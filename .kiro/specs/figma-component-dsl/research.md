@@ -169,11 +169,14 @@
 - **Context**: Each node has a unique GUID (unchanged from previous design)
 - **Selected Approach**: Counter-based with sessionID=0 and auto-incrementing localID
 
-### Decision: opentype.js for Text Measurement in Compiler
-- **Context**: The Compiler must resolve HUG-contents sizing, which requires knowing child text node dimensions (updated rationale)
-- **Selected Approach**: opentype.js 2.0+ for in-process font metric lookup
-- **Rationale**: Keeps the single-pass pipeline intact. With @napi-rs/canvas replacing PyCairo, the text measurement discrepancy is expected to be smaller — both Skia (renderer) and opentype.js parse the same font files. The Inter font files are bundled (~500KB for 4 weights).
-- **Trade-offs**: Minor width discrepancies between opentype.js advance widths and Skia's text shaping (< 1px per glyph). Acceptable for the visual comparison workflow.
+### Decision: Skia ctx.measureText() for Text Measurement in Compiler (revised)
+- **Context**: The Compiler must resolve HUG-contents sizing, which requires knowing child text node dimensions. Design review identified that using opentype.js (a separate text shaping engine) creates a dual-engine discrepancy risk with Skia-based rendering.
+- **Alternatives Considered**:
+  1. opentype.js — separate font parser, < 1px/glyph discrepancy vs Skia, compounds across multiple text nodes
+  2. @napi-rs/canvas `ctx.measureText()` — same Skia engine as Renderer, zero discrepancy
+- **Selected Approach**: @napi-rs/canvas `ctx.measureText()` for text measurement. opentype.js removed from dependencies.
+- **Rationale**: Since the Renderer is now in-process (not a subprocess), the Compiler can use the same Skia text shaping engine for measurement. This eliminates measurement-rendering discrepancy entirely. A lightweight scratch canvas context is created for measurement (no pixel buffer allocation needed).
+- **Trade-offs**: Adds @napi-rs/canvas as a Compiler dependency (previously only a Renderer dependency). Acceptable since both packages are in the same monorepo and share the dependency anyway.
 
 ### Decision: Two-Pass Layout Algorithm
 - **Context**: Auto-layout resolution requires bottom-up measurement and top-down positioning (unchanged from previous design)
@@ -182,7 +185,7 @@
 ## Risks & Mitigations
 - **@napi-rs/canvas pre-1.0 stability** — v0.1.x may have edge-case bugs → Mitigate with comprehensive rendering test suite; skia-canvas as fallback option with compatible Canvas 2D API
 - **Auto-layout fidelity** — DSL layout may not match Figma's exact pixel calculations → Mitigate with two-pass layout algorithm verified against worked examples; visual comparison tests against Figma screenshots
-- **Text measurement accuracy** — opentype.js glyph widths may differ from Skia rendering by < 1px per glyph → Mitigate with threshold-based visual comparison (default 95%); discrepancy expected to be smaller than PyCairo due to Skia-opentype alignment
+- **Text measurement accuracy** — Eliminated as a risk. Compiler now uses `ctx.measureText()` from the same Skia engine as the Renderer, producing zero measurement-rendering discrepancy
 - **Platform binary availability** — @napi-rs/canvas ships pre-built binaries for major platforms (Linux x64/arm64, macOS x64/arm64, Windows x64). Unsupported platforms cannot fall back to compilation → Mitigate by documenting supported platforms; CI runs on Linux x64
 - **Font rendering differences** — Skia and Chrome may render text slightly differently → Expected to be minimal (both use Skia internally); absorbed by comparison threshold
 - **Image dimension mismatch** — DSL render and React screenshot may differ in size → Implement resize/pad utility before comparison; report dimension differences as warnings
@@ -197,4 +200,4 @@
 - [Figma Plugin API - layoutMode](https://developers.figma.com/docs/plugins/api/properties/nodes-layoutmode/) — Auto-layout properties
 - [pixelmatch](https://github.com/mapbox/pixelmatch) — Pixel-level image comparison library
 - [Playwright Screenshots](https://playwright.dev/docs/test-snapshots) — Visual comparison and screenshot automation
-- [opentype.js](https://github.com/opentypejs/opentype.js) — OpenType/TrueType font parser for JavaScript
+- [MDN TextMetrics](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics) — Canvas measureText() return type documentation

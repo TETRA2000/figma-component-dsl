@@ -87,7 +87,7 @@ graph TB
 | Image Comparison | pixelmatch 6.0+, pngjs 7.0+ | Pixel-level visual diff | Zero-dependency comparison, pngjs for PNG decode/encode |
 | Figma Plugin | Figma Plugin API, esbuild | Create Figma nodes from DSL definitions | Same build toolchain as reference plugin |
 | Package Management | npm workspaces | Monorepo for TypeScript packages | DSL core, CLI, renderer, and plugin as separate workspace packages |
-| Text Measurement | opentype.js 2.0+ | Font metric lookup for auto-layout HUG sizing | Parses .otf/.ttf for glyph advance widths |
+| Text Measurement | @napi-rs/canvas (ctx.measureText) | Font metric lookup for auto-layout HUG sizing | Same Skia engine as Renderer — zero measurement-rendering discrepancy |
 
 > PyCairo, Pillow, fig2sketch, fig-kiwi, and all Python packaging (pyproject.toml, pip) have been removed. See `research.md` for the evaluation of alternatives and migration rationale.
 
@@ -169,7 +169,7 @@ flowchart TB
 | Component | Domain/Layer | Intent | Req Coverage | Key Dependencies | Contracts |
 |-----------|--------------|--------|--------------|------------------|-----------|
 | DslCore | DSL / Core | Declarative factory functions for node tree construction | 1.1–1.7, 2.1–2.6, 3.1–3.6, 4.1–4.6, 5.1–5.5 | None (P0) | Service |
-| Compiler | DSL / Core | Resolve layout, assign GUIDs, produce FigmaNodeDict | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 | DslCore (P0), opentype.js (P0) | Service |
+| Compiler | DSL / Core | Resolve layout, assign GUIDs, produce FigmaNodeDict | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 | DslCore (P0), @napi-rs/canvas (P0) | Service |
 | Renderer | Rendering / TypeScript | Rasterize FigmaNodeDict to PNG via @napi-rs/canvas | 6.1–6.4 | @napi-rs/canvas (P0) | Service |
 | Capturer | Rendering / TypeScript | Capture React component screenshots via Playwright | 7.1–7.4 | Playwright (P0) | Service |
 | Comparator | Analysis / TypeScript | Pixel-level image diff with similarity scoring | 8.1–8.4 | pixelmatch (P0), pngjs (P0) | Service |
@@ -256,6 +256,13 @@ interface AutoLayoutConfig {
   heightSizing?: 'FIXED' | 'HUG' | 'FILL';
 }
 
+// --- Child Layout (any node when placed inside an auto-layout parent) ---
+interface ChildLayoutProps {
+  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+  layoutGrow?: number;
+}
+
 // --- Typography ---
 interface TextStyle {
   fontFamily?: string;       // default: 'Inter'
@@ -291,8 +298,10 @@ interface DslNode {
   clipContent?: boolean;
   children?: DslNode[];
 
-  // Auto-layout (FRAME, COMPONENT)
+  // Auto-layout container config (FRAME, COMPONENT only)
   autoLayout?: AutoLayoutConfig;
+
+  // Child sizing within parent's auto-layout (any node type when inside an auto-layout parent)
   layoutGrow?: number;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
@@ -314,7 +323,7 @@ interface DslNode {
 
 // --- Factory Functions ---
 function frame(name: string, props: FrameProps): DslNode;
-function text(characters: string, style?: TextStyle): DslNode;
+function text(characters: string, style?: TextStyle & ChildLayoutProps): DslNode;
 function rectangle(name: string, props: RectangleProps): DslNode;
 function ellipse(name: string, props: EllipseProps): DslNode;
 function group(name: string, children: DslNode[]): DslNode;
@@ -341,6 +350,7 @@ function vertical(config?: Partial<AutoLayoutConfig>): AutoLayoutConfig;
 - Factory function prop types (FrameProps, RectangleProps, etc.) are subsets of DslNode properties relevant to each node type — defined via `Pick` and `Partial` for type safety
 - `horizontal()` and `vertical()` are convenience wrappers that set `direction` and merge defaults
 - Color tokens are resolved at compile time, not at DSL construction time
+- **Sizing ownership**: `AutoLayoutConfig.sizing`/`widthSizing`/`heightSizing` control the *container's own* sizing (how the FRAME/COMPONENT determines its own width/height). `DslNode.layoutSizingHorizontal`/`layoutSizingVertical` (via `ChildLayoutProps`) control how a *child* sizes within its *parent's* auto-layout. These are orthogonal — a FRAME can be `sizing: 'FIXED'` while its children use `layoutSizingHorizontal: 'FILL'`.
 
 ---
 
@@ -362,16 +372,21 @@ function vertical(config?: Partial<AutoLayoutConfig>): AutoLayoutConfig;
 
 **Dependencies**
 - Inbound: DslCore — provides DslNode tree (P0)
-- External: opentype.js 2.0+ — font metric lookup for text measurement (P0)
+- External: @napi-rs/canvas — `ctx.measureText()` for text measurement using the same Skia engine as the Renderer (P0)
 
 **Contracts**: Service [x]
 
 ##### Service Interface
 ```typescript
 // --- Compiled Output (Figma node dictionary format) ---
+
+/** All node types supported in the compiled output */
+type FigmaNodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ROUNDED_RECTANGLE'
+  | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'VECTOR';
+
 interface FigmaNodeDict {
   guid: [number, number];                    // [sessionID, localID]
-  type: string;
+  type: FigmaNodeType;
   name: string;
   size: { x: number; y: number };
   transform: [[number, number, number],
@@ -457,31 +472,33 @@ interface CompilerService {
 
 ##### Text Measurement Strategy
 
-The Compiler must know text node dimensions to resolve HUG-contents sizing on parent frames. The Compiler uses **opentype.js** to measure text in TypeScript.
+The Compiler must know text node dimensions to resolve HUG-contents sizing on parent frames. Since the Renderer is now in-process (not a subprocess), the Compiler uses **@napi-rs/canvas's `ctx.measureText()`** — the same Skia text shaping engine that renders the final output. This eliminates the dual-engine discrepancy that existed with the previous opentype.js approach.
 
 ```typescript
 interface TextMeasurement {
-  width: number;    // total advance width in pixels
+  width: number;    // measured advance width in pixels (from Skia)
   height: number;   // lineCount × lineHeight (or fontSize × 1.2 default)
 }
 
 interface TextMeasurer {
-  /** Load a font file (.otf/.ttf) and register it by family+weight */
-  loadFont(path: string, family: string, weight: number): void;
+  /** Initialize with font directory — registers fonts via GlobalFonts.registerFromPath() */
+  initialize(fontDir: string): void;
 
-  /** Measure text dimensions using loaded font metrics */
+  /** Measure text dimensions using Skia's ctx.measureText() */
   measure(characters: string, style: TextStyle): TextMeasurement;
 }
 ```
 
 **How it works**:
-- opentype.js parses `.otf`/`.ttf` files and provides per-glyph advance widths and font-level ascent/descent metrics
-- For each text node, the measurer sums glyph advance widths (scaled to `fontSize`) to compute width, and uses `lineHeight` (or `fontSize × 1.2` default) × line count for height
+- On initialization, registers Inter font files via `GlobalFonts.registerFromPath()` (same registration the Renderer uses)
+- Creates an internal scratch canvas context for measurement (lightweight — no pixel buffer allocated for `measureText()`)
+- Sets `ctx.font` to match the text style (e.g., `'600 14px Inter'`), then calls `ctx.measureText(text)` to get `TextMetrics`
+- Width comes from `textMetrics.width`; height uses `lineHeight` (or `fontSize × 1.2` default) × line count
 - Multi-line text splits on `\n`; width is the maximum line width
 - The Inter font files are bundled in `packages/dsl-core/fonts/` so measurement works offline without system fonts
-- Kerning and ligatures are applied using opentype.js's built-in GPOS/GSUB table support
+- Kerning, ligatures, and complex shaping are handled by Skia's text layout engine — the same engine that renders
 
-**Limitations**: Letter-perfect parity with Skia's text rendering is not guaranteed — minor width differences (< 1px per glyph) may occur. These differences are absorbed by the visual comparison threshold (default 95% similarity). Discrepancy is expected to be smaller than the previous PyCairo design since both Skia and opentype.js parse the same font files.
+**Advantages over previous opentype.js approach**: Zero measurement-rendering discrepancy — the Compiler measures with the exact same Skia engine that the Renderer draws with. No separate font parsing library needed (opentype.js removed from dependencies).
 
 ##### Layout Algorithm Specification
 
@@ -949,7 +966,7 @@ The FigmaNodeDict structure mirrors Figma's internal node representation as docu
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | guid | [number, number] | Yes | Unique node identifier |
-| type | string | Yes | Node type enum |
+| type | FigmaNodeType | Yes | Typed union of supported node types |
 | name | string | Yes | Display name |
 | size | {x: number, y: number} | Yes | Width and height |
 | transform | number[3][3] | Yes | Absolute affine transform |
