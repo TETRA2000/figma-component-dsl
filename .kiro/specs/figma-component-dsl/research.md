@@ -134,8 +134,40 @@
 - **Rationale**: Matches the Figma data model. Deterministic output enables snapshot testing of compiled JSON.
 - **Trade-offs**: Not globally unique across sessions. Acceptable since DSL output is consumed within a single pipeline run.
 
+### Decision: opentype.js for Text Measurement in Compiler
+- **Context**: The Compiler must resolve HUG-contents sizing on auto-layout frames, which requires knowing child text node dimensions. Text rendering happens in Python/PyCairo — the Compiler has no rendering engine.
+- **Alternatives Considered**:
+  1. Two-pass compile (first pass sends text nodes to Python renderer for measurement, second pass resolves layout) — accurate but adds subprocess round-trip and couples compile to render
+  2. Precomputed glyph width tables for Inter at supported weights — fast lookup but must be regenerated for each font, no kerning/ligature support
+  3. opentype.js for font metric lookup — parses .otf/.ttf files, provides per-glyph advance widths with GPOS/GSUB kerning, runs in TypeScript
+- **Selected Approach**: opentype.js 2.0+ for in-process font metric lookup
+- **Rationale**: Keeps the single-pass pipeline intact (no subprocess dependency for measurement). Provides accurate glyph widths with kerning support. Runs in Node.js, matching the Compiler's TypeScript environment. The Inter font files are bundled (~500KB for 4 weights) so no system font dependency.
+- **Trade-offs**: Minor width discrepancies vs. PyCairo's text rendering (< 1px per glyph due to different rasterization hinting). Acceptable for the visual comparison workflow with threshold-based matching. Does not handle complex text layout (RTL, CJK line breaking) — initial scope is Latin script only.
+- **Follow-up**: Measure width discrepancy between opentype.js and PyCairo for the full Inter glyph set. Establish tolerance baseline.
+
+### Decision: Cross-Language Environment Management
+- **Context**: The system spans TypeScript (npm workspaces) and Python (PyCairo subprocess). Development setup and CI must handle both environments reliably.
+- **Alternatives Considered**:
+  1. Docker container with all dependencies — guarantees consistency but adds complexity for local development
+  2. Makefile with setup targets — simple but not cross-platform
+  3. CLI preflight checks with `figma-dsl doctor` — lightweight, actionable error messages, no container overhead
+- **Selected Approach**: CLI preflight checks with environment variable configuration
+- **Rationale**: Minimal overhead for the common case (developer already has Python). Actionable diagnostics for missing dependencies. Environment variable (`FIGMA_DSL_PYTHON`) allows custom Python paths (e.g., virtualenv). The `doctor` command provides one-command verification.
+- **Trade-offs**: Does not guarantee consistent Python versions across machines. Mitigated by specifying minimum Python version (3.10+) and running `doctor` in CI as a prerequisite step.
+
+### Decision: Two-Pass Layout Algorithm
+- **Context**: Auto-layout resolution requires both bottom-up measurement (to determine HUG sizes) and top-down positioning (to allocate FILL space and compute absolute positions).
+- **Alternatives Considered**:
+  1. Single top-down pass — simple but cannot resolve HUG sizing (requires children to be measured first)
+  2. Constraint-based solver (e.g., Cassowary) — powerful but over-engineered for single-axis layout
+  3. Two-pass (bottom-up measurement + top-down positioning) — matches CSS Flexbox layout model
+- **Selected Approach**: Two-pass algorithm: Pass 1 bottom-up measurement, Pass 2 top-down positioning
+- **Rationale**: The two-pass model is the standard approach for single-axis flex layout (used by CSS Flexbox, Flutter, Yoga). It cleanly separates measurement from positioning. Each pass has clear pre/postconditions, making the algorithm testable and debuggable.
+- **Trade-offs**: Two passes over the tree instead of one. Acceptable since component trees are typically small (< 100 nodes). The worked examples in design.md serve as test specifications for verifying correctness.
+
 ## Risks & Mitigations
-- **Auto-layout fidelity** — DSL layout may not match Figma's exact pixel calculations → Mitigate with visual comparison tests against Figma screenshots; document known deviations
+- **Auto-layout fidelity** — DSL layout may not match Figma's exact pixel calculations → Mitigate with two-pass layout algorithm verified against worked examples; visual comparison tests against Figma screenshots; document known deviations
+- **Text measurement accuracy** — opentype.js glyph widths may differ from PyCairo rendering by < 1px per glyph → Mitigate with threshold-based visual comparison (default 95%); measure discrepancy baseline for Inter font
 - **Gradient rendering gap** — figma-html-renderer lacks gradient support → Must implement gradient fill rendering in the Python renderer extension
 - **Cross-language error propagation** — Python subprocess errors may be opaque → Define structured error JSON format for subprocess output; CLI wraps and reports with context
 - **Font availability** — PyCairo text rendering depends on system fonts → Document required fonts (Inter); fall back to system sans-serif; report font mismatch warnings

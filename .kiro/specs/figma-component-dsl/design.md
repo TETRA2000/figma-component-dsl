@@ -89,6 +89,27 @@ graph TB
 | Image Comparison | pixelmatch 6.0+, pngjs 7.0+ | Pixel-level visual diff | Zero-dependency comparison, pngjs for PNG decode/encode |
 | Figma Plugin | Figma Plugin API, esbuild | Create Figma nodes from DSL definitions | Same build toolchain as reference plugin |
 | Package Management | npm workspaces | Monorepo for TypeScript packages | DSL core, CLI, and plugin as separate workspace packages |
+| Text Measurement | opentype.js 2.0+ | Font metric lookup for auto-layout HUG sizing | Parses .otf/.ttf for glyph advance widths |
+| Python Packaging | pyproject.toml + pip | Python renderer package management | Follows figma-html-renderer pattern |
+
+### Cross-Language Environment Management
+
+The system spans TypeScript (npm) and Python (PyCairo). The CLI must reliably invoke the Python renderer as a subprocess.
+
+**Python Environment Discovery**:
+- The CLI discovers the Python interpreter via the `FIGMA_DSL_PYTHON` environment variable, falling back to `python3` on PATH
+- On first use, the CLI runs a preflight check: `python3 -c "import cairo; print(cairo.version)"` and reports actionable errors if PyCairo is missing
+- The `figma-dsl doctor` command verifies all dependencies (Node.js, Python, PyCairo, Inter font) and reports their status
+
+**Python Package Structure**:
+- The Python renderer is packaged as `figma_component_dsl` with `pyproject.toml` (matching the figma-html-renderer pattern)
+- Installation: `pip install -e "./packages/renderer[dev]"` for development
+- System dependency: PyCairo requires the Cairo C library (`brew install cairo` on macOS, `apt install libcairo2-dev` on Linux)
+
+**Font Assets**:
+- The Inter font family (.otf files for Regular, Medium, Semi Bold, Bold weights) is bundled in `packages/dsl-core/fonts/`
+- opentype.js loads these files directly for text measurement — no system font dependency for the compiler
+- The Python renderer uses system fonts with Inter as the expected default; `figma-dsl doctor` warns if Inter is not installed
 
 ## System Flows
 
@@ -161,7 +182,7 @@ flowchart TB
 | Component | Domain/Layer | Intent | Req Coverage | Key Dependencies | Contracts |
 |-----------|--------------|--------|--------------|------------------|-----------|
 | DslCore | DSL / Core | Declarative factory functions for node tree construction | 1.1–1.7, 2.1–2.6, 3.1–3.6, 4.1–4.6, 5.1–5.5 | None (P0) | Service |
-| Compiler | DSL / Core | Resolve layout, assign GUIDs, produce FigmaNodeDict | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 | DslCore (P0) | Service |
+| Compiler | DSL / Core | Resolve layout, assign GUIDs, produce FigmaNodeDict | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 | DslCore (P0), opentype.js (P0) | Service |
 | Renderer | Rendering / Python | Rasterize FigmaNodeDict to PNG via PyCairo | 6.1–6.4 | PyCairo (P0) | Service |
 | Capturer | Rendering / TypeScript | Capture React component screenshots via Playwright | 7.1–7.4 | Playwright (P0) | Service |
 | Comparator | Analysis / TypeScript | Pixel-level image diff with similarity scoring | 8.1–8.4 | pixelmatch (P0), pngjs (P0) | Service |
@@ -354,6 +375,7 @@ function vertical(config?: Partial<AutoLayoutConfig>): AutoLayoutConfig;
 
 **Dependencies**
 - Inbound: DslCore — provides DslNode tree (P0)
+- External: opentype.js 2.0+ — font metric lookup for text measurement (P0)
 
 **Contracts**: Service [x]
 
@@ -445,6 +467,105 @@ interface CompilerService {
 - Auto-layout algorithm implements a subset of CSS Flexbox: single-axis layout with spacing, padding, alignment, and sizing modes (FIXED/HUG/FILL). Does not support wrap, absolute positioning, or constraints.
 - Text baseline computation uses font metrics (ascent/descent) for accurate vertical positioning. For initial implementation, uses simplified line-height-based baselines with one line per `\n` delimiter.
 - Transform matrix composition: parent transform × child offset = child absolute transform. Root node transform is identity.
+
+##### Text Measurement Strategy
+
+The Compiler must know text node dimensions to resolve HUG-contents sizing on parent frames. Since text rendering happens in the Python renderer (PyCairo), the Compiler uses **opentype.js** to measure text in TypeScript without a rendering engine.
+
+```typescript
+interface TextMeasurement {
+  width: number;    // total advance width in pixels
+  height: number;   // lineCount × lineHeight (or fontSize × 1.2 default)
+}
+
+interface TextMeasurer {
+  /** Load a font file (.otf/.ttf) and register it by family+weight */
+  loadFont(path: string, family: string, weight: number): void;
+
+  /** Measure text dimensions using loaded font metrics */
+  measure(characters: string, style: TextStyle): TextMeasurement;
+}
+```
+
+**How it works**:
+- opentype.js parses `.otf`/`.ttf` files and provides per-glyph advance widths and font-level ascent/descent metrics
+- For each text node, the measurer sums glyph advance widths (scaled to `fontSize`) to compute width, and uses `lineHeight` (or `fontSize × 1.2` default) × line count for height
+- Multi-line text splits on `\n`; width is the maximum line width
+- The Inter font files are bundled in `packages/dsl-core/fonts/` so measurement works offline without system fonts
+- Kerning and ligatures are applied using opentype.js's built-in GPOS/GSUB table support
+
+**Limitations**: Letter-perfect parity with PyCairo's text rendering is not guaranteed — minor width differences (< 1px per glyph) may occur. These differences are absorbed by the visual comparison threshold (default 95% similarity).
+
+##### Layout Algorithm Specification
+
+The auto-layout algorithm resolves DslNode trees with `autoLayout` configurations into absolute positions and sizes. It operates in two passes.
+
+**Pass 1 — Bottom-up measurement** (leaf to root):
+1. Leaf nodes (TEXT, RECTANGLE, ELLIPSE) have intrinsic sizes: explicit `size` property, or measured via TextMeasurer for TEXT nodes
+2. FRAME/COMPONENT nodes with `sizing: 'HUG'` compute their size from children:
+   - Primary axis: sum of child sizes along axis + `spacing × (childCount - 1)` + padding
+   - Counter axis: maximum child size along counter axis + padding
+3. FRAME/COMPONENT nodes with `sizing: 'FIXED'` use their explicit `size`
+4. Nodes with `sizing: 'FILL'` defer sizing to Pass 2 (they need parent context)
+
+**Pass 2 — Top-down positioning** (root to leaf):
+1. Root node position is (0, 0)
+2. For each auto-layout container, distribute children along the primary axis:
+   - Compute available space: container size − padding − total spacing
+   - Allocate FIXED and HUG children first (their sizes are known from Pass 1)
+   - Distribute remaining space among FILL children equally
+   - Position children sequentially with `spacing` gaps
+3. Apply alignment:
+   - `primaryAxisAlignItems`: MIN (pack start), CENTER (center block), MAX (pack end), SPACE_BETWEEN (distribute spacing evenly)
+   - `counterAxisAlignItems`: MIN (align start), CENTER (center), MAX (align end)
+4. For each child, compute absolute transform: parent transform × child offset
+5. FILL children inside a HUG parent are treated as HUG (FILL has no meaning when parent size is content-determined)
+
+**Worked Examples**:
+
+*Example 1 — Horizontal button with label*:
+```
+frame('Button', {
+  autoLayout: horizontal({ spacing: 8, padX: 16, padY: 8 }),
+  fills: [solid('#7c3aed')],
+  children: [
+    text('Click me', { fontSize: 14, fontWeight: 500 })
+  ]
+})
+```
+Pass 1: Text "Click me" measured → ~52×17px. Button HUG sizing → width: 52 + 16 + 16 = 84px, height: 17 + 8 + 8 = 33px.
+Pass 2: Text positioned at offset (16, 8) within button frame.
+
+*Example 2 — Vertical card with FILL-width title*:
+```
+frame('Card', {
+  size: { x: 300, y: 200 },
+  autoLayout: vertical({ spacing: 12, padX: 16, padY: 16 }),
+  children: [
+    text('Title', { fontSize: 18, layoutSizingHorizontal: 'FILL' }),
+    text('Body text here', { fontSize: 14, layoutSizingHorizontal: 'FILL' })
+  ]
+})
+```
+Pass 1: Card is FIXED (300×200). Title measured → ~40×22px, Body measured → ~95×17px. Both have FILL horizontal → deferred.
+Pass 2: Available width = 300 − 16 − 16 = 268px. Both texts get width=268 (FILL). Title at (16, 16), Body at (16, 16 + 22 + 12 = 50).
+
+*Example 3 — Nested layout (badge inside horizontal row)*:
+```
+frame('Row', {
+  autoLayout: horizontal({ spacing: 12, padX: 8, padY: 4, counterAlign: 'CENTER' }),
+  children: [
+    text('Label', { fontSize: 14 }),
+    frame('Badge', {
+      autoLayout: horizontal({ padX: 8, padY: 2 }),
+      fills: [solid('#ef4444')],
+      children: [text('3', { fontSize: 12 })]
+    })
+  ]
+})
+```
+Pass 1 (bottom-up): "3" measured → ~7×14px. Badge HUG → 7+8+8=23px × 14+2+2=18px. "Label" measured → ~33×17px. Row HUG → 8 + 33 + 12 + 23 + 8 = 84px × max(17, 18) + 4 + 4 = 26px.
+Pass 2 (top-down): Row height=26. "Label" (17px tall) centered at y = 4 + (26−4−4−17)/2 = 4.5 ≈ 5. Badge (18px tall) centered at y = 4 + (26−4−4−18)/2 = 4. Within Badge, "3" at offset (8, 2).
 
 ---
 
