@@ -1,7 +1,7 @@
 # Implementation Plan
 
-- [ ] 1. Project setup and monorepo infrastructure
-- [ ] 1.1 Initialize npm workspaces monorepo with shared TypeScript configuration
+- [x] 1. Project setup and monorepo infrastructure
+- [x] 1.1 Initialize npm workspaces monorepo with shared TypeScript configuration
   - Set up root package.json with workspaces pointing to packages/dsl-core, packages/renderer, packages/comparator, packages/cli, and packages/figma-plugin
   - Configure a shared TypeScript base config (tsconfig.base.json) with strict mode, no `any`, ES2023 target, and project references for inter-package imports
   - Add vitest as the shared test runner across all TypeScript packages
@@ -9,8 +9,8 @@
   - Configure each package with its own package.json and tsconfig.json extending the shared base
   - _Requirements: 10.1_
 
-- [ ] 2. DSL Core — Node primitives and color system
-- [ ] 2.1 Implement the node type system and factory functions for basic shapes
+- [x] 2. DSL Core — Node primitives and color system
+- [x] 2.1 Implement the node type system and factory functions for basic shapes
   - Define the DslNode interface and NodeType discriminated union covering FRAME, TEXT, RECTANGLE, ELLIPSE, GROUP, COMPONENT, COMPONENT_SET, and INSTANCE
   - Implement factory functions (frame, text, rectangle, ellipse, group) that construct immutable DslNode objects with defensive array copying for children
   - Support size, fills, strokes, corner radius (uniform and per-corner via cornerRadii), opacity, visibility, and clipContent on applicable node types
@@ -18,7 +18,7 @@
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7_
   - _Contracts: DslCore Service_
 
-- [ ] 2.2 (P) Implement color helpers and fill/stroke system
+- [x] 2.2 (P) Implement color helpers and fill/stroke system
   - Implement hex() converting 6-digit hex strings to RgbaColor in 0.0–1.0 float range
   - Implement solid() for creating SolidFill with optional opacity
   - Implement gradient() for creating GradientFill with multiple color stops, position values, and angle-based gradient transform matrix
@@ -28,8 +28,8 @@
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
   - _Contracts: DslCore Service (color helpers)_
 
-- [ ] 3. DSL Core — Layout, typography, and component system
-- [ ] 3.1 Implement auto-layout configuration and layout helpers
+- [x] 3. DSL Core — Layout, typography, and component system
+- [x] 3.1 Implement auto-layout configuration and layout helpers
   - Implement AutoLayoutConfig with direction (HORIZONTAL/VERTICAL), spacing, padding (uniform, padX/padY axis-based, per-side top/right/bottom/left), primary axis alignment (MIN/CENTER/MAX/SPACE_BETWEEN), and counter axis alignment (MIN/CENTER/MAX)
   - Implement horizontal() and vertical() convenience functions that set direction and merge default values
   - Support sizing modes (FIXED/HUG/FILL) at both unified and per-axis (widthSizing/heightSizing) levels
@@ -39,7 +39,7 @@
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
   - _Contracts: DslCore Service (AutoLayoutConfig)_
 
-- [ ] 3.2 (P) Implement typography system and text node properties
+- [x] 3.2 (P) Implement typography system and text node properties
   - Implement TextStyle with font family (default: Inter), weight (400/500/600/700), and font size in pixels
   - Support line height with value and unit discriminator (PERCENT or PIXELS)
   - Support letter spacing with value and unit discriminator (PERCENT or PIXELS)
@@ -48,7 +48,7 @@
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
   - _Contracts: DslCore Service (TextStyle)_
 
-- [ ] 3.3 (P) Implement component, variant, and instance definitions
+- [x] 3.3 (P) Implement component, variant, and instance definitions
   - Implement component() factory creating COMPONENT nodes with component semantics and optional component property definitions (TEXT, BOOLEAN, INSTANCE_SWAP types)
   - Implement componentSet() factory creating COMPONENT_SET nodes that group variant children by axis key-value definitions (variantAxes)
   - Validate that COMPONENT_SET children follow Figma's Key=Value, Key=Value naming convention
@@ -57,7 +57,7 @@
   - _Contracts: DslCore Service (ComponentProperty, DslNode variant types)_
 
 - [ ] 4. Compiler — Core pipeline
-- [ ] 4.1 Implement GUID assignment, parent references, and compile result structure
+- [x] 4.1 Implement GUID assignment, parent references, and compile result structure
   - Traverse the DslNode tree depth-first, assigning counter-based GUIDs ([0, N] with auto-incrementing N) to each node
   - Generate parentIndex references linking each non-root node to its parent's GUID and position
   - Produce the CompileResult structure containing the root CompiledNode, total node count, and accumulated errors

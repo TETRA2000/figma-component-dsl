@@ -49,3 +49,17 @@ export {
 } from "./colors/index.js";
 
 export type { ColorTokenMap } from "./colors/index.js";
+
+// Compiler
+export { compile } from "./compiler/index.js";
+
+export type {
+  CompileError,
+  CompileResult,
+  CompiledNode,
+  Guid,
+  ResolvedFill,
+  ResolvedStroke,
+  ResolvedTextStyle,
+  Transform,
+} from "./compiler/index.js";
