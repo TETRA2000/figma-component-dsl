@@ -17,3 +17,6 @@ export type { TextMeasurement } from "./text-measurer.js";
 
 export { computeLayout } from "./yoga-mapper.js";
 export type { LayoutResult, LayoutData } from "./yoga-mapper.js";
+
+export { generatePluginInput, writePluginInput } from "./exporter.js";
+export type { PluginInput, PluginComponentDef, PluginNodeDef, PluginVariantDef } from "./exporter.js";

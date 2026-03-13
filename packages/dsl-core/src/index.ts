@@ -64,4 +64,11 @@ export type {
   Transform,
 } from "./compiler/index.js";
 
-export { FONTS_DIR } from "./compiler/index.js";
+export { FONTS_DIR, generatePluginInput, writePluginInput } from "./compiler/index.js";
+
+export type {
+  PluginInput,
+  PluginComponentDef,
+  PluginNodeDef,
+  PluginVariantDef,
+} from "./compiler/index.js";

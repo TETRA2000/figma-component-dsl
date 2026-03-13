@@ -145,7 +145,7 @@
   - Handle unsupported node types and invalid fills gracefully (skip with warning, continue rendering)
   - _Requirements: 6.1, 6.4_
 
-- [ ] 7. (P) Screenshot capturer — React component isolation via Playwright
+- [x] 7. (P) Screenshot capturer — React component isolation via Playwright
   - Launch headless Chromium via Playwright and render a single React component in isolation
   - Implement capture() mode: generate a temporary HTML file importing the target React component module, launch an ephemeral Vite dev server via createServer() API with path alias resolution, navigate Playwright to the server, capture the component element, then clean up server and temp directory
   - Implement captureUrl() mode: navigate Playwright to a provided URL (running Storybook or dev server) and capture the target element
@@ -156,7 +156,7 @@
   - _Requirements: 7.1, 7.2, 7.3, 7.4_
   - _Contracts: CaptureService_
 
-- [ ] 8. (P) Visual comparator — Pixel-level image diff via pixelmatch
+- [x] 8. (P) Visual comparator — Pixel-level image diff via pixelmatch
   - Decode two PNG images to raw RGBA buffers using pngjs
   - When images differ in dimensions, pad the smaller image with background color using sharp and flag dimensionMatch as false
   - Run pixelmatch comparison with configurable sensitivity threshold (default 0.1) and anti-aliasing detection
@@ -166,8 +166,8 @@
   - _Requirements: 8.1, 8.2, 8.3, 8.4_
   - _Contracts: CompareService_
 
-- [ ] 9. Figma export pipeline
-- [ ] 9.1 (P) Implement plugin input JSON exporter
+- [x] 9. Figma export pipeline
+- [x] 9.1 (P) Implement plugin input JSON exporter
   - Transform CompileResult into PluginInput format with schema version, component definitions, and target page name
   - Preserve auto-layout properties on PluginNodeDef nodes (direction, spacing, padding, alignment, sizing) so the plugin creates real auto-layout frames — not just computed transforms
   - Extract component property definitions and structure them for plugin registration via addComponentProperty()
@@ -177,7 +177,7 @@
   - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9_
   - _Contracts: ExporterService_
 
-- [ ] 9.2 Implement Figma plugin — basic node creation with fills, auto-layout, and text
+- [x] 9.2 Implement Figma plugin — basic node creation with fills, auto-layout, and text
   - Parse PluginInput JSON from plugin UI (pasted or loaded via file)
   - Recursively create Figma nodes by type: figma.createFrame(), figma.createRectangle(), figma.createEllipse()
   - Apply solid and gradient fills, strokes, corner radius, and opacity to created nodes
@@ -188,7 +188,7 @@
   - _Requirements: 9.1, 9.2, 9.3, 9.4_
   - _Contracts: PluginRunner_
 
-- [ ] 9.3 Implement Figma plugin — components, variants, instances, and error handling
+- [x] 9.3 Implement Figma plugin — components, variants, instances, and error handling
   - Create COMPONENT nodes with registered properties via addComponentProperty() for TEXT, BOOLEAN, and INSTANCE_SWAP types
   - Create variant components with Key=Value naming and combine them using figma.combineAsVariants()
   - Create INSTANCE nodes from corresponding component definitions and apply property overrides
@@ -197,20 +197,20 @@
   - Wrap each node creation in error handling: accumulate errors, report via figma.notify(), and continue without crashing
   - _Requirements: 9.5, 9.6, 9.7, 9.8, 9.9, 9.10_
 
-- [ ] 10. CLI interface — Pipeline orchestration
-- [ ] 10.1 Implement compile and render commands
+- [x] 10. CLI interface — Pipeline orchestration
+- [x] 10.1 Implement compile and render commands
   - Implement the compile command: dynamically import and execute a DSL module (.dsl.ts), compile the resulting DslNode tree via the Compiler, and output CompiledNode JSON to file or stdout
   - Implement the render command: compile DSL then invoke the Renderer in-process to produce a PNG, passing output path, scale factor, and background color options
   - All pipeline stages are in-process TypeScript calls — no subprocess management needed
   - _Requirements: 10.1, 10.2_
   - _Contracts: CliCommands_
 
-- [ ] 10.2 (P) Implement capture and compare commands
+- [x] 10.2 (P) Implement capture and compare commands
   - Implement the capture command: invoke the CaptureService with component path or URL, viewport specification (WxH format), optional props JSON, and output path
   - Implement the compare command: invoke the CompareService with two image paths, configurable threshold, and diff output path; display similarity score and pass/fail result
   - _Requirements: 10.3, 10.4_
 
-- [ ] 10.3 Implement pipeline, export commands, and error handling
+- [x] 10.3 Implement pipeline, export commands, and error handling
   - Implement the pipeline command chaining: compile → render → capture → compare, stopping on first error and reporting which stage failed
   - Implement the export command: compile DSL, generate plugin input JSON via the Exporter, write to output path with optional page name override
   - Implement the doctor command: verify Node.js version (22+), @napi-rs/canvas availability, Playwright browsers installed, Inter font registration status
@@ -219,20 +219,20 @@
   - Build CLI with Node.js parseArgs (no framework dependency)
   - _Requirements: 10.5, 10.6, 10.7_
 
-- [ ] 11. Integration and end-to-end testing
-- [ ] 11.1 Implement compile-to-render integration tests
+- [x] 11. Integration and end-to-end testing
+- [x] 11.1 Implement compile-to-render integration tests
   - Test the full compile → render pipeline: create DSL definitions, compile to CompiledNode, render via Skia renderer in-process, verify output PNG exists with expected dimensions
   - Test error propagation: verify that renderer errors are correctly captured and reported with context by the pipeline
   - Test round-trip consistency: compile a DSL tree, render it, verify pixel-level determinism across repeated runs
   - _Requirements: 6.1, 6.2, 10.1, 10.2_
 
-- [ ] 11.2 Implement CLI end-to-end tests
+- [x] 11.2 Implement CLI end-to-end tests
   - Test each CLI subcommand (compile, render, capture, compare, pipeline, export, doctor) with sample inputs and verify expected outputs
   - Test the pipeline command end-to-end: DSL → compile → render → capture → compare, verifying similarity score and output files
   - Test error scenarios: invalid DSL input (non-zero exit code, descriptive error), comparison below threshold (exit code 1), runtime errors (exit code 2)
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7_
 
-- [ ] 11.3 Create DSL test definitions for primitive and card-level components
+- [x] 11.3 Create DSL test definitions for primitive and card-level components
   - **Button** (all 12 variants: 4 styles × 3 sizes) — gradient fills (purple→indigo), pill-shaped corners (9999), horizontal auto-layout with center alignment, size-dependent padding and font sizes, Full Width boolean property
   - **Badge** (4 variants: Default, Primary, Success, Warning) — solid fills with matching border colors, pill-shaped corners, compact horizontal padding (12×6), TEXT component property for label
   - **FeatureCard** — vertical card layout with 16px spacing, white background with 1px gray border, nested icon placeholder using INSTANCE_SWAP property, 24px uniform padding, 16px corner radius
@@ -244,7 +244,7 @@
   - Render each definition via the Skia renderer and verify output PNG dimensions and visual correctness
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 4.5, 5.1, 5.2, 5.3, 5.4, 6.1, 6.2_
 
-- [ ] 11.4 Create DSL test definitions for section and page-level compositions
+- [x] 11.4 Create DSL test definitions for section and page-level compositions
   - **Navbar** — fixed-width (1200px) horizontal layout with spacers (layoutGrow) between logo, nav links, and CTA button; 1px bottom border stroke; gradient CTA button nested inside; tests flex-grow distribution
   - **Hero** (center + left alignment variants) — vertical layout with 24px spacing, multi-size text (60px title with -2.5px letter-spacing, 20px subtitle), nested badge component, horizontal button row with two CTA styles; tests large text measurement and alignment variants
   - **Stats** (inline + cards variants) — inline variant: horizontal layout with divider separators between stat groups; cards variant: stat values in individual white card frames with borders; purple stat values (36px, 700 weight) with gray labels; tests variant-based layout switching
@@ -258,7 +258,7 @@
   - These page-level compositions exercise: layoutGrow spacers, INSTANCE nodes with overrides, multi-column layouts, dark backgrounds, fixed-width containers, and deeply nested auto-layout trees (3+ levels)
   - _Requirements: 1.6, 2.5, 2.6, 3.6, 4.3, 4.4, 4.6, 5.3, 5.4, 5.5, 6.1, 6.2_
 
-- [ ]* 11.5 Run full visual regression comparison against React component screenshots
+- [x]* 11.5 Run full visual regression comparison against React component screenshots
   - Capture React component screenshots for all 16 reference components using the screenshot capturer with matching viewport sizes
   - Run visual comparison (DSL render vs React screenshot) for each component and establish baseline similarity scores
   - Document expected similarity ranges per component type: simple shapes (>98%), text-heavy layouts (>92%), gradient components (>90%)

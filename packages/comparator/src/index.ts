@@ -1,2 +1,2 @@
-// Comparator — Screenshot capture and pixel-level visual comparison
-// Public API will be re-exported here as modules are implemented
+export { compare, type CompareOptions, type CompareResult } from "./comparator.js";
+export { capture, captureUrl, type CaptureOptions, type CaptureResult } from "./capturer.js";
