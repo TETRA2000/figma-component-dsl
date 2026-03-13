@@ -154,19 +154,42 @@ Two existing reference implementations inform this design:
 6. The CLI shall provide a command to bundle DSL definitions for direct execution in the Figma plugin.
 7. If any pipeline step fails, the CLI shall report the error with context and exit with a non-zero status code.
 
-### Requirement 11: AI-Powered React-to-DSL Generation
+### Requirement 11: Supported React Component Patterns
+
+**Objective:** As a component developer, I want clearly defined constraints on what React component patterns the DSL supports, so that I know which components can be reliably converted to DSL definitions and which require manual work.
+
+#### Acceptance Criteria
+
+1. The system shall support React components that use CSS Modules (`.module.css`) with design tokens as CSS custom properties for styling.
+2. The system shall support React components that use flexbox layout (`display: flex`, `flex-direction`, `gap`, `align-items`, `justify-content`, `padding`, `margin`).
+3. The system shall support React components that use CSS Grid layout (`display: grid`, `grid-template-columns`, `gap`) for uniform grid arrangements.
+4. The system shall support React components with variant props defined as TypeScript union string types (e.g., `variant: 'primary' | 'secondary'`, `size: 'sm' | 'md' | 'lg'`).
+5. The system shall support React components with boolean props (e.g., `highlighted: boolean`, `fullWidth: boolean`) that toggle visual states.
+6. The system shall support React components with string content props (e.g., `title: string`, `description: string`, `children: ReactNode` where children is text).
+7. The system shall support React components with array data props (e.g., `features: Feature[]`, `links: NavLink[]`) where the component renders a list of child elements via `.map()`.
+8. The system shall support React components with up to 3 levels of composition depth (primitives → sections → pages), matching the reference pattern of leaf components composed into container components.
+9. The system shall support React components with up to 15 nested elements per component.
+10. If a React component uses absolute positioning (`position: absolute/fixed`), the system shall emit a `// TODO:` comment and skip that element, as Figma Auto Layout does not support absolute positioning.
+11. If a React component uses CSS animations, transitions, or hover states, the system shall generate DSL for the default (non-animated, non-hovered) visual state only.
+12. If a React component uses responsive breakpoints (`@media` queries), the system shall generate DSL for a single viewport width (default: desktop/1200px) and note other breakpoints in `// TODO:` comments.
+13. If a React component uses dynamic state (`useState`, `useEffect`, event handlers), the system shall generate DSL for the initial/default state only.
+14. If a React component imports third-party UI libraries (not the project's own components), the system shall report it as unsupported and skip the import.
+
+### Requirement 12: AI-Powered React-to-DSL Generation
 
 **Objective:** As a component developer, I want an AI skill that analyzes React component source code and generates corresponding Figma DSL definitions, so that I can bootstrap DSL code from existing React components without writing it manually.
 
 #### Acceptance Criteria
 
 1. The AI skill shall accept a React component file (`.tsx`) as input and produce a DSL definition file as output.
-2. The AI skill shall analyze the component's JSX structure, CSS styles (CSS Modules, inline styles, or design tokens), and prop interfaces to infer the corresponding Figma node hierarchy.
-3. The AI skill shall map React layout patterns (flexbox, grid, padding, gap) to Figma Auto Layout properties (`layoutMode`, `itemSpacing`, padding, alignment, sizing).
-4. The AI skill shall map CSS color values (hex, rgb, CSS custom properties / design tokens) to DSL `solidPaint()` and `gradientPaint()` calls.
-5. The AI skill shall map typography CSS properties (font-family, font-size, font-weight, line-height, letter-spacing) to DSL text node properties.
-6. When a React component defines variants via props (e.g., `variant: 'primary' | 'secondary'`, `size: 'sm' | 'lg'`), the AI skill shall generate a COMPONENT_SET with corresponding variant components using `combineAsVariants()`.
-7. When a React component uses boolean props (e.g., `disabled`, `loading`), the AI skill shall generate BOOLEAN component properties via `addComponentProperty()`.
-8. The AI skill shall generate Code Connect binding suggestions (`.figma.tsx` stubs) that map the generated DSL component properties back to the React component's props using `figma.enum()`, `figma.string()`, `figma.boolean()`, and `figma.instance()` helpers.
-9. The AI skill shall be invocable as a Claude Code slash command (e.g., `/react-to-dsl <ComponentPath>`) for seamless integration into the development workflow.
-10. If the AI skill cannot confidently infer a Figma property from the React source, it shall emit a `// TODO:` comment in the generated DSL code indicating what needs manual review.
+2. The AI skill shall read the component's associated files: the `.module.css` file for styles, the `types.ts` file for shared prop interfaces, and the `tokens.css` file for design token values.
+3. The AI skill shall analyze the component's JSX structure and map elements to DSL node creation calls (`createFrame()`, `await createText()`, `createRectangle()`), following the supported patterns defined in Requirement 11.
+4. The AI skill shall map CSS flexbox properties to `setAutoLayout()` calls: `flex-direction` → `direction`, `gap` → `spacing`, `padding` → `padX`/`padY`/per-side, `align-items`/`justify-content` → `align`/`counterAlign`.
+5. The AI skill shall resolve CSS custom property references (e.g., `var(--color-primary-600)`) to their hex values from `tokens.css` and generate `solidPaint()` calls.
+6. The AI skill shall map CSS typography properties to DSL text node properties: `font-size` → `fontSize`, `font-weight` → `fontWeight`, `line-height` → `lineHeight`, `letter-spacing` → `letterSpacing`, `text-align` → `textAlignHorizontal`.
+7. When a React component defines variant props as union string types, the AI skill shall generate a COMPONENT_SET with one variant component per combination, using `combineAsVariants()` with `Key=Value` naming.
+8. When a React component uses boolean props that affect visual appearance, the AI skill shall generate BOOLEAN component properties via `addComponentProperty()`.
+9. When a React component renders child components via array `.map()` calls, the AI skill shall generate a representative instance with sample data (using the first array element as the template).
+10. The AI skill shall generate Code Connect binding stubs (`.figma.tsx` files) that map DSL component properties back to React props using `figma.enum()`, `figma.string()`, `figma.boolean()`, and `figma.instance()` helpers.
+11. The AI skill shall be invocable as a Claude Code slash command (e.g., `/react-to-dsl <ComponentPath>`) for seamless integration into the development workflow.
+12. If the AI skill encounters an unsupported pattern (per Requirement 11 constraints), it shall emit a `// TODO:` comment with the specific reason and skip that element without failing.
