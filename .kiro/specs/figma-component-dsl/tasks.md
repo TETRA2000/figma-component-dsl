@@ -2,35 +2,29 @@
 
 - [ ] 1. Project setup and monorepo infrastructure
 - [ ] 1.1 Initialize npm workspaces monorepo with shared TypeScript configuration
-  - Set up workspace packages for DSL core, compiler, capturer, comparator, exporter, plugin, and CLI
-  - Configure TypeScript 5.9+ strict mode with no `any` and ES2023 target as shared base configuration
-  - Add vitest as the shared test runner across TypeScript packages
-  - Bundle Inter font files (Regular, Medium, Semi Bold, Bold .otf) in the DSL core package for text measurement
+  - Set up root package.json with workspaces pointing to packages/dsl-core, packages/renderer, packages/comparator, packages/cli, and packages/figma-plugin
+  - Configure a shared TypeScript base config (tsconfig.base.json) with strict mode, no `any`, ES2023 target, and project references for inter-package imports
+  - Add vitest as the shared test runner across all TypeScript packages
+  - Bundle Inter font files (Regular, Medium, Semi Bold, Bold .otf) in packages/dsl-core/fonts/ for text measurement and rendering
+  - Configure each package with its own package.json and tsconfig.json extending the shared base
   - _Requirements: 10.1_
-
-- [ ] 1.2 (P) Set up the Python renderer package
-  - Create a Python package with pyproject.toml following figma-html-renderer conventions
-  - Declare PyCairo 1.27+ and Pillow as dependencies, pytest as a dev dependency
-  - Verify development installation works with editable install
-  - _Requirements: 6.1_
 
 - [ ] 2. DSL Core — Node primitives and color system
 - [ ] 2.1 Implement the node type system and factory functions for basic shapes
-  - Define the DslNode discriminated union type covering FRAME, TEXT, RECTANGLE, ELLIPSE, and GROUP node types
-  - Implement factory functions (frame, text, rectangle, ellipse, group) that construct immutable DslNode objects
+  - Define the DslNode interface and NodeType discriminated union covering FRAME, TEXT, RECTANGLE, ELLIPSE, GROUP, COMPONENT, COMPONENT_SET, and INSTANCE
+  - Implement factory functions (frame, text, rectangle, ellipse, group) that construct immutable DslNode objects with defensive array copying for children
   - Support size, fills, strokes, corner radius (uniform and per-corner via cornerRadii), opacity, visibility, and clipContent on applicable node types
-  - Ensure children arrays are defensively copied to maintain immutability
-  - Validate constraints at construction time: non-empty names, positive size values, valid hex strings
+  - Validate constraints at construction time: non-empty names, positive size values, auto-layout only on FRAME and COMPONENT, characters required on TEXT and forbidden on others
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7_
   - _Contracts: DslCore Service_
 
 - [ ] 2.2 (P) Implement color helpers and fill/stroke system
-  - Implement hex() converting 6-digit hex strings to RGBA colors in 0.0–1.0 float range
-  - Implement solid() for creating solid fills with optional opacity
-  - Implement gradient() for creating linear gradient fills with multiple color stops and angle-based gradient transform matrix
+  - Implement hex() converting 6-digit hex strings to RgbaColor in 0.0–1.0 float range
+  - Implement solid() for creating SolidFill with optional opacity
+  - Implement gradient() for creating GradientFill with multiple color stops, position values, and angle-based gradient transform matrix
   - Implement stroke paint definition with color, weight, and optional alignment (INSIDE/CENTER/OUTSIDE)
-  - Implement defineTokens() and token() for creating and resolving named color constants
-  - Ensure multiple fills per node preserve array ordering
+  - Implement defineTokens() and token() for creating named color constants (ColorTokenMap) and resolving them to SolidFill
+  - Ensure multiple fills per node preserve array ordering in the fills property
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
   - _Contracts: DslCore Service (color helpers)_
 
@@ -51,16 +45,14 @@
   - Support letter spacing with value and unit discriminator (PERCENT or PIXELS)
   - Support text alignment (LEFT/CENTER/RIGHT) mapped to textAlignHorizontal property
   - Support convenience color shorthand on TextStyle (hex string auto-converted to text fill)
-  - Validate that characters is required on TEXT nodes and forbidden on other node types
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
   - _Contracts: DslCore Service (TextStyle)_
 
 - [ ] 3.3 (P) Implement component, variant, and instance definitions
-  - Implement component() factory creating COMPONENT nodes with component semantics and optional property definitions
-  - Support component property types: TEXT with string default, BOOLEAN with boolean default, INSTANCE_SWAP with component reference
-  - Implement componentSet() factory creating COMPONENT_SET nodes that group variants by axis key-value definitions
+  - Implement component() factory creating COMPONENT nodes with component semantics and optional component property definitions (TEXT, BOOLEAN, INSTANCE_SWAP types)
+  - Implement componentSet() factory creating COMPONENT_SET nodes that group variant children by axis key-value definitions (variantAxes)
   - Validate that COMPONENT_SET children follow Figma's Key=Value, Key=Value naming convention
-  - Implement instance() factory creating INSTANCE nodes referencing a component by name with optional property overrides
+  - Implement instance() factory creating INSTANCE nodes referencing a component by name (componentRef) with optional property overrides
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
   - _Contracts: DslCore Service (ComponentProperty, DslNode variant types)_
 
@@ -68,109 +60,105 @@
 - [ ] 4.1 Implement GUID assignment, parent references, and compile result structure
   - Traverse the DslNode tree depth-first, assigning counter-based GUIDs ([0, N] with auto-incrementing N) to each node
   - Generate parentIndex references linking each non-root node to its parent's GUID and position
-  - Produce the CompileResult structure containing the root FigmaNodeDict, total node count, and accumulated errors
-  - Implement compileToJson() for serializing the result to JSON matching the figma-html-renderer node dictionary format
+  - Produce the CompileResult structure containing the root CompiledNode, total node count, and accumulated errors
+  - Compose 3×3 affine transform matrices: parent transform × child offset = child absolute transform, with identity matrix for the root node
   - Ensure deterministic GUID generation for reproducible snapshot testing
   - _Requirements: 1.6_
   - _Contracts: CompilerService_
 
 - [ ] 4.2 (P) Implement color token resolution and fill format conversion
-  - Resolve color token references to concrete RGBA values during the compilation pass
-  - Convert DslNode Fill types (SolidFill, GradientFill) to FigmaNodeDict fillPaints array format
-  - Convert DslNode StrokePaint to FigmaNodeDict stroke entries with strokeWeight
+  - Resolve color token references to concrete RgbaColor values during the compilation pass
+  - Convert DslNode Fill types (SolidFill, GradientFill) to ResolvedFill format for renderer consumption
+  - Convert DslNode StrokePaint to ResolvedStroke entries
   - Preserve fill array ordering when multiple fills are specified on a single node
   - Report unresolved token references as CompileErrors with the originating node path
   - _Requirements: 3.5, 3.6_
 
-- [ ] 4.3 (P) Implement transform matrix computation for fixed-position nodes
-  - Compose 3×3 affine transform matrices: parent transform × child offset = child absolute transform
-  - Use identity matrix for the root node
-  - Output transforms in figma-html-renderer format: [[a, c, tx], [b, d, ty], [0, 0, 1]]
-  - Handle nodes without auto-layout parents by using their explicit position as the offset
-  - Auto-layout containers delegate positioning to the layout algorithm (Task 5.2)
-  - _Requirements: 1.6_
-
-- [ ] 4.4 (P) Implement component, variant, and instance compilation
-  - Compile COMPONENT nodes by mapping componentProperties into the componentPropertyDefinitions format expected by the plugin
-  - Compile COMPONENT_SET nodes by validating variant child naming follows Key=Value convention
-  - Compile INSTANCE nodes by resolving componentRef to a componentId and recording property overrides as overriddenProperties
-  - Track component definitions within the compilation unit for instance reference resolution
-  - Report circular component references and unresolved componentRef as CompileErrors with node path
+- [ ] 4.3 (P) Implement ComponentRegistry and instance resolution
+  - Implement the ComponentRegistry with register(), resolve(), and names() methods for tracking COMPONENT definitions within a compilation unit
+  - Perform a registration pass (depth-first traversal) before layout computation, registering COMPONENT nodes by name and COMPONENT_SET variant children with their full Key=Value names
+  - Resolve INSTANCE nodes by looking up componentRef in the registry, cloning the referenced component subtree, and applying propertyOverrides (TEXT replacement, BOOLEAN visibility toggle, INSTANCE_SWAP child swap)
+  - Report unresolved component references as CompileErrors; compile unresolved INSTANCE nodes as empty frames with a warning
+  - Scope the registry to a single compile() call — created fresh and freed after each compilation
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
+  - _Contracts: ComponentRegistry_
 
-- [ ] 5. Compiler — Text measurement and auto-layout algorithm
+- [ ] 4.4 (P) Implement component and variant compilation output
+  - Compile COMPONENT nodes by mapping componentProperties into the componentPropertyDefinitions format for the exporter
+  - Compile COMPONENT_SET nodes by validating variant child naming follows Key=Value convention and extracting variant axis metadata
+  - Set componentId on compiled nodes for exporter and plugin consumption
+  - Report circular component references as CompileErrors with the full node path
+  - _Requirements: 5.1, 5.2, 5.3, 5.5_
+
+- [ ] 5. Compiler — Text measurement and Yoga layout
 - [ ] 5.1 Integrate opentype.js and implement the text measurer
   - Load Inter font files (.otf) for four weights (Regular, Medium, Semi Bold, Bold) via opentype.js
-  - Measure text width by summing scaled glyph advance widths with GPOS/GSUB kerning and ligature support
+  - Measure text width by summing scaled glyph advance widths with GPOS/GSUB kerning
   - Compute text height as line count × line height (defaulting to fontSize × 1.2 when line height is unspecified)
   - Handle multi-line text (split on \n) returning width as the maximum line width across all lines
+  - Implement createYogaMeasureFunc() that returns a function Yoga calls during layout to determine text node intrinsic size
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
   - _Contracts: TextMeasurer_
 
-- [ ] 5.2 (P) Implement the two-pass auto-layout resolution algorithm
-  - Pass 1 (bottom-up): compute intrinsic sizes for leaf nodes (TEXT via TextMeasurer, shapes via explicit size); resolve HUG sizing from children (primary axis sum + spacing + padding, counter axis max + padding); defer FILL sizing
-  - Pass 2 (top-down): compute available space in each container, allocate FIXED and HUG children first, distribute remaining space equally among FILL children, position children sequentially with spacing gaps
-  - Apply primary axis alignment: MIN packs start, CENTER centers the block, MAX packs end, SPACE_BETWEEN distributes spacing between children
-  - Apply counter axis alignment: MIN aligns to start edge, CENTER centers, MAX aligns to end edge
-  - Treat FILL children inside HUG parents as HUG (FILL has no meaning when parent is content-sized)
-  - Support layoutGrow for proportional space distribution among flex-grow children
+- [ ] 5.2 Implement Yoga layout mapping and layout resolution
+  - Build a parallel Yoga node tree mirroring the DslNode tree, mapping Figma auto-layout properties to Yoga equivalents (direction→flexDirection, spacing→gap, padding, alignment→justifyContent/alignItems)
+  - Map sizing modes: FIXED→explicit width/height, HUG→no explicit size (Yoga auto-sizes), FILL→flexGrow:1 + flexBasis:0
+  - Register custom Yoga measure functions for TEXT nodes using the TextMeasurer
+  - Set layoutGrow values as flexGrow on child Yoga nodes for spacer elements
+  - Call yogaRoot.calculateLayout() and extract computed positions (getComputedLeft/Top/Width/Height) into the CompiledNode tree
+  - Free Yoga nodes after extraction to prevent memory leaks
   - Verify correctness against the three design document worked examples: button with label, card with FILL-width titles, nested badge row with counter-axis centering
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
+  - _Contracts: YogaMapper_
 
-- [ ] 5.3 (P) Implement text data expansion for renderer consumption
-  - Generate textData containing characters and lines array (split by \n) for each TEXT node
-  - Generate derivedTextData with baseline entries per line: lineY position, lineHeight, first and end character indices
-  - Generate fontMetaData with fontFamily, fontStyle name (Regular/Medium/Semi Bold/Bold from weight), fontWeight, and fontSize
-  - Set top-level fontSize, fontFamily, and textAlignHorizontal fields on the compiled node for renderer convenience
-  - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
-
-- [ ] 6. Python renderer — PyCairo rendering pipeline
-- [ ] 6.1 (P) Implement frame and shape rendering
-  - Render FRAME, COMPONENT, COMPONENT_SET, and INSTANCE nodes as rectangles with solid color fills, strokes, corner radius, opacity, and content clipping
-  - Render RECTANGLE nodes with solid fills, stroke outlines, and rounded corners using Cairo arcs
-  - Render ELLIPSE nodes using Cairo arc and scale transformations
-  - Apply node affine transforms via Cairo matrix operations with context save/restore
-  - Skip invisible nodes (visible=false) while continuing to traverse their subtrees
-  - Accept FigmaNodeDict JSON from stdin or file path argument
+- [ ] 6. Renderer — Skia rendering via @napi-rs/canvas
+- [ ] 6.1 Implement frame and shape rendering
+  - Register bundled Inter font files via GlobalFonts.registerFromPath() at startup
+  - Create a Canvas with dimensions from the root CompiledNode and optional background color and scale factor
+  - Render FRAME, COMPONENT, COMPONENT_SET, and INSTANCE nodes as rectangles with solid color fills, strokes, corner radius (including per-corner via roundRect), opacity, and content clipping (save/clip/restore)
+  - Render RECTANGLE nodes with solid fills, stroke outlines, and rounded corners
+  - Render ELLIPSE nodes using arc transformations
+  - Apply node transforms via canvas context transformations
+  - Skip invisible nodes (visible=false) while preserving tree traversal order
   - _Requirements: 6.1, 6.2_
-  - _Contracts: DslRenderer_
+  - _Contracts: RendererService_
 
-- [ ] 6.2 Implement text rendering
-  - Render TEXT nodes using Cairo select_font_face and show_text with correct font family, weight, and size
-  - Map font weight to Cairo values: 400→FONT_WEIGHT_NORMAL, 500–700→FONT_WEIGHT_BOLD
-  - Position each text line using baseline data from derivedTextData (lineY and lineHeight)
-  - Apply text color from the first fillPaint entry
-  - Implement horizontal text alignment (LEFT/CENTER/RIGHT) by computing x-offset based on textAlignHorizontal and measured text width
+- [ ] 6.2 (P) Implement text rendering
+  - Render TEXT nodes using Skia's text API with correct font family, weight, and size from ResolvedTextStyle
+  - Position each text line using baseline data from the compiled node
+  - Apply text color from the resolved text style
+  - Implement horizontal text alignment (LEFT/CENTER/RIGHT) by computing x-offset relative to the node's available width
+  - Handle multi-line text by rendering each line at its computed y position
   - _Requirements: 6.1, 6.2_
 
-- [ ] 6.3 (P) Implement linear gradient fill rendering
-  - Create Cairo LinearGradient patterns from gradientStops color/position data
-  - Convert Figma gradient transform matrices (rotation angle) to Cairo point-to-point gradient coordinates
-  - Apply gradient fills alongside solid fills on multi-fill nodes
-  - _Requirements: 6.2_
-
-- [ ] 6.4 Implement image asset handling, CLI entry point, and error reporting
+- [ ] 6.3 (P) Implement gradient fill and image asset rendering
+  - Create CanvasRenderingContext2D linear gradient patterns from GradientFill data (stops, positions, gradient transform)
+  - Convert Figma gradient transform matrices (rotation angle) to Canvas gradient start/end coordinates
+  - Apply gradient fills alongside solid fills on multi-fill nodes, respecting fill ordering and opacity
   - Resolve image asset paths relative to a configurable asset directory
-  - Load images as Cairo surface patterns scaled to fill node bounds
-  - Implement Python CLI entry point accepting --input, --output, --scale, --bg (white|transparent), and --assets flags
-  - Output structured JSON error messages to stderr with node path, node type, and error description
-  - Produce PNG output at the specified path with correct pixel dimensions
-  - _Requirements: 6.3, 6.4_
+  - Load and draw images scaled to fill node bounds
+  - _Requirements: 6.2, 6.3_
+
+- [ ] 6.4 Implement PNG output and render error reporting
+  - Encode the final canvas to PNG buffer and write to the specified output path
+  - Report render errors as typed RenderError objects with message, node path, and node type
+  - Handle unsupported node types and invalid fills gracefully (skip with warning, continue rendering)
+  - _Requirements: 6.1, 6.4_
 
 - [ ] 7. (P) Screenshot capturer — React component isolation via Playwright
   - Launch headless Chromium via Playwright and render a single React component in isolation
-  - Support capture from a component module path (with minimal Vite server) and from a running dev server URL
-  - Capture element-level screenshots of the isolated component, not the full page
-  - Configure viewport dimensions per capture request and device scale factor
+  - Implement capture() mode: generate a temporary HTML file importing the target React component module, launch an ephemeral Vite dev server via createServer() API with path alias resolution, navigate Playwright to the server, capture the component element, then clean up server and temp directory
+  - Implement captureUrl() mode: navigate Playwright to a provided URL (running Storybook or dev server) and capture the target element
+  - Capture element-level screenshots via element.screenshot() — not the full page
+  - Configure viewport dimensions and device scale factor per capture request
   - Produce PNG output with white background matching the DSL renderer's default background
   - Ensure each capture uses a fresh browser context to prevent state leakage between captures
-  - Clean up browser and server resources after capture completes
   - _Requirements: 7.1, 7.2, 7.3, 7.4_
   - _Contracts: CaptureService_
 
 - [ ] 8. (P) Visual comparator — Pixel-level image diff via pixelmatch
   - Decode two PNG images to raw RGBA buffers using pngjs
-  - When images differ in dimensions, pad the smaller image with background color to match the larger and flag dimensionMatch as false
+  - When images differ in dimensions, pad the smaller image with background color using sharp and flag dimensionMatch as false
   - Run pixelmatch comparison with configurable sensitivity threshold (default 0.1) and anti-aliasing detection
   - Calculate similarity score as percentage of matching pixels
   - Generate a diff image highlighting mismatched pixels in configurable diff color (default red)
@@ -181,7 +169,7 @@
 - [ ] 9. Figma export pipeline
 - [ ] 9.1 (P) Implement plugin input JSON exporter
   - Transform CompileResult into PluginInput format with schema version, component definitions, and target page name
-  - Preserve auto-layout properties on nodes (not just computed transforms) so the plugin creates real auto-layout frames
+  - Preserve auto-layout properties on PluginNodeDef nodes (direction, spacing, padding, alignment, sizing) so the plugin creates real auto-layout frames — not just computed transforms
   - Extract component property definitions and structure them for plugin registration via addComponentProperty()
   - Generate variant definitions with correct Key=Value naming and axis metadata for combineAsVariants()
   - Include instance definitions with component references and property overrides
@@ -190,13 +178,13 @@
   - _Contracts: ExporterService_
 
 - [ ] 9.2 Implement Figma plugin — basic node creation with fills, auto-layout, and text
-  - Parse PluginInput JSON from plugin UI (pasted or loaded)
+  - Parse PluginInput JSON from plugin UI (pasted or loaded via file)
   - Recursively create Figma nodes by type: figma.createFrame(), figma.createRectangle(), figma.createEllipse()
   - Apply solid and gradient fills, strokes, corner radius, and opacity to created nodes
-  - Apply auto-layout properties using the setAutoLayout pattern from the reference plugin
+  - Apply auto-layout properties using the setAutoLayout pattern from the reference plugin (layoutMode, itemSpacing, padding, alignment, sizing)
   - Load Inter fonts asynchronously via figma.loadFontAsync() before text node creation
   - Create text nodes with correct font family, weight, size, line height, letter spacing, and alignment
-  - Build with esbuild matching the reference plugin's build configuration
+  - Build plugin with esbuild matching the reference plugin's build configuration
   - _Requirements: 9.1, 9.2, 9.3, 9.4_
   - _Contracts: PluginRunner_
 
@@ -211,43 +199,37 @@
 
 - [ ] 10. CLI interface — Pipeline orchestration
 - [ ] 10.1 Implement compile and render commands
-  - Implement the compile command: import and execute a DSL module (.dsl.ts), compile the resulting DslNode tree, and output FigmaNodeDict JSON to file or stdout
-  - Implement the render command: invoke the Python renderer as a subprocess with JSON input (via stdin or temp file), passing --output, --scale, and --bg flags
-  - Discover the Python interpreter via the FIGMA_DSL_PYTHON environment variable, falling back to python3 on PATH
-  - Report subprocess errors by parsing the renderer's structured JSON stderr output and presenting it with pipeline context
+  - Implement the compile command: dynamically import and execute a DSL module (.dsl.ts), compile the resulting DslNode tree via the Compiler, and output CompiledNode JSON to file or stdout
+  - Implement the render command: compile DSL then invoke the Renderer in-process to produce a PNG, passing output path, scale factor, and background color options
+  - All pipeline stages are in-process TypeScript calls — no subprocess management needed
   - _Requirements: 10.1, 10.2_
   - _Contracts: CliCommands_
 
 - [ ] 10.2 (P) Implement capture and compare commands
-  - Implement the capture command: invoke the screenshot capturer with component path or URL, viewport specification (WxH format), optional props JSON, and output path
-  - Implement the compare command: invoke the visual comparator with two image paths, configurable threshold, and diff output path; display similarity score and pass/fail result
+  - Implement the capture command: invoke the CaptureService with component path or URL, viewport specification (WxH format), optional props JSON, and output path
+  - Implement the compare command: invoke the CompareService with two image paths, configurable threshold, and diff output path; display similarity score and pass/fail result
   - _Requirements: 10.3, 10.4_
 
 - [ ] 10.3 Implement pipeline, export commands, and error handling
   - Implement the pipeline command chaining: compile → render → capture → compare, stopping on first error and reporting which stage failed
-  - Implement the export command: compile DSL, generate plugin input JSON, write to output path with optional page name override
+  - Implement the export command: compile DSL, generate plugin input JSON via the Exporter, write to output path with optional page name override
+  - Implement the doctor command: verify Node.js version (22+), @napi-rs/canvas availability, Playwright browsers installed, Inter font registration status
   - Define exit codes: 0 for success, 1 for pipeline failure (comparison below threshold), 2 for runtime errors
   - Report all errors with context (originating stage, input that caused failure, relevant file paths)
   - Build CLI with Node.js parseArgs (no framework dependency)
   - _Requirements: 10.5, 10.6, 10.7_
 
-- [ ] 10.4 (P) Implement the doctor command for environment verification
-  - Verify Node.js version (22+), Python version (3.10+), PyCairo availability, and Inter font installation
-  - Run preflight checks: Python interpreter discovery, import cairo validation, font file presence
-  - Report status of each dependency with actionable error messages for missing items
-  - _Requirements: 10.7_
-
 - [ ] 11. Integration and end-to-end testing
 - [ ] 11.1 Implement compile-to-render integration tests
-  - Test the full compile → render pipeline: create DSL definitions, compile to FigmaNodeDict JSON, render via Python subprocess, verify output PNG exists with expected dimensions
-  - Test error propagation: verify that renderer subprocess errors are captured and reported with context by the TypeScript pipeline
-  - Test that the JSON interchange format produced by the compiler is correctly consumed by the Python renderer
+  - Test the full compile → render pipeline: create DSL definitions, compile to CompiledNode, render via Skia renderer in-process, verify output PNG exists with expected dimensions
+  - Test error propagation: verify that renderer errors are correctly captured and reported with context by the pipeline
+  - Test round-trip consistency: compile a DSL tree, render it, verify pixel-level determinism across repeated runs
   - _Requirements: 6.1, 6.2, 10.1, 10.2_
 
 - [ ] 11.2 Implement CLI end-to-end tests
-  - Test each CLI subcommand (compile, render, capture, compare, pipeline, export) with sample inputs and verify expected outputs
+  - Test each CLI subcommand (compile, render, capture, compare, pipeline, export, doctor) with sample inputs and verify expected outputs
   - Test the pipeline command end-to-end: DSL → compile → render → capture → compare, verifying similarity score and output files
-  - Test error scenarios: invalid DSL input (non-zero exit code, descriptive error), missing Python environment (actionable message), comparison below threshold (exit code 1)
+  - Test error scenarios: invalid DSL input (non-zero exit code, descriptive error), comparison below threshold (exit code 1), runtime errors (exit code 2)
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7_
 
 - [ ] 11.3 Create DSL test definitions for primitive and card-level components
@@ -258,8 +240,8 @@
   - **PricingCard** (standard + highlighted variants) — highlighted variant with dark gradient background and inverted text colors, features list with checkmark circles, 1px divider line, conditional CTA button styling, 24px corner radius
   - **CTABanner** — 3-stop dark gradient background (indigo→purple), centered vertical layout with 32px spacing, nested horizontal button row with contrasting styles (solid white + transparent outline), 24px corner radius
   - These definitions exercise: gradient fills, auto-layout (H+V), sizing variants, component properties (TEXT/BOOLEAN/INSTANCE_SWAP), ELLIPSE shapes, multi-fill nodes, border strokes, and nested component structures
-  - Compile each definition and verify the compiler produces valid FigmaNodeDict JSON with correct transforms and layout
-  - Render each definition via the Python renderer and verify output PNG dimensions and visual correctness
+  - Compile each definition and verify the compiler produces valid CompiledNode trees with correct transforms and layout
+  - Render each definition via the Skia renderer and verify output PNG dimensions and visual correctness
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 4.5, 5.1, 5.2, 5.3, 5.4, 6.1, 6.2_
 
 - [ ] 11.4 Create DSL test definitions for section and page-level compositions
