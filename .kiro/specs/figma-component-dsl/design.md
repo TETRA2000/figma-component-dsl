@@ -6,43 +6,42 @@
 
 **Users**: Component developers and design system engineers use the DSL to define component structures in code, iterate on visual accuracy without Figma, and synchronize components between React and Figma.
 
-**Impact**: Introduces a new toolchain (DSL core, compiler, renderer, comparison engine, CLI, Figma plugin) that bridges the gap between the two reference implementations — combining figma_design_playground's component creation patterns with figma-html-renderer's rendering pipeline.
+**Impact**: Introduces a new all-TypeScript toolchain (DSL core, compiler, renderer, comparison engine, CLI, Figma plugin) that bridges the gap between the two reference implementations — combining figma_design_playground's component creation patterns with figma-html-renderer's rendering concepts, reimplemented with Skia (the same rendering engine Figma uses internally).
 
 ### Goals
 - Provide a type-safe, declarative API for defining Figma node structures with auto-layout, colors, typography, and component variants
-- Render DSL definitions as PNG images using PyCairo, matching Figma's visual output
+- Render DSL definitions as PNG images using Skia via @napi-rs/canvas, matching Figma's visual output with high fidelity
 - Enable automated visual comparison between DSL renders and React component screenshots
 - Export DSL definitions to Figma via a plugin that creates real components with properties and variants
-- Expose all pipeline operations through a unified CLI
+- Expose all pipeline operations through a unified CLI — all in TypeScript, no cross-language dependencies
 
 ### Non-Goals
 - Real-time collaborative editing of DSL definitions
 - Full Figma feature parity (effects, masks, boolean operations, constraints, prototyping)
 - DSL-to-React code generation (reverse direction)
-- Figma file parsing (`.fig` → DSL) — that is figma-html-renderer's domain
+- Figma file parsing (`.fig` → DSL) — potential future feature via fig2json
 - Dark mode or responsive variant generation
 
 ## Architecture
 
+> Detailed discovery notes and landscape research are in `research.md`. This section captures all decisions and contracts.
+
 ### Architecture Pattern & Boundary Map
 
-**Selected pattern**: Pipeline with AST Core — sequential stages transform DSL definitions through compilation, rendering, comparison, and export. Each stage has a single responsibility and communicates via well-defined data contracts.
+**Selected pattern**: All-TypeScript Pipeline — sequential stages transform DSL definitions through compilation, rendering, comparison, and export. Each stage has a single responsibility and communicates via well-defined TypeScript interfaces.
 
-**Rationale**: Proven in the figma-html-renderer reference (5-stage pipeline). Natural fit for a compile → render → compare workflow. Stages are independently testable and replaceable.
+**Rationale**: Landscape research (Satori, @react-pdf/renderer, Ink, react-figma) confirmed that every comparable project operates in a single language. The previous cross-language design (TypeScript → JSON → Python/PyCairo) is replaced with an all-TypeScript pipeline using @napi-rs/canvas (Skia) for rendering and Yoga WASM for layout. Skia is the same rendering engine Figma uses internally, providing the highest possible rendering fidelity.
 
 ```mermaid
 graph TB
-    subgraph TypeScript
+    subgraph TypeScript Pipeline
         DSL[DSL Core - Factory Functions]
-        Compiler[Compiler - Layout Resolution]
+        Compiler[Compiler - Yoga Layout]
+        Renderer[Renderer - Skia Canvas]
         Capturer[Screenshot Capturer - Playwright]
         Comparator[Visual Comparator - pixelmatch]
         Exporter[Plugin Exporter - JSON Generator]
         CLI[CLI - Pipeline Orchestrator]
-    end
-
-    subgraph Python
-        Renderer[Renderer - PyCairo]
     end
 
     subgraph Figma
@@ -50,8 +49,8 @@ graph TB
     end
 
     DSL -->|DslNode tree| Compiler
-    Compiler -->|FigmaNodeDict JSON| Renderer
-    Compiler -->|FigmaNodeDict JSON| Exporter
+    Compiler -->|CompiledNode tree| Renderer
+    Compiler -->|CompiledNode tree| Exporter
     Renderer -->|PNG file| Comparator
     Capturer -->|PNG file| Comparator
     Exporter -->|Plugin input JSON| Plugin
@@ -64,52 +63,53 @@ graph TB
 ```
 
 **Domain boundaries**:
-- **DSL Core**: Node definition and tree construction (TypeScript)
-- **Compiler**: Layout resolution, GUID assignment, format conversion (TypeScript)
-- **Renderer**: Visual rasterization from node dictionaries (Python/PyCairo)
+- **DSL Core**: Node definition and tree construction (TypeScript, zero dependencies)
+- **Compiler**: Layout resolution via Yoga, GUID assignment, format conversion (TypeScript)
+- **Renderer**: Visual rasterization via Skia/@napi-rs/canvas (TypeScript)
 - **Capturer**: React component screenshot isolation (TypeScript/Playwright)
 - **Comparator**: Pixel-level image diffing (TypeScript/pixelmatch)
 - **Exporter**: Figma plugin input generation (TypeScript)
 - **Plugin**: Figma node creation via Plugin API (TypeScript, runs in Figma sandbox)
 - **CLI**: User-facing orchestration of all stages (TypeScript/Node.js)
 
-**Existing patterns preserved**: Pipeline architecture from figma-html-renderer; component creation patterns from figma_design_playground plugin; CSS custom property design tokens; PyCairo rendering approach.
+**Existing patterns preserved**: Pipeline architecture concept from figma-html-renderer; component creation patterns from figma_design_playground plugin; CSS custom property design tokens; Satori's all-TypeScript Yoga+opentype.js pattern.
 
-**New components rationale**: DSL Core provides type-safe node construction; Compiler bridges DSL trees to the renderer's expected format; Comparator and Capturer enable the visual iteration loop; CLI unifies all operations.
+**New components rationale**: DSL Core provides type-safe node construction; Compiler bridges DSL trees to rendered output using Yoga for layout; Renderer uses Skia (same engine as Figma) for highest fidelity; Comparator and Capturer enable the visual iteration loop; CLI unifies all operations.
 
-**Steering compliance**: TypeScript strict mode, no `any`; pipeline stages with single responsibility; immutable data between stages; no framework bloat; PyCairo for rendering.
+**Steering compliance**: TypeScript strict mode, no `any`; pipeline stages with single responsibility; immutable data between stages; no framework bloat; single-language (TypeScript) throughout.
 
 ### Technology Stack
 
 | Layer | Choice / Version | Role in Feature | Notes |
 |-------|------------------|-----------------|-------|
 | DSL Core / CLI | TypeScript 5.9+, Node.js 22+ | DSL definition, compilation, orchestration | Strict mode, ES2023 target |
-| Renderer | Python 3.10+, PyCairo 1.27+ | Rasterize node dictionaries to PNG | Extends figma-html-renderer patterns |
-| Screenshot Capture | Playwright 1.50+ | Headless browser React component screenshots | Node.js API, element-level capture |
-| Image Comparison | pixelmatch 6.0+, pngjs 7.0+ | Pixel-level visual diff | Zero-dependency comparison, pngjs for PNG decode/encode |
+| Layout Engine | Yoga WASM (`yoga-layout` 3.x) | Flexbox layout resolution for auto-layout | ~200KB WASM, used by Satori/react-pdf/Ink |
+| Renderer | @napi-rs/canvas 0.1.x (Skia) | Rasterize compiled nodes to PNG | Zero system deps, prebuilt binaries, same engine as Figma |
+| Text Measurement | opentype.js 2.0+ | Font metric lookup for layout sizing | Same approach as Satori; parses .otf/.ttf |
+| Screenshot Capture | Playwright 1.50+ | Headless browser React component screenshots | Element-level capture |
+| Image Comparison | pixelmatch 6.0+, pngjs 7.0+ | Pixel-level visual diff | De facto standard (used by Playwright, jest, Vitest) |
+| Image Processing | sharp 0.33+ | Resize/pad images before comparison | High-performance libvips binding |
 | Figma Plugin | Figma Plugin API, esbuild | Create Figma nodes from DSL definitions | Same build toolchain as reference plugin |
-| Package Management | npm workspaces | Monorepo for TypeScript packages | DSL core, CLI, and plugin as separate workspace packages |
-| Text Measurement | opentype.js 2.0+ | Font metric lookup for auto-layout HUG sizing | Parses .otf/.ttf for glyph advance widths |
-| Python Packaging | pyproject.toml + pip | Python renderer package management | Follows figma-html-renderer pattern |
+| Package Management | npm workspaces | Monorepo for TypeScript packages | All packages in single language |
 
-### Cross-Language Environment Management
+> Rationale for key technology choices is documented in `research.md` design decisions section.
 
-The system spans TypeScript (npm) and Python (PyCairo). The CLI must reliably invoke the Python renderer as a subprocess.
+### Environment Setup
 
-**Python Environment Discovery**:
-- The CLI discovers the Python interpreter via the `FIGMA_DSL_PYTHON` environment variable, falling back to `python3` on PATH
-- On first use, the CLI runs a preflight check: `python3 -c "import cairo; print(cairo.version)"` and reports actionable errors if PyCairo is missing
-- The `figma-dsl doctor` command verifies all dependencies (Node.js, Python, PyCairo, Inter font) and reports their status
+The entire pipeline runs in TypeScript/Node.js. No Python, no cross-language bridge.
 
-**Python Package Structure**:
-- The Python renderer is packaged as `figma_component_dsl` with `pyproject.toml` (matching the figma-html-renderer pattern)
-- Installation: `pip install -e "./packages/renderer[dev]"` for development
-- System dependency: PyCairo requires the Cairo C library (`brew install cairo` on macOS, `apt install libcairo2-dev` on Linux)
+**Dependencies**:
+- Node.js 22+ (single runtime requirement)
+- `npm install` handles everything — @napi-rs/canvas ships prebuilt Skia binaries for macOS (x64/arm64), Linux (x64/arm64), and Windows (x64)
+- No system library installation required (unlike PyCairo which required `brew install cairo`)
 
 **Font Assets**:
 - The Inter font family (.otf files for Regular, Medium, Semi Bold, Bold weights) is bundled in `packages/dsl-core/fonts/`
-- opentype.js loads these files directly for text measurement — no system font dependency for the compiler
-- The Python renderer uses system fonts with Inter as the expected default; `figma-dsl doctor` warns if Inter is not installed
+- opentype.js loads these files for text measurement — no system font dependency for the compiler
+- @napi-rs/canvas registers the same bundled fonts for rendering — consistent measurement and rendering
+
+**Doctor Command**:
+- `figma-dsl doctor` verifies: Node.js version, @napi-rs/canvas availability, Playwright browsers, Inter font registration
 
 ## System Flows
 
@@ -121,7 +121,7 @@ sequenceDiagram
     participant CLI
     participant DSL as DSL Core
     participant Compiler
-    participant Renderer as Renderer - Python
+    participant Renderer as Renderer - Skia
     participant Capturer as Capturer - Playwright
     participant Comparator
 
@@ -129,8 +129,8 @@ sequenceDiagram
     CLI->>DSL: import and execute DSL module
     DSL-->>CLI: DslNode tree
     CLI->>Compiler: compile(dslNode)
-    Compiler-->>CLI: FigmaNodeDict JSON
-    CLI->>Renderer: subprocess render(json, output.png)
+    Compiler-->>CLI: CompiledNode tree
+    CLI->>Renderer: render(compiledNode, output.png)
     Renderer-->>CLI: PNG file path
     CLI->>Capturer: capture(ReactComponent, viewport)
     Capturer-->>CLI: PNG file path
@@ -145,21 +145,16 @@ sequenceDiagram
 flowchart TB
     A[DslNode Tree] --> B[Assign GUIDs]
     B --> C[Resolve Color Tokens]
-    C --> D[Compute Auto-Layout]
-    D --> E[Calculate Absolute Transforms]
-    E --> F[Expand Text Data]
-    F --> G[Set Parent-Child References]
-    G --> H[FigmaNodeDict JSON]
+    C --> D[Build Yoga Tree]
+    D --> E[Measure Text Nodes via opentype.js]
+    E --> F[Calculate Yoga Layout]
+    F --> G[Extract Absolute Positions]
+    G --> H[Set Parent-Child References]
+    H --> I[CompiledNode Tree]
 
-    D --> D1{Has Auto-Layout?}
-    D1 -->|Yes| D2[Measure children sizes]
-    D2 --> D3[Apply spacing and padding]
-    D3 --> D4[Align on primary axis]
-    D4 --> D5[Align on counter axis]
-    D5 --> D6[Apply sizing modes]
-    D1 -->|No| D7[Use explicit size and position]
-    D6 --> E
-    D7 --> E
+    D --> D1[Map DslNode auto-layout to Yoga properties]
+    D1 --> D2[Set direction, spacing, padding, alignment]
+    D2 --> D3[Set sizing modes: FIXED, HUG, FILL]
 ```
 
 ## Requirements Traceability
@@ -167,9 +162,9 @@ flowchart TB
 | Requirement | Summary | Components | Interfaces | Flows |
 |-------------|---------|------------|------------|-------|
 | 1.1–1.7 | DSL node primitives (FRAME, TEXT, RECT, ELLIPSE, GROUP, hierarchy, visibility) | DslCore | NodeFactory, DslNode | — |
-| 2.1–2.6 | Auto-layout system (direction, spacing, padding, alignment, sizing, flex-grow) | DslCore, Compiler | AutoLayoutConfig, LayoutResolver | Compile Flow |
+| 2.1–2.6 | Auto-layout system (direction, spacing, padding, alignment, sizing, flex-grow) | DslCore, Compiler | AutoLayoutConfig, YogaMapper | Compile Flow |
 | 3.1–3.6 | Color and fill system (hex, solid, gradient, stroke, multi-fill, tokens) | DslCore, Compiler | ColorToken, Fill, StrokePaint | Compile Flow |
-| 4.1–4.6 | Typography system (font, size, line-height, letter-spacing, alignment) | DslCore, Compiler | TextStyle, TextDataExpander | Compile Flow |
+| 4.1–4.6 | Typography system (font, size, line-height, letter-spacing, alignment) | DslCore, Compiler | TextStyle, TextMeasurer | Compile Flow |
 | 5.1–5.5 | Component and variant system (COMPONENT, properties, COMPONENT_SET, INSTANCE) | DslCore, Compiler, Exporter | ComponentDef, VariantAxis, InstanceRef | Compile Flow |
 | 6.1–6.4 | DSL rendering to PNG | Renderer | RendererService | Pipeline Flow |
 | 7.1–7.4 | React component screenshot capture | Capturer | CaptureService | Pipeline Flow |
@@ -182,10 +177,10 @@ flowchart TB
 | Component | Domain/Layer | Intent | Req Coverage | Key Dependencies | Contracts |
 |-----------|--------------|--------|--------------|------------------|-----------|
 | DslCore | DSL / Core | Declarative factory functions for node tree construction | 1.1–1.7, 2.1–2.6, 3.1–3.6, 4.1–4.6, 5.1–5.5 | None (P0) | Service |
-| Compiler | DSL / Core | Resolve layout, assign GUIDs, produce FigmaNodeDict | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 | DslCore (P0), opentype.js (P0) | Service |
-| Renderer | Rendering / Python | Rasterize FigmaNodeDict to PNG via PyCairo | 6.1–6.4 | PyCairo (P0) | Service |
-| Capturer | Rendering / TypeScript | Capture React component screenshots via Playwright | 7.1–7.4 | Playwright (P0) | Service |
-| Comparator | Analysis / TypeScript | Pixel-level image diff with similarity scoring | 8.1–8.4 | pixelmatch (P0), pngjs (P0) | Service |
+| Compiler | DSL / Core | Resolve layout via Yoga, assign GUIDs, produce CompiledNode | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 | DslCore (P0), yoga-layout (P0), opentype.js (P0) | Service |
+| Renderer | Rendering / TypeScript | Rasterize CompiledNode to PNG via Skia | 6.1–6.4 | @napi-rs/canvas (P0) | Service |
+| Capturer | Screenshot / TypeScript | Capture React component screenshots via Playwright | 7.1–7.4 | Playwright (P0) | Service |
+| Comparator | Analysis / TypeScript | Pixel-level image diff with similarity scoring | 8.1–8.4 | pixelmatch (P0), pngjs (P0), sharp (P1) | Service |
 | Exporter | Export / TypeScript | Generate Figma plugin input JSON from compiled nodes | 9.1–9.9 | Compiler (P0) | Service |
 | Plugin | Export / Figma | Create Figma nodes from plugin input JSON | 9.1–9.10 | Figma Plugin API (P0) | Service |
 | CLI | Interface / TypeScript | User-facing commands orchestrating all pipeline stages | 10.1–10.7 | All components (P0) | Service |
@@ -361,43 +356,45 @@ function vertical(config?: Partial<AutoLayoutConfig>): AutoLayoutConfig;
 
 | Field | Detail |
 |-------|--------|
-| Intent | Transform DslNode trees into FigmaNodeDict JSON with resolved layout and absolute positions |
+| Intent | Transform DslNode trees into CompiledNode trees with resolved layout (via Yoga) and absolute positions |
 | Requirements | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 |
 
 **Responsibilities & Constraints**
 - Assign counter-based GUIDs to all nodes (sessionID=0, auto-incrementing localID)
 - Resolve color token references to concrete RGBA values
-- Compute auto-layout: measure children, apply spacing/padding/alignment, determine sizes for HUG/FILL modes
-- Calculate absolute transform matrices for each node
-- Expand text nodes with `textData` and `derivedTextData` structures for the renderer
+- Build a parallel Yoga node tree, map Figma auto-layout properties to Yoga equivalents, and compute layout
+- Measure text nodes using opentype.js to inform Yoga's layout calculation
+- Extract computed positions from Yoga and produce CompiledNode tree with absolute transforms
 - Set `parentIndex` references with correct guid and position ordering
 - Validate the tree and report errors with source location context
 
 **Dependencies**
 - Inbound: DslCore — provides DslNode tree (P0)
+- External: yoga-layout 3.x (WASM) — flexbox layout computation (P0)
 - External: opentype.js 2.0+ — font metric lookup for text measurement (P0)
 
 **Contracts**: Service [x]
 
 ##### Service Interface
 ```typescript
-// --- Compiled Output (matches figma-html-renderer node dict format) ---
-interface FigmaNodeDict {
+// --- Compiled Node (renderer-ready format) ---
+interface CompiledNode {
   guid: [number, number];                    // [sessionID, localID]
   type: string;
   name: string;
   size: { x: number; y: number };
+  position: { x: number; y: number };        // absolute position from Yoga layout
   transform: [[number, number, number],
               [number, number, number],
-              [number, number, number]];      // 3×3 affine matrix
-  fillPaints: FigmaPaint[];
-  strokes?: FigmaStroke[];
-  strokeWeight?: number;
+              [number, number, number]];      // 3x3 affine matrix
+  fills: ResolvedFill[];
+  strokes?: ResolvedStroke[];
   cornerRadius?: number;
+  cornerRadii?: { topLeft: number; topRight: number; bottomLeft: number; bottomRight: number };
   opacity: number;
   visible: boolean;
   clipContent?: boolean;
-  children: FigmaNodeDict[];
+  children: CompiledNode[];
   parentIndex?: { guid: [number, number]; position: string };
 
   // Auto-layout passthrough (for Figma plugin consumption)
@@ -413,37 +410,44 @@ interface FigmaNodeDict {
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
 
   // Text
-  textData?: { characters: string; lines: string[] };
-  derivedTextData?: { baselines: Baseline[]; fontMetaData: FontMeta[] };
-  fontSize?: number;
-  fontFamily?: string;
-  textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
+  characters?: string;
+  textStyle?: ResolvedTextStyle;
+  textLines?: string[];
 
   // Component
   componentProperties?: Record<string, { type: string; defaultValue: string | boolean }>;
-  componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
 
   // Instance
   componentId?: string;
   overriddenProperties?: Record<string, string | boolean>;
 }
 
-interface Baseline {
-  lineY: number;
-  lineHeight: number;
-  firstCharIndex: number;
-  endCharIndex: number;
+interface ResolvedFill {
+  type: 'SOLID' | 'GRADIENT_LINEAR';
+  color?: RgbaColor;
+  gradientStops?: GradientStop[];
+  gradientTransform?: [[number, number, number], [number, number, number]];
+  opacity: number;
 }
 
-interface FontMeta {
+interface ResolvedStroke {
+  color: RgbaColor;
+  weight: number;
+  align: 'INSIDE' | 'CENTER' | 'OUTSIDE';
+}
+
+interface ResolvedTextStyle {
   fontFamily: string;
-  fontStyle: string;
   fontWeight: number;
   fontSize: number;
+  lineHeight: number;         // resolved to pixels
+  letterSpacing: number;      // resolved to pixels
+  textAlignHorizontal: 'LEFT' | 'CENTER' | 'RIGHT';
+  color: RgbaColor;
 }
 
 interface CompileResult {
-  root: FigmaNodeDict;
+  root: CompiledNode;
   nodeCount: number;
   errors: CompileError[];
 }
@@ -456,70 +460,59 @@ interface CompileError {
 
 interface CompilerService {
   compile(node: DslNode): CompileResult;
-  compileToJson(node: DslNode): string;
 }
 ```
 - Preconditions: Input DslNode tree must be well-formed (validated by DslCore factories)
-- Postconditions: All nodes have assigned GUIDs, resolved transforms, and valid parentIndex references; auto-layout children have computed positions
-- Invariants: Output JSON conforms to FigmaNodeDict schema; GUID uniqueness within a compilation unit
+- Postconditions: All nodes have assigned GUIDs, resolved positions via Yoga, and valid parentIndex references
+- Invariants: GUID uniqueness within a compilation unit; all token references resolved
 
 **Implementation Notes**
-- Auto-layout algorithm implements a subset of CSS Flexbox: single-axis layout with spacing, padding, alignment, and sizing modes (FIXED/HUG/FILL). Does not support wrap, absolute positioning, or constraints.
-- Text baseline computation uses font metrics (ascent/descent) for accurate vertical positioning. For initial implementation, uses simplified line-height-based baselines with one line per `\n` delimiter.
-- Transform matrix composition: parent transform × child offset = child absolute transform. Root node transform is identity.
+- Transform matrix composition: parent transform x child offset = child absolute transform. Root node transform is identity.
+- Text line splitting on `\n`; width is the maximum line width from opentype.js measurement
 
-##### Text Measurement Strategy
+##### Yoga Layout Mapping
 
-The Compiler must know text node dimensions to resolve HUG-contents sizing on parent frames. Since text rendering happens in the Python renderer (PyCairo), the Compiler uses **opentype.js** to measure text in TypeScript without a rendering engine.
+The Compiler maps Figma auto-layout properties to Yoga equivalents via a `YogaMapper` module. This mapping is the key integration point.
 
 ```typescript
-interface TextMeasurement {
-  width: number;    // total advance width in pixels
-  height: number;   // lineCount × lineHeight (or fontSize × 1.2 default)
-}
+interface YogaMapper {
+  /** Create a Yoga node tree mirroring the DslNode tree */
+  buildYogaTree(node: DslNode, textMeasurer: TextMeasurer): YogaNode;
 
-interface TextMeasurer {
-  /** Load a font file (.otf/.ttf) and register it by family+weight */
-  loadFont(path: string, family: string, weight: number): void;
-
-  /** Measure text dimensions using loaded font metrics */
-  measure(characters: string, style: TextStyle): TextMeasurement;
+  /** Extract computed layout from Yoga tree into position/size data */
+  extractLayout(yogaRoot: YogaNode): Map<DslNode, { x: number; y: number; width: number; height: number }>;
 }
 ```
 
+**Figma-to-Yoga property mapping**:
+
+| Figma Auto-Layout | Yoga Property | Notes |
+|-------------------|---------------|-------|
+| `direction: 'HORIZONTAL'` | `flexDirection: FlexDirection.Row` | — |
+| `direction: 'VERTICAL'` | `flexDirection: FlexDirection.Column` | — |
+| `spacing` | `gap` | Yoga 3.x supports gap natively |
+| `padX` / `padY` | `paddingHorizontal` / `paddingVertical` | — |
+| `padTop/Right/Bottom/Left` | `paddingTop/Right/Bottom/Left` | — |
+| `align: 'MIN'` | `justifyContent: FlexStart` | Primary axis |
+| `align: 'CENTER'` | `justifyContent: Center` | — |
+| `align: 'MAX'` | `justifyContent: FlexEnd` | — |
+| `align: 'SPACE_BETWEEN'` | `justifyContent: SpaceBetween` | — |
+| `counterAlign: 'MIN'` | `alignItems: FlexStart` | Counter axis |
+| `counterAlign: 'CENTER'` | `alignItems: Center` | — |
+| `counterAlign: 'MAX'` | `alignItems: FlexEnd` | — |
+| `sizing: 'FIXED'` | explicit `width` / `height` | From node `size` |
+| `sizing: 'HUG'` | No explicit size; Yoga auto-sizes | — |
+| `sizing: 'FILL'` | `flexGrow: 1`, `flexBasis: 0` | — |
+| `layoutGrow` | `flexGrow` | For spacer elements |
+
 **How it works**:
-- opentype.js parses `.otf`/`.ttf` files and provides per-glyph advance widths and font-level ascent/descent metrics
-- For each text node, the measurer sums glyph advance widths (scaled to `fontSize`) to compute width, and uses `lineHeight` (or `fontSize × 1.2` default) × line count for height
-- Multi-line text splits on `\n`; width is the maximum line width
-- The Inter font files are bundled in `packages/dsl-core/fonts/` so measurement works offline without system fonts
-- Kerning and ligatures are applied using opentype.js's built-in GPOS/GSUB table support
-
-**Limitations**: Letter-perfect parity with PyCairo's text rendering is not guaranteed — minor width differences (< 1px per glyph) may occur. These differences are absorbed by the visual comparison threshold (default 95% similarity).
-
-##### Layout Algorithm Specification
-
-The auto-layout algorithm resolves DslNode trees with `autoLayout` configurations into absolute positions and sizes. It operates in two passes.
-
-**Pass 1 — Bottom-up measurement** (leaf to root):
-1. Leaf nodes (TEXT, RECTANGLE, ELLIPSE) have intrinsic sizes: explicit `size` property, or measured via TextMeasurer for TEXT nodes
-2. FRAME/COMPONENT nodes with `sizing: 'HUG'` compute their size from children:
-   - Primary axis: sum of child sizes along axis + `spacing × (childCount - 1)` + padding
-   - Counter axis: maximum child size along counter axis + padding
-3. FRAME/COMPONENT nodes with `sizing: 'FIXED'` use their explicit `size`
-4. Nodes with `sizing: 'FILL'` defer sizing to Pass 2 (they need parent context)
-
-**Pass 2 — Top-down positioning** (root to leaf):
-1. Root node position is (0, 0)
-2. For each auto-layout container, distribute children along the primary axis:
-   - Compute available space: container size − padding − total spacing
-   - Allocate FIXED and HUG children first (their sizes are known from Pass 1)
-   - Distribute remaining space among FILL children equally
-   - Position children sequentially with `spacing` gaps
-3. Apply alignment:
-   - `primaryAxisAlignItems`: MIN (pack start), CENTER (center block), MAX (pack end), SPACE_BETWEEN (distribute spacing evenly)
-   - `counterAxisAlignItems`: MIN (align start), CENTER (center), MAX (align end)
-4. For each child, compute absolute transform: parent transform × child offset
-5. FILL children inside a HUG parent are treated as HUG (FILL has no meaning when parent size is content-determined)
+1. Walk the DslNode tree and create a parallel Yoga node tree
+2. For each node with `autoLayout`, set the corresponding Yoga properties via the mapping table
+3. For TEXT nodes, register a custom Yoga measure function that uses opentype.js to return text dimensions
+4. For FIXED-size nodes without auto-layout, set explicit width/height on the Yoga node
+5. Call `yogaRoot.calculateLayout()` — Yoga resolves all sizes and positions
+6. Walk the Yoga tree and extract `getComputedLeft()`, `getComputedTop()`, `getComputedWidth()`, `getComputedHeight()` for each node
+7. Free Yoga nodes after extraction
 
 **Worked Examples**:
 
@@ -533,8 +526,7 @@ frame('Button', {
   ]
 })
 ```
-Pass 1: Text "Click me" measured → ~52×17px. Button HUG sizing → width: 52 + 16 + 16 = 84px, height: 17 + 8 + 8 = 33px.
-Pass 2: Text positioned at offset (16, 8) within button frame.
+Yoga tree: Row container (gap=8, padding=16/8) with text child. Text measured by opentype.js → ~52x17px. Yoga computes: Button 84x33px, text at (16, 8).
 
 *Example 2 — Vertical card with FILL-width title*:
 ```
@@ -547,8 +539,7 @@ frame('Card', {
   ]
 })
 ```
-Pass 1: Card is FIXED (300×200). Title measured → ~40×22px, Body measured → ~95×17px. Both have FILL horizontal → deferred.
-Pass 2: Available width = 300 − 16 − 16 = 268px. Both texts get width=268 (FILL). Title at (16, 16), Body at (16, 16 + 22 + 12 = 50).
+Yoga tree: Column container (300x200 fixed, gap=12, padding=16). Both texts: flexGrow=1 horizontal → Yoga allocates width=268. Title at (16, 16), Body at (16, 50).
 
 *Example 3 — Nested layout (badge inside horizontal row)*:
 ```
@@ -564,8 +555,36 @@ frame('Row', {
   ]
 })
 ```
-Pass 1 (bottom-up): "3" measured → ~7×14px. Badge HUG → 7+8+8=23px × 14+2+2=18px. "Label" measured → ~33×17px. Row HUG → 8 + 33 + 12 + 23 + 8 = 84px × max(17, 18) + 4 + 4 = 26px.
-Pass 2 (top-down): Row height=26. "Label" (17px tall) centered at y = 4 + (26−4−4−17)/2 = 4.5 ≈ 5. Badge (18px tall) centered at y = 4 + (26−4−4−18)/2 = 4. Within Badge, "3" at offset (8, 2).
+Yoga computes bottom-up: "3" ~7x14px → Badge 23x18px. "Label" ~33x17px → Row 84x26px. Counter-axis center aligns Label and Badge vertically within Row.
+
+##### Text Measurement
+
+```typescript
+interface TextMeasurement {
+  width: number;    // total advance width in pixels
+  height: number;   // lineCount x lineHeight
+}
+
+interface TextMeasurer {
+  /** Load a font file (.otf/.ttf) and register it by family+weight */
+  loadFont(path: string, family: string, weight: number): void;
+
+  /** Measure text dimensions using loaded font metrics */
+  measure(characters: string, style: TextStyle): TextMeasurement;
+
+  /** Create a Yoga measure function for text nodes */
+  createYogaMeasureFunc(characters: string, style: TextStyle): YogaMeasureFunction;
+}
+```
+
+**How it works**:
+- opentype.js parses `.otf`/`.ttf` files and provides per-glyph advance widths with GPOS/GSUB kerning
+- For each text node, sums glyph advance widths (scaled to `fontSize`) for width; uses `lineHeight` (or `fontSize x 1.2` default) x line count for height
+- Multi-line text splits on `\n`; width is the maximum line width
+- The Inter font files are bundled in `packages/dsl-core/fonts/`
+- The `createYogaMeasureFunc` method returns a function that Yoga calls during layout to determine text node intrinsic size
+
+**Limitations**: Minor width differences (< 1px per glyph) vs. Skia rendering due to different hinting. Absorbed by the visual comparison threshold.
 
 ---
 
@@ -575,62 +594,59 @@ Pass 2 (top-down): Row height=26. "Label" (17px tall) centered at y = 4 + (26−
 
 | Field | Detail |
 |-------|--------|
-| Intent | Rasterize FigmaNodeDict JSON to PNG images using PyCairo |
+| Intent | Rasterize CompiledNode trees to PNG images using Skia via @napi-rs/canvas |
 | Requirements | 6.1–6.4 |
 
 **Responsibilities & Constraints**
-- Accept FigmaNodeDict JSON via stdin or file path
+- Accept CompiledNode tree (in-process, no serialization needed)
 - Render all supported node types: FRAME, COMPONENT, COMPONENT_SET, INSTANCE, RECTANGLE, ELLIPSE, TEXT, GROUP
 - Apply fills (solid colors, linear gradients), strokes, corner radius, opacity, clipping
-- Render text with correct font, size, weight, and baseline positioning
+- Render text with correct font, size, weight, and alignment using Skia's text API
 - Resolve image asset paths relative to a configurable asset directory
-- Output PNG to specified path; report errors as structured JSON on stderr
+- Output PNG to specified path; throw typed errors with node path context
 
 **Dependencies**
-- Inbound: Compiler — provides FigmaNodeDict JSON (P0)
-- External: PyCairo 1.27+ — vector rendering engine (P0)
-- External: Pillow — image fallback and format conversion (P1)
+- Inbound: Compiler — provides CompiledNode tree (P0)
+- External: @napi-rs/canvas 0.1.x — Skia rendering engine (P0)
 
 **Contracts**: Service [x]
 
 ##### Service Interface
-```python
-@dataclass
-class RenderOptions:
-    background_color: tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0)  # white
-    scale: float = 1.0
-    asset_dir: str | None = None
+```typescript
+interface RenderOptions {
+  backgroundColor?: RgbaColor;     // default: white {r:1,g:1,b:1,a:1}
+  scale?: number;                   // default: 1
+  assetDir?: string;                // for image asset resolution
+}
 
-@dataclass
-class RenderResult:
-    png_path: Path
-    width: int
-    height: int
+interface RenderResult {
+  pngPath: string;
+  width: number;
+  height: number;
+}
 
-@dataclass
-class RenderError:
-    message: str
-    node_path: str
-    node_type: str
+interface RenderError {
+  message: string;
+  nodePath: string;
+  nodeType: string;
+}
 
-class DslRenderer:
-    def render(self, node_json: str, output_path: Path, options: RenderOptions) -> RenderResult:
-        """Render FigmaNodeDict JSON to PNG. Raises RenderError on failure."""
-        ...
-
-    def render_file(self, json_path: Path, output_path: Path, options: RenderOptions) -> RenderResult:
-        """Render from JSON file path."""
-        ...
+interface RendererService {
+  render(node: CompiledNode, outputPath: string, options?: RenderOptions): RenderResult;
+}
 ```
-- Preconditions: Input JSON must conform to FigmaNodeDict schema; transforms must be pre-computed (no layout resolution)
+- Preconditions: CompiledNode tree must have resolved positions and sizes (from Yoga layout)
 - Postconditions: Output PNG exists at specified path with correct dimensions
 - Invariants: Renderer is stateless — each render call is independent
 
 **Implementation Notes**
-- Extends figma-html-renderer's `CanvasRenderer` patterns: Cairo context save/restore stack, transform matrix application, fill handling with `set_source_rgba` and `fill_preserve`
-- **New**: Adds gradient fill support using Cairo's `LinearGradient` pattern with gradient transform conversion from Figma's rotation matrix format
-- CLI invocation: `python -m figma_component_dsl.renderer --input nodes.json --output render.png [--scale 2] [--bg white|transparent] [--assets ./assets]`
-- Error output format: `{"error": "message", "node_path": "...", "node_type": "..."}`
+- Uses @napi-rs/canvas `Canvas` and `CanvasRenderingContext2D` — familiar HTML Canvas API
+- Font registration: `GlobalFonts.registerFromPath()` for bundled Inter fonts at startup
+- Gradient fills: `CanvasRenderingContext2D.createLinearGradient()` with gradient transform conversion from Figma's rotation matrix
+- Rounded rectangles: `ctx.roundRect()` (Skia supports per-corner radii natively)
+- Clipping: `ctx.save()` → `ctx.clip()` → render children → `ctx.restore()`
+- Node traversal: recursive pre-order walk, dispatching by node type to specific render functions
+- Skia is the same engine Figma uses internally — highest possible rendering fidelity
 
 ---
 
@@ -705,7 +721,7 @@ interface CaptureService {
 
 **Responsibilities & Constraints**
 - Load and decode two PNG images to raw RGBA buffers
-- Resize/pad images to matching dimensions if they differ (with warning)
+- Resize/pad images to matching dimensions if they differ (with warning), using sharp
 - Run pixel-level comparison and count mismatched pixels
 - Calculate similarity score as percentage
 - Generate diff image highlighting areas of divergence
@@ -714,6 +730,7 @@ interface CaptureService {
 **Dependencies**
 - External: pixelmatch 6.0+ — pixel comparison algorithm (P0)
 - External: pngjs 7.0+ — PNG encode/decode to raw buffers (P0)
+- External: sharp 0.33+ — image resize/pad when dimensions differ (P1)
 
 **Contracts**: Service [x]
 
@@ -749,9 +766,9 @@ interface CompareService {
 - Invariants: Comparison is commutative — `compare(a, b)` equals `compare(b, a)` in similarity score
 
 **Implementation Notes**
-- When images differ in dimensions, the smaller image is padded with the background color (white) to match the larger. `dimensionMatch: false` signals this to the caller.
+- When images differ in dimensions, the smaller image is padded with the background color (white) using sharp. `dimensionMatch: false` signals this to the caller.
 - pngjs decodes PNG to `Uint8Array` of RGBA pixel data, which pixelmatch consumes directly
-- Diff image uses red (`[255, 0, 0]`) for mismatched pixels by default; anti-aliased pixel detection is enabled to reduce false positives from font rendering differences
+- Anti-aliased pixel detection is enabled by default to reduce false positives from font rendering differences between Skia and browser rendering
 
 ---
 
@@ -761,18 +778,18 @@ interface CompareService {
 
 | Field | Detail |
 |-------|--------|
-| Intent | Generate Figma plugin input JSON from compiled FigmaNodeDict |
+| Intent | Generate Figma plugin input JSON from compiled CompiledNode tree |
 | Requirements | 9.1–9.9 |
 
 **Responsibilities & Constraints**
-- Transform compiled FigmaNodeDict into a format optimized for the Figma plugin's consumption
-- Preserve auto-layout properties (not just computed transforms) so the plugin creates real auto-layout frames
+- Transform CompiledNode into a format optimized for the Figma plugin's consumption
+- Preserve auto-layout properties (not just computed positions) so the plugin creates real auto-layout frames
 - Include component property definitions for the plugin to register via `addComponentProperty()`
 - Include variant axis information for `combineAsVariants()` grouping
 - Generate component placement instructions (page name, sequential positioning)
 
 **Dependencies**
-- Inbound: Compiler — provides FigmaNodeDict (P0)
+- Inbound: Compiler — provides CompiledNode tree (P0)
 
 **Contracts**: Service [x]
 
@@ -787,15 +804,54 @@ interface PluginInput {
 interface PluginComponentDef {
   name: string;
   type: 'COMPONENT' | 'COMPONENT_SET';
-  node: FigmaNodeDict;                    // full node tree
-  properties?: ComponentProperty[];       // for addComponentProperty()
-  variants?: PluginVariantDef[];          // for combineAsVariants()
+  node: PluginNodeDef;                     // full node tree for plugin consumption
+  properties?: ComponentProperty[];        // for addComponentProperty()
+  variants?: PluginVariantDef[];           // for combineAsVariants()
+}
+
+interface PluginNodeDef {
+  type: string;
+  name: string;
+  size: { x: number; y: number };
+  fills: ResolvedFill[];
+  strokes?: ResolvedStroke[];
+  cornerRadius?: number;
+  cornerRadii?: { topLeft: number; topRight: number; bottomLeft: number; bottomRight: number };
+  opacity: number;
+  visible: boolean;
+  clipContent?: boolean;
+  children: PluginNodeDef[];
+
+  // Auto-layout (preserved for Figma plugin to create real auto-layout frames)
+  autoLayout?: {
+    direction: 'HORIZONTAL' | 'VERTICAL';
+    spacing?: number;
+    paddingTop?: number;
+    paddingRight?: number;
+    paddingBottom?: number;
+    paddingLeft?: number;
+    primaryAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN';
+    counterAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX';
+  };
+  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+
+  // Text
+  characters?: string;
+  textStyle?: ResolvedTextStyle;
+
+  // Component
+  componentProperties?: Record<string, { type: string; defaultValue: string | boolean }>;
+
+  // Instance
+  componentRef?: string;
+  overriddenProperties?: Record<string, string | boolean>;
 }
 
 interface PluginVariantDef {
   name: string;                           // 'Variant=Primary, Size=Large'
   axes: Record<string, string>;           // { Variant: 'Primary', Size: 'Large' }
-  node: FigmaNodeDict;
+  node: PluginNodeDef;
 }
 
 interface ExporterService {
@@ -870,8 +926,8 @@ interface PluginOutput {
 | Requirements | 10.1–10.7 |
 
 **Responsibilities & Constraints**
-- Provide subcommands for each pipeline stage: `compile`, `render`, `capture`, `compare`, `pipeline`, `export`
-- Orchestrate cross-language calls (invoke Python renderer as subprocess)
+- Provide subcommands for each pipeline stage: `compile`, `render`, `capture`, `compare`, `pipeline`, `export`, `doctor`
+- Orchestrate all stages in-process (no subprocess calls — everything is TypeScript)
 - Report errors with context (which stage failed, what input caused it) and exit with non-zero status
 - Support configuration via command-line flags and optional config file
 
@@ -885,11 +941,12 @@ interface PluginOutput {
 // CLI commands
 interface CliCommands {
   compile(dslPath: string, options: { output?: string }): Promise<void>;
-  render(jsonPath: string, options: { output?: string; scale?: number; bg?: string }): Promise<void>;
+  render(dslPath: string, options: { output?: string; scale?: number; bg?: string }): Promise<void>;
   capture(componentPath: string, options: { output?: string; viewport?: string; props?: string }): Promise<void>;
   compare(image1: string, image2: string, options: { output?: string; threshold?: number }): Promise<void>;
   pipeline(dslPath: string, componentPath: string, options: PipelineOptions): Promise<void>;
   export(dslPath: string, options: { output?: string; page?: string }): Promise<void>;
+  doctor(): Promise<void>;
 }
 
 interface PipelineOptions {
@@ -902,7 +959,8 @@ interface PipelineOptions {
 
 **Implementation Notes**
 - Built with Node.js `parseArgs` (no framework dependency, matching "No Framework Bloat" principle)
-- Python renderer invoked via `child_process.execFile('python', ['-m', 'figma_component_dsl.renderer', ...])` with JSON piped to stdin or written to a temp file
+- All pipeline stages are in-process TypeScript calls — no subprocess management needed
+- The `render` command calls Compiler then Renderer in sequence (DSL → CompiledNode → PNG)
 - The `pipeline` command chains: compile → render → capture → compare, stopping on first error
 - Exit codes: 0 = success, 1 = pipeline failure (comparison below threshold), 2 = runtime error
 
@@ -919,10 +977,10 @@ erDiagram
     DslNode ||--o| TextStyle : "textStyle"
     DslNode ||--o{ ComponentProperty : "componentProperties"
 
-    FigmaNodeDict ||--o{ FigmaNodeDict : "children"
-    FigmaNodeDict ||--o{ FigmaPaint : "fillPaints"
+    CompiledNode ||--o{ CompiledNode : "children"
+    CompiledNode ||--o{ ResolvedFill : "fills"
 
-    CompileResult ||--|{ FigmaNodeDict : "root"
+    CompileResult ||--|{ CompiledNode : "root"
     CompileResult ||--o{ CompileError : "errors"
 
     CompareResult }|--|| CompareOptions : "configured by"
@@ -930,7 +988,7 @@ erDiagram
 
 **Aggregates and boundaries**:
 - `DslNode` is the root aggregate for the DSL domain — all construction goes through factory functions
-- `FigmaNodeDict` is the root aggregate for the compiled domain — produced exclusively by the Compiler
+- `CompiledNode` is the root aggregate for the compiled domain — produced exclusively by the Compiler
 - `CompareResult` is a value object produced by the Comparator
 
 **Business rules**:
@@ -942,24 +1000,26 @@ erDiagram
 
 ### Logical Data Model
 
-**FigmaNodeDict JSON Schema** (interchange format between TypeScript and Python):
+**CompiledNode** (internal TypeScript interface — no JSON serialization needed for renderer):
 
-The FigmaNodeDict structure mirrors Figma's internal node representation as documented in the figma-html-renderer reference. Key fields:
+The CompiledNode structure contains all information needed for rendering. Unlike the previous design which used JSON interchange with Python, the CompiledNode is passed in-process to the Renderer.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | guid | [number, number] | Yes | Unique node identifier |
 | type | string | Yes | Node type enum |
 | name | string | Yes | Display name |
-| size | {x: number, y: number} | Yes | Width and height |
+| size | {x, y} | Yes | Width and height (from Yoga) |
+| position | {x, y} | Yes | Absolute position (from Yoga) |
 | transform | number[3][3] | Yes | Absolute affine transform |
-| fillPaints | Paint[] | Yes | Fill array (may be empty) |
-| children | FigmaNodeDict[] | Yes | Child nodes (may be empty) |
-| parentIndex | {guid, position} | No | Parent reference (absent on root) |
+| fills | ResolvedFill[] | Yes | Resolved fill array |
+| children | CompiledNode[] | Yes | Child nodes |
 | opacity | number | Yes | 0–1 |
 | visible | boolean | Yes | Visibility flag |
 
-Full schema details for FigmaPaint, text properties, and component properties are defined in the Compiler service interface above.
+**PluginNodeDef** (JSON serialization for Figma plugin):
+
+The Exporter produces PluginInput JSON for consumption by the Figma plugin. This preserves auto-layout properties (not just computed positions) so the plugin creates real auto-layout frames in Figma.
 
 **ColorTokenMap** (design token storage):
 
@@ -979,7 +1039,7 @@ Each pipeline stage produces typed errors with contextual information. Errors ar
 
 **Compile Errors** (accumulated, reported after pass): Layout overflow → warning with node path; circular component reference → `CircularRefError`; unresolved token → `UnresolvedTokenError`.
 
-**Render Errors** (subprocess, structured JSON): Missing font → warning with fallback notification; unsupported node type → skip with warning; invalid paint → skip fill with warning.
+**Render Errors** (typed exceptions): Missing font → warning with fallback notification; unsupported node type → skip with warning; invalid fill → skip fill with warning.
 
 **Pipeline Errors** (CLI level): Stage failure → stop pipeline, report which stage failed and the underlying error; comparison failure (below threshold) → exit code 1 with similarity report.
 
@@ -988,15 +1048,15 @@ Each pipeline stage produces typed errors with contextual information. Errors ar
 ### Unit Tests
 - **DslCore factory functions**: Verify each factory produces correct DslNode structure with type, default values, and child nesting (parameterized across all node types)
 - **Color helpers**: Verify hex parsing, solid/gradient fill construction, token resolution for valid and edge-case inputs
-- **Compiler layout resolution**: Verify auto-layout computation for horizontal/vertical direction, spacing, padding, alignment, and sizing modes against expected transform matrices
+- **Yoga layout mapping**: Verify that Figma auto-layout properties map correctly to Yoga equivalents; verify computed positions match expected values for horizontal/vertical/nested layouts
 - **Compiler GUID assignment**: Verify unique, deterministic GUID generation across tree depths
 - **Comparator scoring**: Verify similarity calculation with identical images (100%), completely different images (~0%), and known diff patterns
 
 ### Integration Tests
 - **Compile + Render pipeline**: DSL definition → compile → render → verify output PNG exists and has expected dimensions
-- **Compile + Export pipeline**: DSL definition → compile → export → verify PluginInput JSON is valid and contains expected component structures
+- **Compile + Export pipeline**: DSL definition → compile → export → verify PluginInput JSON is valid and contains expected component structures with preserved auto-layout properties
 - **Full pipeline**: DSL definition → compile → render → capture → compare → verify CompareResult matches expectations
-- **Error propagation**: Verify that renderer subprocess errors are correctly captured and reported by the CLI with context
+- **Error propagation**: Verify that render errors are correctly captured and reported by the CLI with context
 
 ### E2E Tests
 - **CLI compile command**: Invoke `figma-dsl compile` on sample DSL files, verify JSON output schema
