@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../dsl-core" },
+    { "path": "../compiler" },
+    { "path": "../renderer" },
+    { "path": "../capturer" },
+    { "path": "../comparator" },
+    { "path": "../exporter" }
+  ]
+}

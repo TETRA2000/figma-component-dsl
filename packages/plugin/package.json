@@ -1,0 +1,16 @@
+{
+  "name": "@figma-dsl/plugin",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/code.js",
+  "scripts": {
+    "build": "esbuild src/code.ts --bundle --outfile=dist/code.js --format=esm --target=es2023"
+  },
+  "dependencies": {
+    "@figma/plugin-typings": "^1.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "typescript": "^5.9.0"
+  }
+}
