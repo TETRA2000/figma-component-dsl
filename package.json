@@ -1,0 +1,22 @@
+{
+  "name": "figma-component-dsl",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/dsl-core",
+    "packages/renderer",
+    "packages/comparator",
+    "packages/cli",
+    "packages/figma-plugin"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vitest": "^3.1.0"
+  }
+}

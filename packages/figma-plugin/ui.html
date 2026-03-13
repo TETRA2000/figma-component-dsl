@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Figma Component DSL Importer</title>
+  <style>
+    body { font-family: Inter, sans-serif; margin: 16px; }
+    textarea { width: 100%; height: 200px; font-family: monospace; font-size: 12px; }
+    button { margin-top: 8px; padding: 8px 16px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h3>Component DSL Importer</h3>
+  <p>Paste plugin input JSON below:</p>
+  <textarea id="json-input" placeholder="Paste PluginInput JSON here..."></textarea>
+  <br>
+  <button id="import-btn">Import Components</button>
+  <script>
+    document.getElementById('import-btn').addEventListener('click', () => {
+      const input = document.getElementById('json-input').value;
+      try {
+        const data = JSON.parse(input);
+        parent.postMessage({ pluginMessage: { type: 'import', data } }, '*');
+      } catch (e) {
+        alert('Invalid JSON: ' + e.message);
+      }
+    });
+  </script>
+</body>
+</html>

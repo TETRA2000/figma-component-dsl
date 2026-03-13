@@ -1,0 +1,20 @@
+{
+  "name": "@figma-dsl/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "figma-dsl": "dist/main.js"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@figma-dsl/core": "*",
+    "@figma-dsl/renderer": "*",
+    "@figma-dsl/comparator": "*"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  }
+}
