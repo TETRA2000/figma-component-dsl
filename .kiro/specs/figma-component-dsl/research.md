@@ -123,6 +123,31 @@
 - **Rationale**: LLM excels at the semantic mapping between React patterns (flexbox → Auto Layout, CSS colors → solidPaint, prop variants → COMPONENT_SET). Deterministic AST parsing would miss design intent and require extensive heuristics. The skill system provides a natural invocation point (`/react-to-dsl`) integrated into the developer workflow.
 - **Trade-offs**: Output quality depends on the LLM's understanding; generated code needs human review. Mitigated by generating `// TODO:` comments for uncertain mappings and by the visual comparison loop (render DSL → compare → iterate).
 
+### Decision: Shared DSL Type Hierarchy for Cross-Environment Compatibility
+- **Context**: DSL code must type-check against both VirtualFigmaApi (offline) and Figma Plugin API (in-plugin). These are different type systems — `@figma/plugin-typings` defines `FrameNode`, VirtualFigmaApi defines `VirtualFrameNode`.
+- **Alternatives Considered**:
+  1. Make VirtualNode explicitly implement `@figma/plugin-typings` interfaces — tight coupling to Figma's full API, many unused properties
+  2. Use `any` or type assertions — unsafe, violates project standards
+  3. Define shared DSL type hierarchy (`DslFrameNode`, etc.) that both implementations satisfy via structural typing
+- **Selected Approach**: Shared DSL types in `packages/dsl-core/types.ts`. `DslFrameNode` is a strict subset of Figma's `FrameNode`. `VirtualFrameNode` implements `DslFrameNode`. Figma's `FrameNode` satisfies `DslFrameNode` structurally (TypeScript structural typing, no `implements` needed). DSL code targets `DslFrameNode`.
+- **Rationale**: Decouples DSL from the full Figma Plugin API surface. Only the properties used by the DSL are in scope. TypeScript's structural typing guarantees compatibility without runtime overhead.
+- **Trade-offs**: DSL users cannot access Figma-only properties (e.g., `effects`, `constraints`) through DSL types. This is intentional — the DSL covers the component definition subset only.
+
+### Decision: Async `createText()` for Unified Font-Loading Semantics
+- **Context**: In the Figma Plugin API, text node creation requires `figma.loadFontAsync()` before setting `characters` or font properties. In virtual mode, no font loading is needed. This asymmetry would cause DSL code that works offline to fail in the plugin.
+- **Alternatives Considered**:
+  1. Sync `createText()` in both environments, plugin pre-scans and pre-loads all fonts — requires AST analysis of DSL code, complex and fragile
+  2. Async `createText()` in both environments — uniform API, plugin shim loads font before returning node
+  3. Separate async wrapper for plugin only — breaks "same code" promise
+- **Selected Approach**: `createText()` returns `Promise<DslTextNode>` in both environments. Virtual implementation resolves immediately. Plugin shim loads Inter Regular before returning. Additional font weights loaded on demand via property setters.
+- **Rationale**: DSL code always uses `const text = await createText()` — works identically in both environments. The async overhead in virtual mode is negligible (immediate Promise resolution). This is the simplest approach that maintains the "same code" guarantee.
+- **Trade-offs**: All DSL entry point functions that call `createText()` must be async. This is acceptable since component builders are naturally async (matching the reference plugin pattern).
+
+### Decision: Explicit `combineAsVariants` and `createInstance` Virtual Behavior
+- **Context**: `combineAsVariants()` and `createInstance()` have complex behavior in the Figma Plugin API that must be faithfully simulated in virtual mode.
+- **Selected Approach**: Define explicit postconditions for both methods. `combineAsVariants(components, parent)` creates a `DslComponentSetNode`, reparents input components as children, validates `Key=Value` naming. `createInstance()` creates a `DslInstanceNode` with `mainComponent` back-pointer and inherited default properties.
+- **Rationale**: Without specified behavior, implementers may interpret differently, causing inconsistent rendering vs. Figma output. Explicit postconditions serve as both documentation and test specifications.
+
 ### Decision: Two-Pass Layout Algorithm (preserved from v1)
 - **Context**: Auto-layout resolution requires both bottom-up measurement and top-down positioning
 - **Selected Approach**: Two-pass algorithm: Pass 1 bottom-up measurement, Pass 2 top-down positioning

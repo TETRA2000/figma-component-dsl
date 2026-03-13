@@ -90,6 +90,47 @@ graph TB
 
 **Steering compliance**: TypeScript strict mode, no `any`; pipeline stages with single responsibility; immutable data between stages; no framework bloat; PyCairo for rendering.
 
+### Shared Type Hierarchy (Cross-Environment Type Strategy)
+
+The DSL defines its own type hierarchy (`DslFrameNode`, `DslTextNode`, etc.) covering the Figma Plugin API property subset used by the DSL. This is the keystone enabling "one codebase, two environments":
+
+- **DSL types** (`packages/dsl-core/types.ts`): Declare the interface contracts — `DslFrameNode`, `DslTextNode`, `DslComponentNode`, `DslSceneNode`, `DslPaint`, etc. These are the types that DSL user code imports and targets.
+- **Virtual environment**: `VirtualFrameNode` implements `DslFrameNode`. The `VirtualFigmaApi.createFrame()` returns `DslFrameNode`.
+- **Plugin environment**: Figma's `FrameNode` (from `@figma/plugin-typings`) satisfies `DslFrameNode` structurally — TypeScript's structural typing means no explicit `implements` is needed. The plugin shim's `createFrame()` returns `DslFrameNode` (widened from Figma's `FrameNode`).
+- **DSL code writes**: `const frame: DslFrameNode = createFrame();` — this compiles in both environments.
+
+The DSL types are a strict subset of Figma's types. Properties not covered by the DSL (e.g., `effects`, `constraints`, `reactions`) are intentionally excluded. If Figma adds new properties, the DSL types only need updating if the new property is within scope of the requirements.
+
+```mermaid
+graph TB
+    subgraph DSL Type Hierarchy
+        DslSceneNode[DslSceneNode - base]
+        DslFrameNode[DslFrameNode extends DslSceneNode]
+        DslTextNode[DslTextNode extends DslSceneNode]
+        DslRectangleNode[DslRectangleNode extends DslSceneNode]
+        DslEllipseNode[DslEllipseNode extends DslSceneNode]
+        DslComponentNode[DslComponentNode extends DslFrameNode]
+        DslComponentSetNode[DslComponentSetNode extends DslFrameNode]
+        DslInstanceNode[DslInstanceNode extends DslFrameNode]
+        DslGroupNode[DslGroupNode extends DslSceneNode]
+    end
+
+    subgraph Virtual Impl
+        VirtualFrameNode[VirtualFrameNode implements DslFrameNode]
+        VirtualTextNode[VirtualTextNode implements DslTextNode]
+    end
+
+    subgraph Figma Plugin API
+        FigmaFrameNode[FrameNode satisfies DslFrameNode - structural]
+        FigmaTextNode[TextNode satisfies DslTextNode - structural]
+    end
+
+    DslFrameNode -.-> VirtualFrameNode
+    DslFrameNode -.-> FigmaFrameNode
+    DslTextNode -.-> VirtualTextNode
+    DslTextNode -.-> FigmaTextNode
+```
+
 ### Technology Stack
 
 | Layer | Choice / Version | Role in Feature | Notes |
@@ -216,10 +257,11 @@ flowchart TB
 | Requirements | 1.1–1.12, 4.1–4.6, 5.1–5.5 |
 
 **Responsibilities & Constraints**
-- Define a `FigmaApi` interface with methods mirroring the Figma Plugin API: `createFrame()`, `createText()`, `createRectangle()`, `createEllipse()`, `createComponent()`, `createGroup()`
-- `VirtualFigmaApi` implementation returns `VirtualNode` objects with property setters that accumulate state — these are later consumed by the Compiler
-- `VirtualNode` objects support `appendChild()`, direct property assignment (`node.fills = [...]`, `node.layoutMode = 'HORIZONTAL'`), and `addComponentProperty()` / `createInstance()` / `combineAsVariants()` for component semantics
-- In the plugin environment, the adapter delegates directly to `figma.createFrame()`, `figma.createText()`, etc. — no virtual layer needed
+- Define a `FigmaApi` interface with methods returning DSL types: `createFrame(): DslFrameNode`, `createText(): Promise<DslTextNode>`, `createRectangle(): DslRectangleNode`, etc.
+- `createText()` is async in both environments — in the plugin it awaits `figma.loadFontAsync()`, in virtual mode it resolves immediately. This ensures DSL code always uses `await createText()`, providing uniform behavior across environments.
+- `VirtualFigmaApi` implementation returns objects implementing DSL type interfaces, with property setters that accumulate state for the Compiler
+- Virtual nodes support `appendChild()`, direct property assignment (`node.fills = [...]`, `node.layoutMode = 'HORIZONTAL'`), and `addComponentProperty()` / `createInstance()` / `combineAsVariants()` for component semantics
+- In the plugin environment, the adapter delegates directly to `figma.createFrame()`, `figma.createText()`, etc. — return types are widened to DSL types via structural compatibility
 - Validate property constraints at assignment time (e.g., `layoutMode` only on FRAME/COMPONENT)
 
 **Dependencies**
@@ -229,20 +271,15 @@ flowchart TB
 
 ##### Service Interface
 ```typescript
-// --- FigmaApi Interface (mirrors Figma Plugin API subset) ---
-interface FigmaApi {
-  createFrame(): FrameNode;
-  createText(): TextNode;
-  createRectangle(): RectangleNode;
-  createEllipse(): EllipseNode;
-  createComponent(): ComponentNode;
-  createGroup(children: SceneNode[], parent: BaseNode): GroupNode;
-  combineAsVariants(components: ComponentNode[], parent: BaseNode): ComponentSetNode;
-}
+// --- Shared DSL Type Hierarchy (packages/dsl-core/types.ts) ---
+// DSL code targets these types. Both VirtualNode and Figma Plugin API
+// types satisfy them via TypeScript structural typing.
 
-// --- Virtual Node (offline implementation) ---
-interface VirtualNode {
-  readonly type: NodeType;
+type DslNodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ELLIPSE' | 'GROUP'
+  | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE';
+
+interface DslSceneNode {
+  readonly type: DslNodeType;
   name: string;
   x: number;
   y: number;
@@ -251,17 +288,17 @@ interface VirtualNode {
   rotation: number;
   opacity: number;
   visible: boolean;
-  fills: Paint[];
-  strokes: Paint[];
+  fills: DslPaint[];
+  strokes: DslPaint[];
   strokeWeight: number;
   cornerRadius: number;
-  cornerRadii?: { topLeft: number; topRight: number; bottomRight: number; bottomLeft: number };
   clipContent: boolean;
-  readonly children: readonly VirtualNode[];
-  appendChild(child: VirtualNode): void;
+  readonly children: readonly DslSceneNode[];
+  appendChild(child: DslSceneNode): void;
+  resize(width: number, height: number): void;
 }
 
-interface VirtualFrameNode extends VirtualNode {
+interface DslFrameNode extends DslSceneNode {
   layoutMode: 'NONE' | 'HORIZONTAL' | 'VERTICAL';
   itemSpacing: number;
   paddingTop: number;
@@ -274,7 +311,7 @@ interface VirtualFrameNode extends VirtualNode {
   layoutSizingVertical: 'FIXED' | 'HUG' | 'FILL';
 }
 
-interface VirtualTextNode extends VirtualNode {
+interface DslTextNode extends DslSceneNode {
   characters: string;
   fontFamily: string;
   fontWeight: number;
@@ -284,28 +321,35 @@ interface VirtualTextNode extends VirtualNode {
   textAlignHorizontal: 'LEFT' | 'CENTER' | 'RIGHT';
 }
 
-interface VirtualComponentNode extends VirtualFrameNode {
-  addComponentProperty(name: string, type: 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', defaultValue: string | boolean): void;
-  createInstance(): VirtualInstanceNode;
+interface DslRectangleNode extends DslSceneNode {
+  cornerRadius: number;
 }
 
-interface VirtualInstanceNode extends VirtualFrameNode {
-  readonly componentRef: VirtualComponentNode;
+interface DslEllipseNode extends DslSceneNode {}
+
+interface DslGroupNode extends DslSceneNode {}
+
+interface DslComponentNode extends DslFrameNode {
+  addComponentProperty(name: string, type: 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', defaultValue: string | boolean): void;
+  createInstance(): DslInstanceNode;
+}
+
+interface DslComponentSetNode extends DslFrameNode {}
+
+interface DslInstanceNode extends DslFrameNode {
+  readonly mainComponent: DslComponentNode;
   setProperties(overrides: Record<string, string | boolean>): void;
 }
 
-type NodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ELLIPSE' | 'GROUP'
-  | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE';
-
-// --- Paint Types (match Figma Plugin API) ---
-interface SolidPaint {
+// --- Paint Types (match Figma Plugin API paint format) ---
+interface DslSolidPaint {
   type: 'SOLID';
   color: { r: number; g: number; b: number };
   opacity?: number;
   visible?: boolean;
 }
 
-interface GradientPaint {
+interface DslGradientPaint {
   type: 'GRADIENT_LINEAR';
   gradientStops: Array<{ color: { r: number; g: number; b: number; a: number }; position: number }>;
   gradientTransform: [[number, number, number], [number, number, number]];
@@ -313,16 +357,37 @@ interface GradientPaint {
   visible?: boolean;
 }
 
-type Paint = SolidPaint | GradientPaint;
+type DslPaint = DslSolidPaint | DslGradientPaint;
+
+// --- FigmaApi Interface ---
+// All DSL code imports from 'figma-dsl'. In virtual env, resolved to
+// VirtualFigmaApi. In plugin env, resolved to a shim delegating to figma.*.
+// createText() is async in both envs to unify font-loading semantics.
+interface DslFigmaApi {
+  createFrame(): DslFrameNode;
+  createText(): Promise<DslTextNode>;
+  createRectangle(): DslRectangleNode;
+  createEllipse(): DslEllipseNode;
+  createComponent(): DslComponentNode;
+  createGroup(children: DslSceneNode[], parent: DslSceneNode): DslGroupNode;
+  combineAsVariants(components: DslComponentNode[], parent: DslSceneNode): DslComponentSetNode;
+}
 ```
 - Preconditions: Method calls must follow Figma API semantics (e.g., `appendChild` only on container nodes)
-- Postconditions: VirtualNode tree accurately reflects all property assignments and child relationships
-- Invariants: VirtualNode property names and types match Figma Plugin API exactly; children order matches insertion order
+- Postconditions:
+  - `createFrame/Rectangle/Ellipse/Component()`: Returns a new node with default property values
+  - `createText()`: Returns a `Promise<DslTextNode>` — in virtual env resolves immediately; in plugin env resolves after `figma.loadFontAsync()` completes for the default font (Inter Regular)
+  - `combineAsVariants(components, parent)`: Creates a new `DslComponentSetNode`, reparents all input components as its children (removing them from their previous parent), and the component set inherits the `Key=Value, Key=Value` naming from child component names
+  - `createInstance()` on `DslComponentNode`: Creates a new `DslInstanceNode` with `mainComponent` back-pointer to the source component; the instance inherits the component's default property values; property overrides are applied via `setProperties()`
+  - `resize(width, height)`: Sets both `width` and `height` in a single call (matches Figma's `node.resize()` method)
+- Invariants: DSL type property names and value types are a strict subset of Figma Plugin API types; Figma's `FrameNode` structurally satisfies `DslFrameNode`; children order matches insertion order
 
 **Implementation Notes**
-- VirtualNode uses property setters that store values in an internal dictionary — the Compiler reads these to produce FigmaNodeDict
-- In the plugin environment, DSL code imports from a shim module that re-exports `figma.createFrame`, etc. — no adapter code runs at all
+- `VirtualFigmaApi` internally creates objects implementing DSL type interfaces — the Compiler reads their state to produce FigmaNodeDict
+- In the plugin environment, DSL code imports from a shim module that wraps `figma.createFrame()` etc. with DSL return type widening. `createText()` in the plugin shim calls `figma.loadFontAsync({ family: 'Inter', style: 'Regular' })` before returning the `TextNode`
 - The `VirtualFigmaApi` is instantiated once per DSL execution and provides the entry point for all node creation
+- `combineAsVariants()` in virtual mode creates a `VirtualComponentSetNode`, reparents input components (updating their `parentIndex`), and validates that all children have names matching `Key=Value` format. In plugin mode, it delegates directly to `figma.combineAsVariants()`
+- `createInstance()` in virtual mode creates a `VirtualInstanceNode` with a reference to the source component and a shallow copy of default property values. In plugin mode, it delegates to `component.createInstance()`
 
 ---
 
@@ -349,11 +414,11 @@ type Paint = SolidPaint | GradientPaint;
 ```typescript
 // --- Color Helpers (match reference plugin signatures) ---
 function hexToRGB(hex: string): { r: number; g: number; b: number };
-function solidPaint(hex: string, opacity?: number): SolidPaint;
+function solidPaint(hex: string, opacity?: number): DslSolidPaint;
 function gradientPaint(
   stops: Array<{ color: string; position: number }>,
   angle?: number
-): GradientPaint;
+): DslGradientPaint;
 
 // --- Auto-Layout Helper (match reference plugin signature) ---
 interface AutoLayoutOptions {
@@ -372,12 +437,12 @@ interface AutoLayoutOptions {
   heightSizing?: 'FIXED' | 'HUG' | 'FILL';
 }
 
-function setAutoLayout(node: FrameNode, options: AutoLayoutOptions): void;
+function setAutoLayout(node: DslFrameNode, options: AutoLayoutOptions): void;
 
 // --- Color Token System ---
 type ColorTokenMap = Record<string, string>;  // tokenName → hex
 function defineTokens(tokens: ColorTokenMap): ColorTokenMap;
-function tokenPaint(tokens: ColorTokenMap, name: string): SolidPaint;
+function tokenPaint(tokens: ColorTokenMap, name: string): DslSolidPaint;
 ```
 - Preconditions: Hex strings must be valid 6-digit hex with `#` prefix; gradient angles in degrees
 - Postconditions: Paint objects are Figma Plugin API-compatible; `setAutoLayout` mutates the node's layout properties in place
@@ -469,8 +534,8 @@ interface CompileError {
 }
 
 interface CompilerService {
-  compile(rootNode: VirtualNode): CompileResult;
-  compileToJson(rootNode: VirtualNode): string;
+  compile(rootNode: DslSceneNode): CompileResult;
+  compileToJson(rootNode: DslSceneNode): string;
 }
 ```
 - Preconditions: Input VirtualNode tree must be well-formed (constructed via FigmaApi)
@@ -513,7 +578,7 @@ const button = createFrame();
 button.name = 'Button';
 button.fills = [solidPaint('#7c3aed')];
 setAutoLayout(button, { direction: 'HORIZONTAL', spacing: 8, padX: 16, padY: 8 });
-const label = createText();
+const label = await createText();
 label.characters = 'Click me';
 label.fontSize = 14;
 button.appendChild(label);
@@ -527,7 +592,7 @@ const card = createFrame();
 card.name = 'Card';
 card.resize(300, 200);
 setAutoLayout(card, { direction: 'VERTICAL', spacing: 12, padX: 16, padY: 16 });
-const title = createText();
+const title = await createText();
 title.characters = 'Title';
 title.fontSize = 18;
 title.layoutSizingHorizontal = 'FILL';
@@ -685,7 +750,7 @@ interface CompareService {
 **Responsibilities & Constraints**
 - Load a JS bundle (produced by CLI `bundle` command) containing DSL definitions
 - Execute DSL code where `createFrame()`, `solidPaint()`, `setAutoLayout()` etc. delegate directly to the real Figma Plugin API (`figma.createFrame()`, etc.)
-- Load fonts asynchronously via `figma.loadFontAsync()` before text node creation
+- Font loading is handled transparently by the `createText()` shim — each `await createText()` call loads the required font before returning the text node. Additional font weights (Medium, Semi Bold, Bold) are loaded on demand when `fontWeight` is set to a non-default value.
 - Register component properties, combine variants, create instances — all via real Figma API
 - Place created components on a dedicated page ("Component Library") with sequential positioning
 - Output JSON mapping of component names to Figma node IDs
@@ -701,13 +766,19 @@ interface CompareService {
 ##### Service Interface
 ```typescript
 // Plugin shim module — re-exports Figma globals for DSL code
-// DSL code imports: import { createFrame, solidPaint, setAutoLayout } from 'figma-dsl'
+// DSL code imports: import { createFrame, createText, solidPaint, setAutoLayout } from 'figma-dsl'
 // In plugin env, these resolve to:
-const createFrame = () => figma.createFrame();
-const createText = () => figma.createText();
-const createRectangle = () => figma.createRectangle();
-const createEllipse = () => figma.createEllipse();
-const createComponent = () => figma.createComponent();
+const createFrame = (): DslFrameNode => figma.createFrame();
+const createText = async (): Promise<DslTextNode> => {
+  const node = figma.createText();
+  await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
+  return node;
+};
+const createRectangle = (): DslRectangleNode => figma.createRectangle();
+const createEllipse = (): DslEllipseNode => figma.createEllipse();
+const createComponent = (): DslComponentNode => figma.createComponent();
+const combineAsVariants = (c: DslComponentNode[], p: DslSceneNode): DslComponentSetNode =>
+  figma.combineAsVariants(c as ComponentNode[], p as BaseNode & ChildrenMixin);
 // solidPaint, gradientPaint, hexToRGB, setAutoLayout — shared helpers, identical in both envs
 
 interface PluginOutput {
@@ -721,8 +792,8 @@ interface PluginOutput {
 - Invariants: Invalid nodes skipped with error notification
 
 **Implementation Notes**
-- The bundle uses esbuild to resolve all DSL imports into a single IIFE
-- Font loading: collects all font references from DSL code and loads them before execution
+- The bundle uses esbuild to resolve all DSL imports into a single IIFE that exports an async `main()` function
+- Font loading is handled per `createText()` call — the shim's `createText()` loads Inter Regular by default. When DSL code sets `node.fontWeight = 600`, a property setter triggers `figma.loadFontAsync({ family: 'Inter', style: 'Semi Bold' })`. This eliminates the need for a pre-scan pass.
 - The plugin UI provides a text area for pasting the bundle or a file picker for loading it
 - Error handling: per-node try/catch wrapping, errors accumulated and shown via `figma.notify()`
 
@@ -833,9 +904,9 @@ description: >
 
 ```mermaid
 erDiagram
-    VirtualNode ||--o{ VirtualNode : "children via appendChild"
-    VirtualNode ||--o{ Paint : "fills"
-    VirtualNode ||--o{ Paint : "strokes"
+    DslSceneNode ||--o{ DslSceneNode : "children via appendChild"
+    DslSceneNode ||--o{ DslPaint : "fills"
+    DslSceneNode ||--o{ DslPaint : "strokes"
 
     FigmaNodeDict ||--o{ FigmaNodeDict : "children"
     FigmaNodeDict ||--o{ FigmaPaint : "fillPaints"
@@ -847,17 +918,17 @@ erDiagram
 ```
 
 **Aggregates and boundaries**:
-- `VirtualNode` is the root aggregate for the offline DSL domain — created by `VirtualFigmaApi` methods
+- `DslSceneNode` (and subtypes) is the root aggregate for the DSL domain — created by `DslFigmaApi` methods, implemented by VirtualNode in offline mode
 - `FigmaNodeDict` is the root aggregate for the compiled domain — produced exclusively by the Compiler
 - `CompareResult` is a value object produced by the Comparator
 
 **Business rules**:
-- Auto-layout (`layoutMode`) is only valid on FRAME and COMPONENT node types
+- Auto-layout (`layoutMode`) is only valid on `DslFrameNode` subtypes (FRAME, COMPONENT, COMPONENT_SET, INSTANCE)
 - TEXT nodes must have `characters` set; other node types must not
-- COMPONENT_SET nodes must contain at least one COMPONENT child
-- INSTANCE nodes must reference a valid component via `componentRef`
+- COMPONENT_SET nodes must contain at least one COMPONENT child (enforced by `combineAsVariants()` postcondition)
+- INSTANCE nodes must reference a valid component via `mainComponent` (set by `createInstance()` postcondition)
 - Variant component names must follow `Key=Value, Key=Value` format
-- VirtualNode property names and types must exactly match Figma Plugin API equivalents
+- DSL type property names and types are a strict subset of Figma Plugin API types — structural compatibility is enforced by TypeScript compiler
 
 ### Logical Data Model
 
