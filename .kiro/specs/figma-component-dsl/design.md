@@ -795,7 +795,7 @@ interface PluginOutput {
 
 **Implementation Notes**
 - The bundle uses esbuild to resolve all DSL imports into a single IIFE that exports an async `main()` function
-- Font loading is handled per `createText()` call — the shim's `createText()` loads Inter Regular by default. When DSL code sets `node.fontWeight = 600`, a property setter triggers `figma.loadFontAsync({ family: 'Inter', style: 'Semi Bold' })`. This eliminates the need for a pre-scan pass.
+- **Font loading — async property setter pattern**: Font loading is handled per `createText()` call — the shim's `createText()` loads Inter Regular by default. When DSL code sets `node.fontWeight = 600`, a property setter intercepts the assignment and triggers `await figma.loadFontAsync({ family: 'Inter', style: 'Semi Bold' })` before applying the value. This is a deliberate side-effect: the setter returns a `Promise`, so DSL code that changes font weight on an existing text node must use the pattern `await (node.fontWeight = 600)` or set the weight before any other property that depends on it. This eliminates the need for a pre-scan pass. The weight-to-style mapping is: 400→'Regular', 500→'Medium', 600→'Semi Bold', 700→'Bold'.
 - The plugin UI provides a text area for pasting the bundle or a file picker for loading it
 - Error handling: per-node try/catch wrapping, errors accumulated and shown via `figma.notify()`
 
@@ -995,7 +995,7 @@ Each pipeline stage produces typed errors with contextual information.
 ### Unit Tests
 - **VirtualFigmaApi**: Verify `createFrame()`, `createText()`, etc. produce VirtualNode objects with correct types and default values; verify `appendChild` builds correct tree
 - **SharedHelpers**: Verify `hexToRGB`, `solidPaint`, `gradientPaint`, `setAutoLayout` produce correct output for valid and edge-case inputs; verify `gradientPaint` rotation matrix
-- **Compiler layout**: Verify two-pass auto-layout for horizontal/vertical, spacing, padding, alignment, sizing modes against expected transforms (use worked examples as test specs)
+- **Compiler layout**: Verify two-pass auto-layout for horizontal/vertical, spacing, padding, alignment, sizing modes against expected transforms (use worked examples as test specs). Dedicated cases for FILL-inside-HUG edge case: verify that a FILL child inside a HUG parent is treated as HUG (matching Figma's behavior), and that the parent's computed size correctly wraps the child's intrinsic size rather than expanding
 - **Compiler GUID assignment**: Verify unique, deterministic GUID generation
 - **Comparator scoring**: Verify similarity calculation with identical (100%), different (~0%), and known diff patterns
 
