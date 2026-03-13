@@ -10,7 +10,7 @@
 
 ### Goals
 - Provide a Figma Plugin API-compatible TypeScript API that runs in both offline and Figma environments
-- Render DSL definitions as PNG images using PyCairo, matching Figma's visual output
+- Render DSL definitions as PNG images using @napi-rs/canvas (Skia), matching Figma's visual output
 - Enable automated visual comparison between DSL renders and React component screenshots
 - Execute DSL code directly in a Figma plugin to create real components — no translation layer
 - Generate DSL definitions from React components via AI skill
@@ -41,7 +41,7 @@ graph TB
     subgraph Offline Path
         VirtualApi[VirtualFigmaApi]
         Compiler[Compiler - Layout Resolution]
-        Renderer[Renderer - PyCairo]
+        Renderer[Renderer - napi-rs canvas Skia]
         Capturer[Screenshot Capturer - Playwright]
         Comparator[Visual Comparator - pixelmatch]
     end
@@ -81,14 +81,14 @@ graph TB
 - **VirtualFigmaApi**: Offline node construction producing VirtualNode trees (TypeScript)
 - **Shared Helpers**: Pure functions for colors, layout, text — environment-agnostic (TypeScript)
 - **Compiler**: Layout resolution, GUID assignment, format conversion to FigmaNodeDict (TypeScript)
-- **Renderer**: Visual rasterization from node dictionaries (Python/PyCairo)
+- **Renderer**: Visual rasterization from node dictionaries (TypeScript/@napi-rs/canvas)
 - **Capturer**: React component screenshot isolation (TypeScript/Playwright)
 - **Comparator**: Pixel-level image diffing (TypeScript/pixelmatch)
 - **Plugin Runtime**: Loads and executes bundled DSL code with real Figma API (TypeScript, Figma sandbox)
 - **AI Skill**: Claude Code skill for React-to-DSL generation (SKILL.md)
 - **CLI**: User-facing orchestration (TypeScript/Node.js)
 
-**Steering compliance**: TypeScript strict mode, no `any`; pipeline stages with single responsibility; immutable data between stages; no framework bloat; PyCairo for rendering.
+**Steering compliance**: TypeScript strict mode, no `any`; pipeline stages with single responsibility; immutable data between stages; no framework bloat; @napi-rs/canvas (Skia) for rendering; single-language TypeScript stack.
 
 ### Shared Type Hierarchy (Cross-Environment Type Strategy)
 
@@ -136,20 +136,19 @@ graph TB
 | Layer | Choice / Version | Role in Feature | Notes |
 |-------|------------------|-----------------|-------|
 | DSL Core / CLI | TypeScript 5.9+, Node.js 22+ | DSL API, compilation, orchestration | Strict mode, ES2023 target |
-| Renderer | Python 3.10+, PyCairo 1.27+ | Rasterize node dictionaries to PNG | Extends figma-html-renderer patterns |
+| Renderer | @napi-rs/canvas 0.1.96+ | Rasterize node dictionaries to PNG via Skia Canvas 2D API | Zero system deps, in-process rendering |
 | Screenshot Capture | Playwright 1.50+ | Headless browser React component screenshots | Element-level capture |
 | Image Comparison | pixelmatch 6.0+, pngjs 7.0+ | Pixel-level visual diff | Zero-dependency comparison |
 | Figma Plugin | Figma Plugin API, esbuild | Execute DSL code to create Figma nodes | Same build toolchain as reference plugin |
 | Package Management | npm workspaces | Monorepo for TypeScript packages | dsl-core, cli, plugin as separate packages |
 | Text Measurement | opentype.js 2.0+ | Font metric lookup for auto-layout HUG sizing | Bundled Inter font files |
 | AI Skill | Claude Code Skills (.claude/skills/) | React-to-DSL generation | SKILL.md with Agent Skills standard |
-| Python Packaging | pyproject.toml + pip | Python renderer package | Follows figma-html-renderer pattern |
 
-### Cross-Language Environment Management
+### Environment Management
 
-The CLI discovers the Python interpreter via `FIGMA_DSL_PYTHON` environment variable, falling back to `python3` on PATH. The `figma-dsl doctor` command verifies all dependencies (Node.js, Python, PyCairo, Inter font) and reports their status.
+The entire stack runs in a single Node.js process — no cross-language coordination required. The `figma-dsl doctor` command verifies Node.js version and Inter font availability.
 
-The Inter font family (.otf files for Regular, Medium, Semi Bold, Bold) is bundled in `packages/dsl-core/fonts/` for offline text measurement via opentype.js.
+The Inter font family (.otf files for Regular, Medium, Semi Bold, Bold) is bundled in `packages/dsl-core/fonts/` for offline text measurement via opentype.js and registered with `@napi-rs/canvas` via `GlobalFonts.registerFromPath()` for rendering.
 
 ## System Flows
 
@@ -161,7 +160,7 @@ sequenceDiagram
     participant CLI
     participant VApi as VirtualFigmaApi
     participant Compiler
-    participant Renderer as Renderer - Python
+    participant Renderer as Renderer - napi-rs canvas
     participant Capturer as Capturer - Playwright
     participant Comparator
 
@@ -170,7 +169,7 @@ sequenceDiagram
     VApi-->>CLI: VirtualNode tree
     CLI->>Compiler: compile(virtualNodes)
     Compiler-->>CLI: FigmaNodeDict JSON
-    CLI->>Renderer: subprocess render(json, output.png)
+    CLI->>Renderer: render(compiledNodes, output.png)
     Renderer-->>CLI: PNG file path
     CLI->>Capturer: capture(ReactComponent, viewport)
     Capturer-->>CLI: PNG file path
@@ -240,7 +239,7 @@ flowchart TB
 | FigmaApiAdapter | DSL / Core | Dual-environment interface for node creation | 1.1–1.12, 4.1–4.6, 5.1–5.5 | None (P0) | Service |
 | SharedHelpers | DSL / Core | Pure helper functions shared across environments | 2.1–2.7, 3.1–3.6 | None (P0) | Service |
 | Compiler | DSL / Core | Resolve layout, assign GUIDs, produce FigmaNodeDict | 1.11, 2.1–2.7, 3.1–3.5, 4.1–4.6, 5.1–5.5 | FigmaApiAdapter (P0), opentype.js (P0) | Service |
-| Renderer | Rendering / Python | Rasterize FigmaNodeDict to PNG via PyCairo | 6.1–6.4 | PyCairo (P0) | Service |
+| Renderer | Rendering / TypeScript | Rasterize FigmaNodeDict to PNG via @napi-rs/canvas | 6.1–6.4 | @napi-rs/canvas (P0) | Service |
 | Capturer | Rendering / TypeScript | Capture React component screenshots via Playwright | 7.1–7.4 | Playwright (P0) | Service |
 | Comparator | Analysis / TypeScript | Pixel-level image diff with similarity scoring | 8.1–8.4 | pixelmatch (P0), pngjs (P0) | Service |
 | PluginRuntime | Export / Figma | Execute bundled DSL code with real Figma Plugin API | 9.1–9.8 | Figma Plugin API (P0), esbuild (P1) | Service |
@@ -479,7 +478,7 @@ function tokenPaint(tokens: ColorTokenMap, name: string): DslSolidPaint;
 
 ##### Service Interface
 ```typescript
-// --- Compiled Output (matches figma-html-renderer node dict format) ---
+// --- Compiled Output (informed by figma-html-renderer node dict format) ---
 interface FigmaNodeDict {
   guid: [number, number];
   type: string;
@@ -609,50 +608,50 @@ Pass 2: Available width = 300−16−16 = 268px. Title gets width=268. Title at 
 
 | Field | Detail |
 |-------|--------|
-| Intent | Rasterize FigmaNodeDict JSON to PNG images using PyCairo |
+| Intent | Rasterize FigmaNodeDict to PNG images using @napi-rs/canvas (Skia Canvas 2D API) |
 | Requirements | 6.1–6.4 |
 
 **Responsibilities & Constraints**
-- Accept FigmaNodeDict JSON via stdin or file path
+- Accept a `FigmaNodeDict` object directly (in-process, no serialization boundary)
 - Render all supported node types: FRAME, COMPONENT, COMPONENT_SET, INSTANCE, RECTANGLE, ELLIPSE, TEXT, GROUP
 - Apply fills (solid colors, linear gradients), strokes, corner radius, opacity, clipping
-- Render text with correct font, size, weight, and baseline positioning
-- Output PNG to specified path; report errors as structured JSON on stderr
+- Render text with correct font, size, weight, and baseline positioning using Skia text engine
+- Output PNG to specified path or return as `Buffer`
 
 **Dependencies**
-- Inbound: Compiler — provides FigmaNodeDict JSON (P0)
-- External: PyCairo 1.27+ — vector rendering engine (P0)
-- External: Pillow — image fallback and format conversion (P1)
+- Inbound: Compiler — provides `FigmaNodeDict` object (P0)
+- External: @napi-rs/canvas 0.1.96+ — Skia-backed Canvas 2D API (P0)
 
 **Contracts**: Service [x]
 
 ##### Service Interface
-```python
-@dataclass
-class RenderOptions:
-    background_color: tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0)
-    scale: float = 1.0
-    asset_dir: str | None = None
+```typescript
+interface RenderOptions {
+  backgroundColor: { r: number; g: number; b: number; a: number };
+  scale: number;
+  assetDir?: string;
+}
 
-@dataclass
-class RenderResult:
-    png_path: Path
-    width: int
-    height: int
+interface RenderResult {
+  pngPath: string;
+  width: number;
+  height: number;
+}
 
-class DslRenderer:
-    def render(self, node_json: str, output_path: Path, options: RenderOptions) -> RenderResult:
-        """Render FigmaNodeDict JSON to PNG."""
-        ...
+interface RendererService {
+  render(root: FigmaNodeDict, outputPath: string, options?: Partial<RenderOptions>): Promise<RenderResult>;
+  renderToBuffer(root: FigmaNodeDict, options?: Partial<RenderOptions>): Promise<Buffer>;
+}
 ```
-- Preconditions: Input JSON conforms to FigmaNodeDict schema; transforms are pre-computed
-- Postconditions: Output PNG exists at specified path
-- Invariants: Renderer is stateless
+- Preconditions: Input `FigmaNodeDict` has pre-computed transforms (output of Compiler)
+- Postconditions: Output PNG exists at specified path; dimensions match root node size × scale
+- Invariants: Renderer is stateless; font registration happens once at module load via `GlobalFonts.registerFromPath()`
 
 **Implementation Notes**
-- Extends figma-html-renderer's `CanvasRenderer` patterns
-- Adds gradient fill support using Cairo's `LinearGradient` pattern
-- CLI invocation: `python -m figma_component_dsl.renderer --input nodes.json --output render.png [--scale 2] [--bg white|transparent]`
+- Uses standard Canvas 2D API: `ctx.fillRect()` for rectangles, `ctx.arc()` for ellipses, `ctx.roundRect()` for rounded rectangles, `ctx.fillText()` for text, `ctx.createLinearGradient()` for gradients, `ctx.clip()` for clipping, `ctx.setTransform()` for affine transforms, `ctx.globalAlpha` for opacity
+- Fonts registered at startup via `GlobalFonts.registerFromPath()` with bundled Inter font files — same fonts used by opentype.js for measurement
+- PNG export via `canvas.toBuffer('image/png')` — encoding runs in libuv thread pool (non-blocking)
+- Skia rendering engine matches Playwright/Chromium's rendering (both use Skia), improving visual comparison accuracy between DSL renders and React screenshots
 
 ---
 
@@ -832,7 +831,7 @@ interface PipelineOptions {
 
 **Implementation Notes**
 - Built with Node.js `parseArgs` (no framework dependency)
-- Python renderer invoked via `child_process.execFile('python', ['-m', 'figma_component_dsl.renderer', ...])`
+- Renderer invoked in-process via `RendererService.render()` — no subprocess, no serialization boundary
 - The `bundle` command uses esbuild to package DSL definitions for Figma plugin execution
 - The `pipeline` command chains: compile → render → capture → compare, stopping on first error
 - Exit codes: 0 = success, 1 = comparison below threshold, 2 = runtime error
@@ -932,7 +931,7 @@ erDiagram
 
 ### Logical Data Model
 
-**FigmaNodeDict JSON Schema** — interchange format between TypeScript Compiler and Python Renderer. Full schema defined in Compiler service interface above. Key fields:
+**FigmaNodeDict Schema** — output format of the Compiler, consumed directly by the Renderer. Full schema defined in Compiler service interface above. Key fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -956,11 +955,11 @@ Each pipeline stage produces typed errors with contextual information.
 
 **Compile Errors** (accumulated): Layout overflow → warning with node path; circular component reference → `CircularRefError`; unresolved token → `UnresolvedTokenError`.
 
-**Render Errors** (subprocess, structured JSON): Missing font → fallback with warning; unsupported node type → skip with warning.
+**Render Errors** (in-process): Missing font → fallback with warning; unsupported node type → skip with warning.
 
 **Plugin Errors** (per-node catch): Node creation failure → `figma.notify()` with error, skip and continue; font loading failure → report and degrade.
 
-**Pipeline Errors** (CLI level): Stage failure → stop pipeline, report which stage failed; comparison below threshold → exit code 1 with similarity report.
+**Pipeline Errors** (CLI level): Stage failure → stop pipeline, report which stage failed; comparison below threshold → exit code 1 with similarity report. All errors are in-process TypeScript exceptions — no cross-language error format needed.
 
 ## Testing Strategy
 
@@ -975,7 +974,7 @@ Each pipeline stage produces typed errors with contextual information.
 - **Compile + Render**: VirtualNode tree → compile → render → verify PNG exists and has expected dimensions
 - **Full pipeline**: DSL definition → compile → render → capture → compare → verify CompareResult
 - **Plugin bundle**: DSL definition → bundle → verify bundle is valid JS that references expected Figma API calls
-- **Error propagation**: Verify renderer subprocess errors correctly captured and reported by CLI
+- **Error propagation**: Verify renderer errors (missing font, invalid node) correctly captured and reported by CLI
 
 ### E2E Tests
 - **CLI compile**: Invoke `figma-dsl compile` on sample DSL files, verify JSON output

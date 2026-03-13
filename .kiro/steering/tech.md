@@ -32,7 +32,7 @@ The DSL will need to combine both directions: define components in code, render 
 | Purpose | Library | Context |
 |---------|---------|---------|
 | Figma binary parsing | fig2sketch, fig-kiwi | Decode `.fig` format |
-| Vector rendering | PyCairo | Rasterize DSL to PNG |
+| Vector rendering | @napi-rs/canvas (Skia) | Rasterize DSL to PNG |
 | Browser automation | Playwright | React screenshot capture |
 | Figma node creation | Figma Plugin API | Export DSL to Figma |
 | Design-to-code mapping | @figma/code-connect | Dev Mode integration |
@@ -70,7 +70,7 @@ pytest                   # Unit tests
 
 ## Key Technical Decisions
 
-1. **PyCairo for rendering** — Same technology as figma-html-renderer, proven for Figma-accurate rasterization
+1. **@napi-rs/canvas for rendering** — Skia-backed Canvas 2D API for Node.js, zero system dependencies, matches Chromium/Playwright rendering engine for better visual comparison accuracy
 2. **CSS Modules over utility CSS** — Scoped styles consuming design tokens, no utility class bloat
 3. **Design tokens as CSS custom properties** — Single source of truth for colors, spacing, typography
 4. **Pipeline architecture** — Sequential stages with single-responsibility classes and immutable dataclasses between stages

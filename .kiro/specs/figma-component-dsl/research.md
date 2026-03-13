@@ -2,11 +2,12 @@
 
 ## Summary
 - **Feature**: figma-component-dsl
-- **Discovery Scope**: New Feature (greenfield) — major architectural revision from v1 design
+- **Discovery Scope**: New Feature (greenfield) — major architectural revision from v1 design; v3 revision replaces Python/PyCairo with TypeScript/@napi-rs/canvas
 - **Key Findings**:
   - Figma's own plugin architecture uses a membrane/adapter pattern to bridge sandboxed VM and host environment — validates our dual-environment adapter approach
   - The DSL-as-Plugin-API-code approach eliminates the Exporter translation layer entirely; DSL code runs directly in both environments through a shared interface
   - Claude Code skills follow the Agent Skills open standard with SKILL.md files; the AI React-to-DSL generator fits naturally as a project skill invocable via `/react-to-dsl`
+  - `@napi-rs/canvas` provides a high-performance Skia-backed Canvas 2D API for Node.js with zero system dependencies, eliminating the need for Python/PyCairo entirely and unifying the project as a single-language TypeScript stack
 
 ## Research Log
 
@@ -44,7 +45,7 @@
   - The dual-context architecture (worker sandbox + UI iframe via postMessage) is the standard plugin execution model
 - **Implications**: Our adapter pattern mirrors Figma's own architecture. In our case, the "membrane" is the `FigmaApi` interface: one side delegates to virtual node construction, the other to real Figma API calls. This is a proven pattern at Figma's own scale.
 
-### PyCairo Rendering Capabilities
+### PyCairo Rendering Capabilities (superseded — see @napi-rs/canvas below)
 - **Context**: Evaluating the rendering engine for DSL-to-PNG conversion
 - **Sources**: PyCairo docs, figma-html-renderer renderer.py
 - **Findings**:
@@ -52,7 +53,30 @@
   - Supports: rectangles, ellipses, rounded rectangles, text, clipping, transform matrices, alpha compositing
   - No built-in auto-layout — positions must be pre-computed
   - Gradient rendering is NOT implemented in figma-html-renderer (identified gap)
-- **Implications**: Gradient fill support must be added. Auto-layout computation happens in the Compiler.
+- **Implications**: Superseded by the decision to adopt `@napi-rs/canvas` and drop Python entirely. See below.
+
+### @napi-rs/canvas as PyCairo Replacement
+- **Context**: Evaluating Node.js/TypeScript alternatives to PyCairo to eliminate the Python dependency and unify the project as a single-language TypeScript stack
+- **Sources**: [@napi-rs/canvas npm](https://www.npmjs.com/package/@napi-rs/canvas), [GitHub repo](https://github.com/Brooooooklyn/canvas), [skia-canvas docs](https://skia-canvas.org/), npm-compare benchmarks
+- **Findings**:
+  - **@napi-rs/canvas** (v0.1.96+): High-performance Skia binding to Node.js via N-API, zero system dependencies, pure npm packages. No postinstall scripts, no node-gyp. ~20MB package size (vs. 45MB + 61 deps for node-canvas). Built-in TypeScript type definitions.
+  - **Canvas 2D API coverage**: Standard Canvas 2D API including `fillRect()`, `arc()`, `roundRect()`, `fillText()`, `createLinearGradient()`, `clip()`, `setTransform()`, `globalAlpha`, `save()`/`restore()` — covers all rendering operations needed for FigmaNodeDict rasterization (rectangles, ellipses, rounded rectangles, text, gradients, clipping, transforms, alpha compositing).
+  - **Font loading**: `GlobalFonts.registerFromPath(path, familyName)` for loading bundled font files. Confirmed working with Inter font family.
+  - **PNG export**: `canvas.toBuffer('image/png')` or `canvas.encode('png')` — image encoding runs in libuv thread pool (non-blocking).
+  - **Gradient support**: `ctx.createLinearGradient(x0, y0, x1, y1)` with `gradient.addColorStop(position, color)` — native Skia gradient rendering, superior to PyCairo's capabilities. This closes the gradient gap identified in figma-html-renderer.
+  - **Performance**: Fastest in serial benchmarks (68 ops/s for "draw house + export PNG"), outperforming node-canvas (60 ops/s) and skia-canvas (47 ops/s).
+  - **Platform support**: Linux x64/arm64, macOS x64/arm64, Windows x64/arm64 — precompiled binaries auto-downloaded via npm.
+  - **Ecosystem momentum**: jsdom adding @napi-rs/canvas as preferred alternative to node-canvas; Konva supports it via `konva/skia-backend`; approaching v1.0 release.
+- **Alternatives evaluated**:
+  - **node-canvas** (Cairo-based): Requires system dependencies (Cairo, Pango, libjpeg), node-gyp compilation. Does NOT eliminate native dependency issue — it wraps Cairo in Node.js, essentially keeping Cairo as a dependency.
+  - **skia-canvas**: Feature-rich (PDF, boolean paths, filters), multi-threaded. Slower in serial benchmarks. Less ecosystem adoption than @napi-rs/canvas.
+  - **PureImage**: Pure JavaScript, zero native deps. Too slow for production use — author states "values portability over speed."
+- **Implications**:
+  - The Renderer component becomes a TypeScript module using `@napi-rs/canvas`, running in-process instead of as a Python subprocess.
+  - Eliminates: Python runtime dependency, PyCairo system dependency, pyproject.toml packaging, cross-language subprocess communication, `FIGMA_DSL_PYTHON` environment variable, structured JSON error format for subprocess errors.
+  - Gradient rendering is natively supported — closes the gap identified in the PyCairo evaluation.
+  - Text rendering uses Skia's text engine with registered fonts, providing better consistency with Chrome's rendering (relevant since React screenshots come from Chromium via Playwright, which also uses Skia).
+  - The `figma-dsl doctor` command simplifies to checking only Node.js and Inter font presence.
 
 ### Playwright Screenshot & pixelmatch Comparison
 - **Context**: Evaluating screenshot capture and image comparison tools
@@ -89,7 +113,8 @@
 |--------|-------------|-----------|---------------------|-------|
 | Adapter with Pipeline | Shared FigmaApi interface with Virtual and Plugin adapters; Virtual path feeds into compilation pipeline | DSL code IS plugin code, zero translation overhead in Figma, dual-environment from single codebase | Adapter interface must stay in sync with Figma API subset | **Selected** — maximizes code reuse between environments |
 | Pipeline with AST Core (v1) | Custom factory functions → AST → Compiled nodes → Exporter → Plugin input | Clear separation, proven pipeline pattern | Requires translation layer (Exporter), custom API deviates from Figma API | Previous design, replaced by adapter approach |
-| Monolithic Single-Language | All TypeScript or all Python | Simpler deployment | Loses either TypeScript type safety or PyCairo rendering | Rejected |
+| Monolithic Single-Language TS | All TypeScript with @napi-rs/canvas for rendering | Simpler deployment, single runtime, no cross-language IPC | Rendering fidelity depends on Skia vs Cairo — Skia is Chrome's engine, better match for Playwright screenshots | **Selected (v3)** — eliminates Python dependency entirely |
+| Monolithic Single-Language (v1) | All TypeScript or all Python | Simpler deployment | Previously rejected due to lack of TypeScript rendering option | Superseded by @napi-rs/canvas availability |
 
 ## Design Decisions
 
@@ -163,25 +188,47 @@
 - **Selected Approach**: Counter-based with sessionID=0, auto-incrementing localID
 - **Rationale**: Deterministic output enables snapshot testing.
 
-### Decision: Cross-Language Environment Management (preserved from v1)
-- **Context**: System spans TypeScript and Python
-- **Selected Approach**: CLI preflight checks with `figma-dsl doctor` command
-- **Rationale**: Minimal overhead, actionable diagnostics.
+### Decision: Cross-Language Environment Management (superseded)
+- **Context**: System previously spanned TypeScript and Python
+- **Previous Approach**: CLI preflight checks with `figma-dsl doctor` command verifying Python, PyCairo, etc.
+- **Current Status**: Superseded — the system is now pure TypeScript. The `figma-dsl doctor` command only checks Node.js version and Inter font presence.
+
+### Decision: Replace PyCairo with @napi-rs/canvas (v3 revision)
+- **Context**: The original design used PyCairo (Python) for DSL-to-PNG rendering, requiring a cross-language subprocess architecture. This introduced complexity: Python runtime dependency, cross-language error propagation, structured JSON IPC, environment variable configuration (`FIGMA_DSL_PYTHON`), and `pyproject.toml` packaging.
+- **Alternatives Considered**:
+  1. **Keep PyCairo** (status quo) — proven rendering, but forces dual-language stack
+  2. **node-canvas** (Cairo-based Node.js binding) — still requires Cairo system dependency and node-gyp compilation
+  3. **skia-canvas** — Skia-based, feature-rich, but slower serial performance and less ecosystem adoption
+  4. **@napi-rs/canvas** — Skia-based, zero system dependencies, fastest serial performance, growing ecosystem
+  5. **PureImage** — pure JavaScript, no native deps, but too slow for production
+- **Selected Approach**: `@napi-rs/canvas` 0.1.96+ as an in-process TypeScript rendering engine. The Renderer becomes a TypeScript module that receives `FigmaNodeDict` objects directly (no JSON serialization/deserialization), uses the standard Canvas 2D API for rasterization, and exports PNG via `canvas.toBuffer('image/png')`.
+- **Rationale**:
+  - **Single-language stack**: Eliminates Python runtime, simplifying installation, CI/CD, and debugging. One `npm install` sets up everything.
+  - **Zero system dependencies**: Pre-compiled Skia binaries auto-downloaded via npm — no system-level Cairo, Pango, or fontconfig installation required.
+  - **Better rendering consistency**: Both the Renderer (Skia via @napi-rs/canvas) and React screenshots (Chromium via Playwright) use Google Skia for rendering. This means text anti-aliasing, gradient interpolation, and curve rasterization are more likely to match, improving visual comparison accuracy.
+  - **Native gradient support**: Closes the gradient rendering gap identified in the PyCairo evaluation without additional implementation effort.
+  - **In-process communication**: No subprocess spawning, no JSON serialization overhead, no cross-language error format. The Renderer is a direct function call in the same Node.js process.
+  - **Performance**: 68 ops/s in serial benchmarks (vs. PyCairo subprocess overhead which includes process spawn, JSON serialization, and IPC).
+- **Trade-offs**:
+  - The `@napi-rs/canvas` package is pre-1.0 (v0.1.96), though it is widely used and approaching v1.0.
+  - Rendering output differs from PyCairo — Skia vs. Cairo produce slightly different anti-aliasing. Since Playwright also uses Skia, this is an advantage for visual comparison accuracy.
+  - Loss of the figma-html-renderer rendering patterns as direct reference. The new Renderer draws from the same FigmaNodeDict data model but uses Canvas 2D API calls instead of Cairo API calls.
+- **Follow-up**: Verify @napi-rs/canvas font registration with bundled Inter font files. Benchmark rendering latency for complex component trees.
 
 ## Risks & Mitigations
 - **Figma API surface drift** — Figma Plugin API may change, requiring adapter updates → Pin to supported Figma Plugin API version; adapter covers only the subset used by DSL
 - **Auto-layout fidelity** — DSL layout may not match Figma's exact pixel calculations → Two-pass layout algorithm verified against worked examples; visual comparison tests
-- **Text measurement accuracy** — opentype.js may differ from PyCairo by < 1px per glyph → Threshold-based visual comparison (default 95%)
-- **Gradient rendering gap** — figma-html-renderer lacks gradient support → Must implement in Python renderer
+- **Text measurement accuracy** — opentype.js may differ from @napi-rs/canvas Skia text metrics by < 1px per glyph → Threshold-based visual comparison (default 95%)
+- **@napi-rs/canvas pre-1.0 stability** — Package is v0.1.96, not yet 1.0 → Widely used (300+ dependents), approaching v1.0 release, jsdom officially integrating it. Pin to known-good version.
 - **AI skill output quality** — Generated DSL may not perfectly represent React components → `// TODO:` comments for uncertain mappings; visual comparison loop for iteration; human review expected
-- **Cross-language error propagation** — Python subprocess errors may be opaque → Structured error JSON format
 
 ## References
 - [Figma Plugin API Reference](https://www.figma.com/plugin-docs/api/api-reference/) — Official API docs
 - [How Figma built the plugin system](https://www.figma.com/blog/how-we-built-the-figma-plugin-system/) — Membrane pattern, sandbox architecture
 - [Figma Plugin API Node Types](https://www.figma.com/plugin-docs/api/nodes/) — Node type hierarchy
 - [Claude Code Skills Documentation](https://code.claude.com/docs/en/skills) — Skill system, SKILL.md format
+- [@napi-rs/canvas](https://www.npmjs.com/package/@napi-rs/canvas) — Skia-backed Canvas 2D API for Node.js (replaces PyCairo)
+- [@napi-rs/canvas GitHub](https://github.com/Brooooooklyn/canvas) — Source, benchmarks, API docs
 - [pixelmatch](https://github.com/mapbox/pixelmatch) — Pixel-level image comparison
 - [Playwright Screenshots](https://playwright.dev/docs/test-snapshots) — Visual comparison
-- [PyCairo](https://pycairo.readthedocs.io/) — Python bindings for Cairo
 - [opentype.js](https://opentype.js.org/) — JavaScript font parser for text measurement
