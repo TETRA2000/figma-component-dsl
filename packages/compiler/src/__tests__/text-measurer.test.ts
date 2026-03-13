@@ -70,6 +70,28 @@ describe('TextMeasurer', () => {
     expect(m.height).toBeCloseTo(24, 0); // 20 * 1.2
   });
 
+  it('accounts for letterSpacing in PIXELS', () => {
+    const normal = measurer.measure('Hello', { fontSize: 14 });
+    const spaced = measurer.measure('Hello', {
+      fontSize: 14,
+      letterSpacing: { value: 2, unit: 'PIXELS' },
+    });
+    // 5 chars × 2px extra = 10px wider
+    expect(spaced.width).toBeGreaterThan(normal.width);
+    expect(spaced.width - normal.width).toBeCloseTo(10, 0);
+  });
+
+  it('accounts for letterSpacing in PERCENT', () => {
+    const normal = measurer.measure('AB', { fontSize: 20 });
+    const spaced = measurer.measure('AB', {
+      fontSize: 20,
+      letterSpacing: { value: 50, unit: 'PERCENT' },
+    });
+    // 50% of 20px = 10px per char, 2 chars = 20px extra
+    expect(spaced.width).toBeGreaterThan(normal.width);
+    expect(spaced.width - normal.width).toBeCloseTo(20, 0);
+  });
+
   it('handles different font weights', () => {
     const regular = measurer.measure('Bold Text', { fontSize: 14, fontWeight: 400 });
     const bold = measurer.measure('Bold Text', { fontSize: 14, fontWeight: 700 });

@@ -105,6 +105,12 @@ function compileNode(
     strokes,
     strokeWeight,
     cornerRadius: node.cornerRadius,
+    cornerRadii: node.cornerRadii ? {
+      topLeft: node.cornerRadii.topLeft,
+      topRight: node.cornerRadii.topRight,
+      bottomLeft: node.cornerRadii.bottomLeft,
+      bottomRight: node.cornerRadii.bottomRight,
+    } : undefined,
     opacity: node.opacity ?? 1,
     visible: node.visible ?? true,
     clipContent: node.clipContent,
@@ -160,6 +166,9 @@ function compileNode(
     compiled.fontSize = td.fontSize;
     compiled.fontFamily = td.fontFamily;
     compiled.textAlignHorizontal = td.textAlignHorizontal;
+    if (td.letterSpacing) {
+      compiled.letterSpacing = td.letterSpacing;
+    }
   }
 
   return compiled;

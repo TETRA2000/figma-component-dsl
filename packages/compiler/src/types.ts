@@ -63,6 +63,10 @@ export interface FigmaNodeDict {
   fontSize?: number;
   fontFamily?: string;
   textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
+  letterSpacing?: { value: number; unit: 'PERCENT' | 'PIXELS' };
+
+  // Corner radii (per-corner)
+  cornerRadii?: { topLeft: number; topRight: number; bottomLeft: number; bottomRight: number };
 
   // Component
   componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;

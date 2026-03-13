@@ -317,6 +317,60 @@ describe('Compiler — Component compilation', () => {
   });
 });
 
+describe('Compiler — Text data expansion with letterSpacing', () => {
+  it('includes letterSpacing in compiled text node', () => {
+    const node: DslNode = Object.freeze({
+      type: 'TEXT' as const,
+      name: 'Spaced',
+      characters: 'Hello',
+      textStyle: Object.freeze({
+        fontSize: 16,
+        letterSpacing: Object.freeze({ value: 2, unit: 'PIXELS' as const }),
+      }),
+      opacity: 1,
+      visible: true,
+      children: Object.freeze([]),
+    });
+    const result = compile(node);
+    expect(result.root.letterSpacing).toEqual({ value: 2, unit: 'PIXELS' });
+  });
+
+  it('omits letterSpacing when not specified', () => {
+    const node: DslNode = Object.freeze({
+      type: 'TEXT' as const,
+      name: 'Normal',
+      characters: 'Hello',
+      opacity: 1,
+      visible: true,
+      children: Object.freeze([]),
+    });
+    const result = compile(node);
+    expect(result.root.letterSpacing).toBeUndefined();
+  });
+});
+
+describe('Compiler — Per-corner cornerRadii', () => {
+  it('passes cornerRadii through to compiled node', () => {
+    const node: DslNode = Object.freeze({
+      type: 'FRAME' as const,
+      name: 'RoundedFrame',
+      size: { x: 100, y: 100 },
+      cornerRadii: Object.freeze({ topLeft: 8, topRight: 16, bottomLeft: 4, bottomRight: 12 }),
+      opacity: 1,
+      visible: true,
+      children: Object.freeze([]),
+    });
+    const result = compile(node);
+    expect(result.root.cornerRadii).toEqual({ topLeft: 8, topRight: 16, bottomLeft: 4, bottomRight: 12 });
+  });
+
+  it('omits cornerRadii when not specified', () => {
+    const node = makeFrame('F');
+    const result = compile(node);
+    expect(result.root.cornerRadii).toBeUndefined();
+  });
+});
+
 describe('Compiler — compileToJson', () => {
   it('produces valid JSON string', () => {
     const node = makeFrame('Root', [makeRect('R', 10, 10)]);

@@ -60,6 +60,16 @@ export class TextMeasurer {
       lineHeight = fontSize * 1.2;
     }
 
+    // Compute letter spacing in pixels
+    let letterSpacingPx = 0;
+    if (style.letterSpacing) {
+      if (style.letterSpacing.unit === 'PIXELS') {
+        letterSpacingPx = style.letterSpacing.value;
+      } else {
+        letterSpacingPx = fontSize * (style.letterSpacing.value / 100);
+      }
+    }
+
     // Split into lines
     const lines = characters.split('\n');
     let maxWidth = 0;
@@ -76,6 +86,7 @@ export class TextMeasurer {
           lineWidth += kerning * (fontSize / font.unitsPerEm);
         }
       }
+      lineWidth += glyphs.length * letterSpacingPx;
       maxWidth = Math.max(maxWidth, lineWidth);
     }
 

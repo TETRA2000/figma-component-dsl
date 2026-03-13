@@ -33,8 +33,24 @@ def _render_rounded_rect(
     ctx: cairo.Context,
     x: float, y: float, w: float, h: float,
     radius: float,
+    radii: dict[str, float] | None = None,
 ) -> None:
-    """Draw a rounded rectangle path."""
+    """Draw a rounded rectangle path with uniform or per-corner radii."""
+    if radii:
+        tl = min(radii.get("topLeft", 0), w / 2, h / 2)
+        tr = min(radii.get("topRight", 0), w / 2, h / 2)
+        br = min(radii.get("bottomRight", 0), w / 2, h / 2)
+        bl = min(radii.get("bottomLeft", 0), w / 2, h / 2)
+        if tl <= 0 and tr <= 0 and br <= 0 and bl <= 0:
+            ctx.rectangle(x, y, w, h)
+            return
+        ctx.new_sub_path()
+        ctx.arc(x + w - tr, y + tr, tr, -math.pi / 2, 0) if tr > 0 else ctx.move_to(x + w, y)
+        ctx.arc(x + w - br, y + h - br, br, 0, math.pi / 2) if br > 0 else ctx.line_to(x + w, y + h)
+        ctx.arc(x + bl, y + h - bl, bl, math.pi / 2, math.pi) if bl > 0 else ctx.line_to(x, y + h)
+        ctx.arc(x + tl, y + tl, tl, math.pi, 3 * math.pi / 2) if tl > 0 else ctx.line_to(x, y)
+        ctx.close_path()
+        return
     if radius <= 0:
         ctx.rectangle(x, y, w, h)
         return
@@ -84,10 +100,54 @@ def _apply_gradient(
     ctx.fill_preserve()
 
 
+def _apply_image_fill(
+    ctx: cairo.Context,
+    paint: dict[str, Any],
+    w: float, h: float,
+    options: RenderOptions,
+    errors: list[dict[str, str]],
+    node_name: str,
+) -> None:
+    """Apply an image fill by loading from assets_dir."""
+    image_ref = paint.get("imageRef", "")
+    if not options.assets_dir:
+        errors.append({
+            "nodePath": node_name,
+            "nodeType": "IMAGE",
+            "error": f"IMAGE fill requires --assets directory, cannot resolve {image_ref}",
+        })
+        return
+
+    image_path = Path(options.assets_dir) / image_ref
+    if not image_path.exists():
+        errors.append({
+            "nodePath": node_name,
+            "nodeType": "IMAGE",
+            "error": f"Image asset not found: {image_ref}",
+        })
+        return
+
+    image_surface = cairo.ImageSurface.create_from_png(str(image_path))
+    img_w = image_surface.get_width()
+    img_h = image_surface.get_height()
+
+    # Scale image to fill node bounds
+    scale_x = w / img_w if img_w > 0 else 1
+    scale_y = h / img_h if img_h > 0 else 1
+    pattern = cairo.SurfacePattern(image_surface)
+    matrix = cairo.Matrix()
+    matrix.scale(1 / scale_x, 1 / scale_y)
+    pattern.set_matrix(matrix)
+    ctx.set_source(pattern)
+    ctx.fill_preserve()
+
+
 def _apply_fills(
     ctx: cairo.Context,
     node: dict[str, Any],
     w: float, h: float,
+    options: RenderOptions | None = None,
+    errors: list[dict[str, str]] | None = None,
 ) -> None:
     """Apply all fills to the current path."""
     fill_paints = node.get("fillPaints", [])
@@ -101,6 +161,8 @@ def _apply_fills(
             ctx.fill_preserve()
         elif paint_type == "GRADIENT_LINEAR":
             _apply_gradient(ctx, paint, w, h)
+        elif paint_type == "IMAGE" and options is not None and errors is not None:
+            _apply_image_fill(ctx, paint, w, h, options, errors, node.get("name", "?"))
 
 
 def _apply_strokes(
@@ -165,6 +227,15 @@ def _render_text(
     )
     ctx.set_font_size(font_size)
 
+    # Compute letter spacing in pixels
+    letter_spacing_px = 0.0
+    ls = node.get("letterSpacing")
+    if ls:
+        if ls.get("unit") == "PIXELS":
+            letter_spacing_px = ls.get("value", 0)
+        elif ls.get("unit") == "PERCENT":
+            letter_spacing_px = font_size * (ls.get("value", 0) / 100)
+
     for i, line in enumerate(lines):
         if i < len(baselines):
             bl = baselines[i]
@@ -174,21 +245,39 @@ def _render_text(
             line_y = i * font_size * 1.2
             line_height = font_size * 1.2
 
-        # Compute text x position based on alignment
-        extents = ctx.text_extents(line)
-        text_width = extents.x_advance
-
-        if text_align == "CENTER":
-            tx = x + (w - text_width) / 2
-        elif text_align == "RIGHT":
-            tx = x + w - text_width
-        else:
-            tx = x
-
         # Baseline position: lineY + ascent approximation
         ty = y + line_y + font_size * 0.8
-        ctx.move_to(tx, ty)
-        ctx.show_text(line)
+
+        if letter_spacing_px != 0 and line:
+            # Render character by character with spacing
+            total_width = sum(ctx.text_extents(ch).x_advance for ch in line)
+            total_width += len(line) * letter_spacing_px
+
+            if text_align == "CENTER":
+                cx = x + (w - total_width) / 2
+            elif text_align == "RIGHT":
+                cx = x + w - total_width
+            else:
+                cx = x
+
+            for ch in line:
+                ctx.move_to(cx, ty)
+                ctx.show_text(ch)
+                cx += ctx.text_extents(ch).x_advance + letter_spacing_px
+        else:
+            # Compute text x position based on alignment
+            extents = ctx.text_extents(line)
+            text_width = extents.x_advance
+
+            if text_align == "CENTER":
+                tx = x + (w - text_width) / 2
+            elif text_align == "RIGHT":
+                tx = x + w - text_width
+            else:
+                tx = x
+
+            ctx.move_to(tx, ty)
+            ctx.show_text(line)
 
 
 def _render_node(
@@ -226,18 +315,19 @@ def _render_node(
             ctx.scale(w / 2, h / 2)
             ctx.arc(0, 0, 1, 0, 2 * math.pi)
             ctx.restore()
-            _apply_fills(ctx, node, w, h)
+            _apply_fills(ctx, node, w, h, options, errors)
             ctx.new_path()
     elif node_type in ("FRAME", "COMPONENT", "COMPONENT_SET", "INSTANCE", "RECTANGLE"):
         corner_radius = node.get("cornerRadius", 0)
-        _render_rounded_rect(ctx, tx, ty, w, h, corner_radius)
-        _apply_fills(ctx, node, w, h)
+        corner_radii = node.get("cornerRadii")
+        _render_rounded_rect(ctx, tx, ty, w, h, corner_radius, corner_radii)
+        _apply_fills(ctx, node, w, h, options, errors)
         _apply_strokes(ctx, node)
         ctx.new_path()
 
         # Clip content if needed
         if node.get("clipContent"):
-            _render_rounded_rect(ctx, tx, ty, w, h, corner_radius)
+            _render_rounded_rect(ctx, tx, ty, w, h, corner_radius, corner_radii)
             ctx.clip()
     elif node_type == "GROUP":
         pass  # Groups just render children

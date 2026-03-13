@@ -21,6 +21,7 @@ export function expandTextData(
   fontSize: number;
   fontFamily: string;
   textAlignHorizontal: 'LEFT' | 'CENTER' | 'RIGHT';
+  letterSpacing?: { value: number; unit: 'PERCENT' | 'PIXELS' };
 } {
   const fontSize = style?.fontSize ?? 14;
   const fontFamily = style?.fontFamily ?? 'Inter';
@@ -70,5 +71,6 @@ export function expandTextData(
     fontSize,
     fontFamily,
     textAlignHorizontal: textAlign,
+    letterSpacing: style?.letterSpacing ? { value: style.letterSpacing.value, unit: style.letterSpacing.unit } : undefined,
   };
 }

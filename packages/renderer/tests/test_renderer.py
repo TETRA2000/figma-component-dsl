@@ -4,6 +4,7 @@ import json
 import os
 import tempfile
 
+import cairo
 import pytest
 
 from figma_component_dsl.renderer import RenderOptions, render
@@ -105,6 +106,20 @@ class TestRendererBasics:
         errors = render({"root": node}, RenderOptions(output=out))
         assert errors == []
 
+    def test_render_with_per_corner_radii(self, tmp_path):
+        """Render a frame with per-corner radii."""
+        out = str(tmp_path / "out.png")
+        node = _make_frame("Root", 200, 100, fills=[
+            {"type": "SOLID", "color": {"r": 0, "g": 0.5, "b": 1, "a": 1}, "opacity": 1, "visible": True}
+        ])
+        node["cornerRadii"] = {
+            "topLeft": 8, "topRight": 16,
+            "bottomLeft": 4, "bottomRight": 12,
+        }
+        errors = render({"root": node}, RenderOptions(output=out))
+        assert errors == []
+        assert os.path.getsize(out) > 0
+
 
 class TestRendererText:
     """Test text rendering."""
@@ -113,6 +128,25 @@ class TestRendererText:
         """Render a text node."""
         out = str(tmp_path / "out.png")
         text = _make_text("Label", "Hello World", 10, 10)
+        node = _make_frame("Root", 200, 50, children=[text])
+        errors = render({"root": node}, RenderOptions(output=out))
+        assert errors == []
+
+    def test_render_text_with_letter_spacing(self, tmp_path):
+        """Render a text node with letter spacing applied."""
+        out = str(tmp_path / "out.png")
+        text = _make_text("Spaced", "Hello", 10, 10, font_size=16)
+        text["letterSpacing"] = {"value": 2, "unit": "PIXELS"}
+        node = _make_frame("Root", 200, 50, children=[text])
+        errors = render({"root": node}, RenderOptions(output=out))
+        assert errors == []
+        assert os.path.getsize(out) > 0
+
+    def test_render_text_with_percent_letter_spacing(self, tmp_path):
+        """Render a text node with percent-based letter spacing."""
+        out = str(tmp_path / "out.png")
+        text = _make_text("Spaced", "AB", 10, 10, font_size=20)
+        text["letterSpacing"] = {"value": 50, "unit": "PERCENT"}
         node = _make_frame("Root", 200, 50, children=[text])
         errors = render({"root": node}, RenderOptions(output=out))
         assert errors == []
@@ -190,6 +224,79 @@ class TestRendererOptions:
         node = _make_frame("Root", 200, 100, children=[hidden_rect])
         errors = render({"root": node}, RenderOptions(output=out))
         assert errors == []
+
+
+class TestRendererImageAssets:
+    """Test image asset rendering."""
+
+    def _make_test_image(self, path, w=50, h=50):
+        """Create a simple test PNG image using Cairo."""
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        ctx = cairo.Context(surface)
+        ctx.set_source_rgba(1, 0, 0, 1)  # Red
+        ctx.paint()
+        surface.write_to_png(str(path))
+
+    def test_render_image_fill(self, tmp_path):
+        """Render a node with an IMAGE fill resolved from assets_dir."""
+        # Create test image asset
+        assets_dir = tmp_path / "assets"
+        assets_dir.mkdir()
+        self._make_test_image(assets_dir / "icon.png", 50, 50)
+
+        out = str(tmp_path / "out.png")
+        rect = {
+            "guid": [0, 1],
+            "type": "RECTANGLE",
+            "name": "Icon",
+            "size": {"x": 50, "y": 50},
+            "transform": [[1, 0, 10], [0, 1, 10], [0, 0, 1]],
+            "fillPaints": [{"type": "IMAGE", "imageRef": "icon.png", "visible": True}],
+            "opacity": 1,
+            "visible": True,
+            "children": [],
+        }
+        node = _make_frame("Root", 100, 100, children=[rect])
+        errors = render({"root": node}, RenderOptions(output=out, assets_dir=str(assets_dir)))
+        assert errors == []
+        assert os.path.getsize(out) > 0
+
+    def test_render_image_fill_missing_asset_reports_error(self, tmp_path):
+        """Missing image asset reports an error without crashing."""
+        out = str(tmp_path / "out.png")
+        rect = {
+            "guid": [0, 1],
+            "type": "RECTANGLE",
+            "name": "Icon",
+            "size": {"x": 50, "y": 50},
+            "transform": [[1, 0, 10], [0, 1, 10], [0, 0, 1]],
+            "fillPaints": [{"type": "IMAGE", "imageRef": "missing.png", "visible": True}],
+            "opacity": 1,
+            "visible": True,
+            "children": [],
+        }
+        node = _make_frame("Root", 100, 100, children=[rect])
+        errors = render({"root": node}, RenderOptions(output=out, assets_dir=str(tmp_path)))
+        assert len(errors) == 1
+        assert "missing.png" in errors[0]["error"]
+
+    def test_render_image_fill_no_assets_dir_reports_error(self, tmp_path):
+        """IMAGE fill without assets_dir reports an error."""
+        out = str(tmp_path / "out.png")
+        rect = {
+            "guid": [0, 1],
+            "type": "RECTANGLE",
+            "name": "Icon",
+            "size": {"x": 50, "y": 50},
+            "transform": [[1, 0, 10], [0, 1, 10], [0, 0, 1]],
+            "fillPaints": [{"type": "IMAGE", "imageRef": "icon.png", "visible": True}],
+            "opacity": 1,
+            "visible": True,
+            "children": [],
+        }
+        node = _make_frame("Root", 100, 100, children=[rect])
+        errors = render({"root": node}, RenderOptions(output=out))
+        assert len(errors) == 1
 
 
 class TestRendererStdin:

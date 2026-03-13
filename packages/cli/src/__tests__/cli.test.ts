@@ -50,8 +50,24 @@ describe('CLI', () => {
     expect([EXIT_SUCCESS, EXIT_PIPELINE_FAILURE]).toContain(result);
   });
 
-  it('pipeline command returns EXIT_RUNTIME_ERROR (placeholder)', async () => {
+  it('pipeline command returns EXIT_RUNTIME_ERROR when no input file', async () => {
     const result = await pipelineCommand([]);
+    expect(result).toBe(EXIT_RUNTIME_ERROR);
+  });
+
+  it('pipeline command returns EXIT_RUNTIME_ERROR for non-existent DSL file', async () => {
+    const result = await pipelineCommand(['/tmp/nonexistent-pipeline-test.dsl.ts']);
+    expect(result).toBe(EXIT_RUNTIME_ERROR);
+  });
+
+  it('pipeline command accepts --dsl, --url, --output, --threshold flags', async () => {
+    // Should fail at compile stage (non-existent file), not at arg parsing
+    const result = await pipelineCommand([
+      '/tmp/nonexistent.dsl.ts',
+      '--url', 'http://localhost:3000',
+      '--output', '/tmp/pipeline-out',
+      '--threshold', '0.90',
+    ]);
     expect(result).toBe(EXIT_RUNTIME_ERROR);
   });
 

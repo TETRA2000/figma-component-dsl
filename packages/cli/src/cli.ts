@@ -245,9 +245,83 @@ export async function exportCommand(args: string[]): Promise<number> {
 }
 
 export async function pipelineCommand(args: string[]): Promise<number> {
-  console.error('Pipeline command chains: compile → render → capture → compare');
-  console.error('Use individual commands for now.');
-  return EXIT_RUNTIME_ERROR;
+  const { values, positionals } = parseArgs({
+    args,
+    options: {
+      url: { type: 'string', short: 'u' },
+      selector: { type: 'string', short: 's', default: '#root > *' },
+      viewport: { type: 'string', short: 'v', default: '1280x720' },
+      output: { type: 'string', short: 'o', default: 'pipeline-output' },
+      threshold: { type: 'string', default: '0.95' },
+      bg: { type: 'string', default: 'white' },
+      scale: { type: 'string', default: '1' },
+    },
+    allowPositionals: true,
+  });
+
+  const inputPath = positionals[0];
+  if (!inputPath) {
+    console.error('Error: No input DSL file specified');
+    console.error('Usage: figma-dsl pipeline <input.dsl.ts> --url <react-url> [options]');
+    return EXIT_RUNTIME_ERROR;
+  }
+
+  const outputDir = values['output']!;
+  const { mkdirSync } = await import('node:fs');
+  try { mkdirSync(outputDir, { recursive: true }); } catch { /* ignore */ }
+
+  const jsonPath = resolve(outputDir, 'compiled.json');
+  const renderPath = resolve(outputDir, 'render.png');
+  const capturePath = resolve(outputDir, 'capture.png');
+  const diffPath = resolve(outputDir, 'diff.png');
+
+  // Stage 1: Compile
+  console.log('Pipeline [1/4]: Compiling DSL...');
+  const compileResult = await compileCommand([inputPath, '--output', jsonPath]);
+  if (compileResult !== EXIT_SUCCESS) {
+    console.error('Pipeline failed at compile stage');
+    return EXIT_RUNTIME_ERROR;
+  }
+
+  // Stage 2: Render
+  console.log('Pipeline [2/4]: Rendering to PNG...');
+  const renderResult = await renderCommand([
+    '--input', jsonPath,
+    '--output', renderPath,
+    '--scale', values['scale']!,
+    '--bg', values['bg']!,
+  ]);
+  if (renderResult !== EXIT_SUCCESS) {
+    console.error('Pipeline failed at render stage');
+    return EXIT_RUNTIME_ERROR;
+  }
+
+  // Stage 3: Capture (optional — requires --url)
+  if (values['url']) {
+    console.log('Pipeline [3/4]: Capturing React screenshot...');
+    const captureResult = await captureCommand([
+      '--url', values['url'],
+      '--selector', values['selector']!,
+      '--output', capturePath,
+      '--viewport', values['viewport']!,
+    ]);
+    if (captureResult !== EXIT_SUCCESS) {
+      console.error('Pipeline failed at capture stage');
+      return EXIT_RUNTIME_ERROR;
+    }
+
+    // Stage 4: Compare
+    console.log('Pipeline [4/4]: Comparing images...');
+    const compareResult = await compareCommand([
+      renderPath, capturePath,
+      '--threshold', values['threshold']!,
+      '--diff', diffPath,
+    ]);
+    return compareResult;
+  }
+
+  console.log('Pipeline complete (stages 1-2). Provide --url for capture+compare.');
+  return EXIT_SUCCESS;
 }
 
 export async function doctorCommand(): Promise<number> {
