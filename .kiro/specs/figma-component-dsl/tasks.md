@@ -267,7 +267,7 @@
   - These page-level compositions exercise: layoutGrow spacers, INSTANCE nodes with overrides, multi-column layouts, dark backgrounds, fixed-width containers, and deeply nested auto-layout trees (3+ levels)
   - _Requirements: 1.6, 2.5, 2.6, 3.6, 4.3, 4.4, 4.6, 5.3, 5.4, 5.5, 6.1, 6.2_
 
-- [ ]* 11.5 Run full visual regression comparison against React component screenshots
+- [x]* 11.5 Run full visual regression comparison against React component screenshots
   - Capture React component screenshots for all 16 reference components using the screenshot capturer with matching viewport sizes
   - Run visual comparison (DSL render vs React screenshot) for each component and establish baseline similarity scores
   - Document expected similarity ranges per component type: simple shapes (>98%), text-heavy layouts (>92%), gradient components (>90%)
