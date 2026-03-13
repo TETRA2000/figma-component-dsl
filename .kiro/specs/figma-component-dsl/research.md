@@ -8,6 +8,7 @@
   - The DSL-as-Plugin-API-code approach eliminates the Exporter translation layer entirely; DSL code runs directly in both environments through a shared interface
   - Claude Code skills follow the Agent Skills open standard with SKILL.md files; the AI React-to-DSL generator fits naturally as a project skill invocable via `/react-to-dsl`
   - `@napi-rs/canvas` provides a high-performance Skia-backed Canvas 2D API for Node.js with zero system dependencies, eliminating the need for Python/PyCairo entirely and unifying the project as a single-language TypeScript stack
+  - Analysis of 16 reference React components reveals a clear scope boundary: CSS Modules + design tokens + flexbox/grid + Inter font system are fully mappable to Figma DSL; animations, scroll state, gradient text, SVG icons, and external images require graceful degradation with placeholder nodes
 
 ## Research Log
 
@@ -106,6 +107,21 @@
   - Runs in Node.js (TypeScript), no system font dependency when fonts are bundled
   - Minor width discrepancies vs PyCairo (< 1px per glyph)
 - **Implications**: Keeps single-pass pipeline intact. Inter font files bundled for offline measurement.
+
+### Reference React Component Analysis (for Requirement 12)
+- **Context**: Defining the scope of supported React component patterns for DSL generation, screenshot capture, and visual comparison
+- **Sources**: `references/figma_design_playground/src/components/` — 16 components, `tokens.css`, `types.ts`
+- **Findings**:
+  - **Component spectrum**: 3 primitives (Button, Badge, Container) + 13 section components (Navbar, Hero, FeatureGrid, Stats, LogoCloud, Testimonials, PricingTable, CTABanner, FAQ, Footer, etc.)
+  - **Styling**: All components use CSS Modules (`.module.css`) consuming CSS custom properties from centralized `tokens.css`. Variant selection via `styles[variant]` dynamic key access. No utility-class framework (no Tailwind, no CSS-in-JS).
+  - **Design tokens**: 10-shade primary color scale, 12-stop gray scale, 4 accent color scales, 7 gradients, 4px-based spacing scale (4–96px), 6 border radius values, 10-stop font size scale (12–60px), Inter font with 4 weights (400–700).
+  - **Layout**: Primarily CSS flexbox; some CSS grid for column layouts (FeatureGrid, Stats, Footer). Container component with max-width + centered margin.
+  - **Variants**: Button (4 variants × 3 sizes = 12 combinations), Badge (4 variants), Stats (2 variants), LogoCloud (2 variants), Hero (2 alignments), Container (4 max-width sizes).
+  - **Composition**: Section components compose primitives (PricingTable → PricingCard → Button). Container wraps 10/13 sections. Array data rendered via `.map()` (features, stats, testimonials, pricing plans).
+  - **Shared types**: 7 interfaces — `NavLink`, `Feature`, `Testimonial`, `PricingPlan`, `FAQItem`, `FooterColumn`, `StatItem`.
+  - **Out-of-scope patterns identified**: Navbar scroll-based blur, LogoCloud marquee animation, Hero gradient text (`background-clip: text`), Lucide React SVG icons, external CDN images (dicebear avatars), `box-shadow` effects, dark mode via `prefers-color-scheme`.
+  - **State management**: Local only — Navbar (`scrolled`, `mobileOpen`), FAQ (`openIndex`). No global state, no context providers.
+- **Implications**: Supported patterns (CSS Modules, flexbox, tokens, Inter font, variant/size props) are well-defined and map directly to Figma DSL constructs. Out-of-scope patterns have clear fallback strategies (placeholder nodes + TODO comments). The reference library serves as the validation corpus for the tool.
 
 ## Architecture Pattern Evaluation
 
@@ -214,6 +230,27 @@
   - Rendering output differs from PyCairo — Skia vs. Cairo produce slightly different anti-aliasing. Since Playwright also uses Skia, this is an advantage for visual comparison accuracy.
   - Loss of the figma-html-renderer rendering patterns as direct reference. The new Renderer draws from the same FigmaNodeDict data model but uses Canvas 2D API calls instead of Cairo API calls.
 - **Follow-up**: Verify @napi-rs/canvas font registration with bundled Inter font files. Benchmark rendering latency for complex component trees.
+
+### Decision: Reference Design Token Constants in SharedHelpers (Req 12)
+- **Context**: Requirement 12.2–12.3, 12.10–12.11 specify support for the reference library's design token system (CSS custom properties for colors, spacing, radius, typography). The AI skill must resolve these tokens to concrete values when generating DSL code.
+- **Alternatives Considered**:
+  1. Parse `tokens.css` at runtime in the AI skill — requires CSS parsing, fragile
+  2. Pre-define token constants as TypeScript objects in SharedHelpers — type-safe, importable, testable
+  3. External JSON config file — lacks TypeScript integration
+- **Selected Approach**: Pre-defined constant maps in SharedHelpers (`REFERENCE_COLORS`, `SEMANTIC_COLORS`, `REFERENCE_GRADIENTS`, `SPACING_SCALE`, `RADIUS_SCALE`, `FONT_SIZE_SCALE`, `FONT_WEIGHTS`) derived from the reference library's `tokens.css`. The AI skill instructions reference these constants when generating DSL code.
+- **Rationale**: Constants provide a single source of truth for the DSL's design token vocabulary. They are type-safe (TypeScript `Record` types), importable by both manual DSL authors and the AI skill, and testable. New token sets can be added alongside reference tokens without modification.
+- **Trade-offs**: Token values are duplicated from `tokens.css` (manual sync required). Mitigated by the visual comparison loop — if tokens drift, the pixel comparison will catch the discrepancy.
+
+### Decision: Cartesian Variant Product for Multi-Axis Components (Req 12.23)
+- **Context**: Components like Button have both `variant` (4 values) and `size` (3 values) props. Figma represents these as 12 individual variant components in a COMPONENT_SET with naming `variant=primary, size=sm`, etc.
+- **Selected Approach**: The AI skill generates all Cartesian product combinations when a component has multiple variant axes. Each combination becomes a separate variant component.
+- **Rationale**: Matches Figma's variant model exactly. Figma's variant picker displays all combinations, and designers expect to see each variant-size pair individually.
+- **Trade-offs**: For components with many axes, the number of variants can grow quickly (e.g., 4 × 3 × 2 = 24 variants). This is inherent to Figma's model, not a DSL limitation.
+
+### Decision: Graceful Degradation for Out-of-Scope Patterns (Req 12.25–12.32)
+- **Context**: Several CSS patterns in the reference library have no Figma node equivalent: animations, scroll-based state, `backdrop-filter`, gradient text, SVG icons, external images, `box-shadow`, dark mode.
+- **Selected Approach**: Each out-of-scope pattern has a defined fallback behavior — placeholder nodes (RECTANGLE/ELLIPSE) with `// TODO:` comments. The system never fails on unsupported patterns; it degrades gracefully with clear annotations.
+- **Rationale**: Users can bootstrap DSL code from any reference component and then manually refine the unsupported parts. The visual comparison loop reveals which areas need attention. Failing on unsupported patterns would block the entire workflow.
 
 ## Risks & Mitigations
 - **Figma API surface drift** — Figma Plugin API may change, requiring adapter updates → Pin to supported Figma Plugin API version; adapter covers only the subset used by DSL

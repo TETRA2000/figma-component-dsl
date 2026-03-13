@@ -231,20 +231,27 @@ flowchart TB
 | 9.1–9.8 | Figma plugin — direct DSL execution | PluginRuntime | PluginRunner | Plugin Execution Flow |
 | 10.1–10.7 | CLI interface for all pipeline operations | CLI | CliCommands | Pipeline Flow |
 | 11.1–11.10 | AI-powered React-to-DSL generation | ReactToDslSkill | SKILL.md | — |
+| 12.1–12.5 | Supported styling patterns (CSS Modules, design tokens, variants, sizes) | ReactToDslSkill, SharedHelpers | SKILL.md, DesignTokenMap | — |
+| 12.6–12.9 | Supported layout patterns (flexbox, grid, containers, viewport) | ReactToDslSkill, Capturer | SKILL.md, CaptureService | Pipeline Flow |
+| 12.10–12.12 | Supported typography patterns (Inter, size scale, headings) | ReactToDslSkill, SharedHelpers, Compiler | SKILL.md, TextMeasurer | — |
+| 12.13–12.15 | Supported color and fill patterns (solid, gradient, border) | ReactToDslSkill, SharedHelpers | SKILL.md, SolidPaint, GradientPaint | — |
+| 12.16–12.20 | Supported composition patterns (children, arrays, nesting, conditional, boolean) | ReactToDslSkill | SKILL.md | — |
+| 12.21–12.24 | Supported prop and variant patterns (variant axes, size axes, Cartesian product, string props) | ReactToDslSkill, FigmaApiAdapter | SKILL.md, ComponentDef, VariantAxis | — |
+| 12.25–12.32 | Out-of-scope exclusions (animations, scroll, backdrop-filter, gradient text, SVG icons, CDN images, shadow, dark mode) | ReactToDslSkill, Capturer | SKILL.md, CaptureService | — |
 
 ## Components and Interfaces
 
 | Component | Domain/Layer | Intent | Req Coverage | Key Dependencies | Contracts |
 |-----------|--------------|--------|--------------|------------------|-----------|
 | FigmaApiAdapter | DSL / Core | Dual-environment interface for node creation | 1.1–1.12, 4.1–4.6, 5.1–5.5 | None (P0) | Service |
-| SharedHelpers | DSL / Core | Pure helper functions shared across environments | 2.1–2.7, 3.1–3.6 | None (P0) | Service |
+| SharedHelpers | DSL / Core | Pure helper functions shared across environments | 2.1–2.7, 3.1–3.6, 12.2–12.3, 12.10–12.11 | None (P0) | Service |
 | Compiler | DSL / Core | Resolve layout, assign GUIDs, produce FigmaNodeDict | 1.11, 2.1–2.7, 3.1–3.5, 4.1–4.6, 5.1–5.5 | FigmaApiAdapter (P0), opentype.js (P0) | Service |
 | Renderer | Rendering / TypeScript | Rasterize FigmaNodeDict to PNG via @napi-rs/canvas | 6.1–6.4 | @napi-rs/canvas (P0) | Service |
-| Capturer | Rendering / TypeScript | Capture React component screenshots via Playwright | 7.1–7.4 | Playwright (P0) | Service |
+| Capturer | Rendering / TypeScript | Capture React component screenshots via Playwright | 7.1–7.4, 12.9, 12.25–12.26 | Playwright (P0) | Service |
 | Comparator | Analysis / TypeScript | Pixel-level image diff with similarity scoring | 8.1–8.4 | pixelmatch (P0), pngjs (P0) | Service |
 | PluginRuntime | Export / Figma | Execute bundled DSL code with real Figma Plugin API | 9.1–9.8 | Figma Plugin API (P0), esbuild (P1) | Service |
 | CLI | Interface / TypeScript | User-facing commands orchestrating all pipeline stages | 10.1–10.7 | All components (P0) | Service |
-| ReactToDslSkill | AI / Skill | Generate DSL code from React component source | 11.1–11.10 | Claude Code Skills system (P0) | — |
+| ReactToDslSkill | AI / Skill | Generate DSL code from React component source | 11.1–11.10, 12.1–12.32 | Claude Code Skills system (P0) | — |
 
 ### DSL Core Layer
 
@@ -395,7 +402,7 @@ interface DslFigmaApi {
 | Field | Detail |
 |-------|--------|
 | Intent | Provide environment-agnostic helper functions matching the reference plugin's utilities |
-| Requirements | 2.1–2.7, 3.1–3.6 |
+| Requirements | 2.1–2.7, 3.1–3.6, 12.2–12.3, 12.10–12.11 |
 
 **Responsibilities & Constraints**
 - `hexToRGB(hex: string)`: Convert hex color strings to `{ r, g, b }` in 0.0–1.0 range
@@ -442,6 +449,31 @@ function setAutoLayout(node: DslFrameNode, options: AutoLayoutOptions): void;
 type ColorTokenMap = Record<string, string>;  // tokenName → hex
 function defineTokens(tokens: ColorTokenMap): ColorTokenMap;
 function tokenPaint(tokens: ColorTokenMap, name: string): DslSolidPaint;
+
+// --- Reference Design Token Constants (12.2–12.3, 12.10–12.11) ---
+// Pre-defined token maps matching the reference library's tokens.css.
+// AI skill and manual DSL authors import these for consistency.
+
+/** Color scales: primary-50..900, gray-50..950, pink, orange, cyan, green */
+const REFERENCE_COLORS: ColorTokenMap;
+
+/** Semantic tokens: text-primary, bg-primary, border-default, etc. */
+const SEMANTIC_COLORS: ColorTokenMap;
+
+/** Gradient definitions: gradient-primary, gradient-hero, gradient-cta, etc. */
+const REFERENCE_GRADIENTS: Record<string, { stops: Array<{ color: string; position: number }>; angle: number }>;
+
+/** Spacing scale: space-1 (4px) through space-24 (96px) */
+const SPACING_SCALE: Record<string, number>;
+
+/** Border radius scale: radius-sm (2px) through radius-full (9999px) */
+const RADIUS_SCALE: Record<string, number>;
+
+/** Typography size scale: text-xs (12px) through text-6xl (60px) */
+const FONT_SIZE_SCALE: Record<string, number>;
+
+/** Font weight map: regular (400), medium (500), semibold (600), bold (700) */
+const FONT_WEIGHTS: Record<string, number>;
 ```
 - Preconditions: Hex strings must be valid 6-digit hex with `#` prefix; gradient angles in degrees
 - Postconditions: Paint objects are Figma Plugin API-compatible; `setAutoLayout` mutates the node's layout properties in place
@@ -662,7 +694,7 @@ interface RendererService {
 | Field | Detail |
 |-------|--------|
 | Intent | Capture isolated React component screenshots via headless browser |
-| Requirements | 7.1–7.4 |
+| Requirements | 7.1–7.4, 12.9, 12.25–12.26 |
 
 **Dependencies**
 - External: Playwright 1.50+ (P0)
@@ -676,6 +708,7 @@ interface CaptureOptions {
   selector?: string;
   background?: 'white' | 'transparent';
   deviceScaleFactor?: number;
+  scrollPosition?: number;  // pixels from top (12.26), default: 0
 }
 
 interface CaptureResult {
@@ -693,6 +726,8 @@ interface CaptureService {
 **Implementation Notes**
 - Two capture modes: (1) `capture()` spins up minimal Vite server for isolated render; (2) `captureUrl()` navigates to existing dev server
 - Element-level screenshot via `element.screenshot({ type: 'png' })`
+- **Responsive capture (12.9)**: Each invocation captures at a single viewport width — responsive variants are handled by invoking capture multiple times with different viewport options, not by representing responsiveness in a single DSL
+- **Static snapshot (12.25–12.26)**: Screenshots capture the component at rest — CSS animations and transitions render in their initial or default state. Scroll position defaults to 0 (top of page); configurable via `scrollPosition` option for components with scroll-dependent styling (e.g., Navbar blur)
 
 ---
 
@@ -845,19 +880,41 @@ interface PipelineOptions {
 | Field | Detail |
 |-------|--------|
 | Intent | Claude Code skill that generates DSL definitions from React component source code |
-| Requirements | 11.1–11.10 |
+| Requirements | 11.1–11.10, 12.1–12.32 |
 
 **Responsibilities & Constraints**
+
+*Supported pattern analysis (12.1–12.24):*
 - Accept a React component file path as argument (e.g., `/react-to-dsl src/components/Button/Button.tsx`)
 - Read the component's `.tsx` file, associated `.module.css` or style files, and `types.ts` for prop interfaces
-- Analyze JSX structure → map to `createFrame()`, `createText()`, `createRectangle()` calls
-- Map CSS flexbox → `setAutoLayout()` calls (direction, spacing, padding, alignment)
-- Map CSS colors → `solidPaint()` / `gradientPaint()` calls
-- Map CSS typography → text node properties (fontSize, fontWeight, lineHeight, etc.)
-- Map React prop variants → `createComponent()` + `combineAsVariants()` with COMPONENT_SET
-- Map boolean props → `addComponentProperty(name, 'BOOLEAN', default)`
+- **CSS Modules (12.1)**: Parse `.module.css` files and resolve `styles[variant]` dynamic key access to identify variant-specific styling
+- **Design tokens (12.2–12.3)**: Resolve CSS custom property references (`var(--color-primary-600)`) through `tokens.css` to concrete hex values; use `REFERENCE_COLORS` and `SEMANTIC_COLORS` constants from SharedHelpers
+- **Flexbox layout (12.6)**: Map `display: flex`, `flex-direction`, `justify-content`, `align-items`, `gap`, `padding` → `setAutoLayout()` calls with correct direction, spacing, padding, alignment
+- **Grid layout (12.7)**: Map `grid-template-columns: repeat(N, 1fr)` with `gap` → nested Auto Layout structure (vertical container with N horizontal child frames per row)
+- **Container patterns (12.8)**: Map `max-width` + `margin: 0 auto` → FRAME with `layoutSizingHorizontal: 'FIXED'` at container width
+- **Typography (12.10–12.12)**: Map HTML heading elements (`<h1>`–`<h3>`, `<p>`, `<span>`) to TEXT nodes with appropriate `fontSize` from `FONT_SIZE_SCALE` and `fontWeight` from `FONT_WEIGHTS`
+- **Colors (12.13–12.14)**: Map CSS color values and `linear-gradient()` to `solidPaint()` / `gradientPaint()` calls
+- **Borders (12.15)**: Map `border` and `border-radius` → stroke and `cornerRadius` properties
+- **Children (12.16)**: Map `children: ReactNode` → DSL `appendChild()` calls
+- **Array data (12.17)**: Map `.map()` rendering → repeated child node creation in DSL
+- **Nesting (12.18)**: Map composed components → nested DSL function calls (e.g., `buildPricingCard()` called inside `buildPricingTable()`)
+- **Conditional (12.19)**: Map `{value && <Element>}` → conditional node creation or `visible: false`
+- **Boolean props (12.20)**: Map `fullWidth?: boolean` → `addComponentProperty(name, 'BOOLEAN', default)`
+- **Variant props (12.21)**: Map `variant: 'primary' | 'secondary'` → `combineAsVariants()` COMPONENT_SET
+- **Size props (12.22)**: Map `size: 'sm' | 'md' | 'lg'` → additional variant axis
+- **Cartesian product (12.23)**: When both variant and size props exist, generate all combinations (e.g., 4 variants × 3 sizes = 12 variant components)
+- **String props (12.24)**: Map `title?: string` → `addComponentProperty(name, 'TEXT', default)`
 - Generate Code Connect `.figma.tsx` stub using `figma.enum()`, `figma.string()`, `figma.boolean()`, `figma.instance()`
-- Emit `// TODO:` comments for uncertain mappings
+
+*Out-of-scope handling (12.25–12.32):*
+- **Animations (12.25)**: Ignore CSS `transition`, `animation`, `@keyframes`; render static state only
+- **Scroll state (12.26)**: Ignore scroll-based conditional styling (e.g., Navbar `scrolled` class); render default (unscrolled) state
+- **Backdrop filter (12.27)**: Emit `// TODO: backdrop-filter not supported` comment; omit from DSL
+- **Gradient text (12.28)**: Emit `// TODO: gradient text (background-clip: text) not supported` comment; use fallback solid color from the first gradient stop
+- **SVG icons (12.29)**: Emit `// TODO: replace with icon asset` comment; generate placeholder RECTANGLE or ELLIPSE node with icon dimensions
+- **External images (12.30)**: Emit `// TODO: external image` comment with URL; generate placeholder RECTANGLE with image dimensions if determinable
+- **Box shadow (12.31)**: Emit `// TODO: box-shadow not supported` comment; omit from DSL (Figma effects out of scope)
+- **Dark mode (12.32)**: Generate DSL for light mode only; note that dark mode requires a separate invocation with theme override
 
 **Dependencies**
 - External: Claude Code Skills system (P0) — provides invocation mechanism
@@ -879,23 +936,29 @@ description: >
 ```
 
 **Skill Instructions** (markdown body of SKILL.md):
-1. Read the target React component file and its associated CSS/style files
-2. Read the component's prop type interface
-3. Analyze the JSX tree structure and map each element to DSL node creation calls
-4. Map CSS layout properties to `setAutoLayout()` configurations
-5. Map CSS color values to `solidPaint()` / `gradientPaint()` calls
-6. Map typography CSS to text node properties
-7. If the component has variant props (union types), generate a `combineAsVariants()` COMPONENT_SET
-8. If the component has boolean props, generate `addComponentProperty()` calls
-9. Output the DSL definition file (`.dsl.ts`)
-10. Output a Code Connect stub file (`.figma.tsx`)
-11. Add `// TODO:` comments where mappings are uncertain
+1. Read the target React component file and its associated `.module.css` file
+2. Read `tokens.css` to resolve CSS custom property values to concrete hex/px values
+3. Read the component's prop type interface (from `types.ts` or inline)
+4. Analyze the JSX tree structure and map each element to DSL node creation calls
+5. Parse CSS Modules classes referenced by the component; resolve `styles[variant]` patterns
+6. Map CSS flexbox properties to `setAutoLayout()` configurations
+7. Map `grid-template-columns: repeat(N, 1fr)` to nested Auto Layout structures
+8. Map CSS color values and design token references to `solidPaint()` / `gradientPaint()` calls using `REFERENCE_COLORS`
+9. Map typography CSS to text node properties using `FONT_SIZE_SCALE` and `FONT_WEIGHTS`
+10. If the component has variant props (union types), generate a `combineAsVariants()` COMPONENT_SET with Cartesian product of all variant axes
+11. If the component has boolean props, generate `addComponentProperty()` calls
+12. If the component has string props, generate `addComponentProperty(name, 'TEXT', default)` calls
+13. For out-of-scope patterns (animations, gradient text, SVG icons, external images, box-shadow, backdrop-filter), emit `// TODO:` comments with fallback nodes
+14. Output the DSL definition file (`.dsl.ts`)
+15. Output a Code Connect stub file (`.figma.tsx`)
 
 **Implementation Notes**
 - The skill is a `.claude/skills/react-to-dsl/SKILL.md` file in the project repository
 - It leverages Claude's understanding of both React/CSS patterns and Figma API semantics
 - Output quality depends on the LLM — generated code should be reviewed and refined through the visual comparison loop
 - The skill reads existing DSL examples in the project for style consistency (few-shot learning from codebase)
+- The skill imports `REFERENCE_COLORS`, `SEMANTIC_COLORS`, `FONT_SIZE_SCALE`, `FONT_WEIGHTS`, `SPACING_SCALE`, and `RADIUS_SCALE` from SharedHelpers to generate token-aware DSL code
+- For components with both variant and size props (e.g., Button: 4 variants × 3 sizes = 12), the skill generates all Cartesian product combinations as individual variant components named `variant=primary, size=sm`, etc.
 
 ## Data Models
 
@@ -984,3 +1047,5 @@ Each pipeline stage produces typed errors with contextual information.
 
 ### Visual Regression
 - **Reference components**: Render all 16 reference components from DSL definitions using Figma Plugin API-style code, compare against React component screenshots. Establish baseline similarity scores.
+- **Supported pattern coverage (12.1–12.24)**: For each supported pattern category (CSS Modules, flexbox, grid, typography, colors, variants, composition), include at least one reference component that exercises the pattern. Verify that the AI skill generates correct DSL for each.
+- **Out-of-scope fallback verification (12.25–12.32)**: Verify that components with out-of-scope patterns (e.g., Navbar with scroll state, LogoCloud with marquee, Hero with gradient text) generate DSL with appropriate `// TODO:` comments and fallback nodes rather than errors.
