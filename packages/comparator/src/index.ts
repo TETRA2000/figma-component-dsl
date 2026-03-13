@@ -1,2 +1,3 @@
 // @figma-dsl/comparator — Pixel-level image comparison via pixelmatch
-export {};
+export { compare } from "./comparator.js";
+export type { CompareOptions, CompareResult } from "./comparator.js";
