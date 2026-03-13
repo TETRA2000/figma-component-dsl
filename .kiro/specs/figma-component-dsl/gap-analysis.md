@@ -74,7 +74,40 @@ The `RenderOptions` interface declares `assetDir?: string`, but the renderer con
 - B) Defer until image-based components are defined in DSL tests
 - C) Document as a known limitation
 
-### Gap 2: Steering Drift — tech.md References Python/PyCairo
+### Gap 2: letterSpacing Not Applied in Rendering or Plugin (Req 4.4) — **Partial**
+
+`letterSpacing` is modeled in the type system (`TextStyle`) and passed to the measurer interface, but:
+- The Canvas 2D renderer does not apply `ctx.letterSpacing` when rendering text
+- The text measurer does not factor letter spacing into width calculations
+- The Figma plugin does not set `text.letterSpacing` on created text nodes
+
+**Impact**: Low — all reference components use default letter spacing. Would affect precise layout of letter-spaced text.
+
+### Gap 3: lineHeight Not Applied by Figma Plugin (Req 9.4) — **Partial**
+
+The exporter writes `lineHeight` to the plugin JSON, but the plugin's TEXT node creation does not set `text.lineHeight` on the Figma node. Figma text nodes will use default line height instead of the DSL-specified value.
+
+**Impact**: Low for single-line text; visible for multi-line text where line height affects fidelity.
+
+### Gap 4: Per-Corner cornerRadii Not Rendered (Req 1.1) — **Partial**
+
+`cornerRadii` (topLeft, topRight, bottomLeft, bottomRight) is supported in the DSL type and triggers `ROUNDED_RECTANGLE` type mapping in the compiler, but the renderer only calls `ctx.roundRect(x, y, w, h, cornerRadius)` with the uniform value. Per-corner rendering is not implemented.
+
+**Impact**: Low — no current test definitions use per-corner radii. Only uniform `cornerRadius` is visually applied.
+
+### Gap 5: Stroke Alignment Not Rendered (Req 3.4) — **Partial**
+
+`StrokePaint.align` (INSIDE/CENTER/OUTSIDE) is defined in the type and stored, but the renderer always strokes at Canvas 2D default (center position). Inside/outside inset logic is not implemented.
+
+**Impact**: Low — current test definitions do not rely on stroke alignment for pixel-accurate matching.
+
+### Gap 6: Capturer Has No Tests (Req 7) — **Missing Coverage**
+
+No test file exists for the capturer package. Playwright/Chromium-based testing requires a running browser environment. The CLI test suite covers only usage-error paths, not actual URL capture.
+
+**Impact**: Medium — regressions would only be caught in CI if a browser is available.
+
+### Gap 7: Steering Drift — tech.md References Python/PyCairo
 
 `tech.md` states: *"PyCairo for rendering (proven for Figma-accurate rasterization)"* and references Python 3.10+, pytest, etc. The implementation correctly uses TypeScript/@napi-rs/canvas per the approved design document, but the steering file has not been updated.
 
@@ -82,7 +115,7 @@ The `RenderOptions` interface declares `assetDir?: string`, but the renderer con
 
 **Resolution**: Update `tech.md` to reflect the single-language TypeScript stack.
 
-### Gap 3: Optional Task 11.5 — Visual Regression Not Executed
+### Gap 8: Optional Task 11.5 — Visual Regression Not Executed
 
 The deferred optional task requires the reference React app (`figma_design_playground`) to be running. No baseline similarity scores have been established.
 
@@ -110,10 +143,18 @@ The implementation created 8 new packages from scratch, following the design doc
 
 ## 4. Recommendations
 
-1. **Image asset rendering** (Gap 1): Implement when needed — add `loadImage()` support to handle IMAGE paint types. This is a ~2 hour task (S effort).
+1. **Image asset rendering** (Gap 1): Add `loadImage()` to handle IMAGE paint types. S effort (~2 hours).
 
-2. **Steering update** (Gap 2): Update `tech.md` to reflect TypeScript/@napi-rs/canvas stack. Quick fix.
+2. **Typography fidelity** (Gaps 2-3): Apply `letterSpacing` in renderer/measurer and `lineHeight` in plugin. S effort each.
 
-3. **Visual regression** (Gap 3): Execute task 11.5 when the reference React app is available. This establishes baseline similarity scores for ongoing regression testing.
+3. **Per-corner radii rendering** (Gap 4): Pass `cornerRadii` array to `ctx.roundRect()`. S effort.
 
-4. **No blocking gaps**: The implementation covers all functional requirements. The codebase is ready for use.
+4. **Stroke alignment** (Gap 5): Implement inside/outside stroke inset logic. S effort.
+
+5. **Capturer tests** (Gap 6): Add Playwright-based integration tests with a test fixture server. M effort.
+
+6. **Steering update** (Gap 7): Update `tech.md` to reflect TypeScript/@napi-rs/canvas stack. Quick fix.
+
+7. **Visual regression** (Gap 8): Execute task 11.5 when the reference React app is available.
+
+8. **No blocking gaps**: All 10 requirements are functionally covered. Gaps are rendering fidelity refinements and test coverage improvements.
