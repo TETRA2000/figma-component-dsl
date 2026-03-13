@@ -1,18 +1,12 @@
 # Implementation Plan
 
 - [ ] 1. Project setup and monorepo infrastructure
-- [ ] 1.1 Initialize npm workspaces monorepo with shared TypeScript configuration
-  - Set up workspace packages for DSL core, compiler, capturer, comparator, exporter, plugin, and CLI
+  - Set up npm workspace packages for DSL core, compiler, renderer, capturer, comparator, exporter, plugin, and CLI
   - Configure TypeScript 5.9+ strict mode with no `any` and ES2023 target as shared base configuration
-  - Add vitest as the shared test runner across TypeScript packages
-  - Bundle Inter font files (Regular, Medium, Semi Bold, Bold .otf) in the DSL core package for text measurement
+  - Add @napi-rs/canvas 0.1.96+ as a shared dependency for both compiler (text measurement) and renderer (rasterization)
+  - Add vitest as the shared test runner across all packages
+  - Bundle Inter font files (Regular, Medium, Semi Bold, Bold .otf) in the DSL core package for text measurement and rendering
   - _Requirements: 10.1_
-
-- [ ] 1.2 (P) Set up the Python renderer package
-  - Create a Python package with pyproject.toml following figma-html-renderer conventions
-  - Declare PyCairo 1.27+ and Pillow as dependencies, pytest as a dev dependency
-  - Verify development installation works with editable install
-  - _Requirements: 6.1_
 
 - [ ] 2. DSL Core — Node primitives and color system
 - [ ] 2.1 Implement the node type system and factory functions for basic shapes
@@ -38,12 +32,11 @@
 - [ ] 3.1 Implement auto-layout configuration and layout helpers
   - Implement AutoLayoutConfig with direction (HORIZONTAL/VERTICAL), spacing, padding (uniform, padX/padY axis-based, per-side top/right/bottom/left), primary axis alignment (MIN/CENTER/MAX/SPACE_BETWEEN), and counter axis alignment (MIN/CENTER/MAX)
   - Implement horizontal() and vertical() convenience functions that set direction and merge default values
-  - Support sizing modes (FIXED/HUG/FILL) at both unified and per-axis (widthSizing/heightSizing) levels
-  - Support layoutGrow property on child nodes for spacer and flex-grow behavior
-  - Support per-child layoutSizingHorizontal and layoutSizingVertical overrides
+  - Support container sizing modes (FIXED/HUG/FILL) at both unified and per-axis (widthSizing/heightSizing) levels on AutoLayoutConfig
+  - Implement ChildLayoutProps (layoutSizingHorizontal, layoutSizingVertical, layoutGrow) for child nodes within auto-layout parents
   - Validate that auto-layout is only applied to FRAME and COMPONENT node types
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
-  - _Contracts: DslCore Service (AutoLayoutConfig)_
+  - _Contracts: DslCore Service (AutoLayoutConfig, ChildLayoutProps)_
 
 - [ ] 3.2 (P) Implement typography system and text node properties
   - Implement TextStyle with font family (default: Inter), weight (400/500/600/700), and font size in pixels
@@ -51,6 +44,7 @@
   - Support letter spacing with value and unit discriminator (PERCENT or PIXELS)
   - Support text alignment (LEFT/CENTER/RIGHT) mapped to textAlignHorizontal property
   - Support convenience color shorthand on TextStyle (hex string auto-converted to text fill)
+  - Accept ChildLayoutProps on the text() factory (via TextStyle & ChildLayoutProps intersection) for sizing within auto-layout parents
   - Validate that characters is required on TEXT nodes and forbidden on other node types
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
   - _Contracts: DslCore Service (TextStyle)_
@@ -66,10 +60,11 @@
 
 - [ ] 4. Compiler — Core pipeline
 - [ ] 4.1 Implement GUID assignment, parent references, and compile result structure
+  - Define FigmaNodeType typed union covering FRAME, TEXT, RECTANGLE, ROUNDED_RECTANGLE, ELLIPSE, GROUP, COMPONENT, COMPONENT_SET, INSTANCE, and VECTOR
   - Traverse the DslNode tree depth-first, assigning counter-based GUIDs ([0, N] with auto-incrementing N) to each node
   - Generate parentIndex references linking each non-root node to its parent's GUID and position
-  - Produce the CompileResult structure containing the root FigmaNodeDict, total node count, and accumulated errors
-  - Implement compileToJson() for serializing the result to JSON matching the figma-html-renderer node dictionary format
+  - Produce the CompileResult structure containing the root FigmaNodeDict (with typed FigmaNodeType), total node count, and accumulated errors
+  - Implement compileToJson() for serializing the result to JSON
   - Ensure deterministic GUID generation for reproducible snapshot testing
   - _Requirements: 1.6_
   - _Contracts: CompilerService_
@@ -85,7 +80,7 @@
 - [ ] 4.3 (P) Implement transform matrix computation for fixed-position nodes
   - Compose 3×3 affine transform matrices: parent transform × child offset = child absolute transform
   - Use identity matrix for the root node
-  - Output transforms in figma-html-renderer format: [[a, c, tx], [b, d, ty], [0, 0, 1]]
+  - Output transforms in format: [[a, c, tx], [b, d, ty], [0, 0, 1]]
   - Handle nodes without auto-layout parents by using their explicit position as the offset
   - Auto-layout containers delegate positioning to the layout algorithm (Task 5.2)
   - _Requirements: 1.6_
@@ -99,11 +94,13 @@
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
 - [ ] 5. Compiler — Text measurement and auto-layout algorithm
-- [ ] 5.1 Integrate opentype.js and implement the text measurer
-  - Load Inter font files (.otf) for four weights (Regular, Medium, Semi Bold, Bold) via opentype.js
-  - Measure text width by summing scaled glyph advance widths with GPOS/GSUB kerning and ligature support
+- [ ] 5.1 Implement the Skia-based text measurer using @napi-rs/canvas
+  - Initialize the text measurer by registering Inter font files (.otf) for four weights via GlobalFonts.registerFromPath()
+  - Create a lightweight scratch canvas context for measurement (no pixel buffer needed)
+  - Set ctx.font to match the text style (e.g., '600 14px Inter') and call ctx.measureText() for width via TextMetrics
   - Compute text height as line count × line height (defaulting to fontSize × 1.2 when line height is unspecified)
   - Handle multi-line text (split on \n) returning width as the maximum line width across all lines
+  - Uses the same Skia text shaping engine as the Renderer, eliminating measurement-rendering discrepancy
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
   - _Contracts: TextMeasurer_
 
@@ -124,37 +121,38 @@
   - Set top-level fontSize, fontFamily, and textAlignHorizontal fields on the compiled node for renderer convenience
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
 
-- [ ] 6. Python renderer — PyCairo rendering pipeline
-- [ ] 6.1 (P) Implement frame and shape rendering
+- [ ] 6. TypeScript renderer — @napi-rs/canvas rendering pipeline
+- [ ] 6.1 Implement renderer initialization and frame/shape rendering
+  - Initialize the renderer by registering Inter font files via GlobalFonts.registerFromPath() (shared registration with the text measurer)
+  - Create a canvas via createCanvas(width * scale, height * scale) using root node size
   - Render FRAME, COMPONENT, COMPONENT_SET, and INSTANCE nodes as rectangles with solid color fills, strokes, corner radius, opacity, and content clipping
-  - Render RECTANGLE nodes with solid fills, stroke outlines, and rounded corners using Cairo arcs
-  - Render ELLIPSE nodes using Cairo arc and scale transformations
-  - Apply node affine transforms via Cairo matrix operations with context save/restore
-  - Skip invisible nodes (visible=false) while continuing to traverse their subtrees
-  - Accept FigmaNodeDict JSON from stdin or file path argument
+  - Render RECTANGLE nodes with solid fills, stroke outlines, and rounded corners using ctx.roundRect()
+  - Render ELLIPSE nodes using ctx.arc() with appropriate center and radius calculations
+  - Apply node affine transforms via ctx.setTransform(a, b, c, d, tx, ty) with context save/restore
+  - Skip invisible nodes (visible=false) while preserving tree structure
+  - Return PNG buffer via canvas.toBuffer('image/png') and optionally write to file
   - _Requirements: 6.1, 6.2_
-  - _Contracts: DslRenderer_
+  - _Contracts: RendererService_
 
 - [ ] 6.2 Implement text rendering
-  - Render TEXT nodes using Cairo select_font_face and show_text with correct font family, weight, and size
-  - Map font weight to Cairo values: 400→FONT_WEIGHT_NORMAL, 500–700→FONT_WEIGHT_BOLD
+  - Render TEXT nodes using ctx.font with CSS font syntax (e.g., '600 14px Inter') and ctx.fillText()
+  - Map font weight to CSS weight values: 400→normal, 500→'500', 600→'600', 700→bold
   - Position each text line using baseline data from derivedTextData (lineY and lineHeight)
-  - Apply text color from the first fillPaint entry
+  - Apply text color from the first fillPaint entry via ctx.fillStyle
   - Implement horizontal text alignment (LEFT/CENTER/RIGHT) by computing x-offset based on textAlignHorizontal and measured text width
   - _Requirements: 6.1, 6.2_
 
 - [ ] 6.3 (P) Implement linear gradient fill rendering
-  - Create Cairo LinearGradient patterns from gradientStops color/position data
-  - Convert Figma gradient transform matrices (rotation angle) to Cairo point-to-point gradient coordinates
-  - Apply gradient fills alongside solid fills on multi-fill nodes
+  - Create Canvas linear gradients via ctx.createLinearGradient(x0, y0, x1, y1) from gradientStops color/position data
+  - Convert Figma gradient transform matrices (rotation angle) to gradient start/end coordinates
+  - Apply gradient fills alongside solid fills on multi-fill nodes by setting ctx.fillStyle to the gradient object
   - _Requirements: 6.2_
 
-- [ ] 6.4 Implement image asset handling, CLI entry point, and error reporting
+- [ ] 6.4 Implement image asset handling and error reporting
   - Resolve image asset paths relative to a configurable asset directory
-  - Load images as Cairo surface patterns scaled to fill node bounds
-  - Implement Python CLI entry point accepting --input, --output, --scale, --bg (white|transparent), and --assets flags
-  - Output structured JSON error messages to stderr with node path, node type, and error description
-  - Produce PNG output at the specified path with correct pixel dimensions
+  - Load images via @napi-rs/canvas loadImage() and draw them scaled to fill node bounds
+  - Throw typed RenderError instances with node path, node type, and error description
+  - Produce PNG output at correct pixel dimensions with configurable background color and scale
   - _Requirements: 6.3, 6.4_
 
 - [ ] 7. (P) Screenshot capturer — React component isolation via Playwright
@@ -212,9 +210,9 @@
 - [ ] 10. CLI interface — Pipeline orchestration
 - [ ] 10.1 Implement compile and render commands
   - Implement the compile command: import and execute a DSL module (.dsl.ts), compile the resulting DslNode tree, and output FigmaNodeDict JSON to file or stdout
-  - Implement the render command: invoke the Python renderer as a subprocess with JSON input (via stdin or temp file), passing --output, --scale, and --bg flags
-  - Discover the Python interpreter via the FIGMA_DSL_PYTHON environment variable, falling back to python3 on PATH
-  - Report subprocess errors by parsing the renderer's structured JSON stderr output and presenting it with pipeline context
+  - Implement the render command: invoke the in-process TypeScript renderer with compiled FigmaNodeDict, passing scale and background options
+  - Accept either a DSL path (compile + render in one step) or a pre-compiled JSON path (render only)
+  - Write rendered PNG to the specified output path
   - _Requirements: 10.1, 10.2_
   - _Contracts: CliCommands_
 
@@ -231,23 +229,16 @@
   - Build CLI with Node.js parseArgs (no framework dependency)
   - _Requirements: 10.5, 10.6, 10.7_
 
-- [ ] 10.4 (P) Implement the doctor command for environment verification
-  - Verify Node.js version (22+), Python version (3.10+), PyCairo availability, and Inter font installation
-  - Run preflight checks: Python interpreter discovery, import cairo validation, font file presence
-  - Report status of each dependency with actionable error messages for missing items
-  - _Requirements: 10.7_
-
 - [ ] 11. Integration and end-to-end testing
 - [ ] 11.1 Implement compile-to-render integration tests
-  - Test the full compile → render pipeline: create DSL definitions, compile to FigmaNodeDict JSON, render via Python subprocess, verify output PNG exists with expected dimensions
-  - Test error propagation: verify that renderer subprocess errors are captured and reported with context by the TypeScript pipeline
-  - Test that the JSON interchange format produced by the compiler is correctly consumed by the Python renderer
+  - Test the full compile → render pipeline: create DSL definitions, compile to FigmaNodeDict, render via in-process TypeScript renderer, verify output PNG exists with expected dimensions
+  - Test error propagation: verify that renderer errors are caught and reported with context by the pipeline
   - _Requirements: 6.1, 6.2, 10.1, 10.2_
 
 - [ ] 11.2 Implement CLI end-to-end tests
   - Test each CLI subcommand (compile, render, capture, compare, pipeline, export) with sample inputs and verify expected outputs
   - Test the pipeline command end-to-end: DSL → compile → render → capture → compare, verifying similarity score and output files
-  - Test error scenarios: invalid DSL input (non-zero exit code, descriptive error), missing Python environment (actionable message), comparison below threshold (exit code 1)
+  - Test error scenarios: invalid DSL input (non-zero exit code, descriptive error), comparison below threshold (exit code 1)
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7_
 
 - [ ] 11.3 Create DSL test definitions for primitive and card-level components
@@ -258,8 +249,8 @@
   - **PricingCard** (standard + highlighted variants) — highlighted variant with dark gradient background and inverted text colors, features list with checkmark circles, 1px divider line, conditional CTA button styling, 24px corner radius
   - **CTABanner** — 3-stop dark gradient background (indigo→purple), centered vertical layout with 32px spacing, nested horizontal button row with contrasting styles (solid white + transparent outline), 24px corner radius
   - These definitions exercise: gradient fills, auto-layout (H+V), sizing variants, component properties (TEXT/BOOLEAN/INSTANCE_SWAP), ELLIPSE shapes, multi-fill nodes, border strokes, and nested component structures
-  - Compile each definition and verify the compiler produces valid FigmaNodeDict JSON with correct transforms and layout
-  - Render each definition via the Python renderer and verify output PNG dimensions and visual correctness
+  - Compile each definition and verify the compiler produces valid FigmaNodeDict with correct transforms and layout
+  - Render each definition via the TypeScript renderer and verify output PNG dimensions and visual correctness
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 4.5, 5.1, 5.2, 5.3, 5.4, 6.1, 6.2_
 
 - [ ] 11.4 Create DSL test definitions for section and page-level compositions

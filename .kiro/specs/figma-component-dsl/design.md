@@ -94,9 +94,8 @@ graph TB
 ### Font Assets
 
 - The Inter font family (.otf files for Regular, Medium, Semi Bold, Bold weights) is bundled in `packages/dsl-core/fonts/`
-- opentype.js loads these files for text measurement in the Compiler
-- @napi-rs/canvas loads them via `GlobalFonts.registerFromPath()` for text rendering — no system font dependency
-- Both the Compiler (measurement) and Renderer (drawing) use the same bundled font files, minimizing measurement-rendering discrepancy
+- @napi-rs/canvas loads them via `GlobalFonts.registerFromPath()` for both text measurement (Compiler) and text rendering (Renderer) — no system font dependency
+- Both the Compiler (measurement via `ctx.measureText()`) and Renderer (drawing via `ctx.fillText()`) use the same Skia engine and bundled font files, producing zero measurement-rendering discrepancy
 
 ## System Flows
 
