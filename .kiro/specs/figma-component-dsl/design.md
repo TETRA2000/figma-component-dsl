@@ -231,7 +231,9 @@ flowchart TB
 | 8.1–8.4 | Visual comparison with diff | Comparator | CompareService | Pipeline Flow |
 | 9.1–9.8 | Figma plugin — direct DSL execution | PluginRuntime | PluginRunner | Plugin Execution Flow |
 | 10.1–10.7 | CLI interface for all pipeline operations | CLI | CliCommands | Pipeline Flow |
-| 11.1–11.10 | AI-powered React-to-DSL generation | ReactToDslSkill | SKILL.md | — |
+| 11.1–11.9 | Supported React component patterns (flexbox, grid, CSS Modules, variants, booleans, arrays) | ReactToDslSkill | PatternConstraints | — |
+| 11.10–11.14 | Unsupported pattern handling (absolute positioning, animations, responsive, state, third-party) | ReactToDslSkill | PatternConstraints | — |
+| 12.1–12.12 | AI-powered React-to-DSL generation (skill, file reading, mapping, Code Connect stubs) | ReactToDslSkill | SKILL.md | — |
 
 ## Components and Interfaces
 
@@ -245,7 +247,7 @@ flowchart TB
 | Comparator | Analysis / TypeScript | Pixel-level image diff with similarity scoring | 8.1–8.4 | pixelmatch (P0), pngjs (P0) | Service |
 | PluginRuntime | Export / Figma | Execute bundled DSL code with real Figma Plugin API | 9.1–9.8 | Figma Plugin API (P0), esbuild (P1) | Service |
 | CLI | Interface / TypeScript | User-facing commands orchestrating all pipeline stages | 10.1–10.7 | All components (P0) | Service |
-| ReactToDslSkill | AI / Skill | Generate DSL code from React component source | 11.1–11.10 | Claude Code Skills system (P0) | — |
+| ReactToDslSkill | AI / Skill | Generate DSL code from React components within supported pattern constraints | 11.1–11.14, 12.1–12.12 | Claude Code Skills system (P0) | — |
 
 ### DSL Core Layer
 
@@ -845,24 +847,44 @@ interface PipelineOptions {
 
 | Field | Detail |
 |-------|--------|
-| Intent | Claude Code skill that generates DSL definitions from React component source code |
-| Requirements | 11.1–11.10 |
+| Intent | Claude Code skill that generates DSL definitions from React components within explicitly defined pattern constraints |
+| Requirements | 11.1–11.14, 12.1–12.12 |
 
 **Responsibilities & Constraints**
+
+*Supported Patterns (11.1–11.9) — the skill processes these React patterns:*
+- CSS Modules (`.module.css`) with design tokens as CSS custom properties
+- Flexbox layout (`display: flex`, `flex-direction`, `gap`, `align-items`, `justify-content`, `padding`)
+- CSS Grid layout (`display: grid`, `grid-template-columns`, `gap`) for uniform grid arrangements
+- Variant props as TypeScript union string types (e.g., `variant: 'primary' | 'secondary'`)
+- Boolean props that toggle visual states (e.g., `highlighted: boolean`)
+- String content props (e.g., `title: string`, `children: ReactNode` where children is text)
+- Array data props rendered via `.map()` (e.g., `features: Feature[]`) — generates representative instance from first element
+- Up to 3 levels of composition depth (primitives → sections → pages)
+- Up to 15 nested elements per component
+
+*Unsupported Pattern Handling (11.10–11.14) — the skill emits `// TODO:` and skips:*
+- Absolute/fixed positioning (`position: absolute/fixed`) — Figma Auto Layout does not support it
+- CSS animations, transitions, hover states — generates default (non-animated, non-hovered) state only
+- Responsive breakpoints (`@media` queries) — generates single viewport (default: 1200px desktop)
+- Dynamic state (`useState`, `useEffect`, event handlers) — generates initial/default state only
+- Third-party UI library imports — reports as unsupported and skips
+
+*Generation (12.1–12.12):*
 - Accept a React component file path as argument (e.g., `/react-to-dsl src/components/Button/Button.tsx`)
-- Read the component's `.tsx` file, associated `.module.css` or style files, and `types.ts` for prop interfaces
-- Analyze JSX structure → map to `createFrame()`, `createText()`, `createRectangle()` calls
-- Map CSS flexbox → `setAutoLayout()` calls (direction, spacing, padding, alignment)
-- Map CSS colors → `solidPaint()` / `gradientPaint()` calls
-- Map CSS typography → text node properties (fontSize, fontWeight, lineHeight, etc.)
-- Map React prop variants → `createComponent()` + `combineAsVariants()` with COMPONENT_SET
+- Read associated files: `.module.css` for styles, `types.ts` for shared prop interfaces, `tokens.css` for design token values
+- Analyze JSX structure → map to `createFrame()`, `await createText()`, `createRectangle()` calls
+- Resolve CSS custom property references (e.g., `var(--color-primary-600)`) to hex values from `tokens.css` → `solidPaint()` calls
+- Map CSS flexbox → `setAutoLayout()` calls: `flex-direction` → `direction`, `gap` → `spacing`, `padding` → `padX`/`padY`, `align-items`/`justify-content` → `align`/`counterAlign`
+- Map CSS typography → text node properties (`font-size` → `fontSize`, `font-weight` → `fontWeight`, `line-height` → `lineHeight`, `letter-spacing` → `letterSpacing`, `text-align` → `textAlignHorizontal`)
+- Map variant props → `createComponent()` + `combineAsVariants()` with one variant per combination, `Key=Value` naming
 - Map boolean props → `addComponentProperty(name, 'BOOLEAN', default)`
+- For array `.map()` patterns → generate one representative child instance using the first array element as template
 - Generate Code Connect `.figma.tsx` stub using `figma.enum()`, `figma.string()`, `figma.boolean()`, `figma.instance()`
-- Emit `// TODO:` comments for uncertain mappings
 
 **Dependencies**
 - External: Claude Code Skills system (P0) — provides invocation mechanism
-- External: Source component files — React `.tsx`, CSS Modules, type definitions (P0)
+- External: Source component files — React `.tsx`, CSS Modules (`.module.css`), `types.ts`, `tokens.css` (P0)
 
 **Contracts**: — (AI skill, no programmatic interface)
 
@@ -873,30 +895,36 @@ interface PipelineOptions {
 name: react-to-dsl
 description: >
   Generate Figma DSL definitions from React component source code.
-  Analyzes JSX structure, CSS styles, and prop interfaces to produce
-  DSL code using Figma Plugin API patterns (createFrame, solidPaint,
-  setAutoLayout, etc.) and Code Connect binding stubs.
+  Supports CSS Modules with design tokens, flexbox/grid layout, variant
+  and boolean props, and array data props. Generates DSL code using
+  Figma Plugin API patterns (createFrame, solidPaint, setAutoLayout)
+  and Code Connect binding stubs. Skips unsupported patterns (absolute
+  positioning, animations, responsive breakpoints, dynamic state,
+  third-party UI libs) with TODO comments.
 ---
 ```
 
 **Skill Instructions** (markdown body of SKILL.md):
-1. Read the target React component file and its associated CSS/style files
-2. Read the component's prop type interface
-3. Analyze the JSX tree structure and map each element to DSL node creation calls
-4. Map CSS layout properties to `setAutoLayout()` configurations
-5. Map CSS color values to `solidPaint()` / `gradientPaint()` calls
-6. Map typography CSS to text node properties
-7. If the component has variant props (union types), generate a `combineAsVariants()` COMPONENT_SET
-8. If the component has boolean props, generate `addComponentProperty()` calls
-9. Output the DSL definition file (`.dsl.ts`)
-10. Output a Code Connect stub file (`.figma.tsx`)
-11. Add `// TODO:` comments where mappings are uncertain
+1. Read the target React component `.tsx` file
+2. Read associated files: `*.module.css`, `types.ts` (shared interfaces), `tokens.css` (design token values)
+3. **Classify patterns**: Identify supported vs unsupported patterns per Requirement 11 constraints
+4. For unsupported patterns (absolute positioning, animations, responsive queries, dynamic state, third-party imports), emit `// TODO: [reason]` and skip
+5. Analyze the JSX tree structure and map each supported element to DSL node creation calls
+6. Resolve CSS custom property references to hex values from `tokens.css` → generate `solidPaint()` / `gradientPaint()` calls
+7. Map CSS layout properties to `setAutoLayout()` configurations
+8. Map typography CSS to text node properties
+9. If the component has variant props (union types), generate a `combineAsVariants()` COMPONENT_SET with one variant per combination
+10. If the component has boolean props, generate `addComponentProperty()` calls
+11. For array `.map()` patterns, generate a representative child using first element as template
+12. Output the DSL definition file (`.dsl.ts`)
+13. Output a Code Connect stub file (`.figma.tsx`)
 
 **Implementation Notes**
 - The skill is a `.claude/skills/react-to-dsl/SKILL.md` file in the project repository
 - It leverages Claude's understanding of both React/CSS patterns and Figma API semantics
 - Output quality depends on the LLM — generated code should be reviewed and refined through the visual comparison loop
 - The skill reads existing DSL examples in the project for style consistency (few-shot learning from codebase)
+- Pattern constraints are derived from analysis of the 16 reference components in figma_design_playground — they represent the practical boundary of what the DSL can model (see `research.md`)
 
 ## Data Models
 

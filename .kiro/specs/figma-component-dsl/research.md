@@ -74,6 +74,21 @@
   - The skill description budget scales at 2% of context window
 - **Implications**: The React-to-DSL generator fits as a project skill at `.claude/skills/react-to-dsl/SKILL.md`. The skill instructs Claude to read a React component, analyze its structure/styles/props, and generate DSL code using the Figma Plugin API patterns. Code Connect stubs are generated alongside.
 
+### Supported React Component Patterns (Reference Analysis)
+- **Context**: Defining realistic constraints on what React components the AI skill can convert to DSL, based on the 16 reference components in figma_design_playground
+- **Sources**: `docs/figma_design_playground.md`, component documentation, plugin code analysis
+- **Findings**:
+  - **Layout**: All 16 components use flexbox or CSS Grid — no absolute positioning (except Navbar mobile overlay which uses `position: fixed`)
+  - **Styling**: Exclusively CSS Modules with `tokens.css` design tokens as CSS custom properties. Class composition via `[...].filter(Boolean).join(' ')` pattern
+  - **Props**: 4 patterns — union string variants (`variant: 'primary' | 'secondary'`), booleans (`fullWidth`, `highlighted`), string content (`title`, `children`), array data (`features: Feature[]`, `links: NavLink[]`)
+  - **Complexity**: Range from simple (1-3 elements: Button, Badge) to medium (6-15 elements: PricingCard, Navbar). No complex components (>15 elements)
+  - **Composition**: Max 3 levels (primitives → sections → page). Leaf components (FeatureCard, TestimonialCard) composed into containers (FeatureGrid, Testimonials)
+  - **Interactivity**: Only 2 components have state (Navbar: scroll + mobile menu toggle, FAQ: accordion open index). All other interactivity is CSS-only (hover transforms, transitions)
+  - **Responsive**: 4 breakpoints (480px, 640px, 768px, 1024px). Each component defines its own responsive rules
+  - **Data**: All content hardcoded in LandingPage.tsx as module-level constants. No API calls, no dynamic data fetching
+  - **Types**: 7 shared interfaces in types.ts (NavLink, Feature, Testimonial, PricingPlan, FAQItem, FooterColumn, StatItem). All strictly typed, no `any`
+- **Implications**: These patterns define the realistic boundary of Requirement 11 (Supported Patterns). Components outside these patterns (absolute positioning, complex state, third-party UI libs, CSS-in-JS) are explicitly out of scope. The AI skill generates for a single viewport (1200px desktop) and default/initial state only.
+
 ### opentype.js for Text Measurement
 - **Context**: Font metric lookup for auto-layout HUG sizing in the Compiler
 - **Sources**: opentype.js docs
