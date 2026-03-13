@@ -56,7 +56,7 @@
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
   - _Contracts: DslCore Service (ComponentProperty, DslNode variant types)_
 
-- [ ] 4. Compiler — Core pipeline
+- [x] 4. Compiler — Core pipeline
 - [x] 4.1 Implement GUID assignment, parent references, and compile result structure
   - Traverse the DslNode tree depth-first, assigning counter-based GUIDs ([0, N] with auto-incrementing N) to each node
   - Generate parentIndex references linking each non-root node to its parent's GUID and position
@@ -66,7 +66,7 @@
   - _Requirements: 1.6_
   - _Contracts: CompilerService_
 
-- [ ] 4.2 (P) Implement color token resolution and fill format conversion
+- [x] 4.2 (P) Implement color token resolution and fill format conversion
   - Resolve color token references to concrete RgbaColor values during the compilation pass
   - Convert DslNode Fill types (SolidFill, GradientFill) to ResolvedFill format for renderer consumption
   - Convert DslNode StrokePaint to ResolvedStroke entries
@@ -74,7 +74,7 @@
   - Report unresolved token references as CompileErrors with the originating node path
   - _Requirements: 3.5, 3.6_
 
-- [ ] 4.3 (P) Implement ComponentRegistry and instance resolution
+- [x] 4.3 (P) Implement ComponentRegistry and instance resolution
   - Implement the ComponentRegistry with register(), resolve(), and names() methods for tracking COMPONENT definitions within a compilation unit
   - Perform a registration pass (depth-first traversal) before layout computation, registering COMPONENT nodes by name and COMPONENT_SET variant children with their full Key=Value names
   - Resolve INSTANCE nodes by looking up componentRef in the registry, cloning the referenced component subtree, and applying propertyOverrides (TEXT replacement, BOOLEAN visibility toggle, INSTANCE_SWAP child swap)
@@ -83,15 +83,15 @@
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
   - _Contracts: ComponentRegistry_
 
-- [ ] 4.4 (P) Implement component and variant compilation output
+- [x] 4.4 (P) Implement component and variant compilation output
   - Compile COMPONENT nodes by mapping componentProperties into the componentPropertyDefinitions format for the exporter
   - Compile COMPONENT_SET nodes by validating variant child naming follows Key=Value convention and extracting variant axis metadata
   - Set componentId on compiled nodes for exporter and plugin consumption
   - Report circular component references as CompileErrors with the full node path
   - _Requirements: 5.1, 5.2, 5.3, 5.5_
 
-- [ ] 5. Compiler — Text measurement and Yoga layout
-- [ ] 5.1 Integrate opentype.js and implement the text measurer
+- [x] 5. Compiler — Text measurement and Yoga layout
+- [x] 5.1 Integrate opentype.js and implement the text measurer
   - Load Inter font files (.otf) for four weights (Regular, Medium, Semi Bold, Bold) via opentype.js
   - Measure text width by summing scaled glyph advance widths with GPOS/GSUB kerning
   - Compute text height as line count × line height (defaulting to fontSize × 1.2 when line height is unspecified)
@@ -100,7 +100,7 @@
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
   - _Contracts: TextMeasurer_
 
-- [ ] 5.2 Implement Yoga layout mapping and layout resolution
+- [x] 5.2 Implement Yoga layout mapping and layout resolution
   - Build a parallel Yoga node tree mirroring the DslNode tree, mapping Figma auto-layout properties to Yoga equivalents (direction→flexDirection, spacing→gap, padding, alignment→justifyContent/alignItems)
   - Map sizing modes: FIXED→explicit width/height, HUG→no explicit size (Yoga auto-sizes), FILL→flexGrow:1 + flexBasis:0
   - Register custom Yoga measure functions for TEXT nodes using the TextMeasurer
@@ -111,8 +111,8 @@
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
   - _Contracts: YogaMapper_
 
-- [ ] 6. Renderer — Skia rendering via @napi-rs/canvas
-- [ ] 6.1 Implement frame and shape rendering
+- [x] 6. Renderer — Skia rendering via @napi-rs/canvas
+- [x] 6.1 Implement frame and shape rendering
   - Register bundled Inter font files via GlobalFonts.registerFromPath() at startup
   - Create a Canvas with dimensions from the root CompiledNode and optional background color and scale factor
   - Render FRAME, COMPONENT, COMPONENT_SET, and INSTANCE nodes as rectangles with solid color fills, strokes, corner radius (including per-corner via roundRect), opacity, and content clipping (save/clip/restore)
@@ -123,7 +123,7 @@
   - _Requirements: 6.1, 6.2_
   - _Contracts: RendererService_
 
-- [ ] 6.2 (P) Implement text rendering
+- [x] 6.2 (P) Implement text rendering
   - Render TEXT nodes using Skia's text API with correct font family, weight, and size from ResolvedTextStyle
   - Position each text line using baseline data from the compiled node
   - Apply text color from the resolved text style
@@ -131,7 +131,7 @@
   - Handle multi-line text by rendering each line at its computed y position
   - _Requirements: 6.1, 6.2_
 
-- [ ] 6.3 (P) Implement gradient fill and image asset rendering
+- [x] 6.3 (P) Implement gradient fill and image asset rendering
   - Create CanvasRenderingContext2D linear gradient patterns from GradientFill data (stops, positions, gradient transform)
   - Convert Figma gradient transform matrices (rotation angle) to Canvas gradient start/end coordinates
   - Apply gradient fills alongside solid fills on multi-fill nodes, respecting fill ordering and opacity
@@ -139,7 +139,7 @@
   - Load and draw images scaled to fill node bounds
   - _Requirements: 6.2, 6.3_
 
-- [ ] 6.4 Implement PNG output and render error reporting
+- [x] 6.4 Implement PNG output and render error reporting
   - Encode the final canvas to PNG buffer and write to the specified output path
   - Report render errors as typed RenderError objects with message, node path, and node type
   - Handle unsupported node types and invalid fills gracefully (skip with warning, continue rendering)

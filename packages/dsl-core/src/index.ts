@@ -63,3 +63,5 @@ export type {
   ResolvedTextStyle,
   Transform,
 } from "./compiler/index.js";
+
+export { FONTS_DIR } from "./compiler/index.js";

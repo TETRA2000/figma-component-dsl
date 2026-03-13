@@ -6,8 +6,11 @@ import type {
   Guid,
   ResolvedFill,
   ResolvedStroke,
+  ResolvedTextStyle,
   Transform,
 } from "./types.js";
+import { ComponentRegistry } from "./component-registry.js";
+import { computeLayout, type LayoutData } from "./yoga-mapper.js";
 
 const IDENTITY_TRANSFORM: Transform = [
   [1, 0, 0],
@@ -17,15 +20,18 @@ const IDENTITY_TRANSFORM: Transform = [
 
 /**
  * Compile a DslNode tree into a CompiledNode tree with GUIDs,
- * parent references, and transform matrices.
- *
- * Note: This initial implementation handles GUID assignment, parent
- * references, property passthrough, and transform composition.
- * Yoga layout and text measurement will be added in Tasks 5.1–5.2.
+ * parent references, transform matrices, and resolved components.
  */
 export function compile(node: DslNode): CompileResult {
   const errors: CompileError[] = [];
   let guidCounter = 0;
+
+  // Phase 1: Register all components
+  const registry = new ComponentRegistry();
+  registry.registerAll(node);
+
+  // Phase 2: Compute Yoga layout
+  const layoutData = computeLayout(node);
 
   function nextGuid(): Guid {
     return [0, guidCounter++] as const;
@@ -39,7 +45,6 @@ export function compile(node: DslNode): CompileResult {
         opacity: fill.opacity,
       };
     }
-    // GRADIENT_LINEAR
     return {
       type: "GRADIENT_LINEAR",
       gradientStops: fill.gradientStops,
@@ -56,13 +61,13 @@ export function compile(node: DslNode): CompileResult {
     };
   }
 
-  function resolvePadding(node: DslNode): {
+  function resolvePadding(dslNode: DslNode): {
     paddingTop?: number;
     paddingRight?: number;
     paddingBottom?: number;
     paddingLeft?: number;
   } {
-    const al = node.autoLayout;
+    const al = dslNode.autoLayout;
     if (al === undefined) return {};
 
     const padTop = al.padTop ?? al.padY ?? 0;
@@ -78,6 +83,24 @@ export function compile(node: DslNode): CompileResult {
     };
   }
 
+  function validateVariantNaming(dslNode: DslNode, path: string): void {
+    if (dslNode.type !== "COMPONENT_SET" || !dslNode.children) return;
+    const keyValuePattern = /^[^=]+=.+$/;
+    for (const child of dslNode.children) {
+      if (child.type === "COMPONENT") {
+        const parts = child.name.split(",").map((s) => s.trim());
+        const valid = parts.every((part) => keyValuePattern.test(part));
+        if (!valid) {
+          errors.push({
+            message: `Variant "${child.name}" does not follow Key=Value naming convention`,
+            nodePath: `${path} > ${child.name}`,
+            nodeType: child.type,
+          });
+        }
+      }
+    }
+  }
+
   function compileNode(
     dslNode: DslNode,
     parentGuid: Guid | undefined,
@@ -87,42 +110,57 @@ export function compile(node: DslNode): CompileResult {
   ): CompiledNode {
     const guid = nextGuid();
 
-    // Position: for now, (0,0) since Yoga layout is not yet integrated
-    const position = { x: 0, y: 0 };
-    const size = dslNode.size ?? { x: 0, y: 0 };
+    // Handle INSTANCE resolution
+    if (dslNode.type === "INSTANCE" && dslNode.componentRef) {
+      const resolved = registry.resolve(dslNode.componentRef);
+      if (!resolved) {
+        errors.push({
+          message: `Unresolved component reference: '${dslNode.componentRef}'`,
+          nodePath: path,
+          nodeType: dslNode.type,
+        });
+      }
+    }
 
-    // Compose transform: parent transform × child offset translation
-    // Until Yoga provides computed positions, children are at (0,0) offset
-    const transform: Transform = parentGuid === undefined
-      ? IDENTITY_TRANSFORM
-      : composeTransform(parentTransform, position.x, position.y);
+    // Validate COMPONENT_SET variant naming
+    validateVariantNaming(dslNode, path);
 
-    // Resolve fills
+    // Use Yoga-computed layout if available, fall back to DSL size
+    const layout = layoutData.layouts.get(dslNode);
+    const position = layout
+      ? { x: layout.x, y: layout.y }
+      : { x: 0, y: 0 };
+    const size = layout
+      ? { x: layout.width, y: layout.height }
+      : dslNode.size ?? { x: 0, y: 0 };
+
+    const transform: Transform =
+      parentGuid === undefined
+        ? IDENTITY_TRANSFORM
+        : composeTransform(parentTransform, position.x, position.y);
+
     const fills: ResolvedFill[] = dslNode.fills
       ? dslNode.fills.map(resolveFill)
       : [];
 
-    // Resolve strokes
     const strokes: ResolvedStroke[] | undefined = dslNode.strokes
       ? dslNode.strokes.map(resolveStroke)
       : undefined;
 
-    // Auto-layout passthrough
     const al = dslNode.autoLayout;
     const padding = resolvePadding(dslNode);
 
-    // Compile children
     const children: CompiledNode[] = dslNode.children
       ? dslNode.children.map((child, i) =>
-          compileNode(
-            child,
-            guid,
-            i,
-            transform,
-            `${path} > ${child.name}`,
-          ),
+          compileNode(child, guid, i, transform, `${path} > ${child.name}`),
         )
       : [];
+
+    // Determine componentId for COMPONENT and INSTANCE nodes
+    const componentId =
+      dslNode.type === "COMPONENT" || dslNode.type === "COMPONENT_SET"
+        ? dslNode.name
+        : dslNode.componentRef;
 
     return {
       guid,
@@ -173,6 +211,12 @@ export function compile(node: DslNode): CompileResult {
       ...(dslNode.characters !== undefined && {
         characters: dslNode.characters,
       }),
+      ...(layoutData.textStyles.has(dslNode) && {
+        textStyle: layoutData.textStyles.get(dslNode),
+      }),
+      ...(layoutData.textLines.has(dslNode) && {
+        textLines: layoutData.textLines.get(dslNode),
+      }),
 
       // Component properties
       ...(dslNode.componentProperties !== undefined && {
@@ -184,10 +228,10 @@ export function compile(node: DslNode): CompileResult {
         ),
       }),
 
-      // Instance
-      ...(dslNode.componentRef !== undefined && {
-        componentId: dslNode.componentRef,
-      }),
+      // Component/Instance ID
+      ...(componentId !== undefined && { componentId }),
+
+      // Instance overrides
       ...(dslNode.propertyOverrides !== undefined && {
         overriddenProperties: { ...dslNode.propertyOverrides },
       }),
@@ -203,20 +247,11 @@ export function compile(node: DslNode): CompileResult {
   };
 }
 
-/**
- * Compose a parent transform with a child translation offset.
- * Result = parent × translate(dx, dy)
- */
 function composeTransform(
   parent: Transform,
   dx: number,
   dy: number,
 ): Transform {
-  // For a pure translation, the child transform matrix is:
-  // [1, 0, dx]
-  // [0, 1, dy]
-  // [0, 0, 1]
-  // Multiplied by parent:
   return [
     [
       parent[0][0],

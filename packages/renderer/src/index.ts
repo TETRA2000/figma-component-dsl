@@ -1,2 +1,2 @@
-// Renderer — Skia-based rasterization of compiled DSL nodes
-// Public API will be re-exported here as modules are implemented
+export { render, renderToFile } from "./renderer.js";
+export type { RenderOptions, RenderResult, RenderError } from "./renderer.js";
