@@ -2,23 +2,24 @@
 
 ## Overview
 
-**Purpose**: This feature delivers a domain-specific language for declaratively defining Figma component structures in TypeScript, enabling a Figma-free iteration loop where developers define components, render them as images, compare against React screenshots, and export to Figma when ready.
+**Purpose**: This feature delivers a DSL for defining Figma component structures in TypeScript where the DSL language IS Figma Plugin API code. The same `createFrame()`, `solidPaint()`, `setAutoLayout()` calls work both offline (producing virtual node trees for rendering and comparison) and inside a Figma plugin (producing real Figma nodes). An AI skill generates DSL definitions from React components to bootstrap the workflow.
 
-**Users**: Component developers and design system engineers use the DSL to define component structures in code, iterate on visual accuracy without Figma, and synchronize components between React and Figma.
+**Users**: Component developers and design system engineers use the DSL to define component structures, iterate visually without Figma, and synchronize components between React and Figma.
 
-**Impact**: Introduces a new toolchain (DSL core, compiler, renderer, comparison engine, CLI, Figma plugin) that bridges the gap between the two reference implementations — combining figma_design_playground's component creation patterns with figma-html-renderer's rendering pipeline.
+**Impact**: Introduces a dual-environment adapter layer, a rendering/comparison pipeline, a Figma plugin runtime, and an AI-powered React-to-DSL generator — bridging figma_design_playground's component creation patterns with figma-html-renderer's rendering pipeline.
 
 ### Goals
-- Provide a type-safe, declarative API for defining Figma node structures with auto-layout, colors, typography, and component variants
+- Provide a Figma Plugin API-compatible TypeScript API that runs in both offline and Figma environments
 - Render DSL definitions as PNG images using PyCairo, matching Figma's visual output
 - Enable automated visual comparison between DSL renders and React component screenshots
-- Export DSL definitions to Figma via a plugin that creates real components with properties and variants
+- Execute DSL code directly in a Figma plugin to create real components — no translation layer
+- Generate DSL definitions from React components via AI skill
 - Expose all pipeline operations through a unified CLI
 
 ### Non-Goals
+- Full Figma Plugin API coverage (only the subset needed for component definition)
 - Real-time collaborative editing of DSL definitions
 - Full Figma feature parity (effects, masks, boolean operations, constraints, prototyping)
-- DSL-to-React code generation (reverse direction)
 - Figma file parsing (`.fig` → DSL) — that is figma-html-renderer's domain
 - Dark mode or responsive variant generation
 
@@ -26,56 +27,66 @@
 
 ### Architecture Pattern & Boundary Map
 
-**Selected pattern**: Pipeline with AST Core — sequential stages transform DSL definitions through compilation, rendering, comparison, and export. Each stage has a single responsibility and communicates via well-defined data contracts.
+**Selected pattern**: Adapter with Pipeline — a shared `FigmaApi` interface provides `createFrame()`, `createText()`, etc. with two implementations: `VirtualFigmaApi` (offline, produces virtual node trees) and real Figma Plugin API (in-plugin, delegates to `figma.create*()`). Helper functions (`setAutoLayout()`, `solidPaint()`, `gradientPaint()`, `hexToRGB()`) are pure data transforms shared between both environments. The virtual node path feeds into a compilation pipeline (layout resolution → rendering → comparison).
 
-**Rationale**: Proven in the figma-html-renderer reference (5-stage pipeline). Natural fit for a compile → render → compare workflow. Stages are independently testable and replaceable.
+**Rationale**: Mirrors Figma's own membrane/adapter pattern (see `research.md`). Users write one codebase that runs everywhere. Eliminates the Exporter translation layer from the v1 design.
 
 ```mermaid
 graph TB
-    subgraph TypeScript
-        DSL[DSL Core - Factory Functions]
+    subgraph DSL Code
+        UserCode[User DSL Definitions]
+        Helpers[Shared Helpers - setAutoLayout solidPaint etc]
+    end
+
+    subgraph Offline Path
+        VirtualApi[VirtualFigmaApi]
         Compiler[Compiler - Layout Resolution]
+        Renderer[Renderer - PyCairo]
         Capturer[Screenshot Capturer - Playwright]
         Comparator[Visual Comparator - pixelmatch]
-        Exporter[Plugin Exporter - JSON Generator]
+    end
+
+    subgraph Figma Path
+        PluginApi[Figma Plugin API - direct delegation]
+        FigmaNodes[Real Figma Nodes]
+    end
+
+    subgraph AI Generation
+        AISkill[React-to-DSL Skill]
+    end
+
+    subgraph Interface
         CLI[CLI - Pipeline Orchestrator]
     end
 
-    subgraph Python
-        Renderer[Renderer - PyCairo]
-    end
-
-    subgraph Figma
-        Plugin[Figma Plugin - Node Creator]
-    end
-
-    DSL -->|DslNode tree| Compiler
+    AISkill -->|generates| UserCode
+    UserCode --> VirtualApi
+    UserCode --> PluginApi
+    Helpers --> VirtualApi
+    Helpers --> PluginApi
+    VirtualApi -->|VirtualNode tree| Compiler
     Compiler -->|FigmaNodeDict JSON| Renderer
-    Compiler -->|FigmaNodeDict JSON| Exporter
-    Renderer -->|PNG file| Comparator
-    Capturer -->|PNG file| Comparator
-    Exporter -->|Plugin input JSON| Plugin
-    CLI --> DSL
+    Renderer -->|PNG| Comparator
+    Capturer -->|PNG| Comparator
+    PluginApi --> FigmaNodes
+    CLI --> VirtualApi
     CLI --> Compiler
     CLI --> Renderer
     CLI --> Capturer
     CLI --> Comparator
-    CLI --> Exporter
 ```
 
 **Domain boundaries**:
-- **DSL Core**: Node definition and tree construction (TypeScript)
-- **Compiler**: Layout resolution, GUID assignment, format conversion (TypeScript)
+- **FigmaApi Adapter**: Interface abstraction over node creation (TypeScript)
+- **VirtualFigmaApi**: Offline node construction producing VirtualNode trees (TypeScript)
+- **Shared Helpers**: Pure functions for colors, layout, text — environment-agnostic (TypeScript)
+- **Compiler**: Layout resolution, GUID assignment, format conversion to FigmaNodeDict (TypeScript)
 - **Renderer**: Visual rasterization from node dictionaries (Python/PyCairo)
 - **Capturer**: React component screenshot isolation (TypeScript/Playwright)
 - **Comparator**: Pixel-level image diffing (TypeScript/pixelmatch)
-- **Exporter**: Figma plugin input generation (TypeScript)
-- **Plugin**: Figma node creation via Plugin API (TypeScript, runs in Figma sandbox)
-- **CLI**: User-facing orchestration of all stages (TypeScript/Node.js)
-
-**Existing patterns preserved**: Pipeline architecture from figma-html-renderer; component creation patterns from figma_design_playground plugin; CSS custom property design tokens; PyCairo rendering approach.
-
-**New components rationale**: DSL Core provides type-safe node construction; Compiler bridges DSL trees to the renderer's expected format; Comparator and Capturer enable the visual iteration loop; CLI unifies all operations.
+- **Plugin Runtime**: Loads and executes bundled DSL code with real Figma API (TypeScript, Figma sandbox)
+- **AI Skill**: Claude Code skill for React-to-DSL generation (SKILL.md)
+- **CLI**: User-facing orchestration (TypeScript/Node.js)
 
 **Steering compliance**: TypeScript strict mode, no `any`; pipeline stages with single responsibility; immutable data between stages; no framework bloat; PyCairo for rendering.
 
@@ -83,67 +94,72 @@ graph TB
 
 | Layer | Choice / Version | Role in Feature | Notes |
 |-------|------------------|-----------------|-------|
-| DSL Core / CLI | TypeScript 5.9+, Node.js 22+ | DSL definition, compilation, orchestration | Strict mode, ES2023 target |
+| DSL Core / CLI | TypeScript 5.9+, Node.js 22+ | DSL API, compilation, orchestration | Strict mode, ES2023 target |
 | Renderer | Python 3.10+, PyCairo 1.27+ | Rasterize node dictionaries to PNG | Extends figma-html-renderer patterns |
-| Screenshot Capture | Playwright 1.50+ | Headless browser React component screenshots | Node.js API, element-level capture |
-| Image Comparison | pixelmatch 6.0+, pngjs 7.0+ | Pixel-level visual diff | Zero-dependency comparison, pngjs for PNG decode/encode |
-| Figma Plugin | Figma Plugin API, esbuild | Create Figma nodes from DSL definitions | Same build toolchain as reference plugin |
-| Package Management | npm workspaces | Monorepo for TypeScript packages | DSL core, CLI, and plugin as separate workspace packages |
-| Text Measurement | opentype.js 2.0+ | Font metric lookup for auto-layout HUG sizing | Parses .otf/.ttf for glyph advance widths |
-| Python Packaging | pyproject.toml + pip | Python renderer package management | Follows figma-html-renderer pattern |
+| Screenshot Capture | Playwright 1.50+ | Headless browser React component screenshots | Element-level capture |
+| Image Comparison | pixelmatch 6.0+, pngjs 7.0+ | Pixel-level visual diff | Zero-dependency comparison |
+| Figma Plugin | Figma Plugin API, esbuild | Execute DSL code to create Figma nodes | Same build toolchain as reference plugin |
+| Package Management | npm workspaces | Monorepo for TypeScript packages | dsl-core, cli, plugin as separate packages |
+| Text Measurement | opentype.js 2.0+ | Font metric lookup for auto-layout HUG sizing | Bundled Inter font files |
+| AI Skill | Claude Code Skills (.claude/skills/) | React-to-DSL generation | SKILL.md with Agent Skills standard |
+| Python Packaging | pyproject.toml + pip | Python renderer package | Follows figma-html-renderer pattern |
 
 ### Cross-Language Environment Management
 
-The system spans TypeScript (npm) and Python (PyCairo). The CLI must reliably invoke the Python renderer as a subprocess.
+The CLI discovers the Python interpreter via `FIGMA_DSL_PYTHON` environment variable, falling back to `python3` on PATH. The `figma-dsl doctor` command verifies all dependencies (Node.js, Python, PyCairo, Inter font) and reports their status.
 
-**Python Environment Discovery**:
-- The CLI discovers the Python interpreter via the `FIGMA_DSL_PYTHON` environment variable, falling back to `python3` on PATH
-- On first use, the CLI runs a preflight check: `python3 -c "import cairo; print(cairo.version)"` and reports actionable errors if PyCairo is missing
-- The `figma-dsl doctor` command verifies all dependencies (Node.js, Python, PyCairo, Inter font) and reports their status
-
-**Python Package Structure**:
-- The Python renderer is packaged as `figma_component_dsl` with `pyproject.toml` (matching the figma-html-renderer pattern)
-- Installation: `pip install -e "./packages/renderer[dev]"` for development
-- System dependency: PyCairo requires the Cairo C library (`brew install cairo` on macOS, `apt install libcairo2-dev` on Linux)
-
-**Font Assets**:
-- The Inter font family (.otf files for Regular, Medium, Semi Bold, Bold weights) is bundled in `packages/dsl-core/fonts/`
-- opentype.js loads these files directly for text measurement — no system font dependency for the compiler
-- The Python renderer uses system fonts with Inter as the expected default; `figma-dsl doctor` warns if Inter is not installed
+The Inter font family (.otf files for Regular, Medium, Semi Bold, Bold) is bundled in `packages/dsl-core/fonts/` for offline text measurement via opentype.js.
 
 ## System Flows
 
-### Full Pipeline Flow
+### Full Pipeline Flow (Offline Path)
 
 ```mermaid
 sequenceDiagram
     participant User
     participant CLI
-    participant DSL as DSL Core
+    participant VApi as VirtualFigmaApi
     participant Compiler
     participant Renderer as Renderer - Python
     participant Capturer as Capturer - Playwright
     participant Comparator
 
     User->>CLI: figma-dsl pipeline component.dsl.ts
-    CLI->>DSL: import and execute DSL module
-    DSL-->>CLI: DslNode tree
-    CLI->>Compiler: compile(dslNode)
+    CLI->>VApi: execute DSL module
+    VApi-->>CLI: VirtualNode tree
+    CLI->>Compiler: compile(virtualNodes)
     Compiler-->>CLI: FigmaNodeDict JSON
     CLI->>Renderer: subprocess render(json, output.png)
     Renderer-->>CLI: PNG file path
     CLI->>Capturer: capture(ReactComponent, viewport)
     Capturer-->>CLI: PNG file path
-    CLI->>Comparator: compare(dsl.png, react.png, options)
+    CLI->>Comparator: compare(dsl.png, react.png)
     Comparator-->>CLI: ComparisonResult
-    CLI-->>User: similarity score, diff image path
+    CLI-->>User: similarity score, diff image
+```
+
+### Figma Plugin Execution Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant CLI
+    participant Plugin as Figma Plugin
+    participant FigmaAPI as Figma Plugin API
+
+    User->>CLI: figma-dsl bundle component.dsl.ts
+    CLI-->>User: bundle.js
+    User->>Plugin: paste or load bundle.js
+    Plugin->>FigmaAPI: createFrame, createText, etc
+    FigmaAPI-->>Plugin: real Figma nodes
+    Plugin-->>User: component IDs JSON
 ```
 
 ### Compile Flow
 
 ```mermaid
 flowchart TB
-    A[DslNode Tree] --> B[Assign GUIDs]
+    A[VirtualNode Tree] --> B[Assign GUIDs]
     B --> C[Resolve Color Tokens]
     C --> D[Compute Auto-Layout]
     D --> E[Calculate Absolute Transforms]
@@ -152,13 +168,10 @@ flowchart TB
     G --> H[FigmaNodeDict JSON]
 
     D --> D1{Has Auto-Layout?}
-    D1 -->|Yes| D2[Measure children sizes]
-    D2 --> D3[Apply spacing and padding]
-    D3 --> D4[Align on primary axis]
-    D4 --> D5[Align on counter axis]
-    D5 --> D6[Apply sizing modes]
+    D1 -->|Yes| D2[Pass 1 - Bottom-up Measurement]
+    D2 --> D3[Pass 2 - Top-down Positioning]
     D1 -->|No| D7[Use explicit size and position]
-    D6 --> E
+    D3 --> E
     D7 --> E
 ```
 
@@ -166,44 +179,48 @@ flowchart TB
 
 | Requirement | Summary | Components | Interfaces | Flows |
 |-------------|---------|------------|------------|-------|
-| 1.1–1.7 | DSL node primitives (FRAME, TEXT, RECT, ELLIPSE, GROUP, hierarchy, visibility) | DslCore | NodeFactory, DslNode | — |
-| 2.1–2.6 | Auto-layout system (direction, spacing, padding, alignment, sizing, flex-grow) | DslCore, Compiler | AutoLayoutConfig, LayoutResolver | Compile Flow |
-| 3.1–3.6 | Color and fill system (hex, solid, gradient, stroke, multi-fill, tokens) | DslCore, Compiler | ColorToken, Fill, StrokePaint | Compile Flow |
-| 4.1–4.6 | Typography system (font, size, line-height, letter-spacing, alignment) | DslCore, Compiler | TextStyle, TextDataExpander | Compile Flow |
-| 5.1–5.5 | Component and variant system (COMPONENT, properties, COMPONENT_SET, INSTANCE) | DslCore, Compiler, Exporter | ComponentDef, VariantAxis, InstanceRef | Compile Flow |
+| 1.1–1.5 | DSL as Figma Plugin API code (dual-env, helpers) | FigmaApiAdapter, SharedHelpers | FigmaApi, VirtualFigmaApi | — |
+| 1.6–1.12 | Node primitives (FRAME, TEXT, RECT, ELLIPSE, GROUP, hierarchy, visibility) | FigmaApiAdapter | FigmaApi, VirtualNode | — |
+| 2.1–2.7 | Auto-layout system (setAutoLayout helper, direction, spacing, padding, alignment, sizing) | SharedHelpers, Compiler | AutoLayoutConfig, LayoutResolver | Compile Flow |
+| 3.1–3.6 | Color and fill system (solidPaint, gradientPaint, hexToRGB, tokens) | SharedHelpers | SolidPaint, GradientPaint, ColorToken | — |
+| 4.1–4.6 | Typography system (font properties, Figma text model) | FigmaApiAdapter, Compiler | TextStyle, TextMeasurer | Compile Flow |
+| 5.1–5.5 | Component and variant system (createComponent, addComponentProperty, combineAsVariants, createInstance) | FigmaApiAdapter | ComponentDef, VariantAxis | — |
 | 6.1–6.4 | DSL rendering to PNG | Renderer | RendererService | Pipeline Flow |
 | 7.1–7.4 | React component screenshot capture | Capturer | CaptureService | Pipeline Flow |
 | 8.1–8.4 | Visual comparison with diff | Comparator | CompareService | Pipeline Flow |
-| 9.1–9.10 | Figma plugin — DSL to Figma components | Exporter, Plugin | PluginInputSchema, PluginRunner | — |
+| 9.1–9.8 | Figma plugin — direct DSL execution | PluginRuntime | PluginRunner | Plugin Execution Flow |
 | 10.1–10.7 | CLI interface for all pipeline operations | CLI | CliCommands | Pipeline Flow |
+| 11.1–11.10 | AI-powered React-to-DSL generation | ReactToDslSkill | SKILL.md | — |
 
 ## Components and Interfaces
 
 | Component | Domain/Layer | Intent | Req Coverage | Key Dependencies | Contracts |
 |-----------|--------------|--------|--------------|------------------|-----------|
-| DslCore | DSL / Core | Declarative factory functions for node tree construction | 1.1–1.7, 2.1–2.6, 3.1–3.6, 4.1–4.6, 5.1–5.5 | None (P0) | Service |
-| Compiler | DSL / Core | Resolve layout, assign GUIDs, produce FigmaNodeDict | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 | DslCore (P0), opentype.js (P0) | Service |
+| FigmaApiAdapter | DSL / Core | Dual-environment interface for node creation | 1.1–1.12, 4.1–4.6, 5.1–5.5 | None (P0) | Service |
+| SharedHelpers | DSL / Core | Pure helper functions shared across environments | 2.1–2.7, 3.1–3.6 | None (P0) | Service |
+| Compiler | DSL / Core | Resolve layout, assign GUIDs, produce FigmaNodeDict | 1.11, 2.1–2.7, 3.1–3.5, 4.1–4.6, 5.1–5.5 | FigmaApiAdapter (P0), opentype.js (P0) | Service |
 | Renderer | Rendering / Python | Rasterize FigmaNodeDict to PNG via PyCairo | 6.1–6.4 | PyCairo (P0) | Service |
 | Capturer | Rendering / TypeScript | Capture React component screenshots via Playwright | 7.1–7.4 | Playwright (P0) | Service |
 | Comparator | Analysis / TypeScript | Pixel-level image diff with similarity scoring | 8.1–8.4 | pixelmatch (P0), pngjs (P0) | Service |
-| Exporter | Export / TypeScript | Generate Figma plugin input JSON from compiled nodes | 9.1–9.9 | Compiler (P0) | Service |
-| Plugin | Export / Figma | Create Figma nodes from plugin input JSON | 9.1–9.10 | Figma Plugin API (P0) | Service |
+| PluginRuntime | Export / Figma | Execute bundled DSL code with real Figma Plugin API | 9.1–9.8 | Figma Plugin API (P0), esbuild (P1) | Service |
 | CLI | Interface / TypeScript | User-facing commands orchestrating all pipeline stages | 10.1–10.7 | All components (P0) | Service |
+| ReactToDslSkill | AI / Skill | Generate DSL code from React component source | 11.1–11.10 | Claude Code Skills system (P0) | — |
 
 ### DSL Core Layer
 
-#### DslCore
+#### FigmaApiAdapter
 
 | Field | Detail |
 |-------|--------|
-| Intent | Provide type-safe factory functions for constructing DSL node trees |
-| Requirements | 1.1–1.7, 2.1–2.6, 3.1–3.6, 4.1–4.6, 5.1–5.5 |
+| Intent | Provide a Figma Plugin API-compatible interface with virtual and real implementations |
+| Requirements | 1.1–1.12, 4.1–4.6, 5.1–5.5 |
 
 **Responsibilities & Constraints**
-- Expose factory functions (`frame`, `text`, `rectangle`, `ellipse`, `group`, `component`, `componentSet`, `instance`) that return `DslNode` objects
-- Validate node property constraints at construction time (e.g., auto-layout only on FRAME/COMPONENT)
-- Provide color helper functions (`hex`, `solid`, `gradient`, `colorToken`) that accept hex strings and produce fill objects
-- Maintain immutability — factory functions return new objects, never mutate inputs
+- Define a `FigmaApi` interface with methods mirroring the Figma Plugin API: `createFrame()`, `createText()`, `createRectangle()`, `createEllipse()`, `createComponent()`, `createGroup()`
+- `VirtualFigmaApi` implementation returns `VirtualNode` objects with property setters that accumulate state — these are later consumed by the Compiler
+- `VirtualNode` objects support `appendChild()`, direct property assignment (`node.fills = [...]`, `node.layoutMode = 'HORIZONTAL'`), and `addComponentProperty()` / `createInstance()` / `combineAsVariants()` for component semantics
+- In the plugin environment, the adapter delegates directly to `figma.createFrame()`, `figma.createText()`, etc. — no virtual layer needed
+- Validate property constraints at assignment time (e.g., `layoutMode` only on FRAME/COMPONENT)
 
 **Dependencies**
 - None — this is the innermost core with zero external dependencies
@@ -212,48 +229,134 @@ flowchart TB
 
 ##### Service Interface
 ```typescript
-// --- Node Types ---
+// --- FigmaApi Interface (mirrors Figma Plugin API subset) ---
+interface FigmaApi {
+  createFrame(): FrameNode;
+  createText(): TextNode;
+  createRectangle(): RectangleNode;
+  createEllipse(): EllipseNode;
+  createComponent(): ComponentNode;
+  createGroup(children: SceneNode[], parent: BaseNode): GroupNode;
+  combineAsVariants(components: ComponentNode[], parent: BaseNode): ComponentSetNode;
+}
+
+// --- Virtual Node (offline implementation) ---
+interface VirtualNode {
+  readonly type: NodeType;
+  name: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number;
+  opacity: number;
+  visible: boolean;
+  fills: Paint[];
+  strokes: Paint[];
+  strokeWeight: number;
+  cornerRadius: number;
+  cornerRadii?: { topLeft: number; topRight: number; bottomRight: number; bottomLeft: number };
+  clipContent: boolean;
+  readonly children: readonly VirtualNode[];
+  appendChild(child: VirtualNode): void;
+}
+
+interface VirtualFrameNode extends VirtualNode {
+  layoutMode: 'NONE' | 'HORIZONTAL' | 'VERTICAL';
+  itemSpacing: number;
+  paddingTop: number;
+  paddingRight: number;
+  paddingBottom: number;
+  paddingLeft: number;
+  primaryAxisAlignItems: 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN';
+  counterAxisAlignItems: 'MIN' | 'CENTER' | 'MAX';
+  layoutSizingHorizontal: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical: 'FIXED' | 'HUG' | 'FILL';
+}
+
+interface VirtualTextNode extends VirtualNode {
+  characters: string;
+  fontFamily: string;
+  fontWeight: number;
+  fontSize: number;
+  lineHeight: { value: number; unit: 'PERCENT' | 'PIXELS' } | { unit: 'AUTO' };
+  letterSpacing: { value: number; unit: 'PERCENT' | 'PIXELS' };
+  textAlignHorizontal: 'LEFT' | 'CENTER' | 'RIGHT';
+}
+
+interface VirtualComponentNode extends VirtualFrameNode {
+  addComponentProperty(name: string, type: 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', defaultValue: string | boolean): void;
+  createInstance(): VirtualInstanceNode;
+}
+
+interface VirtualInstanceNode extends VirtualFrameNode {
+  readonly componentRef: VirtualComponentNode;
+  setProperties(overrides: Record<string, string | boolean>): void;
+}
+
 type NodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ELLIPSE' | 'GROUP'
   | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE';
 
-// --- Color & Fill ---
-interface RgbaColor {
-  r: number; // 0–1
-  g: number;
-  b: number;
-  a: number;
-}
-
-interface SolidFill {
+// --- Paint Types (match Figma Plugin API) ---
+interface SolidPaint {
   type: 'SOLID';
-  color: RgbaColor;
-  opacity: number;
-  visible: boolean;
+  color: { r: number; g: number; b: number };
+  opacity?: number;
+  visible?: boolean;
 }
 
-interface GradientStop {
-  color: RgbaColor;
-  position: number; // 0–1
-}
-
-interface GradientFill {
+interface GradientPaint {
   type: 'GRADIENT_LINEAR';
-  gradientStops: GradientStop[];
+  gradientStops: Array<{ color: { r: number; g: number; b: number; a: number }; position: number }>;
   gradientTransform: [[number, number, number], [number, number, number]];
-  opacity: number;
-  visible: boolean;
+  opacity?: number;
+  visible?: boolean;
 }
 
-type Fill = SolidFill | GradientFill;
+type Paint = SolidPaint | GradientPaint;
+```
+- Preconditions: Method calls must follow Figma API semantics (e.g., `appendChild` only on container nodes)
+- Postconditions: VirtualNode tree accurately reflects all property assignments and child relationships
+- Invariants: VirtualNode property names and types match Figma Plugin API exactly; children order matches insertion order
 
-interface StrokePaint {
-  color: RgbaColor;
-  weight: number;
-  align?: 'INSIDE' | 'CENTER' | 'OUTSIDE';
-}
+**Implementation Notes**
+- VirtualNode uses property setters that store values in an internal dictionary — the Compiler reads these to produce FigmaNodeDict
+- In the plugin environment, DSL code imports from a shim module that re-exports `figma.createFrame`, etc. — no adapter code runs at all
+- The `VirtualFigmaApi` is instantiated once per DSL execution and provides the entry point for all node creation
 
-// --- Auto-Layout ---
-interface AutoLayoutConfig {
+---
+
+#### SharedHelpers
+
+| Field | Detail |
+|-------|--------|
+| Intent | Provide environment-agnostic helper functions matching the reference plugin's utilities |
+| Requirements | 2.1–2.7, 3.1–3.6 |
+
+**Responsibilities & Constraints**
+- `hexToRGB(hex: string)`: Convert hex color strings to `{ r, g, b }` in 0.0–1.0 range
+- `solidPaint(hex: string, opacity?: number)`: Return a `SolidPaint` object
+- `gradientPaint(stops: { color: string; position: number }[], angle?: number)`: Return a `GradientPaint` with rotation matrix
+- `setAutoLayout(node: FrameNode, config: AutoLayoutOptions)`: Set auto-layout properties on a frame node
+- These functions are pure data transforms — they work identically in both environments because they only produce plain objects or set properties on the node argument
+
+**Dependencies**
+- None — pure functions with no external dependencies
+
+**Contracts**: Service [x]
+
+##### Service Interface
+```typescript
+// --- Color Helpers (match reference plugin signatures) ---
+function hexToRGB(hex: string): { r: number; g: number; b: number };
+function solidPaint(hex: string, opacity?: number): SolidPaint;
+function gradientPaint(
+  stops: Array<{ color: string; position: number }>,
+  angle?: number
+): GradientPaint;
+
+// --- Auto-Layout Helper (match reference plugin signature) ---
+interface AutoLayoutOptions {
   direction: 'HORIZONTAL' | 'VERTICAL';
   spacing?: number;
   padX?: number;
@@ -269,91 +372,21 @@ interface AutoLayoutConfig {
   heightSizing?: 'FIXED' | 'HUG' | 'FILL';
 }
 
-// --- Typography ---
-interface TextStyle {
-  fontFamily?: string;       // default: 'Inter'
-  fontWeight?: 400 | 500 | 600 | 700;
-  fontSize?: number;         // pixels
-  lineHeight?: { value: number; unit: 'PERCENT' | 'PIXELS' };
-  letterSpacing?: { value: number; unit: 'PERCENT' | 'PIXELS' };
-  textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
-  color?: string;            // hex string, convenience shorthand
-}
+function setAutoLayout(node: FrameNode, options: AutoLayoutOptions): void;
 
-// --- Component Properties ---
-type ComponentPropertyType = 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP';
-
-interface ComponentProperty {
-  name: string;
-  type: ComponentPropertyType;
-  defaultValue: string | boolean;
-  preferredValues?: string[]; // for INSTANCE_SWAP, reference component names
-}
-
-// --- DSL Node (AST) ---
-interface DslNode {
-  type: NodeType;
-  name: string;
-  size?: { x: number; y: number };
-  fills?: Fill[];
-  strokes?: StrokePaint[];
-  cornerRadius?: number;
-  cornerRadii?: { topLeft: number; topRight: number; bottomLeft: number; bottomRight: number };
-  opacity?: number;
-  visible?: boolean;
-  clipContent?: boolean;
-  children?: DslNode[];
-
-  // Auto-layout (FRAME, COMPONENT)
-  autoLayout?: AutoLayoutConfig;
-  layoutGrow?: number;
-  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
-  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
-
-  // Text (TEXT only)
-  characters?: string;
-  textStyle?: TextStyle;
-
-  // Component (COMPONENT only)
-  componentProperties?: ComponentProperty[];
-
-  // Component Set (COMPONENT_SET only)
-  variantAxes?: Record<string, string[]>;
-
-  // Instance (INSTANCE only)
-  componentRef?: string;
-  propertyOverrides?: Record<string, string | boolean>;
-}
-
-// --- Factory Functions ---
-function frame(name: string, props: FrameProps): DslNode;
-function text(characters: string, style?: TextStyle): DslNode;
-function rectangle(name: string, props: RectangleProps): DslNode;
-function ellipse(name: string, props: EllipseProps): DslNode;
-function group(name: string, children: DslNode[]): DslNode;
-function component(name: string, props: ComponentProps): DslNode;
-function componentSet(name: string, props: ComponentSetProps): DslNode;
-function instance(componentRef: string, overrides?: Record<string, string | boolean>): DslNode;
-
-// --- Color Helpers ---
-function hex(value: string): RgbaColor;               // '#7c3aed' → {r, g, b, a: 1}
-function solid(hexValue: string, opacity?: number): SolidFill;
-function gradient(stops: { hex: string; position: number }[], angle?: number): GradientFill;
-function defineTokens(tokens: Record<string, string>): ColorTokenMap;
-function token(map: ColorTokenMap, name: string): SolidFill;
-
-// --- Layout Helpers ---
-function horizontal(config?: Partial<AutoLayoutConfig>): AutoLayoutConfig;
-function vertical(config?: Partial<AutoLayoutConfig>): AutoLayoutConfig;
+// --- Color Token System ---
+type ColorTokenMap = Record<string, string>;  // tokenName → hex
+function defineTokens(tokens: ColorTokenMap): ColorTokenMap;
+function tokenPaint(tokens: ColorTokenMap, name: string): SolidPaint;
 ```
-- Preconditions: Node names must be non-empty strings; size values must be positive; color hex strings must be valid 6-digit hex
-- Postconditions: Returns a well-formed DslNode tree with correct type discrimination
-- Invariants: DslNode objects are immutable after construction; children arrays are defensively copied
+- Preconditions: Hex strings must be valid 6-digit hex with `#` prefix; gradient angles in degrees
+- Postconditions: Paint objects are Figma Plugin API-compatible; `setAutoLayout` mutates the node's layout properties in place
+- Invariants: `gradientPaint` rotation matrix is mathematically correct for the given angle
 
 **Implementation Notes**
-- Factory function prop types (FrameProps, RectangleProps, etc.) are subsets of DslNode properties relevant to each node type — defined via `Pick` and `Partial` for type safety
-- `horizontal()` and `vertical()` are convenience wrappers that set `direction` and merge defaults
-- Color tokens are resolved at compile time, not at DSL construction time
+- `setAutoLayout` maps `padX` → `paddingLeft` + `paddingRight`, `padY` → `paddingTop` + `paddingBottom`
+- `gradientPaint` computes transform matrix: `[[cos(θ), sin(θ), 0.5], [-sin(θ), cos(θ), 0.5]]` where θ is the angle in radians
+- These helpers are the exact same functions used by the reference plugin, extracted as a shared module
 
 ---
 
@@ -361,20 +394,20 @@ function vertical(config?: Partial<AutoLayoutConfig>): AutoLayoutConfig;
 
 | Field | Detail |
 |-------|--------|
-| Intent | Transform DslNode trees into FigmaNodeDict JSON with resolved layout and absolute positions |
-| Requirements | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 |
+| Intent | Transform VirtualNode trees into FigmaNodeDict JSON with resolved layout and absolute positions |
+| Requirements | 1.11, 2.1–2.7, 3.1–3.5, 4.1–4.6, 5.1–5.5 |
 
 **Responsibilities & Constraints**
 - Assign counter-based GUIDs to all nodes (sessionID=0, auto-incrementing localID)
 - Resolve color token references to concrete RGBA values
-- Compute auto-layout: measure children, apply spacing/padding/alignment, determine sizes for HUG/FILL modes
+- Compute auto-layout: two-pass algorithm (bottom-up measurement + top-down positioning)
 - Calculate absolute transform matrices for each node
 - Expand text nodes with `textData` and `derivedTextData` structures for the renderer
 - Set `parentIndex` references with correct guid and position ordering
 - Validate the tree and report errors with source location context
 
 **Dependencies**
-- Inbound: DslCore — provides DslNode tree (P0)
+- Inbound: FigmaApiAdapter — provides VirtualNode tree (P0)
 - External: opentype.js 2.0+ — font metric lookup for text measurement (P0)
 
 **Contracts**: Service [x]
@@ -383,13 +416,13 @@ function vertical(config?: Partial<AutoLayoutConfig>): AutoLayoutConfig;
 ```typescript
 // --- Compiled Output (matches figma-html-renderer node dict format) ---
 interface FigmaNodeDict {
-  guid: [number, number];                    // [sessionID, localID]
+  guid: [number, number];
   type: string;
   name: string;
   size: { x: number; y: number };
   transform: [[number, number, number],
               [number, number, number],
-              [number, number, number]];      // 3×3 affine matrix
+              [number, number, number]];
   fillPaints: FigmaPaint[];
   strokes?: FigmaStroke[];
   strokeWeight?: number;
@@ -400,7 +433,7 @@ interface FigmaNodeDict {
   children: FigmaNodeDict[];
   parentIndex?: { guid: [number, number]; position: string };
 
-  // Auto-layout passthrough (for Figma plugin consumption)
+  // Auto-layout passthrough (for reference)
   stackMode?: 'HORIZONTAL' | 'VERTICAL';
   itemSpacing?: number;
   paddingTop?: number;
@@ -409,8 +442,6 @@ interface FigmaNodeDict {
   paddingLeft?: number;
   primaryAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN';
   counterAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX';
-  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
-  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
 
   // Text
   textData?: { characters: string; lines: string[] };
@@ -420,26 +451,9 @@ interface FigmaNodeDict {
   textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
 
   // Component
-  componentProperties?: Record<string, { type: string; defaultValue: string | boolean }>;
   componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
-
-  // Instance
   componentId?: string;
   overriddenProperties?: Record<string, string | boolean>;
-}
-
-interface Baseline {
-  lineY: number;
-  lineHeight: number;
-  firstCharIndex: number;
-  endCharIndex: number;
-}
-
-interface FontMeta {
-  fontFamily: string;
-  fontStyle: string;
-  fontWeight: number;
-  fontSize: number;
 }
 
 interface CompileResult {
@@ -450,122 +464,77 @@ interface CompileResult {
 
 interface CompileError {
   message: string;
-  nodePath: string;     // e.g., "Button > Label"
+  nodePath: string;
   nodeType: string;
 }
 
 interface CompilerService {
-  compile(node: DslNode): CompileResult;
-  compileToJson(node: DslNode): string;
+  compile(rootNode: VirtualNode): CompileResult;
+  compileToJson(rootNode: VirtualNode): string;
 }
 ```
-- Preconditions: Input DslNode tree must be well-formed (validated by DslCore factories)
-- Postconditions: All nodes have assigned GUIDs, resolved transforms, and valid parentIndex references; auto-layout children have computed positions
-- Invariants: Output JSON conforms to FigmaNodeDict schema; GUID uniqueness within a compilation unit
-
-**Implementation Notes**
-- Auto-layout algorithm implements a subset of CSS Flexbox: single-axis layout with spacing, padding, alignment, and sizing modes (FIXED/HUG/FILL). Does not support wrap, absolute positioning, or constraints.
-- Text baseline computation uses font metrics (ascent/descent) for accurate vertical positioning. For initial implementation, uses simplified line-height-based baselines with one line per `\n` delimiter.
-- Transform matrix composition: parent transform × child offset = child absolute transform. Root node transform is identity.
+- Preconditions: Input VirtualNode tree must be well-formed (constructed via FigmaApi)
+- Postconditions: All nodes have assigned GUIDs, resolved transforms, and valid parentIndex references
+- Invariants: Output JSON conforms to FigmaNodeDict schema; GUID uniqueness within compilation
 
 ##### Text Measurement Strategy
 
-The Compiler must know text node dimensions to resolve HUG-contents sizing on parent frames. Since text rendering happens in the Python renderer (PyCairo), the Compiler uses **opentype.js** to measure text in TypeScript without a rendering engine.
+The Compiler uses **opentype.js** to measure text in TypeScript without a rendering engine. See `research.md` for detailed rationale.
 
 ```typescript
-interface TextMeasurement {
-  width: number;    // total advance width in pixels
-  height: number;   // lineCount × lineHeight (or fontSize × 1.2 default)
-}
-
 interface TextMeasurer {
-  /** Load a font file (.otf/.ttf) and register it by family+weight */
   loadFont(path: string, family: string, weight: number): void;
-
-  /** Measure text dimensions using loaded font metrics */
-  measure(characters: string, style: TextStyle): TextMeasurement;
+  measure(characters: string, style: { fontSize: number; fontFamily?: string; fontWeight?: number; lineHeight?: { value: number; unit: string } }): { width: number; height: number };
 }
 ```
-
-**How it works**:
-- opentype.js parses `.otf`/`.ttf` files and provides per-glyph advance widths and font-level ascent/descent metrics
-- For each text node, the measurer sums glyph advance widths (scaled to `fontSize`) to compute width, and uses `lineHeight` (or `fontSize × 1.2` default) × line count for height
-- Multi-line text splits on `\n`; width is the maximum line width
-- The Inter font files are bundled in `packages/dsl-core/fonts/` so measurement works offline without system fonts
-- Kerning and ligatures are applied using opentype.js's built-in GPOS/GSUB table support
-
-**Limitations**: Letter-perfect parity with PyCairo's text rendering is not guaranteed — minor width differences (< 1px per glyph) may occur. These differences are absorbed by the visual comparison threshold (default 95% similarity).
 
 ##### Layout Algorithm Specification
 
-The auto-layout algorithm resolves DslNode trees with `autoLayout` configurations into absolute positions and sizes. It operates in two passes.
+Two-pass auto-layout resolution. See `research.md` for decision rationale.
 
 **Pass 1 — Bottom-up measurement** (leaf to root):
-1. Leaf nodes (TEXT, RECTANGLE, ELLIPSE) have intrinsic sizes: explicit `size` property, or measured via TextMeasurer for TEXT nodes
-2. FRAME/COMPONENT nodes with `sizing: 'HUG'` compute their size from children:
-   - Primary axis: sum of child sizes along axis + `spacing × (childCount - 1)` + padding
-   - Counter axis: maximum child size along counter axis + padding
-3. FRAME/COMPONENT nodes with `sizing: 'FIXED'` use their explicit `size`
-4. Nodes with `sizing: 'FILL'` defer sizing to Pass 2 (they need parent context)
+1. Leaf nodes have intrinsic sizes: explicit `width`/`height`, or measured via TextMeasurer for TEXT nodes
+2. FRAME/COMPONENT nodes with `layoutSizingHorizontal/Vertical: 'HUG'` compute size from children: primary axis sum + spacing + padding; counter axis max + padding
+3. `'FIXED'` nodes use their explicit size
+4. `'FILL'` nodes defer sizing to Pass 2
 
 **Pass 2 — Top-down positioning** (root to leaf):
 1. Root node position is (0, 0)
-2. For each auto-layout container, distribute children along the primary axis:
-   - Compute available space: container size − padding − total spacing
-   - Allocate FIXED and HUG children first (their sizes are known from Pass 1)
-   - Distribute remaining space among FILL children equally
-   - Position children sequentially with `spacing` gaps
-3. Apply alignment:
-   - `primaryAxisAlignItems`: MIN (pack start), CENTER (center block), MAX (pack end), SPACE_BETWEEN (distribute spacing evenly)
-   - `counterAxisAlignItems`: MIN (align start), CENTER (center), MAX (align end)
-4. For each child, compute absolute transform: parent transform × child offset
-5. FILL children inside a HUG parent are treated as HUG (FILL has no meaning when parent size is content-determined)
+2. For each auto-layout container: compute available space, allocate FIXED/HUG first, distribute remaining to FILL children equally, position with spacing gaps
+3. Apply alignment: `primaryAxisAlignItems` (MIN/CENTER/MAX/SPACE_BETWEEN), `counterAxisAlignItems` (MIN/CENTER/MAX)
+4. Compute absolute transform: parent transform × child offset
+5. FILL children inside HUG parent treated as HUG
 
 **Worked Examples**:
 
-*Example 1 — Horizontal button with label*:
+*Example 1 — Horizontal button*:
+```typescript
+const button = createFrame();
+button.name = 'Button';
+button.fills = [solidPaint('#7c3aed')];
+setAutoLayout(button, { direction: 'HORIZONTAL', spacing: 8, padX: 16, padY: 8 });
+const label = createText();
+label.characters = 'Click me';
+label.fontSize = 14;
+button.appendChild(label);
 ```
-frame('Button', {
-  autoLayout: horizontal({ spacing: 8, padX: 16, padY: 8 }),
-  fills: [solid('#7c3aed')],
-  children: [
-    text('Click me', { fontSize: 14, fontWeight: 500 })
-  ]
-})
-```
-Pass 1: Text "Click me" measured → ~52×17px. Button HUG sizing → width: 52 + 16 + 16 = 84px, height: 17 + 8 + 8 = 33px.
-Pass 2: Text positioned at offset (16, 8) within button frame.
+Pass 1: Text "Click me" → ~52×17px. Button HUG → 52+16+16=84px × 17+8+8=33px.
+Pass 2: Text at offset (16, 8).
 
-*Example 2 — Vertical card with FILL-width title*:
+*Example 2 — Vertical card with FILL-width children*:
+```typescript
+const card = createFrame();
+card.name = 'Card';
+card.resize(300, 200);
+setAutoLayout(card, { direction: 'VERTICAL', spacing: 12, padX: 16, padY: 16 });
+const title = createText();
+title.characters = 'Title';
+title.fontSize = 18;
+title.layoutSizingHorizontal = 'FILL';
+card.appendChild(title);
 ```
-frame('Card', {
-  size: { x: 300, y: 200 },
-  autoLayout: vertical({ spacing: 12, padX: 16, padY: 16 }),
-  children: [
-    text('Title', { fontSize: 18, layoutSizingHorizontal: 'FILL' }),
-    text('Body text here', { fontSize: 14, layoutSizingHorizontal: 'FILL' })
-  ]
-})
-```
-Pass 1: Card is FIXED (300×200). Title measured → ~40×22px, Body measured → ~95×17px. Both have FILL horizontal → deferred.
-Pass 2: Available width = 300 − 16 − 16 = 268px. Both texts get width=268 (FILL). Title at (16, 16), Body at (16, 16 + 22 + 12 = 50).
-
-*Example 3 — Nested layout (badge inside horizontal row)*:
-```
-frame('Row', {
-  autoLayout: horizontal({ spacing: 12, padX: 8, padY: 4, counterAlign: 'CENTER' }),
-  children: [
-    text('Label', { fontSize: 14 }),
-    frame('Badge', {
-      autoLayout: horizontal({ padX: 8, padY: 2 }),
-      fills: [solid('#ef4444')],
-      children: [text('3', { fontSize: 12 })]
-    })
-  ]
-})
-```
-Pass 1 (bottom-up): "3" measured → ~7×14px. Badge HUG → 7+8+8=23px × 14+2+2=18px. "Label" measured → ~33×17px. Row HUG → 8 + 33 + 12 + 23 + 8 = 84px × max(17, 18) + 4 + 4 = 26px.
-Pass 2 (top-down): Row height=26. "Label" (17px tall) centered at y = 4 + (26−4−4−17)/2 = 4.5 ≈ 5. Badge (18px tall) centered at y = 4 + (26−4−4−18)/2 = 4. Within Badge, "3" at offset (8, 2).
+Pass 1: Card is FIXED (300×200). Title measured → ~40×22px, FILL horizontal deferred.
+Pass 2: Available width = 300−16−16 = 268px. Title gets width=268. Title at (16, 16).
 
 ---
 
@@ -583,7 +552,6 @@ Pass 2 (top-down): Row height=26. "Label" (17px tall) centered at y = 4 + (26−
 - Render all supported node types: FRAME, COMPONENT, COMPONENT_SET, INSTANCE, RECTANGLE, ELLIPSE, TEXT, GROUP
 - Apply fills (solid colors, linear gradients), strokes, corner radius, opacity, clipping
 - Render text with correct font, size, weight, and baseline positioning
-- Resolve image asset paths relative to a configurable asset directory
 - Output PNG to specified path; report errors as structured JSON on stderr
 
 **Dependencies**
@@ -597,7 +565,7 @@ Pass 2 (top-down): Row height=26. "Label" (17px tall) centered at y = 4 + (26−
 ```python
 @dataclass
 class RenderOptions:
-    background_color: tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0)  # white
+    background_color: tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0)
     scale: float = 1.0
     asset_dir: str | None = None
 
@@ -607,30 +575,19 @@ class RenderResult:
     width: int
     height: int
 
-@dataclass
-class RenderError:
-    message: str
-    node_path: str
-    node_type: str
-
 class DslRenderer:
     def render(self, node_json: str, output_path: Path, options: RenderOptions) -> RenderResult:
-        """Render FigmaNodeDict JSON to PNG. Raises RenderError on failure."""
-        ...
-
-    def render_file(self, json_path: Path, output_path: Path, options: RenderOptions) -> RenderResult:
-        """Render from JSON file path."""
+        """Render FigmaNodeDict JSON to PNG."""
         ...
 ```
-- Preconditions: Input JSON must conform to FigmaNodeDict schema; transforms must be pre-computed (no layout resolution)
-- Postconditions: Output PNG exists at specified path with correct dimensions
-- Invariants: Renderer is stateless — each render call is independent
+- Preconditions: Input JSON conforms to FigmaNodeDict schema; transforms are pre-computed
+- Postconditions: Output PNG exists at specified path
+- Invariants: Renderer is stateless
 
 **Implementation Notes**
-- Extends figma-html-renderer's `CanvasRenderer` patterns: Cairo context save/restore stack, transform matrix application, fill handling with `set_source_rgba` and `fill_preserve`
-- **New**: Adds gradient fill support using Cairo's `LinearGradient` pattern with gradient transform conversion from Figma's rotation matrix format
-- CLI invocation: `python -m figma_component_dsl.renderer --input nodes.json --output render.png [--scale 2] [--bg white|transparent] [--assets ./assets]`
-- Error output format: `{"error": "message", "node_path": "...", "node_type": "..."}`
+- Extends figma-html-renderer's `CanvasRenderer` patterns
+- Adds gradient fill support using Cairo's `LinearGradient` pattern
+- CLI invocation: `python -m figma_component_dsl.renderer --input nodes.json --output render.png [--scale 2] [--bg white|transparent]`
 
 ---
 
@@ -643,15 +600,8 @@ class DslRenderer:
 | Intent | Capture isolated React component screenshots via headless browser |
 | Requirements | 7.1–7.4 |
 
-**Responsibilities & Constraints**
-- Launch headless Chromium via Playwright
-- Render a single React component in isolation (not a full page)
-- Configure viewport size per capture request
-- Produce PNG with white background matching DSL render background
-- Clean up browser resources after capture
-
 **Dependencies**
-- External: Playwright 1.50+ — headless browser automation (P0)
+- External: Playwright 1.50+ (P0)
 
 **Contracts**: Service [x]
 
@@ -659,9 +609,9 @@ class DslRenderer:
 ```typescript
 interface CaptureOptions {
   viewport: { width: number; height: number };
-  selector?: string;            // CSS selector for element capture (default: '#root > *')
+  selector?: string;
   background?: 'white' | 'transparent';
-  deviceScaleFactor?: number;   // default: 1
+  deviceScaleFactor?: number;
 }
 
 interface CaptureResult {
@@ -671,28 +621,14 @@ interface CaptureResult {
 }
 
 interface CaptureService {
-  capture(
-    componentPath: string,       // path to React component module
-    props: Record<string, unknown>,
-    outputPath: string,
-    options: CaptureOptions
-  ): Promise<CaptureResult>;
-
-  captureUrl(
-    url: string,                 // URL of running dev server
-    outputPath: string,
-    options: CaptureOptions
-  ): Promise<CaptureResult>;
+  capture(componentPath: string, props: Record<string, unknown>, outputPath: string, options: CaptureOptions): Promise<CaptureResult>;
+  captureUrl(url: string, outputPath: string, options: CaptureOptions): Promise<CaptureResult>;
 }
 ```
-- Preconditions: Component module must export a default React component or named export; Playwright browsers must be installed
-- Postconditions: PNG file exists at outputPath with dimensions matching the rendered component bounds
-- Invariants: Each capture uses a fresh browser context to prevent state leakage
 
 **Implementation Notes**
-- Two capture modes: (1) `capture()` spins up a minimal Vite server that renders the component in isolation; (2) `captureUrl()` navigates to an existing dev server URL
-- Element-level screenshot via `element.screenshot({ type: 'png' })` captures only the component, not the full page
-- Viewport configuration: `page.setViewportSize({ width, height })` before navigation
+- Two capture modes: (1) `capture()` spins up minimal Vite server for isolated render; (2) `captureUrl()` navigates to existing dev server
+- Element-level screenshot via `element.screenshot({ type: 'png' })`
 
 ---
 
@@ -700,163 +636,95 @@ interface CaptureService {
 
 | Field | Detail |
 |-------|--------|
-| Intent | Compare two PNG images pixel-by-pixel and produce similarity metrics and diff visualization |
+| Intent | Compare two PNG images pixel-by-pixel with similarity scoring and diff visualization |
 | Requirements | 8.1–8.4 |
 
-**Responsibilities & Constraints**
-- Load and decode two PNG images to raw RGBA buffers
-- Resize/pad images to matching dimensions if they differ (with warning)
-- Run pixel-level comparison and count mismatched pixels
-- Calculate similarity score as percentage
-- Generate diff image highlighting areas of divergence
-- Report pass/fail against configurable threshold
-
 **Dependencies**
-- External: pixelmatch 6.0+ — pixel comparison algorithm (P0)
-- External: pngjs 7.0+ — PNG encode/decode to raw buffers (P0)
+- External: pixelmatch 6.0+ (P0), pngjs 7.0+ (P0)
 
 **Contracts**: Service [x]
 
 ##### Service Interface
 ```typescript
 interface CompareOptions {
-  threshold?: number;           // pixelmatch sensitivity, 0–1 (default: 0.1)
-  failThreshold?: number;       // similarity % below which comparison fails (default: 95)
-  diffColor?: [number, number, number];  // RGB for diff pixels (default: [255, 0, 0])
-  antiAliasing?: boolean;       // detect and ignore AA differences (default: true)
+  threshold?: number;
+  failThreshold?: number;
+  diffColor?: [number, number, number];
+  antiAliasing?: boolean;
 }
 
 interface CompareResult {
-  similarity: number;           // 0–100 percentage
+  similarity: number;
   mismatchedPixels: number;
   totalPixels: number;
-  diffImagePath: string | null; // path to generated diff PNG, null if identical
-  dimensionMatch: boolean;      // false if images were resized for comparison
-  passed: boolean;              // similarity >= failThreshold
+  diffImagePath: string | null;
+  dimensionMatch: boolean;
+  passed: boolean;
 }
 
 interface CompareService {
-  compare(
-    imagePath1: string,
-    imagePath2: string,
-    diffOutputPath: string,
-    options?: CompareOptions
-  ): Promise<CompareResult>;
+  compare(imagePath1: string, imagePath2: string, diffOutputPath: string, options?: CompareOptions): Promise<CompareResult>;
 }
 ```
-- Preconditions: Both image paths must point to valid PNG files
-- Postconditions: CompareResult contains accurate pixel counts; diff image (if generated) exists at diffOutputPath
-- Invariants: Comparison is commutative — `compare(a, b)` equals `compare(b, a)` in similarity score
 
 **Implementation Notes**
-- When images differ in dimensions, the smaller image is padded with the background color (white) to match the larger. `dimensionMatch: false` signals this to the caller.
-- pngjs decodes PNG to `Uint8Array` of RGBA pixel data, which pixelmatch consumes directly
-- Diff image uses red (`[255, 0, 0]`) for mismatched pixels by default; anti-aliased pixel detection is enabled to reduce false positives from font rendering differences
+- When images differ in dimensions, the smaller is padded with background color; `dimensionMatch: false` signals this
+- Anti-aliased pixel detection enabled to reduce false positives from font rendering
 
 ---
 
-### Export Layer
+### Plugin Layer
 
-#### Exporter
-
-| Field | Detail |
-|-------|--------|
-| Intent | Generate Figma plugin input JSON from compiled FigmaNodeDict |
-| Requirements | 9.1–9.9 |
-
-**Responsibilities & Constraints**
-- Transform compiled FigmaNodeDict into a format optimized for the Figma plugin's consumption
-- Preserve auto-layout properties (not just computed transforms) so the plugin creates real auto-layout frames
-- Include component property definitions for the plugin to register via `addComponentProperty()`
-- Include variant axis information for `combineAsVariants()` grouping
-- Generate component placement instructions (page name, sequential positioning)
-
-**Dependencies**
-- Inbound: Compiler — provides FigmaNodeDict (P0)
-
-**Contracts**: Service [x]
-
-##### Service Interface
-```typescript
-interface PluginInput {
-  version: string;                         // schema version
-  components: PluginComponentDef[];
-  page: string;                            // target page name (default: 'Component Library')
-}
-
-interface PluginComponentDef {
-  name: string;
-  type: 'COMPONENT' | 'COMPONENT_SET';
-  node: FigmaNodeDict;                    // full node tree
-  properties?: ComponentProperty[];       // for addComponentProperty()
-  variants?: PluginVariantDef[];          // for combineAsVariants()
-}
-
-interface PluginVariantDef {
-  name: string;                           // 'Variant=Primary, Size=Large'
-  axes: Record<string, string>;           // { Variant: 'Primary', Size: 'Large' }
-  node: FigmaNodeDict;
-}
-
-interface ExporterService {
-  generatePluginInput(compiled: CompileResult): PluginInput;
-  writePluginInput(input: PluginInput, outputPath: string): void;
-}
-```
-- Preconditions: CompileResult must contain zero errors
-- Postconditions: PluginInput JSON is valid and contains all component definitions with properties and variants
-- Invariants: Variant names follow Figma's `Key=Value, Key=Value` convention
-
----
-
-#### Plugin
+#### PluginRuntime
 
 | Field | Detail |
 |-------|--------|
-| Intent | Parse PluginInput JSON and create Figma nodes using the Plugin API |
-| Requirements | 9.1–9.10 |
+| Intent | Execute bundled DSL code directly in the Figma plugin environment |
+| Requirements | 9.1–9.8 |
 
 **Responsibilities & Constraints**
-- Read PluginInput JSON (pasted or loaded from file in plugin UI)
-- Create Figma nodes recursively: frames, text (with async font loading), rectangles, ellipses, components
-- Apply auto-layout properties from node definitions (using `setAutoLayout()` pattern from reference)
-- Apply fills, strokes, corner radius, opacity
-- Register component properties via `addComponentProperty()`
-- Combine variant components via `figma.combineAsVariants()`
-- Create instances with property overrides
-- Place components on the target page with sequential positioning
+- Load a JS bundle (produced by CLI `bundle` command) containing DSL definitions
+- Execute DSL code where `createFrame()`, `solidPaint()`, `setAutoLayout()` etc. delegate directly to the real Figma Plugin API (`figma.createFrame()`, etc.)
+- Load fonts asynchronously via `figma.loadFontAsync()` before text node creation
+- Register component properties, combine variants, create instances — all via real Figma API
+- Place created components on a dedicated page ("Component Library") with sequential positioning
 - Output JSON mapping of component names to Figma node IDs
-- Report errors via `figma.notify()` without crashing
+- Wrap each node creation in try/catch; report errors via `figma.notify()`; continue on failure
 
 **Dependencies**
-- Inbound: Exporter — provides PluginInput JSON (P0)
+- Inbound: CLI `bundle` command — provides JS bundle (P0)
 - External: Figma Plugin API — node creation and manipulation (P0)
-- External: esbuild — plugin compilation (P1)
+- External: esbuild — bundle compilation (P1)
 
 **Contracts**: Service [x]
 
 ##### Service Interface
 ```typescript
-// Plugin internal interface (runs in Figma sandbox)
-interface PluginRunner {
-  run(input: PluginInput): Promise<PluginOutput>;
-}
+// Plugin shim module — re-exports Figma globals for DSL code
+// DSL code imports: import { createFrame, solidPaint, setAutoLayout } from 'figma-dsl'
+// In plugin env, these resolve to:
+const createFrame = () => figma.createFrame();
+const createText = () => figma.createText();
+const createRectangle = () => figma.createRectangle();
+const createEllipse = () => figma.createEllipse();
+const createComponent = () => figma.createComponent();
+// solidPaint, gradientPaint, hexToRGB, setAutoLayout — shared helpers, identical in both envs
 
 interface PluginOutput {
-  nodeIds: Record<string, string>;         // componentName → figmaNodeId
+  nodeIds: Record<string, string>;
   created: number;
   errors: string[];
 }
 ```
-- Preconditions: PluginInput JSON is valid; required fonts are available in Figma
-- Postconditions: All valid components created on target page; nodeIds mapping output to console
-- Invariants: Invalid nodes are skipped (not crash) with error notification
+- Preconditions: Bundle is valid JS; required fonts available in Figma
+- Postconditions: All valid components created on target page; nodeIds mapping output
+- Invariants: Invalid nodes skipped with error notification
 
 **Implementation Notes**
-- Mirrors the reference plugin's architecture: helper functions for color conversion, auto-layout, text creation, and shape creation
-- Font loading: loads Inter Regular/Medium/Semi Bold/Bold before node creation (same pattern as reference)
-- Node creation is recursive: for each node in the tree, dispatch by type to the appropriate `figma.create*()` call, then process children
-- Error handling: wrap each node creation in try/catch; accumulate errors; notify user and continue
+- The bundle uses esbuild to resolve all DSL imports into a single IIFE
+- Font loading: collects all font references from DSL code and loads them before execution
+- The plugin UI provides a text area for pasting the bundle or a file picker for loading it
+- Error handling: per-node try/catch wrapping, errors accumulated and shown via `figma.notify()`
 
 ---
 
@@ -869,42 +737,95 @@ interface PluginOutput {
 | Intent | User-facing command-line interface orchestrating all pipeline operations |
 | Requirements | 10.1–10.7 |
 
-**Responsibilities & Constraints**
-- Provide subcommands for each pipeline stage: `compile`, `render`, `capture`, `compare`, `pipeline`, `export`
-- Orchestrate cross-language calls (invoke Python renderer as subprocess)
-- Report errors with context (which stage failed, what input caused it) and exit with non-zero status
-- Support configuration via command-line flags and optional config file
-
-**Dependencies**
-- Inbound: All components (P0)
-
 **Contracts**: Service [x]
 
 ##### Service Interface
 ```typescript
-// CLI commands
 interface CliCommands {
   compile(dslPath: string, options: { output?: string }): Promise<void>;
   render(jsonPath: string, options: { output?: string; scale?: number; bg?: string }): Promise<void>;
   capture(componentPath: string, options: { output?: string; viewport?: string; props?: string }): Promise<void>;
   compare(image1: string, image2: string, options: { output?: string; threshold?: number }): Promise<void>;
   pipeline(dslPath: string, componentPath: string, options: PipelineOptions): Promise<void>;
-  export(dslPath: string, options: { output?: string; page?: string }): Promise<void>;
+  bundle(dslPath: string, options: { output?: string }): Promise<void>;
+  doctor(): Promise<void>;
 }
 
 interface PipelineOptions {
-  output?: string;         // output directory
-  viewport?: string;       // WxH format, e.g., '800x600'
-  threshold?: number;      // comparison fail threshold
-  scale?: number;          // render scale factor
+  output?: string;
+  viewport?: string;
+  threshold?: number;
+  scale?: number;
 }
 ```
 
 **Implementation Notes**
-- Built with Node.js `parseArgs` (no framework dependency, matching "No Framework Bloat" principle)
-- Python renderer invoked via `child_process.execFile('python', ['-m', 'figma_component_dsl.renderer', ...])` with JSON piped to stdin or written to a temp file
+- Built with Node.js `parseArgs` (no framework dependency)
+- Python renderer invoked via `child_process.execFile('python', ['-m', 'figma_component_dsl.renderer', ...])`
+- The `bundle` command uses esbuild to package DSL definitions for Figma plugin execution
 - The `pipeline` command chains: compile → render → capture → compare, stopping on first error
-- Exit codes: 0 = success, 1 = pipeline failure (comparison below threshold), 2 = runtime error
+- Exit codes: 0 = success, 1 = comparison below threshold, 2 = runtime error
+
+---
+
+### AI Generation Layer
+
+#### ReactToDslSkill
+
+| Field | Detail |
+|-------|--------|
+| Intent | Claude Code skill that generates DSL definitions from React component source code |
+| Requirements | 11.1–11.10 |
+
+**Responsibilities & Constraints**
+- Accept a React component file path as argument (e.g., `/react-to-dsl src/components/Button/Button.tsx`)
+- Read the component's `.tsx` file, associated `.module.css` or style files, and `types.ts` for prop interfaces
+- Analyze JSX structure → map to `createFrame()`, `createText()`, `createRectangle()` calls
+- Map CSS flexbox → `setAutoLayout()` calls (direction, spacing, padding, alignment)
+- Map CSS colors → `solidPaint()` / `gradientPaint()` calls
+- Map CSS typography → text node properties (fontSize, fontWeight, lineHeight, etc.)
+- Map React prop variants → `createComponent()` + `combineAsVariants()` with COMPONENT_SET
+- Map boolean props → `addComponentProperty(name, 'BOOLEAN', default)`
+- Generate Code Connect `.figma.tsx` stub using `figma.enum()`, `figma.string()`, `figma.boolean()`, `figma.instance()`
+- Emit `// TODO:` comments for uncertain mappings
+
+**Dependencies**
+- External: Claude Code Skills system (P0) — provides invocation mechanism
+- External: Source component files — React `.tsx`, CSS Modules, type definitions (P0)
+
+**Contracts**: — (AI skill, no programmatic interface)
+
+##### Skill Definition
+```yaml
+# .claude/skills/react-to-dsl/SKILL.md frontmatter
+---
+name: react-to-dsl
+description: >
+  Generate Figma DSL definitions from React component source code.
+  Analyzes JSX structure, CSS styles, and prop interfaces to produce
+  DSL code using Figma Plugin API patterns (createFrame, solidPaint,
+  setAutoLayout, etc.) and Code Connect binding stubs.
+---
+```
+
+**Skill Instructions** (markdown body of SKILL.md):
+1. Read the target React component file and its associated CSS/style files
+2. Read the component's prop type interface
+3. Analyze the JSX tree structure and map each element to DSL node creation calls
+4. Map CSS layout properties to `setAutoLayout()` configurations
+5. Map CSS color values to `solidPaint()` / `gradientPaint()` calls
+6. Map typography CSS to text node properties
+7. If the component has variant props (union types), generate a `combineAsVariants()` COMPONENT_SET
+8. If the component has boolean props, generate `addComponentProperty()` calls
+9. Output the DSL definition file (`.dsl.ts`)
+10. Output a Code Connect stub file (`.figma.tsx`)
+11. Add `// TODO:` comments where mappings are uncertain
+
+**Implementation Notes**
+- The skill is a `.claude/skills/react-to-dsl/SKILL.md` file in the project repository
+- It leverages Claude's understanding of both React/CSS patterns and Figma API semantics
+- Output quality depends on the LLM — generated code should be reviewed and refined through the visual comparison loop
+- The skill reads existing DSL examples in the project for style consistency (few-shot learning from codebase)
 
 ## Data Models
 
@@ -912,12 +833,9 @@ interface PipelineOptions {
 
 ```mermaid
 erDiagram
-    DslNode ||--o{ DslNode : "children"
-    DslNode ||--o{ Fill : "fills"
-    DslNode ||--o{ StrokePaint : "strokes"
-    DslNode ||--o| AutoLayoutConfig : "autoLayout"
-    DslNode ||--o| TextStyle : "textStyle"
-    DslNode ||--o{ ComponentProperty : "componentProperties"
+    VirtualNode ||--o{ VirtualNode : "children via appendChild"
+    VirtualNode ||--o{ Paint : "fills"
+    VirtualNode ||--o{ Paint : "strokes"
 
     FigmaNodeDict ||--o{ FigmaNodeDict : "children"
     FigmaNodeDict ||--o{ FigmaPaint : "fillPaints"
@@ -929,22 +847,21 @@ erDiagram
 ```
 
 **Aggregates and boundaries**:
-- `DslNode` is the root aggregate for the DSL domain — all construction goes through factory functions
+- `VirtualNode` is the root aggregate for the offline DSL domain — created by `VirtualFigmaApi` methods
 - `FigmaNodeDict` is the root aggregate for the compiled domain — produced exclusively by the Compiler
 - `CompareResult` is a value object produced by the Comparator
 
 **Business rules**:
-- Auto-layout is only valid on FRAME and COMPONENT node types
+- Auto-layout (`layoutMode`) is only valid on FRAME and COMPONENT node types
 - TEXT nodes must have `characters` set; other node types must not
 - COMPONENT_SET nodes must contain at least one COMPONENT child
-- INSTANCE nodes must reference a valid component name via `componentRef`
+- INSTANCE nodes must reference a valid component via `componentRef`
 - Variant component names must follow `Key=Value, Key=Value` format
+- VirtualNode property names and types must exactly match Figma Plugin API equivalents
 
 ### Logical Data Model
 
-**FigmaNodeDict JSON Schema** (interchange format between TypeScript and Python):
-
-The FigmaNodeDict structure mirrors Figma's internal node representation as documented in the figma-html-renderer reference. Key fields:
+**FigmaNodeDict JSON Schema** — interchange format between TypeScript Compiler and Python Renderer. Full schema defined in Compiler service interface above. Key fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -955,53 +872,45 @@ The FigmaNodeDict structure mirrors Figma's internal node representation as docu
 | transform | number[3][3] | Yes | Absolute affine transform |
 | fillPaints | Paint[] | Yes | Fill array (may be empty) |
 | children | FigmaNodeDict[] | Yes | Child nodes (may be empty) |
-| parentIndex | {guid, position} | No | Parent reference (absent on root) |
 | opacity | number | Yes | 0–1 |
 | visible | boolean | Yes | Visibility flag |
-
-Full schema details for FigmaPaint, text properties, and component properties are defined in the Compiler service interface above.
-
-**ColorTokenMap** (design token storage):
-
-| Field | Type | Description |
-|-------|------|-------------|
-| name | string | Token name (e.g., 'primary600') |
-| hex | string | Hex color value |
-| resolved | RgbaColor | Pre-computed RGBA |
 
 ## Error Handling
 
 ### Error Strategy
-Each pipeline stage produces typed errors with contextual information. Errors are categorized by recoverability.
+Each pipeline stage produces typed errors with contextual information.
 
 ### Error Categories and Responses
-**DSL Construction Errors** (immediate throw): Invalid hex string → `InvalidColorError` with hex value; missing required property → `MissingPropertyError` with node name and property; invalid node nesting → `InvalidChildError` with parent and child types.
+**VirtualNode Errors** (immediate throw): Invalid property type → `TypeError`; invalid child append → `InvalidChildError`; missing required property at compile time → `CompileError`.
 
-**Compile Errors** (accumulated, reported after pass): Layout overflow → warning with node path; circular component reference → `CircularRefError`; unresolved token → `UnresolvedTokenError`.
+**Compile Errors** (accumulated): Layout overflow → warning with node path; circular component reference → `CircularRefError`; unresolved token → `UnresolvedTokenError`.
 
-**Render Errors** (subprocess, structured JSON): Missing font → warning with fallback notification; unsupported node type → skip with warning; invalid paint → skip fill with warning.
+**Render Errors** (subprocess, structured JSON): Missing font → fallback with warning; unsupported node type → skip with warning.
 
-**Pipeline Errors** (CLI level): Stage failure → stop pipeline, report which stage failed and the underlying error; comparison failure (below threshold) → exit code 1 with similarity report.
+**Plugin Errors** (per-node catch): Node creation failure → `figma.notify()` with error, skip and continue; font loading failure → report and degrade.
+
+**Pipeline Errors** (CLI level): Stage failure → stop pipeline, report which stage failed; comparison below threshold → exit code 1 with similarity report.
 
 ## Testing Strategy
 
 ### Unit Tests
-- **DslCore factory functions**: Verify each factory produces correct DslNode structure with type, default values, and child nesting (parameterized across all node types)
-- **Color helpers**: Verify hex parsing, solid/gradient fill construction, token resolution for valid and edge-case inputs
-- **Compiler layout resolution**: Verify auto-layout computation for horizontal/vertical direction, spacing, padding, alignment, and sizing modes against expected transform matrices
-- **Compiler GUID assignment**: Verify unique, deterministic GUID generation across tree depths
-- **Comparator scoring**: Verify similarity calculation with identical images (100%), completely different images (~0%), and known diff patterns
+- **VirtualFigmaApi**: Verify `createFrame()`, `createText()`, etc. produce VirtualNode objects with correct types and default values; verify `appendChild` builds correct tree
+- **SharedHelpers**: Verify `hexToRGB`, `solidPaint`, `gradientPaint`, `setAutoLayout` produce correct output for valid and edge-case inputs; verify `gradientPaint` rotation matrix
+- **Compiler layout**: Verify two-pass auto-layout for horizontal/vertical, spacing, padding, alignment, sizing modes against expected transforms (use worked examples as test specs)
+- **Compiler GUID assignment**: Verify unique, deterministic GUID generation
+- **Comparator scoring**: Verify similarity calculation with identical (100%), different (~0%), and known diff patterns
 
 ### Integration Tests
-- **Compile + Render pipeline**: DSL definition → compile → render → verify output PNG exists and has expected dimensions
-- **Compile + Export pipeline**: DSL definition → compile → export → verify PluginInput JSON is valid and contains expected component structures
-- **Full pipeline**: DSL definition → compile → render → capture → compare → verify CompareResult matches expectations
-- **Error propagation**: Verify that renderer subprocess errors are correctly captured and reported by the CLI with context
+- **Compile + Render**: VirtualNode tree → compile → render → verify PNG exists and has expected dimensions
+- **Full pipeline**: DSL definition → compile → render → capture → compare → verify CompareResult
+- **Plugin bundle**: DSL definition → bundle → verify bundle is valid JS that references expected Figma API calls
+- **Error propagation**: Verify renderer subprocess errors correctly captured and reported by CLI
 
 ### E2E Tests
-- **CLI compile command**: Invoke `figma-dsl compile` on sample DSL files, verify JSON output schema
-- **CLI pipeline command**: Invoke `figma-dsl pipeline` end-to-end, verify similarity score and output files
-- **CLI error reporting**: Invoke with invalid inputs, verify non-zero exit code and descriptive error messages
+- **CLI compile**: Invoke `figma-dsl compile` on sample DSL files, verify JSON output
+- **CLI pipeline**: End-to-end, verify similarity score and output files
+- **CLI bundle**: Invoke `figma-dsl bundle`, verify output is loadable JS
+- **CLI error reporting**: Invalid inputs → non-zero exit code and descriptive errors
 
 ### Visual Regression
-- **Reference component comparison**: Render all 16 reference components (Button variants, Badge, Hero, etc.) from DSL definitions and compare against screenshots of the same components rendered in React. Establish baseline similarity scores and track regression over time.
+- **Reference components**: Render all 16 reference components from DSL definitions using Figma Plugin API-style code, compare against React component screenshots. Establish baseline similarity scores.
