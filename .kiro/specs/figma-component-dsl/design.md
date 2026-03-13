@@ -146,7 +146,10 @@ graph TB
 
 ### Environment Management
 
-The entire stack runs in a single Node.js process — no cross-language coordination required. The `figma-dsl doctor` command verifies Node.js version and Inter font availability.
+The entire stack runs in a single Node.js process — no cross-language coordination required. The `figma-dsl doctor` command verifies:
+- Node.js version (22+)
+- Inter font file availability in `packages/dsl-core/fonts/`
+- Design token sync: parses `tokens.css` (if present in the project) and validates that `REFERENCE_COLORS`, `FONT_SIZE_SCALE`, `SPACING_SCALE`, and `RADIUS_SCALE` constants in SharedHelpers match the CSS custom property values
 
 The Inter font family (.otf files for Regular, Medium, Semi Bold, Bold) is bundled in `packages/dsl-core/fonts/` for offline text measurement via opentype.js and registered with `@napi-rs/canvas` via `GlobalFonts.registerFromPath()` for rendering.
 
@@ -498,7 +501,7 @@ const FONT_WEIGHTS: Record<string, number>;
 - Resolve color token references to concrete RGBA values
 - Compute auto-layout: two-pass algorithm (bottom-up measurement + top-down positioning)
 - Calculate absolute transform matrices for each node
-- Expand text nodes with `textData` and `derivedTextData` structures for the renderer
+- Expand text nodes with `textData` for the renderer (characters, font properties, computed dimensions)
 - Set `parentIndex` references with correct guid and position ordering
 - Validate the tree and report errors with source location context
 
@@ -539,12 +542,19 @@ interface FigmaNodeDict {
   primaryAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN';
   counterAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX';
 
-  // Text
-  textData?: { characters: string; lines: string[] };
-  derivedTextData?: { baselines: Baseline[]; fontMetaData: FontMeta[] };
+  // Text — fields consumed by Canvas 2D API ctx.fillText()
+  textData?: {
+    characters: string;
+    lines: string[];                    // line-broken text for multi-line rendering
+    computedWidth: number;              // measured by opentype.js
+    computedHeight: number;             // measured by opentype.js
+  };
   fontSize?: number;
   fontFamily?: string;
+  fontWeight?: number;
   textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
+  lineHeight?: { value: number; unit: 'PERCENT' | 'PIXELS' } | { unit: 'AUTO' };
+  letterSpacing?: { value: number; unit: 'PERCENT' | 'PIXELS' };
 
   // Component
   componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
@@ -631,6 +641,34 @@ card.appendChild(title);
 ```
 Pass 1: Card is FIXED (300×200). Title measured → ~40×22px, FILL horizontal deferred.
 Pass 2: Available width = 300−16−16 = 268px. Title gets width=268. Title at (16, 16).
+
+*Example 3 — 3-column grid layout (FeatureGrid pattern, 12.7)*:
+```typescript
+// CSS grid-template-columns: repeat(3, 1fr) with gap: 32px
+// → Vertical parent with horizontal row children, each containing FILL-width cards
+
+const grid = createFrame();
+grid.name = 'FeatureGrid';
+grid.resize(1024, 0);  // fixed width, HUG height
+setAutoLayout(grid, { direction: 'VERTICAL', spacing: 32, padX: 0, padY: 0, heightSizing: 'HUG' });
+
+const row = createFrame();
+row.name = 'Row';
+setAutoLayout(row, { direction: 'HORIZONTAL', spacing: 32, widthSizing: 'FILL', heightSizing: 'HUG' });
+
+for (const feature of features.slice(0, 3)) {
+  const card = createFrame();
+  card.name = feature.title;
+  card.layoutSizingHorizontal = 'FILL';
+  setAutoLayout(card, { direction: 'VERTICAL', spacing: 12, padX: 24, padY: 24 });
+  // ... add icon placeholder, title text, description text
+  row.appendChild(card);
+}
+grid.appendChild(row);
+// Repeat for additional rows of 3
+```
+Pass 1: Each card HUG height (~120px). Row HUG height (max child = 120px). Grid HUG height.
+Pass 2: Grid width = 1024px. Row FILL → 1024px. 3 FILL cards → (1024−32−32)/3 = 320px each. Cards positioned at x=0, x=352, x=704.
 
 ---
 
@@ -853,7 +891,7 @@ interface CliCommands {
   compare(image1: string, image2: string, options: { output?: string; threshold?: number }): Promise<void>;
   pipeline(dslPath: string, componentPath: string, options: PipelineOptions): Promise<void>;
   bundle(dslPath: string, options: { output?: string }): Promise<void>;
-  doctor(): Promise<void>;
+  doctor(options?: { tokensPath?: string }): Promise<void>;
 }
 
 interface PipelineOptions {
@@ -1032,6 +1070,7 @@ Each pipeline stage produces typed errors with contextual information.
 - **Compiler layout**: Verify two-pass auto-layout for horizontal/vertical, spacing, padding, alignment, sizing modes against expected transforms (use worked examples as test specs)
 - **Compiler GUID assignment**: Verify unique, deterministic GUID generation
 - **Comparator scoring**: Verify similarity calculation with identical (100%), different (~0%), and known diff patterns
+- **Token sync (12.2–12.3)**: Parse reference library `tokens.css` and verify `REFERENCE_COLORS`, `SEMANTIC_COLORS`, `FONT_SIZE_SCALE`, `SPACING_SCALE`, `RADIUS_SCALE` constants match the CSS custom property values
 
 ### Integration Tests
 - **Compile + Render**: VirtualNode tree → compile → render → verify PNG exists and has expected dimensions
