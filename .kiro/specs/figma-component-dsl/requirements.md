@@ -9,12 +9,12 @@ This specification defines requirements for **Figma Component DSL** — a domain
 Two existing reference implementations inform this design:
 
 - **figma_design_playground** (`./references/figma_design_playground`) — A React 19 + TypeScript component library with 16 production components (Button, Badge, Hero, FeatureCard, PricingCard, etc.), a Figma plugin that programmatically creates matching Figma components using the Plugin API, and Code Connect bindings (`.figma.tsx` files) that map React props to Figma properties. The plugin's helper functions (`setAutoLayout()`, `solidPaint()`, `gradientPaint()`, `hexToRGB()`) and component builder patterns form the basis of the DSL vocabulary.
-- **figma-html-renderer** (`./references/figma-html-renderer`) — A Python CLI tool with a strict 5-stage pipeline (Parse → Build Tree → Classify → Render → Output) that converts Figma's `.fig` binary format into PNG images via PyCairo, using node dictionaries with `guid`, `type`, `transform`, `size`, `fillPaints`, `children`, and `parentIndex` fields.
+- **figma-html-renderer** (`./references/figma-html-renderer`) — A Python CLI tool with a strict 5-stage pipeline (Parse → Build Tree → Classify → Render → Output) that converts Figma's `.fig` binary format into PNG images via PyCairo, using node dictionaries with `guid`, `type`, `transform`, `size`, `fillPaints`, `children`, and `parentIndex` fields. The DSL project's rendering engine uses `@napi-rs/canvas` (Skia-backed, TypeScript) instead of PyCairo (Python) — the node dictionary format is informed by figma-html-renderer but runs entirely in Node.js.
 
 **Target workflow:**
-1. Create React components
+1. Create React components (CSS Modules + design tokens, following reference library patterns)
 2. Generate Figma DSL definitions from those components using AI skill (or write manually)
-3. Render DSL as images (via figma-html-renderer's CanvasRenderer)
+3. Render DSL as images (via @napi-rs/canvas Skia renderer)
 4. Render React components as images (via Playwright)
 5. Compare the two — iterate on the DSL without Figma
 6. When ready, run DSL code directly in Figma plugin to create real components
@@ -170,3 +170,57 @@ Two existing reference implementations inform this design:
 8. The AI skill shall generate Code Connect binding suggestions (`.figma.tsx` stubs) that map the generated DSL component properties back to the React component's props using `figma.enum()`, `figma.string()`, `figma.boolean()`, and `figma.instance()` helpers.
 9. The AI skill shall be invocable as a Claude Code slash command (e.g., `/react-to-dsl <ComponentPath>`) for seamless integration into the development workflow.
 10. If the AI skill cannot confidently infer a Figma property from the React source, it shall emit a `// TODO:` comment in the generated DSL code indicating what needs manual review.
+
+### Requirement 12: Supported React Component Patterns
+
+**Objective:** As a component developer, I want clarity on which React component patterns the tool supports for screenshot capture, DSL generation, and visual comparison, so that I can build components that work well within the pipeline and understand the tool's boundaries.
+
+The reference component library (`figma_design_playground`) defines the target scope: 16 production components ranging from simple primitives (Badge, Button) to complex sections (Hero, PricingTable, Footer). The following criteria define which patterns the tool shall support and which are explicitly out of scope.
+
+#### Acceptance Criteria
+
+##### Supported Styling Patterns
+1. The system shall support React components styled with CSS Modules (`.module.css` files with scoped class names composed via `styles[variant]` dynamic key access).
+2. The system shall support React components that consume design tokens defined as CSS custom properties in a centralized `tokens.css` file, including color scales (`--color-primary-{50-900}`), spacing (`--space-{1-24}`), border radius (`--radius-*`), and typography sizes (`--text-{xs-6xl}`).
+3. The system shall support React components that use semantic color tokens (`--text-primary`, `--bg-primary`, `--border-default`) mapped to underlying color scales.
+4. The system shall support React components with variant-driven styling, where a `variant` prop selects a CSS class name (e.g., `variant: 'primary' | 'secondary' | 'outline' | 'ghost'` → `styles.primary`, `styles.secondary`, etc.).
+5. The system shall support React components with size-driven styling, where a `size` prop selects a CSS class name (e.g., `size: 'sm' | 'md' | 'lg'` → `styles.sm`, `styles.md`, `styles.lg`).
+
+##### Supported Layout Patterns
+6. The system shall support React components that use CSS flexbox for layout, mapping `display: flex`, `flex-direction`, `justify-content`, `align-items`, `gap`, and `padding` to Figma Auto Layout equivalents (`layoutMode`, `primaryAxisAlignItems`, `counterAxisAlignItems`, `itemSpacing`, padding).
+7. The system shall support React components that use CSS grid for simple column layouts, mapping `grid-template-columns: repeat(N, 1fr)` with `gap` to equivalent Figma Auto Layout structures (nested horizontal frames within a vertical container).
+8. The system shall support React components that use max-width container wrappers (`max-width` + `margin: 0 auto`) for centered content.
+9. When a React component uses responsive breakpoints (`@media` queries) that change layout, the system shall capture and compare screenshots at a single configurable viewport width per invocation, not attempt to represent responsiveness within a single DSL definition.
+
+##### Supported Typography Patterns
+10. The system shall support React components that use the Inter font family with weights 400 (Regular), 500 (Medium), 600 (Semi Bold), and 700 (Bold).
+11. The system shall support React components that use the font size scale from the reference library: xs (12px), sm (14px), base (16px), lg (18px), xl (20px), 2xl (24px), 3xl (30px), 4xl (36px), 5xl (48px), 6xl (60px).
+12. The system shall support React components that use semantic HTML heading elements (`<h1>` through `<h3>`) and paragraph elements (`<p>`, `<span>`) for text content.
+
+##### Supported Color and Fill Patterns
+13. The system shall support React components that use solid background colors defined via CSS custom properties or inline hex values.
+14. The system shall support React components that use linear gradients defined via CSS `linear-gradient()` or gradient design tokens (`--gradient-primary`, `--gradient-hero`, etc.).
+15. The system shall support React components that use border and border-radius properties, mapping to Figma stroke and `cornerRadius`.
+
+##### Supported Component Composition Patterns
+16. The system shall support React components that accept `children: ReactNode` as a prop for content projection, mapping to Figma `appendChild()` in the DSL.
+17. The system shall support React components that accept typed array data props (e.g., `features: Feature[]`, `stats: StatItem[]`) and render child components via `.map()`, mapping to repeated Figma child nodes in the DSL.
+18. The system shall support React components that compose other components from the same library (e.g., `PricingTable` renders `PricingCard`, `Hero` renders `Badge` and `Button`), mapping to nested DSL node creation calls.
+19. The system shall support React components that use conditional rendering (`{value && <Element>}`, ternary operators) for optional content, mapping to DSL nodes with `visible: false` or conditional node creation.
+20. The system shall support React components that use boolean props (e.g., `fullWidth?: boolean`, `highlighted?: boolean`) for toggling visual states, mapping to Figma BOOLEAN component properties.
+
+##### Supported Prop and Variant Patterns
+21. The system shall support React components with union-type variant props (e.g., `variant: 'primary' | 'secondary'`), mapping to Figma COMPONENT_SET with variant axes via `combineAsVariants()`.
+22. The system shall support React components with union-type size props (e.g., `size: 'sm' | 'md' | 'lg'`), mapping to an additional Figma variant axis.
+23. When a React component has both variant and size props, the system shall generate the Cartesian product of all variant-size combinations as individual Figma variant components (e.g., Button → 12 variants: 4 variants × 3 sizes).
+24. The system shall support React components with optional string props (e.g., `title?: string`, `subtitle?: string`), mapping to Figma TEXT component properties.
+
+##### Out-of-Scope Patterns (Explicit Exclusions)
+25. The system shall not attempt to represent CSS animations, transitions, or keyframe-based effects (e.g., marquee scroll, hover transitions, accordion animations) in the DSL — these are captured as static snapshots during screenshot comparison.
+26. The system shall not attempt to represent scroll-based state changes (e.g., Navbar blur effect on scroll) in the DSL — the screenshot capture shall use a fixed scroll position.
+27. The system shall not attempt to represent CSS `backdrop-filter` effects (e.g., blur, saturation) in the DSL rendering — these are visual-only effects that do not map to Figma's node model.
+28. The system shall not attempt to represent CSS `background-clip: text` gradient text effects in the DSL — these shall be annotated as `// TODO:` comments in generated DSL code with a fallback solid color.
+29. The system shall not attempt to represent SVG icon content (e.g., Lucide React icons) in the DSL — icons shall be represented as placeholder RECTANGLE or ELLIPSE nodes with a `// TODO: replace with icon asset` comment.
+30. The system shall not attempt to represent external images loaded from CDN URLs (e.g., `api.dicebear.com` avatars) in the DSL — external images shall be represented as placeholder RECTANGLE nodes with the image URL noted in a comment.
+31. The system shall not attempt to represent `box-shadow` CSS properties in the DSL rendering — Figma effects (drop shadow, inner shadow) are outside the current DSL scope (see Non-Goals).
+32. The system shall not attempt to represent dark mode (`prefers-color-scheme: dark`) variants — each theme is a separate screenshot capture and DSL definition if needed.
