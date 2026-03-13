@@ -94,6 +94,46 @@ graph TB
 
 > Rationale for key technology choices is documented in `research.md` design decisions section.
 
+### Monorepo Package Structure
+
+```
+packages/
+├── dsl-core/          # DslCore + Compiler (zero external deps for core; yoga-layout + opentype.js for compiler)
+│   ├── src/
+│   │   ├── nodes/     # Factory functions, DslNode types
+│   │   ├── compiler/  # Yoga mapping, GUID assignment, text measurement
+│   │   ├── colors/    # Hex parsing, fill/gradient helpers, color tokens
+│   │   └── index.ts   # Public API barrel export
+│   ├── fonts/         # Bundled Inter .otf files
+│   └── package.json
+├── renderer/          # Renderer (depends on dsl-core, @napi-rs/canvas)
+│   ├── src/
+│   └── package.json
+├── comparator/        # Capturer + Comparator (depends on playwright, pixelmatch, pngjs, sharp)
+│   ├── src/
+│   └── package.json
+├── cli/               # CLI orchestrator (depends on all above packages)
+│   ├── src/
+│   └── package.json
+└── figma-plugin/      # Figma plugin (depends on dsl-core types only; bundled with esbuild)
+    ├── src/
+    ├── ui.html
+    └── package.json
+```
+
+**Inter-package dependency graph**:
+```
+cli → dsl-core, renderer, comparator
+renderer → dsl-core
+comparator → (none — receives PNG file paths, not package imports)
+figma-plugin → dsl-core (types only, bundled at build time)
+```
+
+**Key decisions**:
+- DslCore and Compiler are co-located in `dsl-core` because the Compiler's primary input is DslNode and they share types. Keeping them together avoids circular dependencies.
+- Capturer and Comparator are co-located in `comparator` because they share the Playwright dependency and both operate on PNG files.
+- `figma-plugin` imports only TypeScript types from `dsl-core` (for PluginInput, PluginNodeDef interfaces) — the plugin is bundled into a standalone `code.js` by esbuild with no runtime package dependencies.
+
 ### Environment Setup
 
 The entire pipeline runs in TypeScript/Node.js. No Python, no cross-language bridge.
@@ -470,6 +510,29 @@ interface CompilerService {
 - Transform matrix composition: parent transform x child offset = child absolute transform. Root node transform is identity.
 - Text line splitting on `\n`; width is the maximum line width from opentype.js measurement
 
+##### Component Registry & Instance Resolution
+
+The Compiler maintains a `ComponentRegistry` to resolve INSTANCE nodes to their target COMPONENT definitions during compilation.
+
+```typescript
+interface ComponentRegistry {
+  /** Register a component definition (called during tree traversal for COMPONENT nodes) */
+  register(name: string, node: DslNode): void;
+
+  /** Resolve a component reference by name (called for INSTANCE nodes) */
+  resolve(componentRef: string): DslNode | undefined;
+
+  /** Get all registered component names */
+  names(): string[];
+}
+```
+
+**Resolution algorithm**:
+1. **Registration pass**: Before layout computation, the Compiler performs a depth-first traversal of the DslNode tree. Every COMPONENT node is registered in the `ComponentRegistry` by its `name` property. COMPONENT_SET children (variant components) are registered with their full `Key=Value, Key=Value` variant name.
+2. **Instance resolution**: When the Compiler encounters an INSTANCE node, it looks up `componentRef` in the registry. If found, the Compiler clones the referenced component's subtree, applies `propertyOverrides` (replacing TEXT property values, toggling BOOLEAN visibility, swapping INSTANCE_SWAP children), and compiles the resulting tree as if it were inline.
+3. **Error handling**: If `componentRef` is not found in the registry, a `CompileError` is emitted with `message: "Unresolved component reference: '{componentRef}'"` and the node path. The INSTANCE node is compiled as an empty frame with a warning.
+4. **Scope**: The registry is scoped to a single `compile()` call — it is created fresh for each compilation unit and freed after.
+
 ##### Yoga Layout Mapping
 
 The Compiler maps Figma auto-layout properties to Yoga equivalents via a `YogaMapper` module. This mapping is the key integration point.
@@ -706,9 +769,24 @@ interface CaptureService {
 - Invariants: Each capture uses a fresh browser context to prevent state leakage
 
 **Implementation Notes**
-- Two capture modes: (1) `capture()` spins up a minimal Vite server that renders the component in isolation; (2) `captureUrl()` navigates to an existing dev server URL
+
+Two capture modes serve different workflows:
+
+**Mode 1 — `capture()` (isolated component rendering)**:
+- Generates a temporary HTML file that imports the target React component module via a dynamic `import()` and renders it into a `#root` div using `ReactDOM.createRoot()`
+- Launches an ephemeral Vite dev server (`createServer()` from `vite` API) with `configFile: false`, `root` pointed at a temp directory containing the generated HTML, and `resolve.alias` mapping `@/` to the project's `src/` for component dependency resolution
+- Waits for the Vite server to be ready, then navigates Playwright to `http://localhost:{port}/`
+- After screenshot capture, calls `server.close()` and removes the temp directory
+- CSS Modules and design token imports resolve naturally through Vite's built-in CSS handling — no special configuration needed
+
+**Mode 2 — `captureUrl()` (existing dev server)**:
+- Navigates Playwright directly to the provided URL (e.g., a running Storybook or Vite dev server)
+- Simpler but requires the user to manage their own dev server lifecycle
+
+**Common to both modes**:
 - Element-level screenshot via `element.screenshot({ type: 'png' })` captures only the component, not the full page
 - Viewport configuration: `page.setViewportSize({ width, height })` before navigation
+- Each capture uses a fresh Playwright browser context to prevent state leakage
 
 ---
 
