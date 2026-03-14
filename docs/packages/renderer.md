@@ -223,7 +223,8 @@ Text rendering depends on **pre-computed baseline data** from the compiler's tex
    - Font size defaults to 14px, family to 'Inter', weight to 400
    - Weight extracted from `derivedTextData.fontMetaData[0].fontWeight`
 2. **Color**: Uses first fill paint's color, defaults to black
-3. **Per-line rendering**: Iterates `textData.lines`:
+3. **Word-wrap detection**: If `node.textAutoResize === 'HEIGHT'`, the renderer word-wraps text at `node.size.x` width using `canvas.measureText()` for word-boundary detection. Each wrapped line is drawn at the computed line height offset.
+4. **Per-line rendering** (non-wrapped path): Iterates `textData.lines`:
    - Baseline Y position from `derivedTextData.baselines[i].lineY`
    - Horizontal alignment via `canvas.measureText()`:
      - LEFT: offset = 0
@@ -232,7 +233,7 @@ Text rendering depends on **pre-computed baseline data** from the compiler's tex
    - Renders via `ctx.fillText(line, xOffset, baselineY)`
 
 ### Design Rationale
-Baseline-driven rendering avoids text measurement in the render hot path. The compiler pre-computes all positioning, making the renderer stateless with respect to font metrics.
+Baseline-driven rendering avoids text measurement in the render hot path. The compiler pre-computes all positioning, making the renderer stateless with respect to font metrics. The `textAutoResize: 'HEIGHT'` path re-measures at render time to produce accurate word-wrapped output matching the Figma plugin behavior.
 
 **Evidence**: `src/renderer.ts:207-247`
 
