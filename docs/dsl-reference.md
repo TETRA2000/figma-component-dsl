@@ -1000,6 +1000,14 @@ componentProperties: [
 ]
 ```
 
+### ~~2b. `componentPropertyDefinitions` on variant children — FIXED~~
+
+**Error:** `"Can only get component property definitions of a component set or non-variant component"`
+
+**Cause:** After `combineAsVariants()`, child COMPONENT nodes become "variant components". Figma's Plugin API does not allow reading `componentPropertyDefinitions` from variant components — this property is only accessible on the parent COMPONENT_SET or standalone COMPONENTs.
+
+**Fix:** The plugin serializer (`serializeNode()`) now checks `node.parent?.type === 'COMPONENT_SET'` and skips `componentPropertyDefinitions` for variant children. Component property definitions are instead read from the COMPONENT_SET node itself, where `combineAsVariants()` promotes them.
+
 ### 3. `instance()` requires the component in the same import
 
 **Error:** `"Component not found for instance: ComponentName"`

@@ -91,7 +91,7 @@ The `createNode()` async function dispatches by node type:
 | TEXT | `figma.createText()` | Async font loading required; characters, alignment |
 | GROUP | `figma.group()` | Creates temp frame for children, groups, removes temp |
 | COMPONENT | `figma.createComponent()` | Registers in `componentMap`; adds property definitions |
-| COMPONENT_SET | `figma.combineAsVariants()` | Combines child COMPONENT nodes into variant set |
+| COMPONENT_SET | `figma.combineAsVariants()` | Combines child COMPONENT nodes into variant set; shared TEXT/BOOLEAN properties registered on the set after combining |
 | INSTANCE | `refComp.createInstance()` | Looks up `componentMap`; applies property overrides |
 | default | — | Logs error, returns null |
 
@@ -280,6 +280,8 @@ The edit log provides real-time feedback, but the final changeset is computed vi
 `serializeNode()` is the inverse of `createNode()`: it reads a Figma `SceneNode` and produces a `PluginNodeDef`. Handles all supported node types (FRAME, RECTANGLE, ELLIPSE, TEXT, GROUP, COMPONENT, COMPONENT_SET, INSTANCE) and recursively serializes children.
 
 Properties serialized: type, name, size, opacity, visible, fills (SOLID + GRADIENT_LINEAR), strokes, cornerRadius, clipContent, auto-layout (stackMode, spacing, padding, alignment, sizing), text (characters, fontSize, fontFamily, fontStyle, textAlignHorizontal, textAutoResize), component property definitions, instance component references.
+
+**Variant component safety**: `componentPropertyDefinitions` is only read from standalone `COMPONENT` nodes and `COMPONENT_SET` nodes. Variant components (children of a `COMPONENT_SET`, created by `combineAsVariants()`) are skipped because Figma's Plugin API throws `"Can only get component property definitions of a component set or non-variant component"` when accessing this property on variant children.
 
 ### Changeset Export
 

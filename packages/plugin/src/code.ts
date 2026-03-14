@@ -278,6 +278,8 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
 
       case 'COMPONENT_SET': {
         const variants: ComponentNode[] = [];
+        // Collect shared component property definitions from the first child
+        let sharedPropDefs: Record<string, { type: string; defaultValue: string | boolean }> | undefined;
         for (const child of def.children) {
           if (child.type === 'COMPONENT') {
             const comp = figma.createComponent();
@@ -285,6 +287,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
             comp.resize(child.size.x, child.size.y);
             comp.fills = toFigmaPaints(child.fills);
             if (child.cornerRadius) comp.cornerRadius = child.cornerRadius;
+            if (child.clipContent !== undefined) comp.clipsContent = child.clipContent;
             comp.opacity = child.opacity;
             comp.visible = child.visible;
             setAutoLayoutConfig(comp, child);
@@ -293,12 +296,27 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
             for (const grandchild of child.children) {
               await createNode(grandchild, comp);
             }
+            // Capture shared property definitions from first child
+            if (!sharedPropDefs && child.componentPropertyDefinitions) {
+              sharedPropDefs = child.componentPropertyDefinitions;
+            }
             variants.push(comp);
           }
         }
         if (variants.length > 0) {
           const set = figma.combineAsVariants(variants, parent as FrameNode | PageNode);
           set.name = def.name;
+          // Register shared component properties on the set (not on variant children)
+          if (sharedPropDefs) {
+            for (const [propName, propDef] of Object.entries(sharedPropDefs)) {
+              if (propDef.type === 'VARIANT') continue;
+              try {
+                set.addComponentProperty(propName, propDef.type as 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', propDef.defaultValue as string);
+              } catch (e) {
+                errors.push(`Failed to add property "${propName}" to set "${def.name}": ${e instanceof Error ? e.message : String(e)}`);
+              }
+            }
+          }
           node = set;
         } else {
           return null;
@@ -463,8 +481,11 @@ function serializeNode(node: SceneNode): PluginNodeDef {
   }
 
   // Component property definitions
-  if (node.type === 'COMPONENT' && 'componentPropertyDefinitions' in node) {
-    const defs = (node as ComponentNode).componentPropertyDefinitions;
+  // Variant components (children of COMPONENT_SET) do NOT support componentPropertyDefinitions.
+  // Only read from standalone COMPONENTs or COMPONENT_SET nodes.
+  const isVariantComponent = node.type === 'COMPONENT' && node.parent?.type === 'COMPONENT_SET';
+  if ((node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') && !isVariantComponent && 'componentPropertyDefinitions' in node) {
+    const defs = (node as ComponentNode | ComponentSetNode).componentPropertyDefinitions;
     if (Object.keys(defs).length > 0) {
       const propDefs: Record<string, { type: string; defaultValue: string | boolean }> = {};
       for (const [name, def] of Object.entries(defs)) {
