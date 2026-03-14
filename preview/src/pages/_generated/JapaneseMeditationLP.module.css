@@ -1,0 +1,452 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #2d2235;
+  background: #ffffff;
+}
+
+/* --- NavBar --- */
+.nav {
+  background: rgba(255, 255, 255, 0.97);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(76, 29, 149, 0.08);
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brand {
+  font-size: 18px;
+  font-weight: 700;
+  color: #4c1d95;
+  letter-spacing: 3px;
+}
+.navLinks {
+  display: flex;
+  gap: 36px;
+}
+.navLink {
+  font-size: 14px;
+  color: #8b7fa8;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #4c1d95;
+}
+.navCta {
+  background: #4c1d95;
+  color: #ffffff;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+/* --- Hero --- */
+.hero {
+  position: relative;
+  min-height: 700px;
+  background: linear-gradient(170deg, #ede9fe 0%, #ddd6fe 50%, #e8e0f0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 60%, rgba(163, 190, 140, 0.1) 0%, rgba(163, 190, 140, 0) 50%);
+  pointer-events: none;
+}
+.heroContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.heroLabel {
+  font-size: 12px;
+  color: #7c3aed;
+  letter-spacing: 6px;
+  font-weight: 600;
+}
+.heroBrandName {
+  font-size: 24px;
+  font-weight: 600;
+  color: #4c1d95;
+  letter-spacing: 8px;
+}
+.heroTitle {
+  font-size: 56px;
+  font-weight: 700;
+  color: #2d2235;
+  line-height: 1.3;
+  margin: 8px 0 8px;
+  letter-spacing: 4px;
+}
+.heroSubtitle {
+  font-size: 16px;
+  color: #8b7fa8;
+  line-height: 2;
+  margin: 0 0 32px;
+}
+.heroBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.heroBtnPrimary {
+  background: #4c1d95;
+  color: #ffffff;
+  border: none;
+  padding: 16px 48px;
+  border-radius: 32px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.heroBtnSecondary {
+  background: none;
+  color: #4c1d95;
+  border: 1px solid #4c1d95;
+  padding: 16px 36px;
+  border-radius: 32px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* --- Section Headers --- */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.sectionLabelPurple {
+  font-size: 11px;
+  color: #7c3aed;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionLabelSage {
+  font-size: 11px;
+  color: #a3be8c;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2d2235;
+  margin: 0;
+  letter-spacing: 3px;
+}
+.sectionDesc {
+  font-size: 15px;
+  color: #8b7fa8;
+  margin: 16px 0 0;
+  line-height: 1.8;
+}
+
+/* --- Programs --- */
+.programs {
+  padding: 100px 24px;
+  background: #ede9fe;
+}
+.programGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.programCard {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid rgba(76, 29, 149, 0.08);
+  border-radius: 16px;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+.programIcon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #c4b5fd, #ddd6fe);
+  border-radius: 50%;
+}
+.programName {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2d2235;
+  margin: 0;
+}
+.programSubtitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #7c3aed;
+  letter-spacing: 1px;
+}
+.programDesc {
+  font-size: 14px;
+  color: #8b7fa8;
+  line-height: 1.9;
+  margin: 0;
+}
+
+/* --- Benefits --- */
+.benefits {
+  padding: 100px 24px;
+  background: #ffffff;
+}
+.benefitsList {
+  max-width: 880px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.benefitItem {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 24px 0;
+}
+.benefitNum {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  background: #a3be8c;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+.benefitText {
+  flex: 1;
+}
+.benefitTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2d2235;
+  margin: 0 0 6px;
+}
+.benefitDesc {
+  font-size: 14px;
+  color: #8b7fa8;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* --- Instructor --- */
+.instructor {
+  padding: 100px 24px;
+  background: #ede9fe;
+}
+.instructorInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  gap: 64px;
+  align-items: center;
+}
+.instructorPhoto {
+  width: 360px;
+  min-width: 360px;
+  height: 420px;
+  background: linear-gradient(160deg, #c4b5fd, #a3be8c);
+  border-radius: 20px;
+}
+.instructorInfo {
+  flex: 1;
+}
+.instructorSectionTitle {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2d2235;
+  margin: 0 0 20px;
+  letter-spacing: 3px;
+}
+.instructorName {
+  font-size: 24px;
+  font-weight: 700;
+  color: #4c1d95;
+  margin: 0 0 8px;
+}
+.instructorRole {
+  font-size: 14px;
+  font-weight: 600;
+  color: #7c3aed;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 20px;
+}
+.instructorBio {
+  font-size: 14px;
+  color: #8b7fa8;
+  line-height: 2;
+  margin: 0;
+}
+
+/* --- Schedule --- */
+.schedule {
+  padding: 100px 24px;
+  background: #ffffff;
+}
+.scheduleTable {
+  max-width: 960px;
+  margin: 0 auto 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.scheduleHeaderRow {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 2fr 1fr;
+  padding: 12px 24px;
+  background: #4c1d95;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.scheduleRow {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 2fr 1fr;
+  padding: 18px 24px;
+  background: #ffffff;
+  border: 1px solid rgba(76, 29, 149, 0.06);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2d2235;
+  align-items: center;
+}
+.scheduleDay {
+  font-weight: 700;
+  color: #4c1d95;
+}
+.scheduleProg {
+  color: #7c3aed;
+}
+.scheduleFee {
+  font-weight: 700;
+}
+.feeNote {
+  text-align: center;
+}
+.feeHighlight {
+  font-size: 15px;
+  font-weight: 700;
+  color: #4c1d95;
+  margin: 0 0 8px;
+}
+.feeSmall {
+  font-size: 13px;
+  color: #8b7fa8;
+  margin: 0;
+}
+
+/* --- Trial CTA --- */
+.trialCta {
+  padding: 100px 24px;
+  background: linear-gradient(160deg, #4c1d95 0%, #6d28d9 100%);
+  text-align: center;
+}
+.trialCtaContent {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.trialCtaTitle {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px;
+  letter-spacing: 3px;
+}
+.trialCtaSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 48px;
+  line-height: 2;
+}
+.trialCtaBtn {
+  background: #ffffff;
+  color: #4c1d95;
+  border: none;
+  padding: 18px 64px;
+  border-radius: 32px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.trialCtaNote {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 16px 0 0;
+}
+
+/* --- Footer --- */
+.footer {
+  background: #f5f3ff;
+  padding: 48px 24px;
+  border-top: 1px solid rgba(76, 29, 149, 0.08);
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footerBrand {
+  font-size: 18px;
+  font-weight: 700;
+  color: #4c1d95;
+  letter-spacing: 3px;
+}
+.footerLinks {
+  display: flex;
+  gap: 32px;
+}
+.footerLink {
+  font-size: 13px;
+  color: #8b7fa8;
+  text-decoration: none;
+}
+.footerDivider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background: rgba(76, 29, 149, 0.08);
+}
+.footerCopy {
+  font-size: 12px;
+  color: #aaaaaa;
+  margin: 0;
+}

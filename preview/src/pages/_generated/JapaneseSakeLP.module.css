@@ -1,0 +1,323 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #ffffff;
+  background: #1e1b4b;
+}
+
+/* Nav */
+.nav {
+  background: #120f3a;
+  padding: 0 24px;
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+.brand {
+  font-size: 22px;
+  font-weight: 900;
+  color: #d4a574;
+  letter-spacing: 3px;
+}
+.navLinks { display: flex; gap: 32px; }
+.navLink {
+  font-size: 14px;
+  color: #ccc;
+  text-decoration: none;
+  font-weight: 500;
+}
+.navLinkAccent {
+  font-size: 14px;
+  color: #d4a574;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  height: 640px;
+  background: linear-gradient(180deg, #1e1b4b, #0f0d2e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(212, 165, 116, 0.08) 0%, transparent 60%);
+}
+.heroContent { position: relative; z-index: 1; }
+.heroLabel {
+  display: inline-block;
+  font-size: 13px;
+  color: #d4a574;
+  letter-spacing: 6px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(212, 165, 116, 0.3);
+  padding: 8px 24px;
+  font-weight: 600;
+}
+.heroTitle {
+  font-size: 56px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.3;
+  margin: 0 0 24px;
+}
+.heroSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.8;
+  margin: 0 0 40px;
+}
+.heroBtn {
+  background: #d4a574;
+  color: #1e1b4b;
+  border: none;
+  padding: 16px 48px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+/* Section Headers */
+.sectionHeader { text-align: center; margin-bottom: 48px; }
+.sectionLabel {
+  font-size: 13px;
+  color: #d4a574;
+  letter-spacing: 4px;
+  font-weight: 600;
+}
+.sectionTitle {
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  margin: 8px 0 0;
+}
+
+/* Sake Lineup */
+.sakeSection {
+  padding: 96px 24px;
+  background: #1e1b4b;
+}
+.sakeGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.sakeCard {
+  flex: 1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.sakeImage {
+  height: 280px;
+  background: linear-gradient(180deg, #2a2660, #15123d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sakeImageLabel {
+  font-size: 16px;
+  font-weight: 700;
+  color: #3a3670;
+  letter-spacing: 4px;
+}
+.sakeInfo {
+  background: #15123d;
+  padding: 20px 20px 24px;
+}
+.sakeNameEn {
+  font-size: 11px;
+  font-weight: 600;
+  color: #d4a574;
+  letter-spacing: 2px;
+}
+.sakeName {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  margin: 4px 0;
+}
+.sakeType {
+  font-size: 12px;
+  font-weight: 500;
+  color: #8888cc;
+}
+.sakeDivider {
+  width: 30px;
+  height: 2px;
+  background: #d4a574;
+  margin: 8px 0;
+}
+.sakeDesc {
+  font-size: 13px;
+  color: #aaaacc;
+  line-height: 1.7;
+  margin: 0 0 8px;
+}
+.sakePrice {
+  font-size: 20px;
+  font-weight: 800;
+  color: #d4a574;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Brewing Process */
+.processSection {
+  padding: 96px 24px;
+  background: #120f3a;
+}
+.processGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.processCard {
+  flex: 1;
+  background: #1e1b4b;
+  padding: 40px 32px;
+  text-align: center;
+  border-radius: 4px;
+}
+.processNumber {
+  font-size: 48px;
+  font-weight: 900;
+  color: #d4a574;
+  opacity: 0.3;
+  margin-bottom: 16px;
+  font-family: 'Inter', sans-serif;
+}
+.processTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 16px;
+}
+.processDivider {
+  width: 40px;
+  height: 2px;
+  background: #d4a574;
+  margin: 0 auto 16px;
+}
+.processDesc {
+  font-size: 14px;
+  color: #aaaacc;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* Brewery Tour */
+.tourSection {
+  padding: 96px 24px;
+  background: #1e1b4b;
+}
+.tourContent {
+  display: flex;
+  gap: 48px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.tourImage {
+  flex: 1;
+  min-height: 300px;
+  background: linear-gradient(135deg, #2a2660, #15123d);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tourImageLabel {
+  color: #3a3670;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 4px;
+}
+.tourInfo { flex: 1; }
+.tourRow {
+  display: flex;
+  padding: 16px 0;
+  border-bottom: 1px solid #333366;
+}
+.tourLabel {
+  width: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d4a574;
+  flex-shrink: 0;
+}
+.tourValue {
+  font-size: 14px;
+  color: #ccccdd;
+}
+
+/* CTA */
+.cta {
+  height: 360px;
+  background: linear-gradient(135deg, #15123d, #1e1b4b 50%, #15123d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.ctaContent { max-width: 600px; }
+.ctaLabel {
+  font-size: 13px;
+  color: #d4a574;
+  letter-spacing: 6px;
+  font-weight: 600;
+}
+.ctaTitle {
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  margin: 16px 0 16px;
+}
+.ctaSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.8;
+  margin: 0 0 32px;
+}
+.ctaBtn {
+  background: #d4a574;
+  color: #1e1b4b;
+  border: none;
+  padding: 16px 48px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+/* Footer */
+.footer {
+  background: #0a0825;
+  padding: 32px 24px;
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+.footerBrand {
+  font-size: 18px;
+  font-weight: 900;
+  color: #d4a574;
+  letter-spacing: 3px;
+}
+.footerCopy {
+  font-size: 12px;
+  color: #555577;
+  margin: 12px 0 0;
+}

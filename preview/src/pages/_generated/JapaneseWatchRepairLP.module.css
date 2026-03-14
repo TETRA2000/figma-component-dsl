@@ -1,0 +1,458 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #1a1a1a;
+  background: #ffffff;
+}
+
+/* Nav */
+.nav {
+  position: sticky;
+  top: 0;
+  background: #3b2a1a;
+  z-index: 100;
+  padding: 0 24px;
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brandGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brandIcon {
+  width: 36px;
+  height: 36px;
+  background: #c5a77d;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b2a1a;
+  font-size: 16px;
+  font-weight: 700;
+}
+.brandText {
+  display: flex;
+  flex-direction: column;
+}
+.brandName {
+  font-size: 16px;
+  font-weight: 700;
+  color: #c5a77d;
+}
+.brandSub {
+  font-size: 10px;
+  font-weight: 600;
+  color: #999;
+  letter-spacing: 2px;
+}
+.navLinks {
+  display: flex;
+  gap: 32px;
+}
+.navLink {
+  font-size: 14px;
+  color: #ccc;
+  text-decoration: none;
+  font-weight: 500;
+}
+.navLink:hover { color: #c5a77d; }
+.navCta {
+  background: #c5a77d;
+  color: #3b2a1a;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Hero */
+.hero {
+  display: flex;
+  align-items: center;
+  padding: 100px 120px;
+  gap: 64px;
+  background: linear-gradient(135deg, #3b2a1a, #5c4033);
+}
+.heroContent { flex: 1; }
+.heroBadge {
+  display: inline-block;
+  border: 1px solid #c5a77d;
+  color: #c5a77d;
+  padding: 6px 16px;
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+.heroTitle {
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: #ffffff;
+  margin: 0 0 20px;
+}
+.heroAccent {
+  color: #c5a77d;
+}
+.heroSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.8;
+  margin: 0 0 32px;
+}
+.heroActions { display: flex; gap: 16px; }
+.primaryBtn {
+  background: #c5a77d;
+  color: #3b2a1a;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.secondaryBtn {
+  background: none;
+  color: #c5a77d;
+  border: 2px solid #c5a77d;
+  padding: 12px 32px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.heroImage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.watchPlaceholder {
+  position: relative;
+  width: 360px;
+  height: 360px;
+}
+.watchFace {
+  position: absolute;
+  top: 80px;
+  left: 80px;
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(180deg, #c5a77d, #8b7355);
+  border-radius: 50%;
+}
+.watchInner {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 160px;
+  height: 160px;
+  background: #3b2a1a;
+  border-radius: 50%;
+}
+
+/* Services */
+.services {
+  padding: 96px 24px;
+  text-align: center;
+}
+.sectionTitle {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+}
+.sectionSubtitle {
+  font-size: 16px;
+  color: #888;
+  margin: 0 0 48px;
+}
+.serviceGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.serviceCard {
+  background: #fff;
+  padding: 40px 32px;
+  border-radius: 8px;
+  border: 1px solid #e8dfd4;
+  text-align: left;
+}
+.serviceIcon {
+  width: 56px;
+  height: 56px;
+  background: #f9f6f1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #3b2a1a;
+  margin-bottom: 16px;
+}
+.serviceTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+}
+.serviceDesc {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.8;
+  margin: 0 0 16px;
+}
+.serviceDivider {
+  width: 40px;
+  height: 2px;
+  background: #c5a77d;
+  margin-bottom: 16px;
+}
+.servicePrice {
+  font-size: 14px;
+  font-weight: 600;
+  color: #c5a77d;
+}
+
+/* Brand Expertise */
+.brandExpertise {
+  background: #f9f6f1;
+  padding: 96px 24px;
+  text-align: center;
+}
+.brandGrid {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.brandItem {
+  background: #fff;
+  padding: 12px 24px;
+  border-radius: 4px;
+  border: 1px solid #e8dfd4;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.brandNote {
+  font-size: 14px;
+  color: #666;
+  margin: 16px 0 0;
+}
+
+/* Process Flow */
+.processFlow {
+  padding: 96px 24px;
+  text-align: center;
+}
+.processGrid {
+  display: flex;
+  gap: 32px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.processStep {
+  flex: 1;
+  background: #fff;
+  padding: 40px 32px;
+  border-radius: 8px;
+  border: 1px solid #e8dfd4;
+  text-align: center;
+}
+.stepNumber {
+  width: 48px;
+  height: 48px;
+  background: #3b2a1a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #c5a77d;
+  margin: 0 auto 16px;
+}
+.stepTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+}
+.stepDesc {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* Price Guide */
+.priceGuide {
+  background: #f9f6f1;
+  padding: 96px 24px;
+  text-align: center;
+}
+.priceTable {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e8dfd4;
+  overflow: hidden;
+}
+.priceRow {
+  display: flex;
+  align-items: center;
+  padding: 20px 32px;
+  border-bottom: 1px solid #eee;
+}
+.priceRow:last-child {
+  border-bottom: none;
+}
+.priceService {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  flex: 1;
+  text-align: left;
+}
+.priceNote {
+  font-size: 13px;
+  color: #666;
+  flex: 1;
+  text-align: left;
+}
+.priceAmount {
+  font-size: 16px;
+  font-weight: 700;
+  color: #c5a77d;
+  min-width: 100px;
+  text-align: right;
+}
+.priceDisclaimer {
+  font-size: 13px;
+  color: #666;
+  margin: 16px 0 0;
+}
+
+/* CTA */
+.cta {
+  padding: 96px 24px;
+  text-align: center;
+  background: #3b2a1a;
+}
+.ctaContent { max-width: 600px; margin: 0 auto; }
+.ctaTitle {
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 12px;
+}
+.ctaSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 32px;
+}
+.ctaButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.ctaButton {
+  background: #c5a77d;
+  color: #3b2a1a;
+  border: none;
+  padding: 16px 48px;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ctaButtonSecondary {
+  background: none;
+  color: #c5a77d;
+  border: 2px solid #c5a77d;
+  padding: 14px 48px;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.ctaNote {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+/* Footer */
+.footer {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 64px 24px 0;
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 48px;
+  border-bottom: 1px solid #333;
+}
+.footerBrand { flex-shrink: 0; }
+.footerLogo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #c5a77d;
+  display: block;
+}
+.footerLogoSub {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  letter-spacing: 2px;
+  display: block;
+  margin-top: 4px;
+}
+.footerTagline {
+  font-size: 13px;
+  color: #888;
+  margin: 8px 0 0;
+}
+.footerLinks { display: flex; gap: 64px; }
+.footerCol { display: flex; flex-direction: column; gap: 12px; }
+.footerColTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #c5a77d;
+  margin: 0 0 4px;
+}
+.footerLink {
+  font-size: 13px;
+  color: #888;
+  text-decoration: none;
+}
+.footerBottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 0;
+  text-align: center;
+}
+.footerBottom p {
+  font-size: 12px;
+  color: #555;
+  margin: 0;
+}

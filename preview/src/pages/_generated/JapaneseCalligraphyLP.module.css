@@ -1,0 +1,436 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #f5f0e8;
+  background: #111111;
+}
+
+/* ─── NavBar ─── */
+.nav {
+  background: rgba(10, 10, 10, 0.95);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brandGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brandKanji {
+  font-size: 26px;
+  font-weight: 900;
+  color: #f5f0e8;
+}
+.brandEn {
+  font-size: 13px;
+  font-weight: 600;
+  color: #cc3333;
+  letter-spacing: 3px;
+}
+.navLinks {
+  display: flex;
+  gap: 36px;
+}
+.navLink {
+  font-size: 14px;
+  color: #8a8078;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #f5f0e8;
+}
+.navCta {
+  background: #cc3333;
+  color: #f5f0e8;
+  border: none;
+  padding: 10px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+/* ─── Hero ─── */
+.hero {
+  position: relative;
+  min-height: 720px;
+  background: linear-gradient(160deg, #1a1614 0%, #111111 50%, #0a0a0a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroAccent {
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(204, 51, 51, 0.12) 0%, rgba(204, 51, 51, 0) 70%);
+  pointer-events: none;
+}
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+.heroLabel {
+  display: inline-block;
+  font-size: 13px;
+  color: #cc3333;
+  letter-spacing: 6px;
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+.heroTitle {
+  font-size: 72px;
+  font-weight: 900;
+  color: #f5f0e8;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  letter-spacing: 6px;
+}
+.heroSubtitle {
+  font-size: 18px;
+  color: rgba(245, 240, 232, 0.63);
+  line-height: 1.8;
+  margin: 0 0 48px;
+}
+.heroBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.heroBtnPrimary {
+  background: #cc3333;
+  color: #f5f0e8;
+  border: none;
+  padding: 18px 56px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.heroBtnSecondary {
+  background: none;
+  color: #f5f0e8;
+  border: 1px solid rgba(245, 240, 232, 0.3);
+  padding: 18px 40px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ─── Section Headers ─── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.sectionLabel {
+  font-size: 12px;
+  color: #cc3333;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 36px;
+  font-weight: 800;
+  color: #f5f0e8;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+/* ─── Courses ─── */
+.courses {
+  padding: 100px 24px;
+  background: #111111;
+}
+.coursesGrid {
+  display: flex;
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.courseCard {
+  flex: 1;
+  background: #1c1a18;
+  border: 1px solid rgba(245, 240, 232, 0.1);
+  padding: 48px 36px;
+  text-align: center;
+}
+.courseLevel {
+  font-size: 11px;
+  font-weight: 700;
+  color: #cc3333;
+  letter-spacing: 3px;
+  display: block;
+  margin-bottom: 12px;
+}
+.courseTitle {
+  font-size: 24px;
+  font-weight: 800;
+  color: #f5f0e8;
+  margin: 0 0 16px;
+}
+.courseDivider {
+  width: 40px;
+  height: 2px;
+  background: #cc3333;
+  margin: 0 auto 16px;
+}
+.courseDesc {
+  font-size: 14px;
+  color: #8a8078;
+  line-height: 1.9;
+  margin: 0 0 24px;
+}
+.courseSchedule {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b6460;
+  margin: 0 0 8px;
+}
+.coursePrice {
+  font-size: 22px;
+  font-weight: 900;
+  color: #f5f0e8;
+  margin: 0;
+}
+
+/* ─── Gallery ─── */
+.gallery {
+  padding: 100px 24px;
+  background: #0a0a0a;
+}
+.galleryGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.galleryItem {
+  flex: 1;
+  text-align: center;
+}
+.galleryImage {
+  width: 100%;
+  height: 340px;
+  background: linear-gradient(135deg, #2a2420, #1a1614);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+.galleryTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f5f0e8;
+  margin: 0 0 4px;
+}
+.galleryStyle {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b6460;
+  margin: 0;
+}
+
+/* ─── Instructor ─── */
+.instructor {
+  display: flex;
+  gap: 80px;
+  padding: 100px 170px;
+  background: #111111;
+  align-items: center;
+}
+.instructorPhoto {
+  width: 400px;
+  height: 480px;
+  background: linear-gradient(135deg, #2a2420, #1c1a18);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.instructorInfo {
+  flex: 1;
+}
+.instructorTitle {
+  font-size: 36px;
+  font-weight: 800;
+  color: #f5f0e8;
+  letter-spacing: 2px;
+  margin: 0 0 20px;
+}
+.instructorDivider {
+  width: 60px;
+  height: 2px;
+  background: #cc3333;
+  margin-bottom: 20px;
+}
+.instructorName {
+  font-size: 22px;
+  font-weight: 800;
+  color: #f5f0e8;
+  margin: 0 0 16px;
+}
+.instructorBio {
+  font-size: 15px;
+  color: #8a8078;
+  line-height: 2;
+  margin: 0 0 16px;
+}
+
+/* ─── Class Info ─── */
+.classInfo {
+  padding: 100px 24px;
+  background: #0a0a0a;
+}
+.infoGrid {
+  display: flex;
+  gap: 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.infoCard {
+  flex: 1;
+  background: #1c1a18;
+  border: 1px solid rgba(245, 240, 232, 0.1);
+  padding: 40px;
+}
+.infoCardTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #f5f0e8;
+  margin: 0 0 16px;
+}
+.infoCardDivider {
+  width: 40px;
+  height: 2px;
+  background: #cc3333;
+  margin-bottom: 16px;
+}
+.infoItem {
+  font-size: 14px;
+  color: #8a8078;
+  line-height: 1.8;
+  margin: 0 0 8px;
+}
+.infoNote {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b6460;
+  margin: 8px 0 0;
+}
+
+/* ─── CTA Section ─── */
+.cta {
+  padding: 120px 24px;
+  background: linear-gradient(160deg, #1a0a0a 0%, #111111 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.ctaGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(204, 51, 51, 0.1) 0%, rgba(204, 51, 51, 0) 60%);
+  pointer-events: none;
+}
+.ctaContent {
+  position: relative;
+  z-index: 1;
+}
+.ctaTitle {
+  font-size: 40px;
+  font-weight: 900;
+  color: #f5f0e8;
+  margin: 0 0 16px;
+  letter-spacing: 3px;
+}
+.ctaSubtitle {
+  font-size: 16px;
+  color: rgba(245, 240, 232, 0.5);
+  margin: 0 0 48px;
+  line-height: 1.8;
+}
+.ctaBtn {
+  background: #cc3333;
+  color: #f5f0e8;
+  border: none;
+  padding: 20px 72px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  cursor: pointer;
+}
+.ctaNote {
+  font-size: 12px;
+  color: #6b6460;
+  margin: 16px 0 0;
+}
+
+/* ─── Footer ─── */
+.footer {
+  background: #080808;
+  padding: 48px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footerBrandGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.footerBrand {
+  font-size: 20px;
+  font-weight: 900;
+  color: #f5f0e8;
+  letter-spacing: 2px;
+}
+.footerBrandEn {
+  font-size: 13px;
+  font-weight: 600;
+  color: #cc3333;
+  letter-spacing: 2px;
+}
+.footerLinks {
+  display: flex;
+  gap: 32px;
+}
+.footerLink {
+  font-size: 13px;
+  color: #6b6460;
+  text-decoration: none;
+}
+.footerDivider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.footerCopy {
+  font-size: 12px;
+  color: #444444;
+  margin: 0;
+}
