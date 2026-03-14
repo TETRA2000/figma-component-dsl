@@ -1,0 +1,26 @@
+{
+  "name": "@figma-dsl/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "figma-dsl": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@figma-dsl/core": "*",
+    "@figma-dsl/compiler": "*",
+    "@figma-dsl/renderer": "*",
+    "@figma-dsl/capturer": "*",
+    "@figma-dsl/comparator": "*",
+    "esbuild": "^0.25.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0"
+  }
+}
