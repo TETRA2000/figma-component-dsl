@@ -390,6 +390,21 @@ export default frame('typography-line-height', {
 });
 `,
     },
+    {
+      name: 'typography-letter-spacing',
+      code: `${imports()}
+export default frame('typography-letter-spacing', {
+  fills: [solid('#FFFFFF')],
+  autoLayout: vertical({ spacing: 8, padX: 10, padY: 10 }),
+  children: [
+    text('Normal spacing', { fontSize: 16, letterSpacing: { value: 0, unit: 'PIXELS' }, color: '#000000' }),
+    text('Tight spacing', { fontSize: 16, letterSpacing: { value: -0.5, unit: 'PIXELS' }, color: '#000000' }),
+    text('Wide spacing', { fontSize: 16, letterSpacing: { value: 2, unit: 'PIXELS' }, color: '#000000' }),
+    text('Percent spacing', { fontSize: 16, letterSpacing: { value: 10, unit: 'PERCENT' }, color: '#000000' }),
+  ],
+});
+`,
+    },
   ];
 }
 

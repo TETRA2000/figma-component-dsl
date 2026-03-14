@@ -241,6 +241,45 @@ describe('CalibrationReporter', () => {
     }
   });
 
+  it('includes dslSourcePath when source map is provided', () => {
+    const dslDir = join(TEST_DIR, 'src-dsl');
+    const figmaDir = join(TEST_DIR, 'src-figma');
+    mkdirSync(dslDir, { recursive: true });
+    mkdirSync(figmaDir, { recursive: true });
+
+    createTestPng(dslDir, 'corner-radius-zero', 50, 50, [255, 0, 0]);
+    createTestPng(figmaDir, 'corner-radius-zero', 50, 50, [255, 0, 0]);
+
+    const reportPath = join(TEST_DIR, 'src-report.json');
+    const report = batchCompare({
+      dslDir,
+      figmaDir,
+      outputPath: reportPath,
+      dslSourceMap: { 'corner-radius-zero': '/path/to/corner-radius-zero.dsl.ts' },
+    });
+
+    expect(report.results[0]!.dslSourcePath).toBe('/path/to/corner-radius-zero.dsl.ts');
+  });
+
+  it('sets dslSourcePath to null when no source map', () => {
+    const dslDir = join(TEST_DIR, 'nosrc-dsl');
+    const figmaDir = join(TEST_DIR, 'nosrc-figma');
+    mkdirSync(dslDir, { recursive: true });
+    mkdirSync(figmaDir, { recursive: true });
+
+    createTestPng(dslDir, 'corner-radius-zero', 50, 50, [255, 0, 0]);
+    createTestPng(figmaDir, 'corner-radius-zero', 50, 50, [255, 0, 0]);
+
+    const reportPath = join(TEST_DIR, 'nosrc-report.json');
+    const report = batchCompare({
+      dslDir,
+      figmaDir,
+      outputPath: reportPath,
+    });
+
+    expect(report.results[0]!.dslSourcePath).toBeNull();
+  });
+
   // Task 5.2: Markdown summary
   it('generates Markdown summary', () => {
     const dslDir = join(TEST_DIR, 'md-dsl');

@@ -89,12 +89,21 @@ export async function runCalibration(options: CalibrateOptions): Promise<Calibra
       const reportPath = join(runDir, 'report.json');
       const diffDir = join(runDir, 'diffs');
 
+      // Build source map from batch results
+      const dslSourceMap: Record<string, string> = {};
+      for (const comp of batch.components) {
+        if (comp.dslPath) {
+          dslSourceMap[comp.name] = comp.dslPath;
+        }
+      }
+
       report = batchCompare({
         dslDir,
         figmaDir,
         outputPath: reportPath,
         diffDir,
         threshold: options.threshold,
+        dslSourceMap,
       });
 
       const markdown = formatReportMarkdown(report);

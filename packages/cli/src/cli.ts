@@ -9,6 +9,7 @@ import { renderToFile, initializeRenderer } from '@figma-dsl/renderer';
 import { compareFiles } from '@figma-dsl/comparator';
 import { captureUrl } from '@figma-dsl/capturer';
 import { exportToFile } from '@figma-dsl/exporter';
+import { generateTestSuite } from './test-suite-generator.js';
 import type { PropertyCategory } from './test-suite-generator.js';
 import { processBatch } from './batch-processor.js';
 import { batchCompare, formatReportMarkdown } from './calibration-reporter.js';
@@ -296,6 +297,36 @@ async function cmdExport(args: string[]): Promise<number> {
   }
 }
 
+async function cmdGenerateTestSuite(args: string[]): Promise<number> {
+  const { values } = parseArgs({
+    args,
+    options: {
+      output: { type: 'string', short: 'o' },
+      property: { type: 'string', multiple: true },
+    },
+    allowPositionals: true,
+  });
+
+  if (!values.output) {
+    console.error('Usage: figma-dsl generate-test-suite -o <output-dir> [--property <category>...]');
+    return 2;
+  }
+
+  try {
+    const result = generateTestSuite({
+      outputDir: resolve(values.output),
+      properties: values.property as PropertyCategory[] | undefined,
+    });
+
+    console.log(`Generated ${result.filesGenerated} test files across ${result.categories.length} categories`);
+    console.log(`Output: ${resolve(values.output)}`);
+    return 0;
+  } catch (err) {
+    console.error(`Generate error: ${err instanceof Error ? err.message : String(err)}`);
+    return 2;
+  }
+}
+
 async function cmdBatch(args: string[]): Promise<number> {
   const { values, positionals } = parseArgs({
     args,
@@ -473,6 +504,8 @@ export async function run(args: string[]): Promise<number> {
       return cmdPipeline(subArgs);
     case 'export':
       return cmdExport(subArgs);
+    case 'generate-test-suite':
+      return cmdGenerateTestSuite(subArgs);
     case 'batch':
       return cmdBatch(subArgs);
     case 'batch-compare':
@@ -506,6 +539,7 @@ Commands:
   export   <file.dsl.ts> -o output.json        Generate Figma plugin input
 
 Calibration:
+  generate-test-suite -o <dir> [--property ..]  Generate test .dsl.ts files
   calibrate      [-o dir] [--property cat]     Full calibration pipeline
   batch          <dir> -o <dir> [--include ..]  Batch compile/render/export
   batch-compare  <dsl-dir> <figma-dir> [-o ..]  Compare DSL vs Figma PNGs

@@ -9,11 +9,14 @@ export interface BatchCompareOptions {
   outputPath: string;
   diffDir?: string;
   threshold?: number;
+  /** Map of componentName → .dsl.ts source file path (from batch manifest) */
+  dslSourceMap?: Record<string, string>;
 }
 
 export interface ComponentCompareResult {
   componentName: string;
   propertyCategory: string;
+  dslSourcePath: string | null;
   dslImagePath: string;
   figmaImagePath: string;
   diffImagePath: string | null;
@@ -137,6 +140,7 @@ export function batchCompare(options: BatchCompareOptions): BatchCompareReport {
     results.push({
       componentName: name,
       propertyCategory: extractPropertyCategory(name),
+      dslSourcePath: options.dslSourceMap?.[name] ?? null,
       dslImagePath: dslPath,
       figmaImagePath: figmaPath,
       diffImagePath: diffPath ?? null,
@@ -226,7 +230,10 @@ export function formatReportMarkdown(report: BatchCompareReport): string {
       lines.push(`- **Dimensions match**: ${result.dimensionMatch}`);
       lines.push(`- **DSL dimensions**: ${result.dslDimensions.width}×${result.dslDimensions.height}`);
       lines.push(`- **Figma dimensions**: ${result.figmaDimensions.width}×${result.figmaDimensions.height}`);
-      lines.push(`- **DSL source**: ${result.dslImagePath}`);
+      if (result.dslSourcePath) {
+        lines.push(`- **DSL source**: ${result.dslSourcePath}`);
+      }
+      lines.push(`- **DSL image**: ${result.dslImagePath}`);
       if (result.diffImagePath) {
         lines.push(`- **Diff image**: ${result.diffImagePath}`);
       }
