@@ -59,3 +59,10 @@ describe('CLI — pipeline usage errors', () => {
     expect(code).toBe(2);
   });
 });
+
+describe('CLI — validate usage errors', () => {
+  it('returns 2 when no path specified', async () => {
+    const code = await run(['validate']);
+    expect(code).toBe(2);
+  });
+});

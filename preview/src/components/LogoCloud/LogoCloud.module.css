@@ -1,0 +1,72 @@
+.section {
+  padding: var(--space-16) 0;
+}
+
+.title {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-tertiary);
+  text-align: center;
+  margin: 0 0 var(--space-8);
+}
+
+.grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-12);
+  flex-wrap: wrap;
+}
+
+.logoWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.logo {
+  height: 32px;
+  width: auto;
+  opacity: 0.4;
+  filter: grayscale(1);
+  transition:
+    opacity var(--transition-base),
+    filter var(--transition-base);
+}
+
+.logoWrap:hover .logo {
+  opacity: 1;
+  filter: grayscale(0);
+}
+
+/* Scrolling marquee variant */
+.scrollOuter {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+.scrollTrack {
+  display: flex;
+  gap: var(--space-12);
+  width: max-content;
+  animation: scroll 30s linear infinite;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "prompt": "Create a landing page for a project management SaaS called TaskFlow with features, pricing, and testimonials",
+    "expected_behavior": "Creates preview/src/pages/TaskFlowPage.tsx with Navbar, Hero, FeatureGrid, PricingTable, Testimonials, and Footer. Updates App.tsx to render the page. Launches preview server.",
+    "validation": [
+      "File preview/src/pages/TaskFlowPage.tsx exists and exports a named component",
+      "App.tsx imports and renders the new page",
+      "All component imports resolve from @/components",
+      "Type imports use import type syntax"
+    ]
+  },
+  {
+    "prompt": "Build me a homepage with a hero section, 4 features in a 2-column grid, and a FAQ",
+    "expected_behavior": "Creates a page with Hero, FeatureGrid (columns=2, 4 features), and FAQ sections. Includes Navbar and Footer as standard page frame.",
+    "validation": [
+      "FeatureGrid has columns={2} and exactly 4 features",
+      "FAQ section has sensible default items",
+      "Page wrapped in fragment with proper section IDs"
+    ]
+  },
+  {
+    "prompt": "Change the hero title to 'Build Better Products' and add a new pricing tier called 'Team' at $49/month",
+    "expected_behavior": "Edits the existing page file to update the Hero title prop and adds a new plan to the plans array without recreating the entire file.",
+    "validation": [
+      "Hero title prop updated in place",
+      "New plan object added to plans array",
+      "No unrelated changes to the file"
+    ]
+  }
+]

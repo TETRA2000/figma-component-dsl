@@ -1,0 +1,70 @@
+.section {
+  padding: var(--space-20) 0;
+}
+
+.banner {
+  position: relative;
+  overflow: hidden;
+  background: var(--gradient-dark);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-16) var(--space-8);
+  text-align: center;
+}
+
+.glow {
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(139, 92, 246, 0.3) 0%,
+    rgba(236, 72, 153, 0.15) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.title {
+  position: relative;
+  font-family: var(--font-sans);
+  font-size: var(--text-4xl);
+  font-weight: 800;
+  color: var(--color-white);
+  margin: 0 0 var(--space-4);
+  letter-spacing: var(--tracking-tight);
+}
+
+.subtitle {
+  position: relative;
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 480px;
+  margin: 0 auto var(--space-8);
+  line-height: var(--leading-relaxed);
+}
+
+.actions {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.actions .ghost {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 640px) {
+  .banner {
+    padding: var(--space-10) var(--space-6);
+  }
+
+  .title {
+    font-size: var(--text-3xl);
+  }
+}
