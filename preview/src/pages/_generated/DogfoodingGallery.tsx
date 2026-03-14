@@ -1,5 +1,2 @@
-import { JapaneseRealEstateLP } from './JapaneseRealEstateLP';
-
-export function DogfoodingGallery() {
-  return <JapaneseRealEstateLP />;
-}
+import { JapaneseSaaSLP } from "./JapaneseSaaSLP";
+export function DogfoodingGallery() { return <JapaneseSaaSLP />; }

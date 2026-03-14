@@ -1,0 +1,610 @@
+.page {
+  font-family: 'Noto Serif JP', 'Georgia', 'Times New Roman', serif;
+  color: #2a2a2a;
+  background: #fffff0;
+}
+
+/* ─── Nav ─── */
+.nav {
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 240, 0.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #e8dcc8;
+  z-index: 100;
+  padding: 0 24px;
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 76px;
+}
+.brand {
+  font-family: 'Georgia', 'Noto Serif JP', serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #c4a35a;
+}
+.navLinks {
+  display: flex;
+  gap: 28px;
+}
+.navLink {
+  font-size: 13px;
+  color: #555;
+  text-decoration: none;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #c4a35a;
+}
+.navCta {
+  background: #c4a35a;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ─── Hero ─── */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 600px;
+  background: linear-gradient(135deg, #f5e6e0 0%, #fffff0 40%, #f5e6e0 100%);
+  overflow: hidden;
+}
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(196, 163, 90, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.heroContent {
+  position: relative;
+  text-align: center;
+  max-width: 700px;
+  padding: 80px 24px;
+}
+.heroSub {
+  font-size: 14px;
+  color: #c4a35a;
+  letter-spacing: 4px;
+  margin: 0 0 28px;
+}
+.heroTitle {
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #2a2a2a;
+  margin: 0 0 28px;
+  letter-spacing: 2px;
+}
+.heroDesc {
+  font-size: 15px;
+  color: #666;
+  line-height: 2;
+  margin: 0 0 40px;
+  letter-spacing: 0.5px;
+}
+.heroActions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.primaryBtn {
+  background: #c4a35a;
+  color: #fff;
+  border: none;
+  padding: 16px 36px;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.secondaryBtn {
+  background: transparent;
+  color: #c4a35a;
+  border: 1px solid #c4a35a;
+  padding: 16px 36px;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ─── Section Common ─── */
+.sectionLabel {
+  display: block;
+  text-align: center;
+  font-family: 'Georgia', 'Noto Serif JP', serif;
+  font-size: 12px;
+  color: #c4a35a;
+  letter-spacing: 4px;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 0 0 16px;
+  letter-spacing: 2px;
+}
+.sectionTitleLight {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fffff0;
+  margin: 0 0 16px;
+  letter-spacing: 2px;
+}
+.sectionSubtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+  margin: 0 0 48px;
+  letter-spacing: 0.5px;
+}
+.sectionSubtitleLight {
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 240, 0.7);
+  margin: 0 0 48px;
+  letter-spacing: 0.5px;
+}
+
+/* ─── Venues ─── */
+.venues {
+  padding: 96px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.venueGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.venueCard {
+  background: #fff;
+  border: 1px solid #e8dcc8;
+  overflow: hidden;
+}
+.venueImg {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.venueImgPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f5e6e0 0%, #e8dcc8 100%);
+}
+.venueInfo {
+  padding: 28px 24px;
+}
+.venueName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 0 0 8px;
+}
+.venueCapacity {
+  display: inline-block;
+  font-size: 12px;
+  color: #c4a35a;
+  border: 1px solid #c4a35a;
+  padding: 2px 10px;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+.venueDesc {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.9;
+  margin: 0 0 16px;
+}
+.venueLink {
+  font-size: 13px;
+  color: #c4a35a;
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+.venueLink:hover {
+  text-decoration: underline;
+}
+
+/* ─── Plans ─── */
+.plans {
+  padding: 96px 24px;
+  background: #faf6f0;
+}
+.planGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.planCard {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e8dcc8;
+  padding: 40px 28px 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.planRecommended {
+  border: 2px solid #c4a35a;
+}
+.planBadge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #c4a35a;
+  color: #fff;
+  padding: 4px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.planName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 0 0 16px;
+  letter-spacing: 1px;
+}
+.planPrice {
+  font-size: 28px;
+  font-weight: 700;
+  color: #c4a35a;
+  margin: 0 0 8px;
+}
+.planUnit {
+  font-size: 13px;
+  font-weight: 400;
+  color: #888;
+}
+.planDivider {
+  width: 40px;
+  height: 1px;
+  background: #e8dcc8;
+  margin: 20px 0;
+}
+.planFeatures {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  text-align: left;
+  width: 100%;
+}
+.planFeature {
+  font-size: 13px;
+  color: #555;
+  line-height: 2.2;
+  letter-spacing: 0.3px;
+}
+.outlineBtn {
+  background: transparent;
+  color: #c4a35a;
+  border: 1px solid #c4a35a;
+  padding: 12px 28px;
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: inherit;
+  margin-top: auto;
+}
+
+/* ─── Gallery ─── */
+.gallery {
+  padding: 96px 24px;
+  background: #2a2a2a;
+}
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.galleryItem {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+}
+.galleryImgPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #4a4040 0%, #3a3030 50%, #4a4040 100%);
+  transition: transform 0.3s;
+}
+.galleryItem:hover .galleryImgPlaceholder {
+  transform: scale(1.05);
+}
+.galleryCaption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+  color: #fffff0;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* ─── Testimonials ─── */
+.testimonials {
+  padding: 96px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.testimonialGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.testimonialCard {
+  background: #fff;
+  border: 1px solid #e8dcc8;
+  padding: 36px 28px;
+  position: relative;
+}
+.testimonialQuote {
+  font-size: 48px;
+  color: #c4a35a;
+  line-height: 1;
+  margin-bottom: 8px;
+  font-family: 'Georgia', serif;
+}
+.testimonialText {
+  font-size: 14px;
+  color: #555;
+  line-height: 2;
+  margin: 0 0 24px;
+}
+.testimonialMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.testimonialAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c4a35a, #d4b86a);
+}
+.testimonialCouple {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2a2a2a;
+  margin: 0;
+}
+.testimonialDate {
+  font-size: 12px;
+  color: #aaa;
+  margin: 4px 0 0;
+}
+
+/* ─── Fairs ─── */
+.fairs {
+  padding: 96px 24px;
+  background: #faf6f0;
+}
+.fairGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.fairCard {
+  background: #fff;
+  border: 1px solid #e8dcc8;
+  display: flex;
+  overflow: hidden;
+}
+.fairImgPlaceholder {
+  width: 240px;
+  min-height: 220px;
+  background: linear-gradient(135deg, #f5e6e0 0%, #e8dcc8 100%);
+  flex-shrink: 0;
+}
+.fairInfo {
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+}
+.fairTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 0 0 8px;
+  line-height: 1.6;
+}
+.fairDate {
+  font-size: 13px;
+  color: #888;
+  margin: 0 0 16px;
+}
+.fairFeatures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.fairTag {
+  font-size: 11px;
+  color: #c4a35a;
+  border: 1px solid #c4a35a;
+  padding: 3px 10px;
+  letter-spacing: 0.5px;
+}
+.fairBtn {
+  background: #c4a35a;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+/* ─── CTA ─── */
+.cta {
+  padding: 96px 24px;
+  background: linear-gradient(135deg, #f5e6e0 0%, #fffff0 50%, #f5e6e0 100%);
+  text-align: center;
+}
+.ctaContent {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.ctaLabel {
+  font-family: 'Georgia', 'Noto Serif JP', serif;
+  font-size: 12px;
+  color: #c4a35a;
+  letter-spacing: 4px;
+  display: block;
+  margin-bottom: 16px;
+}
+.ctaTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 0 0 16px;
+  letter-spacing: 2px;
+}
+.ctaSubtitle {
+  font-size: 14px;
+  color: #666;
+  line-height: 2;
+  margin: 0 0 36px;
+}
+.ctaActions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.ctaPrimary {
+  background: #c4a35a;
+  color: #fff;
+  border: none;
+  padding: 16px 40px;
+  border-radius: 2px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.ctaSecondary {
+  background: transparent;
+  color: #c4a35a;
+  border: 1px solid #c4a35a;
+  padding: 16px 40px;
+  border-radius: 2px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.ctaPhone {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+/* ─── Footer ─── */
+.footer {
+  background: #2a2a2a;
+  color: #fffff0;
+  padding: 0 24px;
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 64px 0;
+  gap: 64px;
+}
+.footerBrand {
+  flex-shrink: 0;
+}
+.footerLogo {
+  font-family: 'Georgia', 'Noto Serif JP', serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #c4a35a;
+}
+.footerTagline {
+  font-size: 12px;
+  color: rgba(255, 255, 240, 0.5);
+  margin: 8px 0 0;
+}
+.footerLinks {
+  display: flex;
+  gap: 64px;
+}
+.footerCol {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.footerColTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 240, 0.8);
+  margin: 0 0 4px;
+  letter-spacing: 0.5px;
+}
+.footerLink {
+  font-size: 12px;
+  color: rgba(255, 255, 240, 0.5);
+  text-decoration: none;
+}
+.footerLink:hover {
+  color: #c4a35a;
+}
+.footerBottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(255, 255, 240, 0.1);
+  padding: 24px 0;
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255, 255, 240, 0.3);
+}

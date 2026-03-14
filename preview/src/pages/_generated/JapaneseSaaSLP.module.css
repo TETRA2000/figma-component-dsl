@@ -1,0 +1,65 @@
+.page { font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif; color: #1a1a1a; background: #fff; }
+
+.nav { background: #fff; border-bottom: 1px solid #eee; padding: 0 24px; }
+.navInner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { font-size: 22px; font-weight: 800; color: #6366f1; }
+.navLinks { display: flex; gap: 32px; }
+.navLink { font-size: 14px; color: #555; text-decoration: none; font-weight: 500; }
+.navActions { display: flex; gap: 12px; }
+.loginBtn { background: transparent; color: #555; border: none; font-size: 14px; font-weight: 500; cursor: pointer; }
+.trialBtn { background: #6366f1; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+.hero { background: linear-gradient(135deg, #eef2ff, #e0e7ff); padding: 80px 24px; text-align: center; }
+.heroContent { max-width: 800px; margin: 0 auto; }
+.heroBadge { display: inline-block; background: #fef3c7; color: #92400e; padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 24px; }
+.heroTitle { font-size: 52px; font-weight: 800; line-height: 1.2; color: #1a1a1a; margin: 0 0 20px; }
+.heroGradient { background: linear-gradient(135deg, #6366f1, #8b5cf6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.heroSubtitle { font-size: 18px; color: #666; line-height: 1.7; margin: 0 0 32px; }
+.heroActions { display: flex; gap: 16px; justify-content: center; margin-bottom: 32px; }
+.primaryBtn { background: #6366f1; color: #fff; border: none; padding: 14px 40px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.demoBtn { background: #fff; color: #6366f1; border: 2px solid #6366f1; padding: 12px 32px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.heroStats { display: flex; gap: 32px; justify-content: center; }
+.heroStat { font-size: 14px; color: #666; }
+.heroStat strong { color: #6366f1; }
+
+.sectionTitle { font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 0 0 12px; text-align: center; }
+.sectionSubtitle { font-size: 16px; color: #888; margin: 0 0 48px; text-align: center; }
+
+.features { padding: 96px 24px; }
+.featureGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
+.featureCard { background: #f9fafb; padding: 32px 24px; border-radius: 16px; border: 1px solid #f0f0f0; }
+.featureIconWrapper { width: 48px; height: 48px; background: #eef2ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+.featureIcon { font-size: 24px; }
+.featureTitle { font-size: 18px; font-weight: 700; color: #1a1a1a; margin: 0 0 8px; }
+.featureDesc { font-size: 14px; color: #666; line-height: 1.7; margin: 0; }
+
+.pricing { padding: 96px 24px; background: #f9fafb; }
+.pricingGrid { display: flex; gap: 24px; max-width: 1000px; margin: 0 auto; align-items: flex-start; }
+.pricingCard { flex: 1; background: #fff; padding: 32px 24px; border-radius: 16px; border: 1px solid #e5e7eb; position: relative; }
+.highlighted { border-color: #6366f1; box-shadow: 0 4px 20px rgba(99,102,241,0.15); }
+.pricingBadge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #6366f1; color: #fff; padding: 4px 16px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+.pricingName { font-size: 18px; font-weight: 700; color: #1a1a1a; margin: 0 0 16px; }
+.pricingPrice { margin-bottom: 24px; }
+.pricingAmount { font-size: 36px; font-weight: 800; color: #1a1a1a; }
+.pricingPeriod { font-size: 14px; color: #888; }
+.pricingFeatures { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.pricingFeature { font-size: 14px; color: #555; }
+.pricingBtnPrimary { width: 100%; background: #6366f1; color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }
+.pricingBtnSecondary { width: 100%; background: #f3f4f6; color: #555; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }
+
+.cta { padding: 80px 24px; background: linear-gradient(135deg, #6366f1, #8b5cf6); text-align: center; }
+.ctaTitle { font-size: 32px; font-weight: 800; color: #fff; margin: 0 0 12px; }
+.ctaSubtitle { font-size: 16px; color: rgba(255,255,255,0.8); margin: 0 0 32px; }
+.ctaBtn { background: #fff; color: #6366f1; border: none; padding: 16px 48px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; }
+
+.footer { background: #111827; color: #fff; padding: 64px 24px 0; }
+.footerInner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; padding-bottom: 48px; border-bottom: 1px solid #1f2937; }
+.footerBrand { flex-shrink: 0; }
+.footerLogo { font-size: 20px; font-weight: 800; color: #6366f1; }
+.footerTagline { font-size: 13px; color: #6b7280; margin: 8px 0 0; }
+.footerLinks { display: flex; gap: 64px; }
+.footerCol { display: flex; flex-direction: column; gap: 12px; }
+.footerColTitle { font-size: 14px; font-weight: 700; color: #fff; margin: 0 0 4px; }
+.footerLink { font-size: 13px; color: #6b7280; text-decoration: none; }
+.footerBottom { max-width: 1200px; margin: 0 auto; padding: 24px 0; text-align: center; }
+.footerBottom p { font-size: 12px; color: #4b5563; margin: 0; }
