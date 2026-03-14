@@ -204,6 +204,18 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string): void
   ctx.restore();
 }
 
+function drawWrappedLine(
+  ctx: SKRSContext2D, text: string, y: number, w: number, align: string,
+): void {
+  let xOffset = 0;
+  if (align === 'CENTER') {
+    xOffset = (w - ctx.measureText(text).width) / 2;
+  } else if (align === 'RIGHT') {
+    xOffset = w - ctx.measureText(text).width;
+  }
+  ctx.fillText(text, xOffset, y);
+}
+
 function renderText(ctx: SKRSContext2D, node: FigmaNodeDict): void {
   if (!node.textData || !node.derivedTextData) return;
 
@@ -228,21 +240,51 @@ function renderText(ctx: SKRSContext2D, node: FigmaNodeDict): void {
   const align = node.textAlignHorizontal ?? 'LEFT';
   const w = node.size.x;
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]!;
-    const baseline = baselines[i];
-    if (!baseline) continue;
+  // Word-wrap when textAutoResize is HEIGHT (fixed width, auto height)
+  if (node.textAutoResize === 'HEIGHT') {
+    const lineHeight = baselines[0]?.lineHeight ?? fontSize * 1.2;
+    let drawLineIndex = 0;
 
-    let xOffset = 0;
-    if (align === 'CENTER') {
-      const measured = ctx.measureText(line);
-      xOffset = (w - measured.width) / 2;
-    } else if (align === 'RIGHT') {
-      const measured = ctx.measureText(line);
-      xOffset = w - measured.width;
+    for (const paragraph of lines) {
+      if (paragraph === '') {
+        drawLineIndex++;
+        continue;
+      }
+      const words = paragraph.split(/\s+/);
+      let currentLine = '';
+      for (const word of words) {
+        const testLine = currentLine ? `${currentLine} ${word}` : word;
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > w && currentLine) {
+          drawWrappedLine(ctx, currentLine, drawLineIndex * lineHeight, w, align);
+          drawLineIndex++;
+          currentLine = word;
+        } else {
+          currentLine = testLine;
+        }
+      }
+      if (currentLine) {
+        drawWrappedLine(ctx, currentLine, drawLineIndex * lineHeight, w, align);
+        drawLineIndex++;
+      }
     }
+  } else {
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]!;
+      const baseline = baselines[i];
+      if (!baseline) continue;
 
-    ctx.fillText(line, xOffset, baseline.lineY);
+      let xOffset = 0;
+      if (align === 'CENTER') {
+        const measured = ctx.measureText(line);
+        xOffset = (w - measured.width) / 2;
+      } else if (align === 'RIGHT') {
+        const measured = ctx.measureText(line);
+        xOffset = w - measured.width;
+      }
+
+      ctx.fillText(line, xOffset, baseline.lineY);
+    }
   }
 }
 
