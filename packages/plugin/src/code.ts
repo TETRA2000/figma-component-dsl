@@ -38,6 +38,7 @@ interface PluginNodeDef {
   fontWeight?: number;
   fontStyle?: string;
   textAlignHorizontal?: string;
+  textAutoResize?: string;
   componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
   componentId?: string;
   overriddenProperties?: Record<string, string | boolean>;
@@ -164,6 +165,13 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         if (def.characters) text.characters = def.characters;
         if (def.textAlignHorizontal) {
           text.textAlignHorizontal = def.textAlignHorizontal as 'LEFT' | 'CENTER' | 'RIGHT' | 'JUSTIFIED';
+        }
+        // Handle text sizing: set textAutoResize BEFORE resize so Figma wraps correctly
+        if (def.textAutoResize) {
+          text.textAutoResize = def.textAutoResize as 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT';
+        }
+        if (def.size && def.size.x > 0 && def.size.y > 0) {
+          text.resize(def.size.x, def.size.y);
         }
         text.fills = toFigmaPaints(def.fills);
         text.opacity = def.opacity;
