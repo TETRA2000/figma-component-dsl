@@ -11,6 +11,20 @@
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present"
   },
+  "bin": {
+    "figma-dsl": "bin/figma-dsl",
+    "figma-dsl-compile": "bin/figma-dsl-compile",
+    "figma-dsl-render": "bin/figma-dsl-render",
+    "figma-dsl-capture": "bin/figma-dsl-capture",
+    "figma-dsl-compare": "bin/figma-dsl-compare",
+    "figma-dsl-pipeline": "bin/figma-dsl-pipeline",
+    "figma-dsl-export": "bin/figma-dsl-export",
+    "figma-dsl-generate-test-suite": "bin/figma-dsl-generate-test-suite",
+    "figma-dsl-batch": "bin/figma-dsl-batch",
+    "figma-dsl-batch-compare": "bin/figma-dsl-batch-compare",
+    "figma-dsl-capture-figma": "bin/figma-dsl-capture-figma",
+    "figma-dsl-calibrate": "bin/figma-dsl-calibrate"
+  },
   "engines": {
     "node": ">=22.0.0"
   }

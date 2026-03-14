@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+import { run } from '../packages/cli/dist/cli.js';
+
+const command = import.meta.url.split('/').pop().replace('figma-dsl-', '');
+const exitCode = await run([command, ...process.argv.slice(2)]);
+process.exit(exitCode);
