@@ -166,12 +166,13 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         if (def.textAlignHorizontal) {
           text.textAlignHorizontal = def.textAlignHorizontal as 'LEFT' | 'CENTER' | 'RIGHT' | 'JUSTIFIED';
         }
-        // Handle text sizing: set textAutoResize BEFORE resize so Figma wraps correctly
+        // Only constrain text size when textAutoResize is explicitly set (e.g. 'HEIGHT' for wrapping)
+        // Without this guard, auto-sized text gets incorrectly constrained and wraps
         if (def.textAutoResize) {
           text.textAutoResize = def.textAutoResize as 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT';
-        }
-        if (def.size && def.size.x > 0 && def.size.y > 0) {
-          text.resize(def.size.x, def.size.y);
+          if (def.size && def.size.x > 0 && def.size.y > 0) {
+            text.resize(def.size.x, def.size.y);
+          }
         }
         text.fills = toFigmaPaints(def.fills);
         text.opacity = def.opacity;
