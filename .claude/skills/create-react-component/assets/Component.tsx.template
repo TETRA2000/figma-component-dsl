@@ -1,0 +1,32 @@
+import type { ReactNode, HTMLAttributes } from 'react';
+import styles from './{{ComponentName}}.module.css';
+
+type Variant = {{variants}};
+type Size = 'sm' | 'md' | 'lg';
+
+interface {{ComponentName}}Props extends HTMLAttributes<HTMLDivElement> {
+  variant?: Variant;
+  size?: Size;
+  children: ReactNode;
+}
+
+export function {{ComponentName}}({
+  variant = '{{defaultVariant}}',
+  size = 'md',
+  children,
+  className,
+  ...props
+}: {{ComponentName}}Props) {
+  const cls = [
+    styles.root,
+    styles[variant],
+    styles[size],
+    className ?? '',
+  ].filter(Boolean).join(' ');
+
+  return (
+    <div className={cls} {...props}>
+      {children}
+    </div>
+  );
+}

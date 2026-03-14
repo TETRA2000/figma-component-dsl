@@ -1,0 +1,32 @@
+[
+  {
+    "prompt": "Create a Toast notification component with success, error, warning, and info variants",
+    "expected_behavior": "Creates 3 files in preview/src/components/Toast/: Toast.tsx, Toast.module.css, Toast.figma.tsx. Component has variant prop with 4 options, uses design tokens, passes DSL validation. Registered in index.ts.",
+    "validation": [
+      "Toast.tsx exports named function Toast",
+      "Toast.module.css uses design token CSS variables",
+      "Toast.figma.tsx maps all 4 variants to figma.enum",
+      "figma-dsl validate passes",
+      "index.ts contains Toast export below END marker"
+    ]
+  },
+  {
+    "prompt": "Build me a card component with an image, title, description, and optional badge",
+    "expected_behavior": "Creates ContentCard component with props for image, title, description, and optional badge. CSS Module handles image aspect ratio and text truncation. Code Connect maps string props.",
+    "validation": [
+      "Component accepts image, title, description, badge props",
+      "CSS handles image layout with proper aspect ratio",
+      "Code Connect uses figma.string for text props and figma.boolean for badge"
+    ]
+  },
+  {
+    "prompt": "I need a dropdown menu with items that can have icons",
+    "expected_behavior": "Creates Dropdown component with trigger element and menu items. Each item accepts an optional icon, label, and onClick handler. CSS Module handles positioning and hover states.",
+    "validation": [
+      "Component handles open/close state",
+      "Menu items accept icon and label props",
+      "CSS handles absolute positioning and z-index",
+      "Keyboard accessibility considered"
+    ]
+  }
+]

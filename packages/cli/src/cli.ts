@@ -1,6 +1,6 @@
 import { parseArgs } from 'util';
 import { resolve, dirname, join } from 'path';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, statSync } from 'fs';
 import { pathToFileURL } from 'url';
 import { compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
 import type { CompileResult } from '@figma-dsl/compiler';
@@ -15,6 +15,7 @@ import { processBatch } from './batch-processor.js';
 import { batchCompare, formatReportMarkdown } from './calibration-reporter.js';
 import { captureFigmaImages, loadNodeIdMap } from './figma-capturer.js';
 import { runCalibration } from './calibrate-orchestrator.js';
+import { validateComponent, validateAll } from '@figma-dsl/validator';
 
 // Find font directory relative to packages
 function findFontDir(): string {
@@ -487,6 +488,98 @@ async function cmdCalibrate(args: string[]): Promise<number> {
   }
 }
 
+async function cmdValidate(args: string[]): Promise<number> {
+  const { values, positionals } = parseArgs({
+    args,
+    options: {
+      tokens: { type: 'string' },
+      rules: { type: 'string' },
+      skip: { type: 'string' },
+      format: { type: 'string' },
+      strict: { type: 'boolean' },
+    },
+    allowPositionals: true,
+  });
+
+  const targetPath = positionals[0];
+  if (!targetPath) {
+    console.error('Usage: figma-dsl validate <path> [--tokens path] [--rules list] [--skip list] [--format text|json] [--strict]');
+    return 2;
+  }
+
+  try {
+    const resolvedPath = resolve(targetPath);
+    const options = {
+      tokensPath: values.tokens ? resolve(values.tokens) : undefined,
+      rules: values.rules ? values.rules.split(',') : undefined,
+      skipRules: values.skip ? values.skip.split(',') : undefined,
+    };
+
+    const isDirectory = existsSync(resolvedPath) && statSync(resolvedPath).isDirectory();
+    const isComponentDir = isDirectory && existsSync(join(resolvedPath, `${resolvedPath.split('/').pop()}.tsx`));
+    const format = values.format ?? 'text';
+    const strict = values.strict ?? false;
+
+    if (isComponentDir) {
+      // Single component validation
+      const result = await validateComponent(resolvedPath, options);
+      if (format === 'json') {
+        console.log(JSON.stringify(result, null, 2));
+      } else {
+        printValidationResult(resolvedPath.split('/').pop()!, result);
+      }
+      const hasFailures = result.errors.length > 0 || (strict && result.warnings.length > 0);
+      return hasFailures ? 1 : 0;
+    } else if (isDirectory) {
+      // Validate all components in directory
+      const results = await validateAll(resolvedPath, options);
+      if (format === 'json') {
+        const obj: Record<string, unknown> = {};
+        for (const [name, result] of results) {
+          obj[name] = result;
+        }
+        console.log(JSON.stringify(obj, null, 2));
+      } else {
+        let hasFailures = false;
+        for (const [name, result] of results) {
+          printValidationResult(name, result);
+          if (result.errors.length > 0 || (strict && result.warnings.length > 0)) {
+            hasFailures = true;
+          }
+        }
+        console.log(`\nValidated ${results.size} component(s)`);
+      }
+      let anyFailed = false;
+      for (const result of results.values()) {
+        if (result.errors.length > 0 || (strict && result.warnings.length > 0)) {
+          anyFailed = true;
+          break;
+        }
+      }
+      return anyFailed ? 1 : 0;
+    } else {
+      console.error(`Path not found or not a directory: ${targetPath}`);
+      return 2;
+    }
+  } catch (err) {
+    console.error(`Validate error: ${err instanceof Error ? err.message : String(err)}`);
+    return 2;
+  }
+}
+
+function printValidationResult(name: string, result: { valid: boolean; errors: Array<{ rule: string; message: string; filePath: string; line?: number; severity: string }>; warnings: Array<{ rule: string; message: string; filePath: string; line?: number; severity: string }>; checkedRules: string[] }): void {
+  const status = result.valid ? '✓ PASS' : '✗ FAIL';
+  console.log(`\n${status}  ${name}`);
+  for (const err of result.errors) {
+    const loc = err.line ? `:${err.line}` : '';
+    console.log(`  ERROR [${err.rule}] ${err.message} (${err.filePath}${loc})`);
+  }
+  for (const warn of result.warnings) {
+    const loc = warn.line ? `:${warn.line}` : '';
+    console.log(`  WARN  [${warn.rule}] ${warn.message} (${warn.filePath}${loc})`);
+  }
+}
+
 export async function run(args: string[]): Promise<number> {
   const command = args[0];
   const subArgs = args.slice(1);
@@ -514,6 +607,8 @@ export async function run(args: string[]): Promise<number> {
       return cmdCaptureFigma(subArgs);
     case 'calibrate':
       return cmdCalibrate(subArgs);
+    case 'validate':
+      return cmdValidate(subArgs);
     case 'help':
     case '--help':
     case '-h':
@@ -537,6 +632,9 @@ Commands:
   compare  <a.png> <b.png> [-t N] [-d diff]    Compare two images
   pipeline <file.dsl.ts> -u <url> [opts]       Full pipeline (compile→render→capture→compare)
   export   <file.dsl.ts> -o output.json        Generate Figma plugin input
+
+Validation:
+  validate <path> [--tokens path] [--format ..]  Validate components for DSL compatibility
 
 Calibration:
   generate-test-suite -o <dir> [--property ..]  Generate test .dsl.ts files

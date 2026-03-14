@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "preview-app",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "preview",
+      "port": 5173,
+      "autoPort": true
+    },
+    {
+      "name": "dsl-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "output"],
+      "port": 8080,
+      "autoPort": true
+    }
+  ]
+}

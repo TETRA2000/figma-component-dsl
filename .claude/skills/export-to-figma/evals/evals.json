@@ -1,0 +1,30 @@
+[
+  {
+    "prompt": "Export the Button component to Figma",
+    "expected_behavior": "Checks for MCP availability, compiles Button.tsx via figma-dsl, exports JSON, and either pushes via MCP or provides plugin-ready JSON file.",
+    "validation": [
+      "figma-dsl compile runs on Button.tsx",
+      "output/Button.figma.json is generated",
+      "Approach selection is presented to user",
+      "Code Connect file path is referenced"
+    ]
+  },
+  {
+    "prompt": "Push all my components to our Figma design file",
+    "expected_behavior": "Iterates over all components in preview/src/components/, compiles and exports each, then uses batch operations for import and comparison.",
+    "validation": [
+      "All components discovered from index.ts",
+      "Each component compiled and exported",
+      "Batch comparison offered post-import"
+    ]
+  },
+  {
+    "prompt": "Set up Code Connect for my Hero component with Figma URL https://figma.com/design/abc123?node-id=1-2",
+    "expected_behavior": "Updates Hero.figma.tsx with the provided Figma URL, replacing PLACEHOLDER. Verifies the mapping if MCP is available.",
+    "validation": [
+      "Hero.figma.tsx FIGMA_URL updated with provided URL",
+      "PLACEHOLDER is no longer in the file",
+      "Props are properly mapped in the Code Connect binding"
+    ]
+  }
+]

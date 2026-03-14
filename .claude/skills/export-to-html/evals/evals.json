@@ -1,0 +1,32 @@
+{
+  "test_cases": [
+    {
+      "prompt": "Export the current page as a standalone HTML file",
+      "assertions": [
+        "Verifies the page is set as root in App.tsx",
+        "Launches preview for user verification",
+        "Runs vite build with singlefile plugin",
+        "Produces self-contained HTML with inlined CSS and JS",
+        "Copies output to user-specified path"
+      ]
+    },
+    {
+      "prompt": "Save this landing page as an HTML file I can share",
+      "assertions": [
+        "Ensures landing page is the render target",
+        "Builds with vite-plugin-singlefile",
+        "Output is a single HTML file with no external dependencies",
+        "Preserves responsive behavior from CSS"
+      ]
+    },
+    {
+      "prompt": "Generate a static HTML version of my page for deployment",
+      "assertions": [
+        "Sets correct page as App.tsx root",
+        "Runs production build",
+        "Outputs portable HTML file",
+        "Includes all design token CSS custom properties"
+      ]
+    }
+  ]
+}
