@@ -127,7 +127,7 @@ function toFigmaPaints(fills: PluginNodeDef['fills']): Paint[] {
 
 // Sets the node's OWN auto-layout configuration (makes it a layout container).
 // Must be called BEFORE children are created so they can use FILL sizing.
-function setAutoLayoutConfig(node: FrameNode | ComponentNode, def: PluginNodeDef): void {
+function setAutoLayoutConfig(node: FrameNode | ComponentNode | ComponentSetNode, def: PluginNodeDef): void {
   if (!def.stackMode) return;
 
   node.layoutMode = def.stackMode === 'HORIZONTAL' ? 'HORIZONTAL' : 'VERTICAL';
@@ -306,6 +306,24 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         if (variants.length > 0) {
           const set = figma.combineAsVariants(variants, parent as FrameNode | PageNode);
           set.name = def.name;
+
+          // Apply auto-layout to the COMPONENT_SET.
+          // combineAsVariants() creates the set but may not arrange children optimally.
+          // If the def specifies auto-layout, use it; otherwise default to horizontal wrap.
+          if (def.stackMode) {
+            setAutoLayoutConfig(set, def);
+          } else {
+            // Default: horizontal wrap with 20px spacing for a nice grid layout
+            set.layoutMode = 'HORIZONTAL';
+            set.layoutWrap = 'WRAP';
+            set.itemSpacing = 20;
+            set.counterAxisSpacing = 20;
+            set.paddingTop = 40;
+            set.paddingRight = 40;
+            set.paddingBottom = 40;
+            set.paddingLeft = 40;
+          }
+
           // Register shared component properties on the set (not on variant children).
           // Uses extracted helpers from serializer.ts for testability.
           const sharedPropDefs = collectSharedPropDefs(def.children);
