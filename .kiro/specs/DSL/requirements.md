@@ -6,7 +6,7 @@ The current DSL pipeline (`@figma-dsl/*` packages) supports FRAME, TEXT, RECTANG
 
 When communicating design intention — especially for hero sections, product cards, avatars, or marketing pages — placeholder rectangles with gradient fills are a poor substitute for actual images. Designers and developers reviewing DSL-rendered PNGs or Figma exports cannot assess visual fidelity without real image content.
 
-This specification enhances the DSL pipeline end-to-end with image support: a new DSL API for referencing images, compiler handling, renderer image drawing, exporter image encoding, and Figma plugin image import.
+This specification enhances the DSL pipeline end-to-end with image support: a new DSL API for referencing images, compiler handling, renderer image drawing, exporter image encoding, Figma plugin image import, and bidirectional image sync so that image changes made by designers in Figma flow back to code via changesets.
 
 ## Requirements
 
@@ -104,3 +104,20 @@ This specification enhances the DSL pipeline end-to-end with image support: a ne
 2. When the `validate` CLI command encounters an image reference with an unsupported format, the Validator shall report a descriptive error identifying the file and supported formats.
 3. When the `validate` CLI command encounters an HTTPS image URL, the Validator shall verify the URL is syntactically valid without performing a network request.
 4. If an image file exceeds 10 MB, the Validator shall report a warning recommending optimization for pipeline performance.
+
+### Requirement 9: Bidirectional Image Sync via Plugin
+
+**Objective:** As a designer, I want image changes I make in Figma (swapping images, adjusting scale mode, adding/removing image fills) to be captured in changesets that developers can apply back to code, so that the bidirectional sync workflow covers images end-to-end.
+
+#### Acceptance Criteria
+
+1. When a component with image fills is imported via the plugin, the Plugin shall include image fill data (image hash, scale mode, original source reference) in the baseline snapshot stored in plugin data.
+2. When a designer replaces an image fill on an imported component in Figma, the Plugin shall detect the change and record it in the edit log with the old image hash and the new image hash.
+3. When a designer changes the `scaleMode` of an image fill (e.g., FILL to FIT) on an imported component, the Plugin shall record the scale mode change as a property change in the edit log.
+4. When a designer adds a new image fill to an imported component, the Plugin shall record the addition as a structural change including the new image data and scale mode.
+5. When a designer removes an image fill from an imported component, the Plugin shall record the removal as a structural change referencing the removed image hash.
+6. When a changeset is exported containing image changes, the Plugin shall embed the new image data as base64 in the changeset JSON alongside the property change metadata.
+7. When the Changeset Applicator encounters an image change in a changeset, the Changeset Applicator shall extract the embedded image data, save it to the project's asset directory, and update the corresponding `image()` or `imageFill()` source reference in the DSL or React code.
+8. When the Changeset Applicator encounters an image scale mode change, the Changeset Applicator shall update the `fit` or `scaleMode` property in the DSL source or the corresponding CSS `object-fit` property in the React component.
+9. The Plugin shall serialize image fills using `figma.getImageByHash()` to retrieve image bytes for export, and include the image dimensions in the serialized output.
+10. If the Plugin cannot retrieve image bytes for a changed image (e.g., the image was deleted from Figma), the Plugin shall include an error marker in the changeset entry and log a warning — not fail the entire changeset export.
