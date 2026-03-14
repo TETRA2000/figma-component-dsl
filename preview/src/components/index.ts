@@ -26,3 +26,7 @@ export { McOrderBanner } from './McOrderBanner/McOrderBanner';
 export { StatCard } from './StatCard/StatCard';
 export { ProgressBar } from './ProgressBar/ProgressBar';
 export { MetricRow } from './MetricRow/MetricRow';
+export { GameCard } from './GameCard/GameCard';
+export { LiveBadge } from './LiveBadge/LiveBadge';
+export { LeaderboardRow } from './LeaderboardRow/LeaderboardRow';
+export { PricingTier } from './PricingTier/PricingTier';

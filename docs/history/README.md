@@ -26,4 +26,7 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-14 — SaaS Pricing](2026-03-14-saas-pricing.md) — 1 issue found, 1 pipeline fix | Features: FILL columns, gradient buttons, strokes, 8-digit hex, cornerRadius
+- [2026-03-14 — Analytics Dashboard](2026-03-14-analytics-dashboard.md) — 0 issues found, 0 pipeline fixes | Features: FILL sizing, SPACE_BETWEEN, gradient fills, ellipse, mixed H+V layout
+- [2026-03-14 — Neon Gaming](2026-03-14-neon-gaming.md) — 0 issues found, 0 pipeline fixes | Features: gradient fills, gradient angles, thick strokes, high cornerRadius, clipContent, ellipse
 - [2026-03-14 — Travel Cards](2026-03-14-travel-cards.md) — 0 issues found, 0 pipeline fixes | Features: cornerRadius, clipContent, strokes, textAutoResize:HEIGHT, FILL sizing, SPACE_BETWEEN, nested auto-layout

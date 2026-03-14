@@ -1,0 +1,60 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+  background: #181818;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid #333333;
+}
+
+.imagePlaceholder {
+  height: 160px;
+  width: 100%;
+}
+
+.imagePlaceholder.pink {
+  background: linear-gradient(135deg, #ff2d55, #0a0a0a);
+}
+
+.imagePlaceholder.blue {
+  background: linear-gradient(135deg, #00d4ff, #0a0a0a);
+}
+
+.imagePlaceholder.green {
+  background: linear-gradient(135deg, #39ff14, #0a0a0a);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 6px;
+}
+
+.genre {
+  font-size: 11px;
+  font-weight: 600;
+  color: #ff2d55;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.players {
+  font-size: 13px;
+  color: #888888;
+  font-weight: 500;
+}
