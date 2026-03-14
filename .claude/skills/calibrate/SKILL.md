@@ -406,6 +406,15 @@ docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/
   validation.log        # Validator output (text)
 ```
 
+## Commit policy
+
+When committing changes from a calibration run, only commit files under these paths:
+
+- `packages/` — pipeline code fixes (compiler, renderer, dsl-core, etc.)
+- `docs/` — history logs, validation results, rendered PNGs
+
+Do **not** commit changes under `preview/`, `examples/`, `dogfooding/`, `calibration/`, or other directories. Those are working artifacts for local use, not tracked output. Stage files explicitly by path — never use `git add .` or `git add -A`.
+
 ## Reference
 
 - See `references/pipeline.md` for the full rendering pipeline architecture
