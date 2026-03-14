@@ -14,6 +14,9 @@ import {
   serializeNode as serializeNodeImpl,
   collectSharedPropDefs,
   getRegistrableProperties,
+  calculateComponentSetWidth,
+  COMPONENT_SET_GAP,
+  COMPONENT_SET_PAD,
 } from './serializer.js';
 import type { SerializableNode } from './serializer.js';
 
@@ -313,15 +316,21 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
           if (def.stackMode) {
             setAutoLayoutConfig(set, def);
           } else {
-            // Default: horizontal wrap with 20px spacing for a nice grid layout
+            // Default: horizontal wrap grid using extracted helpers
+            const variantWidths = variants.map(v => v.width);
+            const totalWidth = calculateComponentSetWidth(variantWidths);
+
             set.layoutMode = 'HORIZONTAL';
             set.layoutWrap = 'WRAP';
-            set.itemSpacing = 20;
-            set.counterAxisSpacing = 20;
-            set.paddingTop = 40;
-            set.paddingRight = 40;
-            set.paddingBottom = 40;
-            set.paddingLeft = 40;
+            set.itemSpacing = COMPONENT_SET_GAP;
+            set.counterAxisSpacing = COMPONENT_SET_GAP;
+            set.paddingTop = COMPONENT_SET_PAD;
+            set.paddingRight = COMPONENT_SET_PAD;
+            set.paddingBottom = COMPONENT_SET_PAD;
+            set.paddingLeft = COMPONENT_SET_PAD;
+            set.resize(totalWidth, set.height);
+            set.primaryAxisSizingMode = 'FIXED';
+            set.counterAxisSizingMode = 'AUTO';
           }
 
           // Register shared component properties on the set (not on variant children).

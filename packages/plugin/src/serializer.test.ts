@@ -5,6 +5,9 @@ import {
   serializeStrokes,
   collectSharedPropDefs,
   getRegistrableProperties,
+  calculateGridColumns,
+  calculateComponentSetWidth,
+  COMPONENT_SET_PAD,
 } from './serializer.js';
 import type { SerializableNode, SerializablePaint, SharedPropDef } from './serializer.js';
 
@@ -555,5 +558,103 @@ describe('getRegistrableProperties', () => {
     expect(result).toHaveLength(1);
     expect(result[0]![0]).toBe('Icon');
     expect(result[0]![1]!.type).toBe('INSTANCE_SWAP');
+  });
+});
+
+// =================================================================
+// calculateGridColumns
+// =================================================================
+
+describe('calculateGridColumns', () => {
+  it('returns 1 for a single variant', () => {
+    expect(calculateGridColumns(1)).toBe(1);
+  });
+
+  it('returns 2 for 2 variants', () => {
+    expect(calculateGridColumns(2)).toBe(2);
+  });
+
+  it('returns 2 for 3 variants', () => {
+    expect(calculateGridColumns(3)).toBe(2);
+  });
+
+  it('returns 2 for 4 variants (perfect square)', () => {
+    expect(calculateGridColumns(4)).toBe(2);
+  });
+
+  it('returns 3 for 5 variants', () => {
+    expect(calculateGridColumns(5)).toBe(3);
+  });
+
+  it('returns 3 for 6 variants (PizzaCard case)', () => {
+    expect(calculateGridColumns(6)).toBe(3);
+  });
+
+  it('returns 3 for 9 variants (perfect square)', () => {
+    expect(calculateGridColumns(9)).toBe(3);
+  });
+
+  it('returns 4 for 10 variants', () => {
+    expect(calculateGridColumns(10)).toBe(4);
+  });
+
+  it('returns 1 for 0 variants (edge case)', () => {
+    expect(calculateGridColumns(0)).toBe(1);
+  });
+
+  it('returns 1 for negative count (edge case)', () => {
+    expect(calculateGridColumns(-1)).toBe(1);
+  });
+});
+
+// =================================================================
+// calculateComponentSetWidth
+// =================================================================
+
+describe('calculateComponentSetWidth', () => {
+  it('calculates width for PizzaCard (6 variants: 260, 320, 400 × 2)', () => {
+    // 6 variants → 3 columns
+    // Top 3 widths: 400, 400, 320
+    // Width = 400 + 400 + 320 + 20*2 + 40*2 = 1240
+    const widths = [260, 320, 400, 260, 320, 400];
+    expect(calculateComponentSetWidth(widths)).toBe(1240);
+  });
+
+  it('calculates width for 2 equal-width variants', () => {
+    // 2 variants → 2 columns
+    // Width = 200 + 200 + 20*1 + 40*2 = 500
+    const widths = [200, 200];
+    expect(calculateComponentSetWidth(widths)).toBe(500);
+  });
+
+  it('calculates width for 1 variant', () => {
+    // 1 variant → 1 column
+    // Width = 300 + 20*0 + 40*2 = 380
+    expect(calculateComponentSetWidth([300])).toBe(380);
+  });
+
+  it('returns only padding for empty variants', () => {
+    expect(calculateComponentSetWidth([])).toBe(COMPONENT_SET_PAD * 2);
+  });
+
+  it('uses custom gap and padding', () => {
+    // 4 variants → 2 columns, widths [100, 200, 150, 180]
+    // Top 2: 200, 180
+    // Width = 200 + 180 + 10*1 + 20*2 = 430
+    expect(calculateComponentSetWidth([100, 200, 150, 180], 10, 20)).toBe(430);
+  });
+
+  it('handles 4 identical-width variants', () => {
+    // 4 → 2 columns
+    // Width = 300 + 300 + 20*1 + 40*2 = 700
+    expect(calculateComponentSetWidth([300, 300, 300, 300])).toBe(700);
+  });
+
+  it('handles 9 variants (3×3 grid)', () => {
+    // 9 → 3 columns
+    // Top 3 widths: 400, 350, 300
+    // Width = 400 + 350 + 300 + 20*2 + 40*2 = 1170
+    const widths = [100, 200, 300, 150, 250, 350, 120, 220, 400];
+    expect(calculateComponentSetWidth(widths)).toBe(1170);
   });
 });

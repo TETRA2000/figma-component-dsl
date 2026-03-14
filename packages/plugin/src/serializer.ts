@@ -216,3 +216,34 @@ export function getRegistrableProperties(
 ): Array<[string, SharedPropDef]> {
   return Object.entries(sharedPropDefs).filter(([, propDef]) => propDef.type !== 'VARIANT');
 }
+
+// --- Component Set Grid Layout ---
+
+export const COMPONENT_SET_GAP = 20;
+export const COMPONENT_SET_PAD = 40;
+
+/**
+ * Calculates the number of columns for a balanced grid layout.
+ * Uses ceil(sqrt(N)) so e.g. 6 variants → 3 cols, 4 → 2, 9 → 3.
+ */
+export function calculateGridColumns(variantCount: number): number {
+  if (variantCount <= 0) return 1;
+  return Math.ceil(Math.sqrt(variantCount));
+}
+
+/**
+ * Calculates the fixed width for a COMPONENT_SET to achieve a balanced
+ * horizontal wrap grid. Takes the N widest children (where N = columns),
+ * sums them, and adds gap + padding.
+ */
+export function calculateComponentSetWidth(
+  variantWidths: ReadonlyArray<number>,
+  gap: number = COMPONENT_SET_GAP,
+  pad: number = COMPONENT_SET_PAD,
+): number {
+  if (variantWidths.length === 0) return pad * 2;
+  const cols = calculateGridColumns(variantWidths.length);
+  const sorted = [...variantWidths].sort((a, b) => b - a);
+  const colWidths = sorted.slice(0, cols);
+  return colWidths.reduce((sum, w) => sum + w, 0) + gap * (cols - 1) + pad * 2;
+}
