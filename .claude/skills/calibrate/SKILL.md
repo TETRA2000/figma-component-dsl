@@ -45,6 +45,9 @@ bin/figma-dsl batch <input-dir-or-glob> -o <output-dir> [--include <extra-glob>.
 # Compare DSL renders vs Figma captures (when Figma PNGs are available)
 bin/figma-dsl batch-compare <dsl-dir> <figma-dir> [-o report.json] [-t <threshold>]
 
+# Capture React component screenshot from dev server
+bin/figma-dsl capture <url> -o output.png [-v WxH] [--selector <css>]
+
 # Validate components for DSL compatibility
 bin/figma-dsl validate <component-dir> [--format json] [--strict] [--skip <rules>]
 
@@ -137,9 +140,42 @@ cp calibration/<timestamp>/dsl/*.png docs/history/<YYYY-MM-DD_HH-mm>-<theme-name
 cp calibration/<timestamp>/batch-manifest.json docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/
 ```
 
+### Step 2.5: Capture React component renders
+
+Capture browser screenshots of the React components via the preview dev server. This gives a ground-truth reference to compare against DSL-rendered PNGs.
+
+1. **Start the preview dev server** (if not already running):
+   ```bash
+   cd preview && npm run dev &
+   DEV_PID=$!
+   cd ..
+   ```
+   Wait for the server to be ready (typically at `http://localhost:5173`).
+
+2. **Capture each component or showcase page**:
+   ```bash
+   # Capture a showcase page
+   bin/figma-dsl capture http://localhost:5173/<page-path> \
+     -o docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/react-render.png
+
+   # Capture a specific component with a CSS selector
+   bin/figma-dsl capture http://localhost:5173 \
+     --selector ".component-class" \
+     -o docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/react-<ComponentName>.png
+   ```
+
+   If a showcase page exists for the theme (e.g., `preview/src/pages/TravelShowcase.tsx`), capture that. Otherwise capture individual components.
+
+3. **Stop the dev server** when done:
+   ```bash
+   kill $DEV_PID 2>/dev/null
+   ```
+
+The React renders saved in the history directory serve as the browser baseline for visual comparison. When inspecting DSL renders in Step 3, compare them side-by-side with these screenshots to spot divergences.
+
 ### Step 3: Inspect rendered PNGs
 
-Read the rendered PNG files to visually verify correctness. Focus on:
+Read the rendered PNG files to visually verify correctness. Compare against the React renders captured in Step 2.5. Focus on:
 
 - **Layout** -- Are children positioned correctly? Is spacing right?
 - **Text** -- Does text wrap properly? Are font sizes/weights correct?
@@ -360,6 +396,14 @@ calibration/<timestamp>/
   plugin-input.json     # For Figma plugin import
   batch-manifest.json   # Component metadata
   report.json           # Comparison report (if Figma captures exist)
+
+docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/
+  *.png                 # DSL-rendered PNGs (copied from calibration)
+  react-render.png      # React browser screenshot (from capture)
+  react-<Component>.png # Per-component React screenshots (optional)
+  batch-manifest.json   # Component metadata
+  validation.json       # Validator output (JSON)
+  validation.log        # Validator output (text)
 ```
 
 ## Reference
