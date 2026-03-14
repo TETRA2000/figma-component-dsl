@@ -84,9 +84,14 @@ Loads a `.dsl.ts` module, compiles with layout measurements, outputs JSON. Error
 
 #### `render` — DSL/JSON to PNG
 ```bash
-figma-dsl render <file.dsl.ts|compiled.json> -o output.png [-s scale] [-b background]
+figma-dsl render <file.dsl.ts|compiled.json> -o output.png [-s scale] [-b background] [--debug-layout]
 ```
 Accepts either raw DSL (compiled on-the-fly) or precompiled JSON. Scale is a float multiplier (default 1.0).
+
+The `--debug-layout` flag overlays layout debug information on the rendered PNG:
+- Semi-transparent colored rectangles for padding areas
+- Dashed red borders around every frame
+- Frame names and computed sizes in small text
 
 #### `capture` — URL to PNG
 ```bash
