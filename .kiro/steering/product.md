@@ -22,7 +22,7 @@ A domain-specific language (DSL) for defining Figma component structures declara
 - **Speed**: Code-based iteration is faster than manual Figma manipulation for developers
 - **Automation**: Programmatic generation eliminates manual duplication between code and design
 - **Fidelity**: DSL maps directly to Figma's data model (auto-layout, component sets, variants, design tokens)
-- **Pipeline**: CLI-driven workflow (`figma-dsl` with 11 commands: compile, render, capture, compare, export, pipeline, batch, batch-compare, calibrate, generate-test-suite, capture-figma) integrates into development toolchains
+- **Pipeline**: CLI-driven workflow (`figma-dsl` with 12 commands: compile, render, capture, compare, export, pipeline, batch, batch-compare, calibrate, generate-test-suite, capture-figma, validate) integrates into development toolchains
 - **AI-assisted**: Claude AI Skills provide guided, conversational workflows for component and page creation with live preview
 
 ## Reference Implementations

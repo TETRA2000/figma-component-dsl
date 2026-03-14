@@ -42,6 +42,7 @@ export interface FigmaNodeDict {
   strokes?: FigmaStroke[];
   strokeWeight?: number;
   cornerRadius?: number;
+  cornerRadii?: { topLeft: number; topRight: number; bottomLeft: number; bottomRight: number };
   opacity: number;
   visible: boolean;
   clipContent?: boolean;
@@ -66,6 +67,7 @@ export interface FigmaNodeDict {
   fontSize?: number;
   fontFamily?: string;
   textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
+  textAutoResize?: 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT';
 
   // Component
   componentProperties?: Record<string, { type: string; defaultValue: string | boolean }>;
@@ -96,4 +98,5 @@ export interface TextMeasurement {
 export interface TextMeasurer {
   initialize(fontDir: string): void;
   measure(characters: string, style: { fontFamily?: string; fontWeight?: number; fontSize?: number; lineHeight?: { value: number; unit: string }; letterSpacing?: { value: number; unit: string } }): TextMeasurement;
+  measureWrapped(characters: string, maxWidth: number, style: { fontFamily?: string; fontWeight?: number; fontSize?: number; lineHeight?: { value: number; unit: string }; letterSpacing?: { value: number; unit: string } }): TextMeasurement;
 }

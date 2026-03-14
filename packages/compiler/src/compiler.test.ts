@@ -66,6 +66,25 @@ describe('compile() — node type mapping', () => {
     expect(result.root.children[0]!.type).toBe('ROUNDED_RECTANGLE');
   });
 
+  it('maps RECTANGLE with cornerRadii to ROUNDED_RECTANGLE', () => {
+    const node = frame('Root', {
+      children: [rectangle('R', {
+        size: { x: 10, y: 10 },
+        cornerRadii: { topLeft: 4, topRight: 0, bottomLeft: 0, bottomRight: 8 },
+      })],
+    });
+    const result = compile(node);
+    expect(result.root.children[0]!.type).toBe('ROUNDED_RECTANGLE');
+  });
+
+  it('passes cornerRadii through to compiled output', () => {
+    const node = frame('Root', {
+      cornerRadii: { topLeft: 4, topRight: 8, bottomLeft: 0, bottomRight: 12 },
+    });
+    const result = compile(node);
+    expect(result.root.cornerRadii).toEqual({ topLeft: 4, topRight: 8, bottomLeft: 0, bottomRight: 12 });
+  });
+
   it('maps RECTANGLE without cornerRadius to RECTANGLE', () => {
     const node = frame('Root', {
       children: [rectangle('R', { size: { x: 10, y: 10 } })],
@@ -184,6 +203,83 @@ describe('compile() — auto-layout passthrough', () => {
     expect(result.root.paddingBottom).toBe(8);
     expect(result.root.primaryAxisAlignItems).toBe('CENTER');
     expect(result.root.counterAxisAlignItems).toBe('MAX');
+  });
+});
+
+describe('compile() — layoutSizing inference', () => {
+  it('infers FIXED when auto-layout frame has explicit size but no widthSizing', () => {
+    const node = frame('Header', {
+      size: { x: 1440, y: 64 },
+      autoLayout: horizontal({ padX: 32, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
+    });
+    const result = compile(node);
+    expect(result.root.layoutSizingHorizontal).toBe('FIXED');
+    expect(result.root.layoutSizingVertical).toBe('FIXED');
+  });
+
+  it('respects explicit widthSizing/heightSizing over inference', () => {
+    const node = frame('Card', {
+      size: { x: 260, y: 100 },
+      autoLayout: vertical({ spacing: 8, widthSizing: 'FIXED', heightSizing: 'HUG' }),
+    });
+    const result = compile(node);
+    expect(result.root.layoutSizingHorizontal).toBe('FIXED');
+    expect(result.root.layoutSizingVertical).toBe('HUG');
+  });
+
+  it('does not infer FIXED when size is zero or undefined', () => {
+    const node = frame('HugFrame', {
+      autoLayout: horizontal({ spacing: 8 }),
+    });
+    const result = compile(node);
+    // No explicit size, so no inference
+    expect(result.root.layoutSizingHorizontal).toBeUndefined();
+    expect(result.root.layoutSizingVertical).toBeUndefined();
+  });
+
+  it('infers FIXED for width only when only x is set', () => {
+    const node = frame('WidthOnly', {
+      size: { x: 300, y: 0 },
+      autoLayout: vertical({ spacing: 0 }),
+    });
+    const result = compile(node);
+    expect(result.root.layoutSizingHorizontal).toBe('FIXED');
+    // y=0 should not infer FIXED
+    expect(result.root.layoutSizingVertical).toBeUndefined();
+  });
+
+  it('preserves HUG when explicitly set even with size', () => {
+    const node = frame('Badge', {
+      size: { x: 80, y: 22 },
+      autoLayout: horizontal({ padX: 12, padY: 4, widthSizing: 'HUG', heightSizing: 'HUG' }),
+    });
+    const result = compile(node);
+    expect(result.root.layoutSizingHorizontal).toBe('HUG');
+    expect(result.root.layoutSizingVertical).toBe('HUG');
+  });
+});
+
+describe('compile() — textAutoResize passthrough', () => {
+  it('passes through textAutoResize from node', () => {
+    const node = frame('Root', {
+      children: [text('Wrapping text', {
+        fontSize: 13,
+        size: { x: 228 },
+        textAutoResize: 'HEIGHT',
+      })],
+    });
+    const result = compile(node);
+    const textNode = result.root.children[0]!;
+    expect(textNode.textAutoResize).toBe('HEIGHT');
+  });
+
+  it('does not set textAutoResize when not specified', () => {
+    const node = frame('Root', {
+      children: [text('Auto text', { fontSize: 14 })],
+    });
+    const result = compile(node);
+    const textNode = result.root.children[0]!;
+    expect(textNode.textAutoResize).toBeUndefined();
   });
 });
 

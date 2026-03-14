@@ -57,9 +57,24 @@ async function cmdCompile(args: string[]): Promise<number> {
     args,
     options: {
       output: { type: 'string', short: 'o' },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl compile — Compile DSL to Figma node dict
+
+Usage: figma-dsl compile <file.dsl.ts> [-o output.json]
+
+Arguments:
+  file.dsl.ts          DSL source file to compile
+
+Options:
+  -o, --output <path>  Write compiled JSON to file (default: stdout)
+  -h, --help           Show this help message`);
+    return 0;
+  }
 
   const dslPath = positionals[0];
   if (!dslPath) {
@@ -100,9 +115,26 @@ async function cmdRender(args: string[]): Promise<number> {
       output: { type: 'string', short: 'o' },
       scale: { type: 'string', short: 's' },
       background: { type: 'string', short: 'b' },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl render — Render DSL or compiled JSON to PNG
+
+Usage: figma-dsl render <file.dsl.ts|compiled.json> -o output.png [-s scale]
+
+Arguments:
+  file                 DSL source file (.dsl.ts) or compiled JSON (.json)
+
+Options:
+  -o, --output <path>  Output PNG file path (required)
+  -s, --scale <N>      Render scale factor (default: 1)
+  -b, --background     Background color
+  -h, --help           Show this help message`);
+    return 0;
+  }
 
   const inputPath = positionals[0];
   if (!inputPath || !values.output) {
@@ -138,9 +170,26 @@ async function cmdCapture(args: string[]): Promise<number> {
       output: { type: 'string', short: 'o' },
       viewport: { type: 'string', short: 'v' },
       selector: { type: 'string' },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl capture — Capture a React component screenshot
+
+Usage: figma-dsl capture <url> -o output.png [-v WxH] [--selector css]
+
+Arguments:
+  url                  URL of the React component to capture
+
+Options:
+  -o, --output <path>  Output PNG file path (required)
+  -v, --viewport <WxH> Viewport size (default: 1280x720)
+  --selector <css>     CSS selector to capture a specific element
+  -h, --help           Show this help message`);
+    return 0;
+  }
 
   const url = positionals[0];
   if (!url || !values.output) {
@@ -168,9 +217,26 @@ async function cmdCompare(args: string[]): Promise<number> {
     options: {
       threshold: { type: 'string', short: 't' },
       diff: { type: 'string', short: 'd' },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl compare — Compare two images
+
+Usage: figma-dsl compare <imageA.png> <imageB.png> [-t threshold] [-d diff.png]
+
+Arguments:
+  imageA.png           First image to compare
+  imageB.png           Second image to compare
+
+Options:
+  -t, --threshold <N>  Similarity threshold percentage (default: 95)
+  -d, --diff <path>    Output diff image path
+  -h, --help           Show this help message`);
+    return 0;
+  }
 
   const imageA = positionals[0];
   const imageB = positionals[1];
@@ -212,9 +278,28 @@ async function cmdPipeline(args: string[]): Promise<number> {
       viewport: { type: 'string', short: 'v' },
       threshold: { type: 'string', short: 't' },
       diff: { type: 'string', short: 'd' },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl pipeline — Full pipeline: compile, render, capture, compare
+
+Usage: figma-dsl pipeline <file.dsl.ts> -u <react-url> [-o dir] [-t threshold]
+
+Arguments:
+  file.dsl.ts          DSL source file to compile
+
+Options:
+  -u, --url <url>      React component URL to capture (required)
+  -o, --output <dir>   Output directory (default: .)
+  -v, --viewport <WxH> Viewport size (default: 1280x720)
+  -t, --threshold <N>  Similarity threshold percentage (default: 95)
+  -d, --diff <path>    Diff image output path (default: <dir>/diff.png)
+  -h, --help           Show this help message`);
+    return 0;
+  }
 
   const dslPath = positionals[0];
   if (!dslPath || !values.url) {
@@ -275,9 +360,25 @@ async function cmdExport(args: string[]): Promise<number> {
     options: {
       output: { type: 'string', short: 'o' },
       page: { type: 'string', short: 'p' },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl export — Generate Figma plugin input JSON
+
+Usage: figma-dsl export <file.dsl.ts> -o plugin-input.json [-p "Page Name"]
+
+Arguments:
+  file.dsl.ts          DSL source file to export
+
+Options:
+  -o, --output <path>  Output JSON file path (required)
+  -p, --page <name>    Page name for Figma import
+  -h, --help           Show this help message`);
+    return 0;
+  }
 
   const dslPath = positionals[0];
   if (!dslPath || !values.output) {
@@ -304,9 +405,27 @@ async function cmdGenerateTestSuite(args: string[]): Promise<number> {
     options: {
       output: { type: 'string', short: 'o' },
       property: { type: 'string', multiple: true },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl generate-test-suite — Generate test DSL files by category
+
+Usage: figma-dsl generate-test-suite -o <output-dir> [--property <category>...]
+
+Options:
+  -o, --output <dir>       Output directory (required)
+  --property <category>    Category to generate (repeatable; default: all)
+  -h, --help               Show this help message
+
+Categories:
+  corner-radius, fills-solid, fills-gradient, strokes,
+  auto-layout-horizontal, auto-layout-vertical, auto-layout-nested,
+  typography, opacity, clip-content, combined, hamburger-theme`);
+    return 0;
+  }
 
   if (!values.output) {
     console.error('Usage: figma-dsl generate-test-suite -o <output-dir> [--property <category>...]');
@@ -336,9 +455,27 @@ async function cmdBatch(args: string[]): Promise<number> {
       include: { type: 'string', multiple: true },
       page: { type: 'string', short: 'p' },
       scale: { type: 'string', short: 's' },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl batch — Batch compile, render, and export DSL files
+
+Usage: figma-dsl batch <dir|glob> -o <output-dir> [--include <path>...] [-p page] [-s scale]
+
+Arguments:
+  dir|glob             Directory or glob pattern of .dsl.ts files
+
+Options:
+  -o, --output <dir>   Output directory (required)
+  --include <path>     Additional glob patterns to include (repeatable)
+  -p, --page <name>    Page name for merged plugin input
+  -s, --scale <N>      Render scale factor (default: 1)
+  -h, --help           Show this help message`);
+    return 0;
+  }
 
   const input = positionals[0];
   if (!input || !values.output) {
@@ -373,9 +510,27 @@ async function cmdBatchCompare(args: string[]): Promise<number> {
       output: { type: 'string', short: 'o' },
       threshold: { type: 'string', short: 't' },
       'diff-dir': { type: 'string' },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl batch-compare — Compare DSL renders vs Figma captures
+
+Usage: figma-dsl batch-compare <dsl-dir> <figma-dir> [-o report.json] [-t threshold] [--diff-dir dir]
+
+Arguments:
+  dsl-dir              Directory containing DSL-rendered PNGs
+  figma-dir            Directory containing Figma-captured PNGs
+
+Options:
+  -o, --output <path>  Report output path (default: report.json)
+  -t, --threshold <N>  Similarity threshold percentage (default: 95)
+  --diff-dir <dir>     Directory for diff images
+  -h, --help           Show this help message`);
+    return 0;
+  }
 
   const dslDir = positionals[0];
   const figmaDir = positionals[1];
@@ -414,9 +569,25 @@ async function cmdCaptureFigma(args: string[]): Promise<number> {
       token: { type: 'string' },
       'node-id-map': { type: 'string' },
       scale: { type: 'string', short: 's' },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl capture-figma — Capture component images from Figma REST API
+
+Usage: figma-dsl capture-figma -o <dir> --file-key <key> --token <token> --node-id-map <path>
+
+Options:
+  -o, --output <dir>       Output directory for captured PNGs (required)
+  --file-key <key>         Figma file key
+  --token <token>          Figma personal access token
+  --node-id-map <path>     JSON file mapping component names to Figma node IDs
+  -s, --scale <N>          Image scale factor (default: 1)
+  -h, --help               Show this help message`);
+    return 0;
+  }
 
   if (!values.output || !values['file-key'] || !values.token || !values['node-id-map']) {
     console.error('Usage: figma-dsl capture-figma -o <dir> --file-key <key> --token <token> --node-id-map <path>');
@@ -457,9 +628,29 @@ async function cmdCalibrate(args: string[]): Promise<number> {
       token: { type: 'string' },
       'node-id-map': { type: 'string' },
       threshold: { type: 'string', short: 't' },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl calibrate — Full calibration pipeline (generate + batch + compare)
+
+Usage: figma-dsl calibrate [-o dir] [--property <category>...] [-t threshold]
+
+Options:
+  -o, --output <dir>       Output directory (default: calibration)
+  --property <category>    Category to include (repeatable; default: all)
+  --include <path>         Additional glob patterns to include (repeatable)
+  --skip-generate          Skip test suite generation (use existing files)
+  --capture-mode <mode>    Figma capture mode: "api" for REST API
+  --file-key <key>         Figma file key (for capture-mode=api)
+  --token <token>          Figma personal access token (for capture-mode=api)
+  --node-id-map <path>     Node ID map JSON (for capture-mode=api)
+  -t, --threshold <N>      Similarity threshold percentage (default: 95)
+  -h, --help               Show this help message`);
+    return 0;
+  }
 
   const outputDir = values.output ?? 'calibration';
 
@@ -497,9 +688,28 @@ async function cmdValidate(args: string[]): Promise<number> {
       skip: { type: 'string' },
       format: { type: 'string' },
       strict: { type: 'boolean' },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
   });
+
+  if (values.help) {
+    console.log(`figma-dsl validate — Validate components for DSL compatibility
+
+Usage: figma-dsl validate <path> [--tokens path] [--rules list] [--skip list] [--format text|json] [--strict]
+
+Arguments:
+  path                 Component directory or parent directory to validate
+
+Options:
+  --tokens <path>      Path to design tokens file
+  --rules <list>       Comma-separated list of rules to run
+  --skip <list>        Comma-separated list of rules to skip
+  --format <fmt>       Output format: text or json (default: text)
+  --strict             Treat warnings as errors
+  -h, --help           Show this help message`);
+    return 0;
+  }
 
   const targetPath = positionals[0];
   if (!targetPath) {
@@ -540,12 +750,8 @@ async function cmdValidate(args: string[]): Promise<number> {
         }
         console.log(JSON.stringify(obj, null, 2));
       } else {
-        let hasFailures = false;
         for (const [name, result] of results) {
           printValidationResult(name, result);
-          if (result.errors.length > 0 || (strict && result.warnings.length > 0)) {
-            hasFailures = true;
-          }
         }
         console.log(`\nValidated ${results.size} component(s)`);
       }

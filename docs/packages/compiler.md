@@ -90,6 +90,9 @@ Registers TTF/OTF fonts from directory. Idempotent — skips if already initiali
 #### `textMeasurer.measure(characters: string, style): TextMeasurement`
 Computes text dimensions using canvas 2D context. Handles multi-line text. Returns `{ width, height }`.
 
+#### `textMeasurer.measureWrapped(characters: string, maxWidth: number, style): TextMeasurement`
+Computes text dimensions with word-wrapping at the given `maxWidth`. Splits on explicit newlines, then wraps each paragraph at word boundaries. Returns `{ width: maxWidth, height: totalLines × lineHeight }`. Used when `textAutoResize: 'HEIGHT'` is set with an explicit width.
+
 #### `resetTextMeasurer(): void`
 Clears initialization state. Used in tests.
 
@@ -190,7 +193,15 @@ Auto-layout properties from `DslNode.autoLayout` are passed through to `FigmaNod
 | `primaryAxisAlignItems` | `al.align ?? 'MIN'` |
 | `counterAxisAlignItems` | `al.counterAlign ?? 'MIN'` |
 | `paddingTop/Right/Bottom/Left` | `resolveAutoLayoutPadding()` |
-| `layoutSizingHorizontal/Vertical` | `al.widthSizing/heightSizing` |
+| `layoutSizingHorizontal/Vertical` | `al.widthSizing/heightSizing`, or inferred from `node.size` |
+
+### layoutSizing Inference
+
+When a node has auto-layout and an explicit `size` but no `widthSizing`/`heightSizing`, the compiler infers `FIXED`:
+- If `node.size.x > 0` and `al.widthSizing` is not set → `layoutSizingHorizontal: 'FIXED'`
+- If `node.size.y > 0` and `al.heightSizing` is not set → `layoutSizingVertical: 'FIXED'`
+
+This ensures that frames like headers/footers with explicit dimensions (e.g., `size: { x: 1440, y: 64 }`) are imported into Figma at their specified size rather than collapsing to HUG mode.
 
 ### Padding Resolution (`resolveAutoLayoutPadding`)
 Cascade order: per-side values (`padTop`, `padRight`, etc.) override shorthand values (`padX`, `padY`), which override default `0`.
@@ -206,7 +217,7 @@ Cascade order: per-side values (`padTop`, `padRight`, etc.) override shorthand v
 
 Computes intrinsic sizes for each node into `Map<DslNode, ResolvedSize>`:
 
-1. **TEXT nodes**: Use `TextMeasurer.measure()` → `{width, height}`
+1. **TEXT nodes**: Use `TextMeasurer.measure()` → `{width, height}`. When `textAutoResize: 'HEIGHT'` is set with an explicit `size.x`, uses `TextMeasurer.measureWrapped()` to compute height at the constrained width.
 2. **Leaf shapes** (no children): Use explicit `node.size` or `{0, 0}`
 3. **Containers with explicit FIXED size** (no autoLayout): Use `node.size`
 4. **Auto-layout containers**:
@@ -255,6 +266,7 @@ Computes child offsets into `Map<DslNode, {x, y}>`:
 
 For each TEXT node, generates:
 - **textData**: `{characters, lines[]}` (split by `\n`)
+- **textAutoResize**: Passthrough from `node.textAutoResize` or `style.textAutoResize` (if set)
 - **derivedTextData**: `{baselines[], fontMetaData[]}`
 
 **Baselines** (per line):
@@ -324,9 +336,9 @@ Root node always has identity (no parent). Translation is additive through the t
 ### FigmaNodeDict (key fields)
 - **Identity**: `guid: [number, number]`, `name: string`, `type: FigmaNodeType`
 - **Geometry**: `size: {x, y}`, `transform: number[3][3]`
-- **Visual**: `fillPaints: FigmaPaint[]`, `strokes: FigmaStroke[]`, `opacity`, `visible`, `cornerRadius`, `clipContent`
+- **Visual**: `fillPaints: FigmaPaint[]`, `strokes: FigmaStroke[]`, `opacity`, `visible`, `cornerRadius`, `cornerRadii`, `clipContent`
 - **Layout**: `stackMode`, `itemSpacing`, `padding*`, `primaryAxisAlignItems`, `counterAxisAlignItems`, `layoutSizingHorizontal/Vertical`
-- **Text**: `textData`, `derivedTextData`, `fontSize`, `fontFamily`, `textAlignHorizontal`
+- **Text**: `textData`, `derivedTextData`, `fontSize`, `fontFamily`, `textAlignHorizontal`, `textAutoResize`
 - **Component**: `componentPropertyDefinitions`, `componentId`, `overriddenProperties`
 - **Hierarchy**: `children: FigmaNodeDict[]`, `parentIndex: {guid, position}`
 
@@ -405,7 +417,8 @@ npm run test     # vitest run
 
 **compiler.test.ts** (~297 lines, 23 test suites):
 - GUID assignment and determinism
-- Type mapping (RECTANGLE → ROUNDED_RECTANGLE)
+- Type mapping (RECTANGLE → ROUNDED_RECTANGLE, including per-corner cornerRadii)
+- Corner radii passthrough (uniform and per-corner)
 - Fill conversion (solid, gradient, multi-fill ordering)
 - Stroke conversion
 - Text data expansion and baselines

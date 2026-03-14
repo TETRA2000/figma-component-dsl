@@ -13,8 +13,9 @@ The DSL is implemented as a TypeScript monorepo with npm workspaces under `packa
 - `exporter` — Figma plugin-compatible JSON export
 - `capturer` — Playwright-based React screenshot capture
 - `comparator` — Pixel-diff image comparison with similarity scoring
-- `cli` — 11-command CLI (`figma-dsl`) with bin stubs
+- `cli` — 12-command CLI (`figma-dsl`) with bin stubs
 - `plugin` — Figma plugin (esbuild → IIFE) for importing JSON into Figma
+- `validator` — DSL compatibility validation with 10 rules (file structure, styling, AST-based checks)
 
 **Reference implementations** (git submodules in `references/`):
 - **figma_design_playground**: React 19 component library → Figma plugin → Figma component

@@ -68,7 +68,7 @@ The plugin is a **monolithic single-file** (`src/code.ts`, ~441 lines) organized
 - **Structural**: `type`, `name`, `size: {x, y}`, `children: PluginNodeDef[]`
 - **Visual**: `fills?`, `strokes?`, `cornerRadius?`, `opacity`, `visible`, `clipContent?`
 - **Layout**: `stackMode?`, `itemSpacing?`, `padding*?`, `primaryAxisAlignItems?`, `counterAxisAlignItems?`, `layoutSizingH/V?`
-- **Text**: `characters?`, `fontSize?`, `fontFamily?`, `fontWeight?`, `fontStyle?`, `textAlignHorizontal?`
+- **Text**: `characters?`, `fontSize?`, `fontFamily?`, `fontWeight?`, `fontStyle?`, `textAlignHorizontal?`, `textAutoResize?`
 - **Component**: `componentPropertyDefinitions?`, `componentId?`, `overriddenProperties?`
 
 No runtime schema validation — type safety is compile-time only via TypeScript. The `schemaVersion` field is defined but never checked.
@@ -124,6 +124,8 @@ Each node follows: create → set name/size → apply fills/strokes/opacity → 
 - Alignment: `primaryAxisAlignItems` and `counterAxisAlignItems` — cast to Figma enums without validation
 - Sizing: `layoutSizingHorizontal/Vertical` — cast to `'FIXED' | 'HUG' | 'FILL'`
 
+**Note**: The compiler now infers `FIXED` when a node has auto-layout and an explicit size but no `widthSizing`/`heightSizing`. This ensures frames with explicit dimensions (e.g., `size: { x: 1440, y: 64 }`) are imported at their specified size rather than defaulting to HUG.
+
 Invalid enum values pass through TypeScript casts and cause Figma API errors (caught by `createNode`'s try-catch).
 
 **Evidence**: `src/code.ts:82-105`
@@ -137,7 +139,8 @@ For TEXT nodes:
 1. Font family defaults to `'Inter'`, style defaults to `'Regular'`
 2. `figma.loadFontAsync({ family, style })` called before setting text properties
 3. After load: sets `fontName`, `characters`, `fontSize`, `textAlignHorizontal`
-4. Fills applied via `toFigmaPaints()` for text color
+4. If `textAutoResize` is set (e.g., `'HEIGHT'`), applies it before calling `resize()` — this enables constrained-width text that wraps and auto-calculates height. Only text nodes with explicit `textAutoResize` are resized; auto-sized text nodes retain their natural dimensions.
+5. Fills applied via `toFigmaPaints()` for text color
 
 If the font is unavailable, `loadFontAsync` throws — caught by `createNode`'s error handler, failing the entire text node.
 

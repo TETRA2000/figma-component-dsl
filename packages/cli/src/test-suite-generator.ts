@@ -12,7 +12,8 @@ export type PropertyCategory =
   | 'typography'
   | 'opacity'
   | 'clip-content'
-  | 'combined';
+  | 'combined'
+  | 'hamburger-theme';
 
 export const ALL_CATEGORIES: PropertyCategory[] = [
   'corner-radius',
@@ -26,6 +27,7 @@ export const ALL_CATEGORIES: PropertyCategory[] = [
   'opacity',
   'clip-content',
   'combined',
+  'hamburger-theme',
 ];
 
 export interface GenerateTestSuiteOptions {
@@ -517,6 +519,533 @@ export default frame('combined-typography-opacity', {
   ];
 }
 
+function hamburgerThemeVariants(): TestVariant[] {
+  return [
+    {
+      name: 'burger-badge',
+      code: `import {
+  component, text,
+  solid,
+  horizontal,
+} from '@figma-dsl/core';
+
+export default component('BurgerBadge', {
+  autoLayout: horizontal({
+    padX: 12,
+    padY: 4,
+    align: 'CENTER',
+    counterAlign: 'CENTER',
+    widthSizing: 'HUG',
+    heightSizing: 'HUG',
+  }),
+  fills: [solid('#da291c')],
+  cornerRadius: 4,
+  componentProperties: [
+    { name: 'Label', type: 'TEXT', defaultValue: 'HOT DEAL' },
+  ],
+  children: [
+    text('HOT DEAL', {
+      fontSize: 11,
+      fontWeight: 700,
+      color: '#ffffff',
+      letterSpacing: { value: 6, unit: 'PERCENT' },
+    }),
+  ],
+});
+`,
+    },
+    {
+      name: 'burger-button',
+      code: `import {
+  component, text,
+  solid,
+  horizontal,
+} from '@figma-dsl/core';
+
+export default component('BurgerButton', {
+  autoLayout: horizontal({
+    padX: 28,
+    padY: 12,
+    align: 'CENTER',
+    counterAlign: 'CENTER',
+    widthSizing: 'HUG',
+    heightSizing: 'HUG',
+  }),
+  fills: [solid('#da291c')],
+  cornerRadius: 9999,
+  componentProperties: [
+    { name: 'Label', type: 'TEXT', defaultValue: 'ORDER NOW' },
+  ],
+  children: [
+    text('ORDER NOW', {
+      fontSize: 14,
+      fontWeight: 700,
+      color: '#ffffff',
+      letterSpacing: { value: 2, unit: 'PERCENT' },
+    }),
+  ],
+});
+`,
+    },
+    {
+      name: 'burger-footer',
+      code: `import {
+  frame, text,
+  solid,
+  horizontal,
+} from '@figma-dsl/core';
+
+export default frame('BurgerFooter', {
+  size: { x: 1440, y: 64 },
+  autoLayout: horizontal({
+    padX: 32,
+    padY: 0,
+    align: 'CENTER',
+    counterAlign: 'CENTER',
+  }),
+  fills: [solid('#292929')],
+  children: [
+    text('\\u00a9 2026 Burger Shop. All rights reserved.', {
+      fontSize: 13,
+      fontWeight: 400,
+      color: '#999999',
+      textAlignHorizontal: 'CENTER',
+    }),
+  ],
+});
+`,
+    },
+    {
+      name: 'burger-header',
+      code: `import {
+  frame, text,
+  solid,
+  horizontal,
+} from '@figma-dsl/core';
+
+export default frame('BurgerHeader', {
+  size: { x: 1440, y: 64 },
+  autoLayout: horizontal({
+    padX: 32,
+    padY: 0,
+    align: 'SPACE_BETWEEN',
+    counterAlign: 'CENTER',
+  }),
+  fills: [solid('#292929')],
+  children: [
+    frame('Logo', {
+      autoLayout: horizontal({ spacing: 12, counterAlign: 'CENTER' }),
+      children: [
+        text('\\ud83c\\udf54', { fontSize: 28, fontWeight: 400, color: '#ffffff' }),
+        text('Burger Shop', {
+          fontSize: 24,
+          fontWeight: 700,
+          color: '#ffbc0d',
+        }),
+      ],
+    }),
+    frame('Actions', {
+      autoLayout: horizontal({ spacing: 12, counterAlign: 'CENTER' }),
+      children: [
+        frame('OrderBtn', {
+          autoLayout: horizontal({ padX: 20, padY: 10, align: 'CENTER', counterAlign: 'CENTER' }),
+          fills: [solid('#ffbc0d')],
+          cornerRadius: 9999,
+          children: [
+            text('ORDER NOW', { fontSize: 12, fontWeight: 700, color: '#292929', letterSpacing: { value: 2, unit: 'PERCENT' } }),
+          ],
+        }),
+        text('SIGN IN', {
+          fontSize: 12,
+          fontWeight: 700,
+          color: '#ffffff',
+          letterSpacing: { value: 2, unit: 'PERCENT' },
+        }),
+      ],
+    }),
+  ],
+});
+`,
+    },
+    {
+      name: 'burger-hero',
+      code: `import {
+  frame, text,
+  solid, gradient,
+  horizontal, vertical,
+} from '@figma-dsl/core';
+
+export default frame('BurgerHero', {
+  size: { x: 1440, y: undefined },
+  autoLayout: vertical({
+    spacing: 32,
+    padX: 64,
+    padY: 80,
+    align: 'CENTER',
+    counterAlign: 'CENTER',
+    widthSizing: 'FIXED',
+    heightSizing: 'HUG',
+  }),
+  fills: [
+    gradient([
+      { hex: '#da291c', position: 0 },
+      { hex: '#ff5722', position: 0.5 },
+      { hex: '#ffbc0d', position: 1 },
+    ], 135),
+  ],
+  children: [
+    frame('Badge', {
+      autoLayout: horizontal({ padX: 12, padY: 4 }),
+      fills: [solid('#ffbc0d')],
+      cornerRadius: 4,
+      children: [
+        text('LIMITED TIME', { fontSize: 11, fontWeight: 700, color: '#292929', letterSpacing: { value: 6, unit: 'PERCENT' } }),
+      ],
+    }),
+    text('Crafted to Perfection', {
+      fontSize: 64,
+      fontWeight: 700,
+      color: '#ffffff',
+      textAlignHorizontal: 'CENTER',
+    }),
+    text('Discover our new menu items, deals, and rewards', {
+      fontSize: 20,
+      fontWeight: 400,
+      color: '#ffffff',
+      textAlignHorizontal: 'CENTER',
+    }),
+    frame('CTAs', {
+      autoLayout: horizontal({ spacing: 16, counterAlign: 'CENTER' }),
+      children: [
+        frame('ViewMenu', {
+          autoLayout: horizontal({ padX: 36, padY: 16, align: 'CENTER', counterAlign: 'CENTER' }),
+          fills: [solid('#ffbc0d')],
+          cornerRadius: 9999,
+          children: [
+            text('VIEW MENU', { fontSize: 16, fontWeight: 700, color: '#292929', letterSpacing: { value: 2, unit: 'PERCENT' } }),
+          ],
+        }),
+        frame('FindRestaurant', {
+          autoLayout: horizontal({ padX: 36, padY: 16, align: 'CENTER', counterAlign: 'CENTER' }),
+          cornerRadius: 9999,
+          strokes: [{ color: { r: 1, g: 1, b: 1, a: 1 }, weight: 2, align: 'INSIDE' as const }],
+          children: [
+            text('FIND A RESTAURANT', { fontSize: 16, fontWeight: 700, color: '#ffffff', letterSpacing: { value: 2, unit: 'PERCENT' } }),
+          ],
+        }),
+      ],
+    }),
+  ],
+});
+`,
+    },
+    {
+      name: 'burger-menu-card',
+      code: `import {
+  component, frame, rectangle, text,
+  solid, gradient,
+  horizontal, vertical,
+} from '@figma-dsl/core';
+
+export default component('BurgerMenuCard', {
+  size: { x: 260, y: undefined },
+  autoLayout: vertical({
+    spacing: 0,
+    widthSizing: 'FIXED',
+    heightSizing: 'HUG',
+  }),
+  fills: [solid('#ffffff')],
+  cornerRadius: 12,
+  strokes: [{ color: { r: 0, g: 0, b: 0, a: 0.08 }, weight: 1, align: 'INSIDE' }],
+  componentProperties: [
+    { name: 'Name', type: 'TEXT', defaultValue: 'Classic Burger' },
+    { name: 'Description', type: 'TEXT', defaultValue: 'Two all-beef patties, special sauce, lettuce, cheese.' },
+    { name: 'Price', type: 'TEXT', defaultValue: '$5.99' },
+    { name: 'Calories', type: 'TEXT', defaultValue: '550 Cal' },
+  ],
+  children: [
+    rectangle('ImageArea', {
+      size: { x: 260, y: 195 },
+      fills: [
+        gradient([
+          { hex: '#fff8e1', position: 0 },
+          { hex: '#ffecb3', position: 1 },
+        ], 135),
+      ],
+    }),
+    frame('Content', {
+      size: { x: 260, y: undefined },
+      autoLayout: vertical({ spacing: 8, padX: 16, padY: 16, widthSizing: 'FIXED', heightSizing: 'HUG' }),
+      children: [
+        text('Classic Burger', {
+          fontSize: 18,
+          fontWeight: 700,
+          color: '#292929',
+        }),
+        text('Two all-beef patties, special sauce, lettuce, cheese.', {
+          fontSize: 13,
+          fontWeight: 400,
+          color: '#6f6f6f',
+          lineHeight: { value: 150, unit: 'PERCENT' },
+          size: { x: 228, y: undefined },
+          textAutoResize: 'HEIGHT',
+        }),
+        frame('PriceRow', {
+          size: { x: 228, y: undefined },
+          autoLayout: horizontal({
+            spacing: 0,
+            align: 'SPACE_BETWEEN',
+            counterAlign: 'CENTER',
+            widthSizing: 'FIXED',
+            heightSizing: 'HUG',
+          }),
+          children: [
+            text('$5.99', {
+              fontSize: 20,
+              fontWeight: 700,
+              color: '#da291c',
+            }),
+            text('550 Cal', {
+              fontSize: 12,
+              fontWeight: 400,
+              color: '#999999',
+            }),
+          ],
+        }),
+      ],
+    }),
+  ],
+});
+`,
+    },
+    {
+      name: 'burger-menu-section',
+      code: `import {
+  frame, rectangle, text,
+  solid, gradient,
+  horizontal, vertical,
+} from '@figma-dsl/core';
+
+function menuCard(name: string, description: string, price: string, calories: string, badge?: string) {
+  const badgeNode = badge
+    ? frame('Badge', {
+        autoLayout: horizontal({ padX: 10, padY: 4 }),
+        fills: [solid('#da291c')],
+        cornerRadius: 4,
+        children: [
+          text(badge, { fontSize: 10, fontWeight: 700, color: '#ffffff', letterSpacing: { value: 6, unit: 'PERCENT' } }),
+        ],
+      })
+    : null;
+
+  return frame(\`Card: \${name}\`, {
+    size: { x: 280, y: undefined },
+    autoLayout: vertical({
+      spacing: 0,
+      widthSizing: 'FIXED',
+      heightSizing: 'HUG',
+    }),
+    fills: [solid('#ffffff')],
+    cornerRadius: 12,
+    strokes: [{ color: { r: 0, g: 0, b: 0, a: 0.08 }, weight: 1, align: 'INSIDE' }],
+    children: [
+      rectangle('Image', {
+        size: { x: 280, y: 210 },
+        fills: [gradient([{ hex: '#fff8e1', position: 0 }, { hex: '#ffecb3', position: 1 }], 135)],
+      }),
+      frame('Content', {
+        autoLayout: vertical({ spacing: 8, padX: 16, padY: 16, widthSizing: 'FIXED', heightSizing: 'HUG' }),
+        size: { x: 280, y: undefined },
+        children: [
+          ...(badgeNode ? [badgeNode] : []),
+          text(name, { fontSize: 18, fontWeight: 700, color: '#292929' }),
+          text(description, {
+            fontSize: 13, fontWeight: 400, color: '#6f6f6f',
+            lineHeight: { value: 150, unit: 'PERCENT' },
+            size: { x: 248 },
+            textAutoResize: 'HEIGHT',
+          }),
+          frame('PriceRow', {
+            size: { x: 248, y: undefined },
+            autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN', counterAlign: 'CENTER', widthSizing: 'FIXED', heightSizing: 'HUG' }),
+            children: [
+              text(price, { fontSize: 20, fontWeight: 700, color: '#da291c' }),
+              text(calories, { fontSize: 12, fontWeight: 400, color: '#999999' }),
+            ],
+          }),
+        ],
+      }),
+    ],
+  });
+}
+
+export default frame('BurgerMenuSection', {
+  size: { x: 1440, y: undefined },
+  autoLayout: vertical({
+    spacing: 24,
+    padX: 120,
+    padY: 64,
+    widthSizing: 'FIXED',
+    heightSizing: 'HUG',
+  }),
+  fills: [solid('#fafafa')],
+  children: [
+    frame('SectionHeader', {
+      autoLayout: vertical({ spacing: 8 }),
+      children: [
+        text('Popular Items', { fontSize: 32, fontWeight: 700, color: '#292929' }),
+        text('Our most-loved menu items', { fontSize: 16, fontWeight: 400, color: '#6f6f6f' }),
+      ],
+    }),
+    frame('MenuGrid', {
+      autoLayout: horizontal({ spacing: 24 }),
+      children: [
+        menuCard('Classic Burger', 'Two all-beef patties, special sauce, lettuce, cheese, pickles, onions.', '$5.99', '550 Cal', 'CLASSIC'),
+        menuCard('Quarter Pounder', 'A quarter pound of 100% fresh beef with melty American cheese.', '$6.49', '520 Cal'),
+        menuCard('10pc Nuggets', 'Tender, juicy chicken nuggets with your choice of dipping sauce.', '$4.99', '410 Cal', 'FAN FAVORITE'),
+        menuCard('Ice Cream Sundae', 'Creamy vanilla soft serve with cookie pieces mixed in.', '$3.99', '510 Cal', 'SWEET TREAT'),
+      ],
+    }),
+  ],
+});
+`,
+    },
+    {
+      name: 'burger-order-banner',
+      code: `import {
+  component, frame, rectangle, text,
+  solid, gradient,
+  horizontal, vertical,
+} from '@figma-dsl/core';
+
+export default component('BurgerOrderBanner', {
+  autoLayout: horizontal({
+    spacing: 16,
+    padX: 20,
+    padY: 16,
+    counterAlign: 'CENTER',
+    widthSizing: 'HUG',
+    heightSizing: 'HUG',
+  }),
+  fills: [
+    gradient([
+      { hex: '#ffbc0d', position: 0 },
+      { hex: '#ffd54f', position: 1 },
+    ], 135),
+  ],
+  cornerRadius: 12,
+  componentProperties: [
+    { name: 'Title', type: 'TEXT', defaultValue: 'Free Delivery' },
+    { name: 'Subtitle', type: 'TEXT', defaultValue: 'On orders over $20.' },
+  ],
+  children: [
+    rectangle('Icon', {
+      size: { x: 36, y: 36 },
+      fills: [solid('#ffffff', 0.3)],
+      cornerRadius: 18,
+    }),
+    frame('TextContent', {
+      autoLayout: vertical({ spacing: 2 }),
+      children: [
+        text('Free Delivery', {
+          fontSize: 16,
+          fontWeight: 700,
+          color: '#292929',
+        }),
+        text('On orders over $20.', {
+          fontSize: 13,
+          fontWeight: 400,
+          color: '#292929',
+        }),
+      ],
+    }),
+  ],
+});
+`,
+    },
+    {
+      name: 'burger-value-section',
+      code: `import {
+  frame, rectangle, text,
+  solid, gradient,
+  horizontal, vertical,
+} from '@figma-dsl/core';
+
+function valueCard(name: string, price: string, calories: string) {
+  return frame(\`Value: \${name}\`, {
+    size: { x: 200, y: undefined },
+    autoLayout: vertical({
+      spacing: 0,
+      widthSizing: 'FIXED',
+      heightSizing: 'HUG',
+    }),
+    fills: [solid('#ffffff')],
+    cornerRadius: 12,
+    strokes: [{ color: { r: 0, g: 0, b: 0, a: 0.08 }, weight: 1, align: 'INSIDE' }],
+    children: [
+      rectangle('Image', {
+        size: { x: 200, y: 150 },
+        fills: [gradient([{ hex: '#fff8e1', position: 0 }, { hex: '#ffecb3', position: 1 }], 135)],
+      }),
+      frame('Info', {
+        autoLayout: vertical({ spacing: 4, padX: 12, padY: 12 }),
+        children: [
+          text(name, { fontSize: 15, fontWeight: 700, color: '#292929' }),
+          frame('PriceRow', {
+            autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
+            children: [
+              text(price, { fontSize: 16, fontWeight: 700, color: '#da291c' }),
+              text(calories, { fontSize: 11, fontWeight: 400, color: '#999999' }),
+            ],
+          }),
+        ],
+      }),
+    ],
+  });
+}
+
+export default frame('BurgerValueSection', {
+  size: { x: 1440, y: undefined },
+  autoLayout: vertical({
+    spacing: 24,
+    padX: 120,
+    padY: 48,
+    widthSizing: 'FIXED',
+    heightSizing: 'HUG',
+  }),
+  fills: [solid('#ffbc0d')],
+  children: [
+    frame('ValueHeader', {
+      autoLayout: horizontal({ spacing: 12, counterAlign: 'CENTER' }),
+      children: [
+        text('$1 $2 $3 Value Menu', { fontSize: 32, fontWeight: 700, color: '#292929' }),
+        frame('ValueBadge', {
+          autoLayout: horizontal({ padX: 12, padY: 4 }),
+          fills: [solid('#292929')],
+          cornerRadius: 4,
+          children: [
+            text('BEST VALUE', { fontSize: 11, fontWeight: 700, color: '#ffbc0d', letterSpacing: { value: 6, unit: 'PERCENT' } }),
+          ],
+        }),
+      ],
+    }),
+    frame('ValueGrid', {
+      autoLayout: horizontal({ spacing: 24 }),
+      children: [
+        valueCard('Chicken Burger', '$1.69', '400 Cal'),
+        valueCard('Small Fries', '$1.89', '220 Cal'),
+        valueCard('Hash Brown', '$1.49', '140 Cal'),
+        valueCard('Vanilla Cone', '$1.69', '200 Cal'),
+        valueCard('Hot Fudge Sundae', '$2.49', '330 Cal'),
+      ],
+    }),
+  ],
+});
+`,
+    },
+  ];
+}
+
 const CATEGORY_GENERATORS: Record<PropertyCategory, () => TestVariant[]> = {
   'corner-radius': cornerRadiusVariants,
   'fills-solid': fillsSolidVariants,
@@ -529,6 +1058,7 @@ const CATEGORY_GENERATORS: Record<PropertyCategory, () => TestVariant[]> = {
   'opacity': opacityVariants,
   'clip-content': clipContentVariants,
   'combined': combinedVariants,
+  'hamburger-theme': hamburgerThemeVariants,
 };
 
 export function generateTestSuite(options: GenerateTestSuiteOptions): GenerateTestSuiteResult {

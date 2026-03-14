@@ -97,13 +97,41 @@ function applyFills(
   }
 }
 
+/**
+ * Resolve corner radius from either uniform `cornerRadius` or per-corner `cornerRadii`.
+ * Returns a single number (uniform) or an array [topLeft, topRight, bottomRight, bottomLeft]
+ * suitable for canvas.roundRect().
+ */
+function resolveCornerRadius(
+  node: FigmaNodeDict,
+): number | [number, number, number, number] | undefined {
+  if (node.cornerRadii) {
+    const { topLeft, topRight, bottomRight, bottomLeft } = node.cornerRadii;
+    // If all corners are the same, use uniform radius
+    if (topLeft === topRight && topRight === bottomRight && bottomRight === bottomLeft) {
+      return topLeft > 0 ? topLeft : undefined;
+    }
+    return [topLeft, topRight, bottomRight, bottomLeft];
+  }
+  if (node.cornerRadius && node.cornerRadius > 0) {
+    return node.cornerRadius;
+  }
+  return undefined;
+}
+
+function hasCornerRadius(radius: number | [number, number, number, number] | undefined): boolean {
+  if (radius === undefined) return false;
+  if (typeof radius === 'number') return radius > 0;
+  return radius.some(r => r > 0);
+}
+
 function drawRoundedRect(
   ctx: SKRSContext2D,
   x: number,
   y: number,
   w: number,
   h: number,
-  radius: number,
+  radius: number | [number, number, number, number],
 ): void {
   ctx.beginPath();
   ctx.roundRect(x, y, w, h, radius);
@@ -121,12 +149,13 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string): void
 
   const w = node.size.x;
   const h = node.size.y;
+  const radius = resolveCornerRadius(node);
 
   // Clip content
   if (node.clipContent) {
     ctx.beginPath();
-    if (node.cornerRadius && node.cornerRadius > 0) {
-      ctx.roundRect(0, 0, w, h, node.cornerRadius);
+    if (hasCornerRadius(radius)) {
+      ctx.roundRect(0, 0, w, h, radius!);
     } else {
       ctx.rect(0, 0, w, h);
     }
@@ -134,8 +163,8 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string): void
   }
 
   const drawShape = (context: SKRSContext2D) => {
-    if (node.cornerRadius && node.cornerRadius > 0) {
-      drawRoundedRect(context, 0, 0, w, h, node.cornerRadius);
+    if (hasCornerRadius(radius)) {
+      drawRoundedRect(context, 0, 0, w, h, radius!);
     } else if (node.type === 'ELLIPSE') {
       context.beginPath();
       context.ellipse(w / 2, h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
@@ -184,9 +213,9 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string): void
       ctx.beginPath();
       ctx.ellipse(w / 2, h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
       ctx.stroke();
-    } else if (node.cornerRadius && node.cornerRadius > 0) {
+    } else if (hasCornerRadius(radius)) {
       ctx.beginPath();
-      ctx.roundRect(0, 0, w, h, node.cornerRadius);
+      ctx.roundRect(0, 0, w, h, radius!);
       ctx.stroke();
     } else {
       ctx.strokeRect(0, 0, w, h);
@@ -202,6 +231,18 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string): void
   }
 
   ctx.restore();
+}
+
+function drawWrappedLine(
+  ctx: SKRSContext2D, text: string, y: number, w: number, align: string,
+): void {
+  let xOffset = 0;
+  if (align === 'CENTER') {
+    xOffset = (w - ctx.measureText(text).width) / 2;
+  } else if (align === 'RIGHT') {
+    xOffset = w - ctx.measureText(text).width;
+  }
+  ctx.fillText(text, xOffset, y);
 }
 
 function renderText(ctx: SKRSContext2D, node: FigmaNodeDict): void {
@@ -228,21 +269,51 @@ function renderText(ctx: SKRSContext2D, node: FigmaNodeDict): void {
   const align = node.textAlignHorizontal ?? 'LEFT';
   const w = node.size.x;
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]!;
-    const baseline = baselines[i];
-    if (!baseline) continue;
+  // Word-wrap when textAutoResize is HEIGHT (fixed width, auto height)
+  if (node.textAutoResize === 'HEIGHT') {
+    const lineHeight = baselines[0]?.lineHeight ?? fontSize * 1.2;
+    let drawLineIndex = 0;
 
-    let xOffset = 0;
-    if (align === 'CENTER') {
-      const measured = ctx.measureText(line);
-      xOffset = (w - measured.width) / 2;
-    } else if (align === 'RIGHT') {
-      const measured = ctx.measureText(line);
-      xOffset = w - measured.width;
+    for (const paragraph of lines) {
+      if (paragraph === '') {
+        drawLineIndex++;
+        continue;
+      }
+      const words = paragraph.split(/\s+/);
+      let currentLine = '';
+      for (const word of words) {
+        const testLine = currentLine ? `${currentLine} ${word}` : word;
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > w && currentLine) {
+          drawWrappedLine(ctx, currentLine, drawLineIndex * lineHeight, w, align);
+          drawLineIndex++;
+          currentLine = word;
+        } else {
+          currentLine = testLine;
+        }
+      }
+      if (currentLine) {
+        drawWrappedLine(ctx, currentLine, drawLineIndex * lineHeight, w, align);
+        drawLineIndex++;
+      }
     }
+  } else {
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]!;
+      const baseline = baselines[i];
+      if (!baseline) continue;
 
-    ctx.fillText(line, xOffset, baseline.lineY);
+      let xOffset = 0;
+      if (align === 'CENTER') {
+        const measured = ctx.measureText(line);
+        xOffset = (w - measured.width) / 2;
+      } else if (align === 'RIGHT') {
+        const measured = ctx.measureText(line);
+        xOffset = w - measured.width;
+      }
+
+      ctx.fillText(line, xOffset, baseline.lineY);
+    }
   }
 }
 

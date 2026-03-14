@@ -70,6 +70,7 @@ export interface TextStyle {
   lineHeight?: { value: number; unit: 'PERCENT' | 'PIXELS' };
   letterSpacing?: { value: number; unit: 'PERCENT' | 'PIXELS' };
   textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
+  textAutoResize?: 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT';
   color?: string;            // hex string, convenience shorthand
 }
 
@@ -108,6 +109,7 @@ export interface DslNode {
   // Text (TEXT only)
   characters?: string;
   textStyle?: TextStyle;
+  textAutoResize?: 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT';
 
   // Component (COMPONENT only)
   componentProperties?: ComponentProperty[];

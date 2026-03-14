@@ -9,7 +9,7 @@
  *  - Strokes (bottom border)
  */
 import {
-  frame, text, group, instance,
+  frame, text, group,
   solid, defineTokens, token,
   horizontal,
   hex,
@@ -61,6 +61,17 @@ export default frame('Navbar', {
     }),
 
     // Right: CTA
-    instance('Button', { Label: 'Sign Up' }),
+    frame('Button', {
+      autoLayout: horizontal({ padX: 20, padY: 10, align: 'CENTER', counterAlign: 'CENTER' }),
+      fills: [solid('#7c3aed')],
+      cornerRadius: 9999,
+      children: [
+        text('Sign Up', {
+          fontSize: 14,
+          fontWeight: 600,
+          color: '#ffffff',
+        }),
+      ],
+    }),
   ],
 });

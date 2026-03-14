@@ -121,6 +121,7 @@ function compileNode(
     strokes,
     strokeWeight,
     cornerRadius: node.cornerRadius,
+    cornerRadii: node.cornerRadii,
     opacity: node.opacity ?? 1,
     visible: node.visible ?? true,
     clipContent: node.clipContent,
@@ -142,9 +143,23 @@ function compileNode(
     result.paddingLeft = pad.paddingLeft;
     result.primaryAxisAlignItems = al.align ?? 'MIN';
     result.counterAxisAlignItems = al.counterAlign ?? 'MIN';
+
+    // Map widthSizing/heightSizing to layoutSizingHorizontal/Vertical
+    // When an explicit size is given with auto-layout but no sizing mode,
+    // infer FIXED so the plugin respects the specified dimensions
+    if (al.widthSizing) {
+      result.layoutSizingHorizontal = al.widthSizing;
+    } else if (node.size && node.size.x > 0) {
+      result.layoutSizingHorizontal = 'FIXED';
+    }
+    if (al.heightSizing) {
+      result.layoutSizingVertical = al.heightSizing;
+    } else if (node.size && node.size.y && node.size.y > 0) {
+      result.layoutSizingVertical = 'FIXED';
+    }
   }
 
-  // Child layout sizing passthrough
+  // Child layout sizing passthrough (explicit overrides)
   if (node.layoutSizingHorizontal) {
     result.layoutSizingHorizontal = node.layoutSizingHorizontal;
   }
@@ -170,6 +185,12 @@ function compileNode(
     result.fontSize = fontSize;
     result.fontFamily = fontFamily;
     result.textAlignHorizontal = style.textAlignHorizontal ?? 'LEFT';
+
+    // textAutoResize passthrough
+    const textAutoResize = node.textAutoResize ?? style.textAutoResize;
+    if (textAutoResize) {
+      result.textAutoResize = textAutoResize;
+    }
 
     const baselines: Baseline[] = [];
     let charIndex = 0;

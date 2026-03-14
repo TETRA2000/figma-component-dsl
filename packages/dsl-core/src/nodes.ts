@@ -33,7 +33,7 @@ export function frame(name: string, props: FrameProps): DslNode {
 
 export function text(
   characters: string,
-  style?: TextStyle & ChildLayoutProps,
+  style?: TextStyle & ChildLayoutProps & { size?: { x: number; y?: number } },
 ): DslNode {
   if (!characters) {
     throw new Error('Text characters must be a non-empty string.');
@@ -45,6 +45,7 @@ export function text(
     lineHeight: style.lineHeight,
     letterSpacing: style.letterSpacing,
     textAlignHorizontal: style.textAlignHorizontal,
+    textAutoResize: style.textAutoResize,
     color: style.color,
   } : undefined;
 
@@ -53,11 +54,18 @@ export function text(
     ? [{ type: 'SOLID' as const, color: parseHex(style.color), opacity: 1, visible: true }]
     : undefined;
 
+  // Text node size — if width specified, pass it through for constrained text
+  const size = style?.size
+    ? { x: style.size.x, y: style.size.y ?? 0 }
+    : undefined;
+
   return {
     type: 'TEXT',
     name: characters,
     characters,
     textStyle,
+    textAutoResize: style?.textAutoResize,
+    size,
     fills,
     visible: true,
     opacity: 1,

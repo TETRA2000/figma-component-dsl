@@ -66,10 +66,11 @@ packages/renderer/
 | Color utility | 54–56 | `rgbaToString()` |
 | Font weight utility | 58–60 | `fontWeightToCss()` |
 | Fill rendering | 62–98 | `applyFills()` — solid + gradient |
-| Shape utility | 100–111 | `drawRoundedRect()` |
-| Node rendering | 113–205 | `renderNode()` — recursive tree traversal |
-| Text rendering | 207–247 | `renderText()` |
-| Public API | 249–293 | `render()`, `renderToFile()` |
+| Corner radius resolution | 100–126 | `resolveCornerRadius()`, `hasCornerRadius()` |
+| Shape utility | 128–139 | `drawRoundedRect()` |
+| Node rendering | 141–234 | `renderNode()` — recursive tree traversal |
+| Text rendering | 236–318 | `renderText()` with word-wrap support |
+| Public API | 320–365 | `render()`, `renderToFile()` |
 
 **Evidence**: `src/index.ts:1`, `src/renderer.ts`, `package.json`
 
@@ -197,7 +198,9 @@ FigmaNodeDict (compiled tree)
 | GROUP | Transparent container — children rendered, no shape |
 
 ### Rounded Rectangles
-- Uses `ctx.roundRect()` when `cornerRadius > 0`
+- Uses `ctx.roundRect()` when corner radius is present
+- Supports both uniform `cornerRadius` (single number) and per-corner `cornerRadii` (array `[topLeft, topRight, bottomRight, bottomLeft]`)
+- `resolveCornerRadius()` helper normalizes both formats for the canvas API
 - Falls back to `ctx.rect()` for zero or undefined corner radius
 - Same logic used for fill shapes, stroke shapes, and clipping regions
 
@@ -223,7 +226,8 @@ Text rendering depends on **pre-computed baseline data** from the compiler's tex
    - Font size defaults to 14px, family to 'Inter', weight to 400
    - Weight extracted from `derivedTextData.fontMetaData[0].fontWeight`
 2. **Color**: Uses first fill paint's color, defaults to black
-3. **Per-line rendering**: Iterates `textData.lines`:
+3. **Word-wrap detection**: If `node.textAutoResize === 'HEIGHT'`, the renderer word-wraps text at `node.size.x` width using `canvas.measureText()` for word-boundary detection. Each wrapped line is drawn at the computed line height offset.
+4. **Per-line rendering** (non-wrapped path): Iterates `textData.lines`:
    - Baseline Y position from `derivedTextData.baselines[i].lineY`
    - Horizontal alignment via `canvas.measureText()`:
      - LEFT: offset = 0
@@ -232,7 +236,7 @@ Text rendering depends on **pre-computed baseline data** from the compiler's tex
    - Renders via `ctx.fillText(line, xOffset, baselineY)`
 
 ### Design Rationale
-Baseline-driven rendering avoids text measurement in the render hot path. The compiler pre-computes all positioning, making the renderer stateless with respect to font metrics.
+Baseline-driven rendering avoids text measurement in the render hot path. The compiler pre-computes all positioning, making the renderer stateless with respect to font metrics. The `textAutoResize: 'HEIGHT'` path re-measures at render time to produce accurate word-wrapped output matching the Figma plugin behavior.
 
 **Evidence**: `src/renderer.ts:207-247`
 
@@ -460,7 +464,7 @@ npm run test     # vitest run
 
 | Suite | Tests | Coverage |
 |-------|-------|----------|
-| Basic shapes | 4 | Solid fills, corner radius, ellipses, groups |
+| Basic shapes | 6 | Solid fills, uniform corner radius, per-corner radii, ellipses, groups |
 | Text | 3 | Simple text, multiline, center-aligned |
 | Gradients | 2 | Linear gradient, gradient with angle |
 | Strokes | 1 | Bordered rectangle |
@@ -487,7 +491,7 @@ npm run test     # vitest run
 2. **Linear gradients only**: GRADIENT_LINEAR supported; no radial, conic, or diamond gradients.
 3. **Inter font only**: All fonts registered under 'Inter' family; custom fonts not supported.
 4. **No shadow/blur effects**: Not in FigmaNodeDict type or rendering implementation.
-5. **Uniform corner radius**: Single `cornerRadius` value, not per-corner.
+5. ~~**Uniform corner radius**~~: **Resolved** — both uniform `cornerRadius` and per-corner `cornerRadii` (`{ topLeft, topRight, bottomLeft, bottomRight }`) are now supported.
 6. **Stroke alignment ignored**: Always renders as CENTER regardless of `INSIDE`/`CENTER`/`OUTSIDE`.
 7. **Unused `assetDir` option**: Declared in `RenderOptions` but never used in implementation.
 8. **Silent text failure**: Text nodes without `textData`/`derivedTextData` render as blank without error.
