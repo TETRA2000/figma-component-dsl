@@ -10,7 +10,7 @@
 import {
   component, componentSet, text, ellipse,
   solid,
-  horizontal,
+  horizontal, vertical,
 } from '@figma-dsl/core';
 
 interface BadgeVariant {
@@ -66,6 +66,7 @@ const variants: BadgeVariant[] = [
 ];
 
 export default componentSet('Badge', {
+  autoLayout: vertical({ spacing: 8, padX: 16, padY: 16 }),
   variantAxes: {
     Variant: ['Success', 'Warning', 'Error', 'Info'],
     Size: ['Small', 'Medium'],
