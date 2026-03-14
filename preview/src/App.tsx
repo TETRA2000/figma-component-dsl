@@ -1,7 +1,7 @@
-import { AnalyticsShowcase } from './pages/AnalyticsShowcase';
+import { McDonaldsShowcase } from './pages/McDonaldsShowcase';
 
 function App() {
-  return <AnalyticsShowcase />;
+  return <McDonaldsShowcase />;
 }
 
 export default App;
