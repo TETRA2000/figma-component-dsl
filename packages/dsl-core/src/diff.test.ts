@@ -31,6 +31,46 @@ describe('diffValues', () => {
     expect(changes[0]!.newValue).toBe(24);
   });
 
+  it('ignores float rounding noise in colors (Figma 32-bit vs JS 64-bit)', () => {
+    const changes: PropertyChange[] = [];
+    // Real example: JS double 0.058823529411764705 vs Figma float 0.05882352963089943
+    diffValues('fills.0.color.r', 0.058823529411764705, 0.05882352963089943, changes);
+    expect(changes).toHaveLength(0);
+  });
+
+  it('ignores float rounding noise in gradient stop colors', () => {
+    const changes: PropertyChange[] = [];
+    diffValues('fills.0.gradientStops.0.color.b', 0.1803921568627451, 0.18039216101169586, changes);
+    expect(changes).toHaveLength(0);
+  });
+
+  it('ignores sub-pixel size differences', () => {
+    const changes: PropertyChange[] = [];
+    // Real example: 1417.6 vs 1418.199951171875 (< 1px diff)
+    diffValues('size.y', 1417.6, 1418.199951171875, changes);
+    expect(changes).toHaveLength(0);
+  });
+
+  it('detects meaningful size changes beyond 1px', () => {
+    const changes: PropertyChange[] = [];
+    diffValues('size.y', 100, 120, changes);
+    expect(changes).toHaveLength(1);
+    expect(changes[0]!.changeType).toBe('modified');
+  });
+
+  it('detects meaningful color changes', () => {
+    const changes: PropertyChange[] = [];
+    // Red to blue: clearly different
+    diffValues('fills.0.color.r', 1.0, 0.0, changes);
+    expect(changes).toHaveLength(1);
+  });
+
+  it('ignores gradient transform epsilon noise', () => {
+    const changes: PropertyChange[] = [];
+    diffValues('fills.0.gradientTransform.0.1', 1.2246467991473532e-16, 1.2246468525851679e-16, changes);
+    expect(changes).toHaveLength(0);
+  });
+
   it('detects added value', () => {
     const changes: PropertyChange[] = [];
     diffValues('cornerRadius', undefined, 8, changes);

@@ -16,6 +16,27 @@ export function describeChange(path: string, oldVal: unknown, newVal: unknown): 
   return `Property ${path} changed`;
 }
 
+// Figma uses 32-bit floats internally; JS uses 64-bit doubles.
+// Colors: max diff ~1e-7 (e.g. 0.058823529411764705 vs 0.05882352963089943)
+// Sizes/positions: rounding to nearest pixel (e.g. 1417.6 vs 1418.199951171875)
+// Transforms: small epsilon diffs (e.g. 1.22e-16 vs 1.22e-16)
+const COLOR_EPSILON = 1e-4;   // ~0.01% color channel difference
+const SIZE_EPSILON = 1;       // 1px tolerance for sizes/positions
+const DEFAULT_EPSILON = 1e-6; // general float tolerance
+
+function getEpsilon(path: string): number {
+  if (path.match(/color\./)) return COLOR_EPSILON;
+  if (path.match(/gradientStops\.\d+\.color/)) return COLOR_EPSILON;
+  if (path.match(/gradientTransform/)) return DEFAULT_EPSILON;
+  if (path.match(/(^|\.)size\./)) return SIZE_EPSILON;
+  if (path.match(/opacity$/)) return COLOR_EPSILON;
+  return DEFAULT_EPSILON;
+}
+
+function numbersNearlyEqual(a: number, b: number, epsilon: number): boolean {
+  return Math.abs(a - b) <= epsilon;
+}
+
 export function diffValues(path: string, oldVal: unknown, newVal: unknown, changes: PropertyChange[]): void {
   if (oldVal === newVal) return;
 
@@ -29,6 +50,13 @@ export function diffValues(path: string, oldVal: unknown, newVal: unknown, chang
   }
 
   if (typeof oldVal !== typeof newVal) {
+    changes.push({ propertyPath: path, changeType: 'modified' as ChangeType, oldValue: oldVal, newValue: newVal, description: describeChange(path, oldVal, newVal) });
+    return;
+  }
+
+  // Float tolerance: Figma uses 32-bit floats, JS uses 64-bit doubles
+  if (typeof oldVal === 'number' && typeof newVal === 'number') {
+    if (numbersNearlyEqual(oldVal, newVal, getEpsilon(path))) return;
     changes.push({ propertyPath: path, changeType: 'modified' as ChangeType, oldValue: oldVal, newValue: newVal, description: describeChange(path, oldVal, newVal) });
     return;
   }
