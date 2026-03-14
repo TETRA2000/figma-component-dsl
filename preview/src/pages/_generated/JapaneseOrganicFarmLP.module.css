@@ -1,0 +1,464 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #78350f;
+  background: #fefce8;
+}
+
+/* ─── NavBar ─── */
+.nav {
+  background: rgba(254, 252, 232, 0.95);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(21, 128, 61, 0.12);
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brand {
+  font-size: 22px;
+  font-weight: 900;
+  color: #15803d;
+  letter-spacing: 2px;
+}
+.navLinks {
+  display: flex;
+  gap: 36px;
+}
+.navLink {
+  font-size: 14px;
+  color: #6b7280;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #15803d;
+}
+.navCta {
+  background: #15803d;
+  color: #ffffff;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+/* ─── Hero ─── */
+.hero {
+  min-height: 680px;
+  background: linear-gradient(160deg, #dcfce7 0%, #fefce8 50%, #faf5ef 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.heroContent {
+  max-width: 700px;
+}
+.heroLabel {
+  display: inline-block;
+  font-size: 13px;
+  color: #15803d;
+  letter-spacing: 6px;
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+.heroTitle {
+  font-size: 64px;
+  font-weight: 900;
+  color: #78350f;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  letter-spacing: 4px;
+}
+.heroSubtitle {
+  font-size: 17px;
+  color: #5c6b52;
+  line-height: 1.9;
+  margin: 0 0 48px;
+}
+.heroBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.heroBtnPrimary {
+  background: #15803d;
+  color: #ffffff;
+  border: none;
+  padding: 18px 48px;
+  border-radius: 32px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.heroBtnSecondary {
+  background: transparent;
+  color: #15803d;
+  border: 2px solid #15803d;
+  padding: 18px 40px;
+  border-radius: 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ─── Section Headers ─── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.sectionLabel {
+  font-size: 12px;
+  color: #15803d;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 34px;
+  font-weight: 800;
+  color: #78350f;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+/* ─── Philosophy ─── */
+.philosophy {
+  padding: 100px 24px;
+  background: #faf5ef;
+}
+.philosophyGrid {
+  display: flex;
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.philosophyCard {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid rgba(21, 128, 61, 0.1);
+  border-radius: 16px;
+  padding: 44px 32px;
+  text-align: center;
+}
+.philosophyIcon {
+  width: 60px;
+  height: 60px;
+  background: #dcfce7;
+  border-radius: 30px;
+  margin: 0 auto 16px;
+}
+.philosophyTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #78350f;
+  margin: 0 0 12px;
+}
+.philosophyDesc {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.9;
+  margin: 0;
+}
+
+/* ─── Vegetables ─── */
+.vegetables {
+  padding: 100px 24px;
+  background: #ffffff;
+}
+.vegetablesGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.vegetableCard {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid rgba(21, 128, 61, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.vegetableImage {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, #86efac, #22c55e);
+}
+.vegetableInfo {
+  padding: 24px;
+}
+.vegetableSeason {
+  font-size: 12px;
+  color: #15803d;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.vegetableName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #78350f;
+  margin: 8px 0;
+}
+.vegetableDesc {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ─── Subscription Plans ─── */
+.subscription {
+  padding: 100px 24px;
+  background: #fefce8;
+}
+.plansGrid {
+  display: flex;
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+.planCard {
+  flex: 1;
+  background: #ffffff;
+  border: 2px solid rgba(21, 128, 61, 0.12);
+  border-radius: 20px;
+  padding: 44px 36px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.planCardPopular {
+  flex: 1;
+  background: #15803d;
+  border-radius: 20px;
+  padding: 44px 36px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.planBadge {
+  font-size: 12px;
+  font-weight: 700;
+  color: #86efac;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.planName {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 12px;
+}
+.planCard .planName {
+  color: #78350f;
+}
+.planCardPopular .planName {
+  color: #ffffff;
+}
+.planPrice {
+  font-size: 36px;
+  font-weight: 900;
+  margin: 0 0 12px;
+}
+.planCard .planPrice {
+  color: #15803d;
+}
+.planCardPopular .planPrice {
+  color: #ffffff;
+}
+.planDesc {
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 0 0 16px;
+}
+.planCard .planDesc {
+  color: #6b7280;
+}
+.planCardPopular .planDesc {
+  color: #bbf7d0;
+}
+.planDivider {
+  width: 200px;
+  height: 1px;
+  margin: 0 0 16px;
+}
+.planCard .planDivider {
+  background: rgba(21, 128, 61, 0.12);
+}
+.planCardPopular .planDivider {
+  background: rgba(255, 255, 255, 0.2);
+}
+.planItems {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  font-size: 13px;
+  line-height: 2;
+}
+.planCard .planItems {
+  color: #4b5563;
+}
+.planCardPopular .planItems {
+  color: #dcfce7;
+}
+.planBtn {
+  background: #15803d;
+  color: #ffffff;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: auto;
+}
+.planBtnPopular {
+  background: #ffffff;
+  color: #15803d;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+/* ─── Farm Visit ─── */
+.farmVisit {
+  padding: 100px 24px;
+  background: #ffffff;
+}
+.farmVisitInner {
+  display: flex;
+  gap: 64px;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: center;
+}
+.farmVisitImage {
+  width: 480px;
+  height: 400px;
+  background: linear-gradient(135deg, #86efac, #15803d);
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.farmVisitContent {
+  flex: 1;
+}
+.farmVisitDesc {
+  font-size: 15px;
+  color: #6b7280;
+  line-height: 1.9;
+  margin: 0 0 24px;
+}
+.farmVisitDetails {
+  margin: 0 0 24px;
+}
+.farmVisitDetails p {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 2;
+  margin: 0;
+}
+.farmVisitBtn {
+  background: #15803d;
+  color: #ffffff;
+  border: none;
+  padding: 14px 36px;
+  border-radius: 28px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ─── CTA ─── */
+.cta {
+  padding: 120px 24px;
+  background: linear-gradient(160deg, #dcfce7, #d1fae5);
+  text-align: center;
+}
+.ctaTitle {
+  font-size: 38px;
+  font-weight: 900;
+  color: #78350f;
+  margin: 0 0 20px;
+  letter-spacing: 2px;
+}
+.ctaSubtitle {
+  font-size: 16px;
+  color: #5c6b52;
+  margin: 0 0 48px;
+  line-height: 1.8;
+}
+.ctaBtn {
+  background: #15803d;
+  color: #ffffff;
+  border: none;
+  padding: 20px 64px;
+  border-radius: 32px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.ctaNote {
+  font-size: 12px;
+  color: #888888;
+  margin: 20px 0 0;
+}
+
+/* ─── Footer ─── */
+.footer {
+  background: #78350f;
+  padding: 48px 24px;
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footerBrand {
+  font-size: 20px;
+  font-weight: 900;
+  color: #fde68a;
+  letter-spacing: 2px;
+}
+.footerLinks {
+  display: flex;
+  gap: 32px;
+}
+.footerLink {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+}
+.footerDivider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.footerCopy {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}

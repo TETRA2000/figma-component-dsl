@@ -1,0 +1,407 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #ffffff;
+  background: #18181b;
+}
+
+/* ─── NavBar ─── */
+.nav {
+  background: rgba(24, 24, 27, 0.95);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(236, 72, 153, 0.12);
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brand {
+  font-size: 20px;
+  font-weight: 900;
+  color: #ec4899;
+  letter-spacing: 3px;
+}
+.navLinks {
+  display: flex;
+  gap: 36px;
+}
+.navLink {
+  font-size: 14px;
+  color: #a1a1aa;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #ffffff;
+}
+.navCta {
+  background: #ec4899;
+  color: #ffffff;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+/* ─── Hero ─── */
+.hero {
+  position: relative;
+  min-height: 700px;
+  background: linear-gradient(160deg, #2d0a1e 0%, #18181b 60%, #1a1a2e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroGlow {
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+.heroLabel {
+  display: inline-block;
+  font-size: 13px;
+  color: #ec4899;
+  letter-spacing: 6px;
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+.heroTitle {
+  font-size: 64px;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  letter-spacing: 4px;
+}
+.heroSubtitle {
+  font-size: 17px;
+  color: #e4a8ca;
+  line-height: 1.9;
+  margin: 0 0 48px;
+  max-width: 620px;
+}
+.heroBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.heroBtnPrimary {
+  background: #ec4899;
+  color: #ffffff;
+  border: none;
+  padding: 18px 48px;
+  border-radius: 32px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.heroBtnSecondary {
+  background: transparent;
+  color: #ec4899;
+  border: 2px solid #ec4899;
+  padding: 18px 40px;
+  border-radius: 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ─── Section Headers ─── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.sectionLabel {
+  font-size: 12px;
+  color: #ec4899;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 34px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+/* ─── Dance Styles ─── */
+.stylesSection {
+  padding: 100px 24px;
+  background: #18181b;
+}
+.stylesGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.styleCard {
+  flex: 1;
+  background: #27272a;
+  border: 1px solid rgba(236, 72, 153, 0.09);
+  border-radius: 16px;
+  padding: 44px 28px;
+  text-align: center;
+}
+.styleIcon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #ec4899, #be185d);
+  border-radius: 12px;
+  margin: 0 auto 14px;
+}
+.styleName {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+.styleNameEn {
+  font-size: 12px;
+  color: #ec4899;
+  letter-spacing: 3px;
+  font-weight: 600;
+  margin: 0 0 14px;
+}
+.styleDivider {
+  width: 40px;
+  height: 2px;
+  background: #ec4899;
+  margin: 0 auto 14px;
+}
+.styleDesc {
+  font-size: 14px;
+  color: #a1a1aa;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ─── Instructors ─── */
+.instructors {
+  padding: 100px 24px;
+  background: #1f1f23;
+}
+.instructorsGrid {
+  display: flex;
+  gap: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.instructorCard {
+  flex: 1;
+  background: #27272a;
+  border: 1px solid rgba(236, 72, 153, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.instructorPhoto {
+  width: 100%;
+  height: 280px;
+  background: linear-gradient(135deg, #ec4899, #7c3aed);
+}
+.instructorInfo {
+  padding: 28px;
+}
+.instructorRole {
+  font-size: 12px;
+  color: #ec4899;
+  letter-spacing: 2px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.instructorName {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 8px;
+}
+.instructorBio {
+  font-size: 14px;
+  color: #a1a1aa;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ─── Schedule ─── */
+.schedule {
+  padding: 100px 24px;
+  background: #18181b;
+}
+.scheduleTable {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  border-collapse: collapse;
+  background: #27272a;
+  border: 1px solid rgba(236, 72, 153, 0.12);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.scheduleTable th {
+  background: #ec4899;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 16px 8px;
+  text-align: center;
+}
+.scheduleTable td {
+  font-size: 13px;
+  color: #a1a1aa;
+  padding: 14px 8px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.scheduleTimeCell {
+  font-weight: 600;
+  color: #ffffff;
+  width: 120px;
+}
+
+/* ─── Showcase ─── */
+.showcase {
+  padding: 100px 24px;
+  background: #1f1f23;
+}
+.showcaseGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.showcaseCard {
+  flex: 1;
+  background: #27272a;
+  border: 1px solid rgba(236, 72, 153, 0.09);
+  border-radius: 16px;
+  padding: 36px 32px;
+}
+.showcaseQuote {
+  font-size: 15px;
+  color: #d4d4d8;
+  line-height: 1.9;
+  margin: 0 0 16px;
+}
+.showcaseAttribution {
+  font-size: 13px;
+  color: #ec4899;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ─── CTA ─── */
+.cta {
+  padding: 120px 24px;
+  background: linear-gradient(160deg, #3d0a27 0%, #18181b 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.ctaGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+.ctaContent {
+  position: relative;
+  z-index: 1;
+}
+.ctaTitle {
+  font-size: 40px;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 20px;
+  letter-spacing: 3px;
+}
+.ctaSubtitle {
+  font-size: 16px;
+  color: #d4a0be;
+  margin: 0 0 48px;
+  line-height: 1.8;
+}
+.ctaBtn {
+  background: #ec4899;
+  color: #ffffff;
+  border: none;
+  padding: 20px 64px;
+  border-radius: 32px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.ctaNote {
+  font-size: 12px;
+  color: #888888;
+  margin: 20px 0 0;
+}
+
+/* ─── Footer ─── */
+.footer {
+  background: #09090b;
+  padding: 48px 24px;
+  border-top: 1px solid rgba(236, 72, 153, 0.08);
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footerBrand {
+  font-size: 18px;
+  font-weight: 900;
+  color: #ec4899;
+  letter-spacing: 2px;
+}
+.footerLinks {
+  display: flex;
+  gap: 32px;
+}
+.footerLink {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+}
+.footerDivider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.footerCopy {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.27);
+  margin: 0;
+}

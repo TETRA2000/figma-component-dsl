@@ -1,0 +1,450 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #111827;
+  background: #fff;
+}
+
+/* Nav */
+.nav {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0 24px;
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brandGroup { display: flex; align-items: center; gap: 12px; }
+.brandName {
+  font-size: 24px;
+  font-weight: 900;
+  color: #374151;
+  letter-spacing: 3px;
+}
+.brandDivider {
+  width: 1px;
+  height: 24px;
+  background: #d1d5db;
+}
+.brandSub {
+  font-size: 12px;
+  font-weight: 600;
+  color: #b8860b;
+  letter-spacing: 3px;
+}
+.navLinks { display: flex; align-items: center; gap: 32px; }
+.navLink {
+  font-size: 14px;
+  color: #374151;
+  text-decoration: none;
+  font-weight: 500;
+}
+.navCTA {
+  background: #374151;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Hero */
+.hero {
+  display: flex;
+  min-height: 600px;
+  background: #faf8f3;
+}
+.heroLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 120px;
+  gap: 28px;
+}
+.heroSince {
+  font-size: 12px;
+  font-weight: 600;
+  color: #b8860b;
+  letter-spacing: 4px;
+}
+.heroTitle {
+  font-size: 52px;
+  font-weight: 900;
+  color: #111827;
+  line-height: 1.35;
+  margin: 0;
+}
+.heroSubtitle {
+  font-size: 16px;
+  color: #6b7280;
+  line-height: 1.8;
+  margin: 0;
+}
+.heroBtns { display: flex; gap: 16px; }
+.primaryBtn {
+  background: #374151;
+  color: #fff;
+  border: none;
+  padding: 16px 40px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+.secondaryBtn {
+  background: transparent;
+  color: #374151;
+  border: 1px solid #374151;
+  padding: 16px 40px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+.heroRight {
+  width: 560px;
+  background: linear-gradient(135deg, #374151, #111827);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.heroIcon {
+  width: 200px;
+  height: 100px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.2);
+  letter-spacing: 6px;
+}
+
+/* Section Headers */
+.sectionHeader { text-align: center; margin-bottom: 48px; }
+.sectionLabel {
+  font-size: 13px;
+  color: #b8860b;
+  letter-spacing: 4px;
+  font-weight: 600;
+}
+.sectionTitle {
+  font-size: 32px;
+  font-weight: 800;
+  color: #111827;
+  margin: 8px 0 0;
+}
+
+/* Categories */
+.categoriesSection {
+  padding: 96px 24px;
+  background: #fff;
+}
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.categoryCard { display: flex; flex-direction: column; gap: 16px; }
+.categoryImg {
+  height: 220px;
+  background: linear-gradient(135deg, #4b5563, #374151);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.categoryImgLabel {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.27);
+  letter-spacing: 4px;
+}
+.categoryName {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+.categoryDesc {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.7;
+  margin: 0;
+}
+.categoryLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: #b8860b;
+  text-decoration: none;
+}
+
+/* Lens */
+.lensSection {
+  padding: 96px 24px;
+  background: #f9fafb;
+}
+.lensList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.lensOption {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+.lensIcon {
+  width: 80px;
+  height: 80px;
+  background: #faf8f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.lensDot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #b8860b, #d4a843);
+}
+.lensInfo {
+  flex: 1;
+  padding: 16px 20px;
+}
+.lensName {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px;
+}
+.lensFeatures {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+.lensPrice {
+  font-size: 18px;
+  font-weight: 700;
+  color: #b8860b;
+  padding: 0 24px;
+  flex-shrink: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Exam */
+.examSection {
+  display: flex;
+  background: #fff;
+}
+.examImg {
+  width: 600px;
+  background: #faf8f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 96px 0;
+  flex-shrink: 0;
+}
+.examIcon {
+  width: 160px;
+  height: 160px;
+  background: #fff;
+  border-radius: 50%;
+  border: 2px solid #b8860b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 800;
+  color: #b8860b;
+}
+.examContent {
+  flex: 1;
+  padding: 96px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.examLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #b8860b;
+  letter-spacing: 4px;
+}
+.examTitle {
+  font-size: 32px;
+  font-weight: 800;
+  color: #111827;
+  margin: 8px 0 0;
+}
+.examDesc {
+  font-size: 15px;
+  color: #6b7280;
+  line-height: 1.8;
+  margin: 0;
+}
+.examFeatures {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.examFeature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.checkMark {
+  width: 20px;
+  height: 20px;
+  background: #b8860b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.examFeatureText {
+  font-size: 14px;
+  color: #4b5563;
+}
+.examCTA {
+  align-self: flex-start;
+  background: #b8860b;
+  color: #fff;
+  border: none;
+  padding: 14px 36px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+/* Stores */
+.storeSection {
+  padding: 96px 24px;
+  background: #faf8f3;
+}
+.storeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.storeCard {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.storeMapArea {
+  height: 200px;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.storeMapLabel {
+  font-size: 20px;
+  font-weight: 700;
+  color: #9ca3af;
+  letter-spacing: 4px;
+}
+.storeInfo {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.storeName {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+.storeRow { display: flex; gap: 12px; }
+.storeRowLabel {
+  width: 64px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #b8860b;
+  flex-shrink: 0;
+}
+.storeRowValue {
+  font-size: 13px;
+  color: #6b7280;
+}
+.storeLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: #b8860b;
+  text-decoration: none;
+  padding-top: 4px;
+}
+
+/* Footer */
+.footer {
+  background: #111827;
+  padding: 48px 24px;
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.footerTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #333;
+  margin-bottom: 24px;
+}
+.footerBrand { display: flex; align-items: center; gap: 12px; }
+.footerBrandName {
+  font-size: 20px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 2px;
+}
+.footerBrandSub {
+  font-size: 11px;
+  font-weight: 600;
+  color: #b8860b;
+  letter-spacing: 2px;
+}
+.footerLinks { display: flex; gap: 28px; }
+.footerLink {
+  font-size: 13px;
+  color: #9ca3af;
+  text-decoration: none;
+}
+.footerCopy {
+  font-size: 12px;
+  color: #6b7280;
+  text-align: center;
+  margin: 0;
+}
