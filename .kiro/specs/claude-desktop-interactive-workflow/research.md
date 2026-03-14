@@ -2,12 +2,13 @@
 
 ## Summary
 - **Feature**: `claude-desktop-interactive-workflow`
-- **Discovery Scope**: New Feature (greenfield skills + preview infrastructure + validation packages + Figma auto-publish + skill-creator methodology)
+- **Discovery Scope**: New Feature (greenfield skills + preview infrastructure + validation packages + Figma multi-approach + skill-creator methodology)
 - **Key Findings**:
-  - Anthropic's `skill-creator` provides a proven methodology for creating, testing, and iterating skills — includes eval framework, description optimization, and progressive disclosure patterns
-  - Figma MCP server's `generate_figma_design` tool enables auto-publishing designs to Figma files directly from Claude Desktop — eliminates manual plugin import
-  - Existing DSL pipeline already accumulates `CompileError[]` with node path tracking; a new `@figma-dsl/validator` package can extend this with React-to-DSL structural validation
-  - `vite-plugin-singlefile` (86K weekly downloads) solves HTML export by inlining all CSS/JS into a single file
+  - The project already has a complete visual fidelity pipeline (`capturer` + `comparator` + CLI `pipeline` command) — compile→render→capture→compare at 95% threshold — enabling a verify-before-import approach
+  - Three Figma design creation approaches (MCP, Plugin JSON, Visual Fidelity Pipeline) provide users flexibility to balance speed vs visual accuracy
+  - Anthropic's `skill-creator` provides a proven methodology for creating, testing, and iterating skills
+  - Figma MCP server's `generate_figma_design` tool enables auto-publishing directly from Claude Desktop
+  - `@figma-dsl/validator` package extends existing `CompileError[]` pattern with React-to-DSL structural validation
 
 ## Research Log
 
@@ -114,6 +115,24 @@
   - MCP path validation happens at the Figma server side — errors returned to Claude for iteration
   - Recommend: Focus validation effort on the React→DSL compatibility gap (validator package), not on exporter output
 
+### Visual Fidelity Pipeline — Existing CLI Infrastructure
+- **Context**: User identified that DSL→Figma export is highly likely to cause visual mismatches; requested multiple approaches with visual verification
+- **Sources**: Codebase analysis of `packages/capturer`, `packages/comparator`, `packages/cli`, `packages/plugin`
+- **Findings**:
+  - **`figma-dsl pipeline`**: Full pipeline command already exists — compile DSL→render PNG→capture React screenshot→pixel-diff compare. Returns exit code 0 (pass) or 1 (fail).
+  - **`packages/capturer`**: Playwright-based screenshot capture via `captureUrl(url, outputPath, options)`. Supports viewport, CSS selector, device scale. Captures from any URL including `localhost` dev servers.
+  - **`packages/comparator`**: Pixel-diff via pixelmatch library. Default 95% similarity threshold. Produces diff PNG highlighting mismatches. Handles dimension mismatches by padding smaller image.
+  - **`figma-dsl capture-figma`**: Captures screenshots from Figma REST API using file key, token, and node ID map. Enables post-import verification.
+  - **`figma-dsl batch-compare`**: Compares directories of DSL renders vs Figma captures. Produces JSON report and Markdown summary.
+  - **`packages/plugin`**: Figma plugin imports `PluginInput` JSON, creates native Figma nodes (FRAME, TEXT, RECTANGLE, ELLIPSE, COMPONENT, COMPONENT_SET, INSTANCE), supports auto-layout, component properties, and auto-export to PNG. Does NOT update existing components — creates new ones each import.
+  - **`figma-dsl calibrate`**: Full calibration orchestration command combining generate→compile→render→capture→compare.
+- **Implications**:
+  - Three approaches map naturally to existing tooling: (A) MCP direct publish, (B) plugin JSON import, (C) pipeline verify-then-import
+  - Approach C uses `figma-dsl pipeline` for pre-import verification, then `capture-figma` + `batch-compare` for post-import verification
+  - The 95% default threshold is configurable via `-t` flag — users can set stricter thresholds for high-fidelity requirements
+  - The iteration loop for Approach C: compile→render→capture→compare→if fail: adjust DSL→repeat
+  - Post-import verification via `capture-figma` + `batch-compare` works for both Approach B and C
+
 ### Anthropic skill-creator — Skill Authoring Methodology
 - **Context**: User requested using the `skill-creator` from the Anthropic skills repository for better skill quality
 - **Sources**: [skill-creator on GitHub](https://github.com/anthropics/skills/tree/main/skills/skill-creator), [skill-creator SKILL.md](https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md)
@@ -192,6 +211,17 @@
 - **Trade-offs**: New package to maintain. But validation logic is distinct from compilation and benefits from isolation.
 - **Follow-up**: Define validation rule set. Determine if rules are configurable or fixed.
 
+### Decision: Three Figma Design Approaches with User Choice
+- **Context**: DSL→Figma export causes visual mismatches. Users need flexibility to choose their preferred approach based on speed, fidelity, and available tooling.
+- **Alternatives Considered**:
+  1. Single approach (MCP only) — simplest but no fallback, no visual verification
+  2. Two approaches (MCP + plugin) — good coverage but no fidelity verification
+  3. Three approaches (MCP + plugin + visual fidelity pipeline) — maximum flexibility
+- **Selected Approach**: Three approaches with the skill guiding user selection based on context
+- **Rationale**: The project already has the full pipeline infrastructure (capturer, comparator, `pipeline` command). Adding it as Approach C costs no new code — only skill instructions. Users with strict visual requirements get a verify-before-import flow, while those prioritizing speed can use MCP or plugin directly.
+- **Trade-offs**: More complex skill instructions. But the skill presents trade-offs upfront and guides selection, so complexity is managed.
+- **Follow-up**: Determine if the skill should auto-detect MCP availability and narrow to available approaches.
+
 ### Decision: Use skill-creator Methodology and Eval Infrastructure
 - **Context**: User requested using Anthropic's skill-creator for better skill quality
 - **Alternatives Considered**:
@@ -222,6 +252,8 @@
 - **Risk**: Code Connect requires valid FIGMA_URL that doesn't exist pre-publish → Mitigation: MCP's `add_code_connect_map` establishes mappings after design is published
 - **Risk**: Design token CSS custom properties may not resolve identically across DSL and React → Mitigation: Token reference provides mapping table; validator checks token references
 - **Risk**: Skill descriptions may not trigger reliably across varied user phrasings → Mitigation: Run skill-creator's description optimization (`run_loop.py`) with 20 trigger eval queries per skill
+- **Risk**: Visual fidelity pipeline (Approach C) may be too slow for iterative workflows → Mitigation: Approach A (MCP) and B (plugin) available as faster alternatives; pipeline comparison typically completes in seconds
+- **Risk**: Plugin creates new components on each import (no update) → Mitigation: Document in skill that re-imports create duplicates; user should delete old components before re-importing
 
 ## References
 - [Figma MCP Server Documentation](https://developers.figma.com/docs/figma-mcp-server/)

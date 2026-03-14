@@ -74,6 +74,26 @@ The skills leverage the existing reference component library (`references/figma_
 6. If a component references design tokens that cannot be mapped to Figma properties, the skill shall instruct Claude to emit a warning listing the unmapped tokens.
 7. The skill shall support batch export of multiple components into a single Figma-importable JSON file via the existing `figma-dsl batch` and `figma-dsl export` CLI commands.
 
+### Requirement 8: Multi-Approach Figma Design Creation
+
+**Objective:** As a Claude Code user, I want to choose between multiple approaches for creating Figma designs from my React components, so that I can select the method that best balances speed, visual fidelity, and my available tooling.
+
+#### Acceptance Criteria
+
+1. The Figma Export Skill shall present the user with three distinct approaches for creating Figma designs and guide them to select the most appropriate one:
+   - **Approach A — MCP Auto-Publish**: Publish designs directly to Figma via the Figma MCP server's `generate_figma_design` tool, with automatic Code Connect mapping via `add_code_connect_map`.
+   - **Approach B — Plugin JSON Import**: Compile components to DSL, export to Figma plugin-compatible JSON via `figma-dsl export`, and import into Figma using the existing Figma plugin (`packages/plugin`).
+   - **Approach C — Visual Fidelity Pipeline**: Run the full `figma-dsl pipeline` command (compile → render DSL PNG → capture React screenshot → pixel-diff compare) to verify visual fidelity before Figma import, then import via plugin or MCP.
+2. When a user selects Approach C (Visual Fidelity Pipeline), the skill shall instruct Claude to run `figma-dsl pipeline <file.dsl.ts> -u <react-url>` and report the similarity percentage and pass/fail result.
+3. If the pipeline comparison reports a similarity below the configured threshold (default 95%), the skill shall instruct Claude to iterate on the DSL definition — adjusting layout, spacing, colors, or typography — and re-run the pipeline until the similarity meets or exceeds the threshold.
+4. The skill shall instruct Claude to generate a diff image (via `figma-dsl compare -d diff.png`) highlighting visual mismatches to aid in diagnosing fidelity issues.
+5. After Approach B or C, the skill shall instruct Claude to use `figma-dsl capture-figma` to capture screenshots of the imported Figma components and run `figma-dsl batch-compare` against the DSL renders to produce a visual fidelity report.
+6. The skill shall document the trade-offs of each approach in its reference materials:
+   - **Approach A**: Fastest, no visual fidelity verification, requires MCP server configuration.
+   - **Approach B**: Medium speed, relies on DSL-to-Figma translation accuracy, works offline.
+   - **Approach C**: Slowest, highest visual fidelity confidence, requires running dev server for React captures.
+7. When batch-exporting multiple components, the skill shall support running Approach C (Visual Fidelity Pipeline) across all components via `figma-dsl batch` combined with `figma-dsl batch-compare`.
+
 ### Requirement 5: HTML Page Generation Skill
 
 **Objective:** As a Claude Code user, I want a skill that guides Claude to generate static HTML pages from React component compositions, so that I can produce deployable web pages directly from the development workflow.

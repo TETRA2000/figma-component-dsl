@@ -184,19 +184,43 @@ sequenceDiagram
     C->>U: Dual preview - React and DSL
 ```
 
-### Figma Auto-Publishing Flow
+### Figma Design Creation — Approach Selection
+
+```mermaid
+flowchart TB
+    User[User: Export to Figma]
+    Skill[Figma Export Skill]
+    Choice{User selects approach}
+
+    User --> Skill
+    Skill --> Choice
+
+    Choice -->|A: Speed priority| MCP[MCP Auto-Publish]
+    Choice -->|B: Offline/Simple| Plugin[Plugin JSON Import]
+    Choice -->|C: Fidelity priority| Pipeline[Visual Fidelity Pipeline]
+
+    MCP --> MCPDone[Design in Figma]
+    Plugin --> PluginDone[Import via Plugin UI]
+    Pipeline --> Verify{Similarity >= 95%?}
+    Verify -->|Yes| PipelineImport[Import via Plugin or MCP]
+    Verify -->|No| Fix[Adjust DSL definition]
+    Fix --> Pipeline
+
+    PipelineImport --> PostVerify[capture-figma + batch-compare]
+    PluginDone --> PostVerify
+```
+
+### Approach A — MCP Auto-Publish Flow
 
 ```mermaid
 sequenceDiagram
     participant U as User
     participant C as Claude
-    participant S as Figma Export Skill
     participant CLI as figma-dsl CLI
     participant MCP as Figma MCP Server
     participant F as Figma Cloud
 
     U->>C: Publish this component to Figma
-    C->>S: Auto-invoke skill
     C->>CLI: figma-dsl compile + export
     CLI->>C: Compiled DSL and export JSON
     C->>MCP: generate_figma_design with component
@@ -205,6 +229,34 @@ sequenceDiagram
     C->>MCP: add_code_connect_map for component
     MCP->>F: Establish Code Connect mapping
     C->>U: Published to Figma with Code Connect
+```
+
+### Approach C — Visual Fidelity Pipeline Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant C as Claude
+    participant CLI as figma-dsl CLI
+    participant Dev as Vite Dev Server
+    participant F as Figma
+
+    U->>C: Export to Figma with fidelity check
+    C->>Dev: Ensure dev server running
+    C->>CLI: figma-dsl pipeline file.dsl.ts -u localhost:5173
+    CLI->>CLI: Compile DSL to render PNG
+    CLI->>Dev: Capture React screenshot
+    CLI->>CLI: Pixel-diff compare (95% threshold)
+    CLI->>C: Similarity 87% FAIL + diff.png
+    C->>C: Adjust DSL layout and spacing
+    C->>CLI: figma-dsl pipeline (re-run)
+    CLI->>C: Similarity 97% PASS
+    C->>CLI: figma-dsl export -o plugin-input.json
+    C->>U: Import via plugin or MCP
+    Note over C,F: Post-import verification
+    C->>CLI: figma-dsl capture-figma + batch-compare
+    CLI->>C: Fidelity report
+    C->>U: Visual fidelity report
 ```
 
 ### HTML Export Flow
@@ -273,6 +325,13 @@ sequenceDiagram
 | 7.3 | Map tokens for Figma export | Token Reference | — | Figma flow |
 | 7.4 | Include tokens in HTML output | Vite build pipeline | — | HTML flow |
 | 7.5 | Propagate custom tokens | Token Reference + all skills | — | — |
+| 8.1 | Three approaches with user selection | Figma Export Skill | Approach selection guide | Approach selection flow |
+| 8.2 | Pipeline similarity reporting | Figma Export Skill | CLI pipeline interface | Pipeline flow |
+| 8.3 | Iterate DSL until threshold met | Figma Export Skill | CLI pipeline + compare | Pipeline flow |
+| 8.4 | Diff image generation | Figma Export Skill | CLI compare -d | Pipeline flow |
+| 8.5 | Post-import verification | Figma Export Skill | CLI capture-figma + batch-compare | All Figma flows |
+| 8.6 | Approach trade-offs documentation | Figma Export Skill references | — | — |
+| 8.7 | Batch visual fidelity | Figma Export Skill | CLI batch + batch-compare | Pipeline flow |
 
 ## Components and Interfaces
 
@@ -284,7 +343,7 @@ sequenceDiagram
 | `@figma-dsl/validator` | Package | DSL compatibility validation | 3.2, 4.6, 7.2 | dsl-core (P0), compiler (P1) | Service |
 | Landing Page Skill | Skill | Guide Claude to compose landing pages | 2.1–2.7 | Registry (P0), preview app (P0) | — |
 | Component Creation Skill | Skill | Guide Claude to scaffold React components | 3.1–3.7 | Templates (P0), Validator (P0), Registry (P0) | — |
-| Figma Export Skill | Skill | Guide Claude to compile, export, and publish to Figma | 4.1–4.7 | CLI (P0), Figma MCP (P0), Token Ref (P1) | — |
+| Figma Export Skill | Skill | Guide Claude to export to Figma via 3 approaches | 4.1–4.7, 8.1–8.7 | CLI (P0), Figma MCP (P1), Token Ref (P1) | — |
 | HTML Export Skill | Skill | Guide Claude to build self-contained HTML | 5.1–5.6 | preview app (P0), vite-plugin-singlefile (P0) | — |
 | Component Registry | Shared Reference | Catalog of components with prop interfaces | 6.1–6.5 | Reference app (P0) | — |
 | Token Reference | Shared Reference | Design token mapping for cross-format use | 7.1–7.5 | tokens.css (P0) | — |
@@ -673,21 +732,23 @@ export function {{ComponentName}}({
 
 | Field | Detail |
 |-------|--------|
-| Intent | Guide Claude to compile, export, and auto-publish designs to Figma |
-| Requirements | 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7 |
+| Intent | Guide Claude to export to Figma via three approaches with user choice |
+| Requirements | 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7 |
 
 **Responsibilities & Constraints**
-- Instruct Claude to compile and export via existing CLI commands
-- Auto-publish to Figma via MCP server's `generate_figma_design` tool (primary path)
-- Fall back to plugin JSON import when MCP is unavailable
-- Establish Code Connect mappings via `add_code_connect_map` after publishing
+- Present three approaches and guide user to select based on context (speed, fidelity, available tooling)
+- **Approach A (MCP)**: Auto-publish via `generate_figma_design` + auto-map Code Connect
+- **Approach B (Plugin)**: Compile → export JSON → import via Figma plugin UI
+- **Approach C (Pipeline)**: Compile → render → capture React → compare → iterate until pass → import
+- Run post-import verification via `capture-figma` + `batch-compare` for Approaches B and C
 - Warn on unmapped design tokens (via validator token-exists rule)
-- Support batch export via `figma-dsl batch`
+- Support batch operations via `figma-dsl batch` + `batch-compare`
 
 **Dependencies**
 - Inbound: User request matching trigger phrases (P0)
-- Outbound: CLI `compile`, `export`, `batch` — DSL operations (P0)
-- Outbound: Figma MCP server — `generate_figma_design`, `add_code_connect_map` (P0)
+- Outbound: CLI `compile`, `export`, `batch`, `pipeline`, `compare`, `capture-figma`, `batch-compare` — DSL operations (P0)
+- Outbound: Figma MCP server — `generate_figma_design`, `add_code_connect_map` (P1)
+- Outbound: Preview app Vite dev server — React screenshot capture for Approach C (P1)
 - Outbound: Token Reference — design token mapping (P1)
 - Outbound: `@figma-dsl/validator` — token validation (P2)
 
