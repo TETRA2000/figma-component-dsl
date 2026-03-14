@@ -53,6 +53,10 @@ export interface DslSceneNode {
   strokes: DslPaint[];
   strokeWeight: number;
   cornerRadius: number;
+  topLeftRadius?: number;
+  topRightRadius?: number;
+  bottomLeftRadius?: number;
+  bottomRightRadius?: number;
   clipContent: boolean;
   readonly children: readonly DslSceneNode[];
   appendChild(child: DslSceneNode): void;

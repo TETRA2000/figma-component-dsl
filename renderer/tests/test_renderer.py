@@ -132,6 +132,20 @@ class TestRendererBasic:
         result = renderer.render(json.dumps(node), tmp_path / "out.png", RenderOptions())
         assert result.png_path.exists()
 
+    def test_render_non_circular_ellipse(self, tmp_path):
+        """Should render an ellipse with different width and height."""
+        renderer = DslRenderer()
+        node = make_frame_node(
+            type="ELLIPSE",
+            width=100,
+            height=50,
+            fills=[{"type": "SOLID", "color": {"r": 0.0, "g": 1.0, "b": 0.0, "a": 1.0}}],
+        )
+        result = renderer.render(json.dumps(node), tmp_path / "out.png", RenderOptions())
+        assert result.png_path.exists()
+        assert result.width == 100
+        assert result.height == 50
+
     def test_render_with_scale(self, tmp_path):
         """Should scale the output."""
         renderer = DslRenderer()
@@ -205,6 +219,75 @@ class TestRendererGradient:
         assert result.png_path.exists()
 
 
+class TestRendererPerCornerRadius:
+    """Test per-corner radius rendering."""
+
+    def test_render_mixed_corner_radii(self, tmp_path):
+        """Should render a rectangle with different radii per corner."""
+        renderer = DslRenderer()
+        node = make_frame_node(
+            type="RECTANGLE",
+            width=120,
+            height=80,
+            fills=[{"type": "SOLID", "color": {"r": 0.2, "g": 0.5, "b": 0.8, "a": 1.0}}],
+            topLeftRadius=20,
+            topRightRadius=0,
+            bottomLeftRadius=0,
+            bottomRightRadius=10,
+        )
+        result = renderer.render(json.dumps(node), tmp_path / "out.png", RenderOptions())
+        assert result.png_path.exists()
+        assert result.width == 120
+        assert result.height == 80
+
+    def test_render_all_corners_different(self, tmp_path):
+        """Should render with all four corners having different radii."""
+        renderer = DslRenderer()
+        node = make_frame_node(
+            type="FRAME",
+            width=200,
+            height=150,
+            fills=[{"type": "SOLID", "color": {"r": 1.0, "g": 0.8, "b": 0.2, "a": 1.0}}],
+            topLeftRadius=30,
+            topRightRadius=15,
+            bottomLeftRadius=5,
+            bottomRightRadius=25,
+        )
+        result = renderer.render(json.dumps(node), tmp_path / "out.png", RenderOptions())
+        assert result.png_path.exists()
+
+    def test_render_uniform_corner_radius_fallback(self, tmp_path):
+        """Should fall back to uniform cornerRadius when per-corner not set."""
+        renderer = DslRenderer()
+        node = make_frame_node(
+            type="RECTANGLE",
+            width=100,
+            height=60,
+            fills=[{"type": "SOLID", "color": {"r": 0.0, "g": 0.8, "b": 0.4, "a": 1.0}}],
+            cornerRadius=12,
+        )
+        result = renderer.render(json.dumps(node), tmp_path / "out.png", RenderOptions())
+        assert result.png_path.exists()
+
+    def test_render_per_corner_with_stroke(self, tmp_path):
+        """Should render per-corner radii with strokes."""
+        renderer = DslRenderer()
+        node = make_frame_node(
+            type="RECTANGLE",
+            width=100,
+            height=60,
+            fills=[{"type": "SOLID", "color": {"r": 1.0, "g": 1.0, "b": 1.0, "a": 1.0}}],
+            topLeftRadius=10,
+            topRightRadius=10,
+            bottomLeftRadius=0,
+            bottomRightRadius=0,
+            strokes=[{"type": "SOLID", "color": {"r": 0.0, "g": 0.0, "b": 0.0, "a": 1.0}}],
+            strokeWeight=2,
+        )
+        result = renderer.render(json.dumps(node), tmp_path / "out.png", RenderOptions())
+        assert result.png_path.exists()
+
+
 class TestRendererCLI:
     """Test CLI entry point."""
 
@@ -231,3 +314,97 @@ class TestRendererCLI:
         )
         assert exit_code == 0
         assert output_path.exists()
+
+
+def _create_test_png(path: Path, width: int = 10, height: int = 10) -> None:
+    """Create a small test PNG using cairo (red square)."""
+    import cairo
+
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+    ctx = cairo.Context(surface)
+    ctx.set_source_rgba(1.0, 0.0, 0.0, 1.0)
+    ctx.rectangle(0, 0, width, height)
+    ctx.fill()
+    surface.write_to_png(str(path))
+
+
+class TestRendererImageFill:
+    """Test IMAGE fill rendering."""
+
+    def test_render_image_fill(self, tmp_path):
+        """Should render a node with an IMAGE fill referencing an asset file."""
+        # Create a test PNG asset
+        asset_dir = tmp_path / "assets"
+        asset_dir.mkdir()
+        _create_test_png(asset_dir / "test_image.png", 20, 20)
+
+        renderer = DslRenderer()
+        node = make_frame_node(
+            width=100,
+            height=80,
+            fills=[{"type": "IMAGE", "imageRef": "test_image.png"}],
+        )
+        options = RenderOptions(asset_dir=str(asset_dir))
+        result = renderer.render(json.dumps(node), tmp_path / "out.png", options)
+
+        assert result.png_path.exists()
+        assert result.width == 100
+        assert result.height == 80
+        # Verify the output file has content (non-zero size)
+        assert result.png_path.stat().st_size > 0
+
+    def test_render_image_fill_missing_asset(self, tmp_path, capsys):
+        """Should fall back gracefully when the asset file is missing."""
+        asset_dir = tmp_path / "assets"
+        asset_dir.mkdir()
+
+        renderer = DslRenderer()
+        node = make_frame_node(
+            width=100,
+            height=80,
+            fills=[{"type": "IMAGE", "imageRef": "nonexistent.png"}],
+        )
+        options = RenderOptions(asset_dir=str(asset_dir))
+        result = renderer.render(json.dumps(node), tmp_path / "out.png", options)
+
+        assert result.png_path.exists()
+        assert result.width == 100
+        assert result.height == 80
+        # Should have printed a warning to stderr
+        captured = capsys.readouterr()
+        assert "nonexistent.png" in captured.err
+
+    def test_render_image_fill_no_asset_dir(self, tmp_path, capsys):
+        """Should fall back gracefully when no asset_dir is configured."""
+        renderer = DslRenderer()
+        node = make_frame_node(
+            width=100,
+            height=80,
+            fills=[{"type": "IMAGE", "imageRef": "some_image.png"}],
+        )
+        options = RenderOptions(asset_dir=None)
+        result = renderer.render(json.dumps(node), tmp_path / "out.png", options)
+
+        assert result.png_path.exists()
+        captured = capsys.readouterr()
+        assert "some_image.png" in captured.err
+
+    def test_render_image_fill_scales_to_node(self, tmp_path):
+        """IMAGE fill should be scaled to fill the node bounds."""
+        asset_dir = tmp_path / "assets"
+        asset_dir.mkdir()
+        # Create a small 10x10 image, render into a 100x80 node
+        _create_test_png(asset_dir / "small.png", 10, 10)
+
+        renderer = DslRenderer()
+        node = make_frame_node(
+            width=100,
+            height=80,
+            fills=[{"type": "IMAGE", "imageRef": "small.png"}],
+        )
+        options = RenderOptions(asset_dir=str(asset_dir))
+        result = renderer.render(json.dumps(node), tmp_path / "out.png", options)
+
+        assert result.png_path.exists()
+        assert result.width == 100
+        assert result.height == 80

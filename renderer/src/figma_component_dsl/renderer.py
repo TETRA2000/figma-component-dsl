@@ -94,7 +94,7 @@ class DslRenderer:
         elif node_type == "ELLIPSE":
             self._render_ellipse(ctx, node, opacity)
         else:
-            self._render_rect_like(ctx, node, opacity)
+            self._render_rect_like(ctx, node, opacity, options)
 
         # Render children
         for child in node.get("children", []):
@@ -107,6 +107,7 @@ class DslRenderer:
         ctx: cairo.Context,
         node: dict[str, Any],
         opacity: float,
+        options: RenderOptions | None = None,
     ) -> None:
         w = node["size"]["x"]
         h = node["size"]["y"]
@@ -118,6 +119,8 @@ class DslRenderer:
                 self._apply_solid_fill(ctx, paint, w, h, corner_radius, opacity)
             elif paint.get("type") == "GRADIENT_LINEAR":
                 self._apply_gradient_fill(ctx, paint, w, h, corner_radius, opacity)
+            elif paint.get("type") == "IMAGE":
+                self._apply_image_fill(ctx, paint, w, h, corner_radius, opacity, options)
 
         # Strokes
         stroke_weight = node.get("strokeWeight", 0)
@@ -177,6 +180,80 @@ class DslRenderer:
             gradient.add_color_stop_rgba(stop["position"], color["r"], color["g"], color["b"], a)
 
         ctx.set_source(gradient)
+        self._rect_path(ctx, w, h, corner_radius)
+        ctx.fill()
+
+    def _apply_image_fill(
+        self,
+        ctx: cairo.Context,
+        paint: dict[str, Any],
+        w: float,
+        h: float,
+        corner_radius: float,
+        opacity: float,
+        options: RenderOptions | None = None,
+    ) -> None:
+        image_ref = paint.get("imageRef", "")
+        asset_dir = options.asset_dir if options else None
+
+        # Resolve asset path
+        if not asset_dir:
+            print(f"Warning: IMAGE fill references '{image_ref}' but no asset_dir configured", file=sys.stderr)
+            self._render_placeholder(ctx, w, h, corner_radius, opacity)
+            return
+
+        asset_path = Path(asset_dir) / image_ref
+        if not asset_path.exists():
+            print(f"Warning: IMAGE asset not found: {asset_path} (imageRef='{image_ref}')", file=sys.stderr)
+            self._render_placeholder(ctx, w, h, corner_radius, opacity)
+            return
+
+        try:
+            img_surface = cairo.ImageSurface.create_from_png(str(asset_path))
+        except Exception as e:
+            print(f"Warning: Failed to load image '{image_ref}': {e}", file=sys.stderr)
+            self._render_placeholder(ctx, w, h, corner_radius, opacity)
+            return
+
+        img_w = img_surface.get_width()
+        img_h = img_surface.get_height()
+
+        # Scale image to fill node bounds
+        scale_x = w / img_w if img_w > 0 else 1.0
+        scale_y = h / img_h if img_h > 0 else 1.0
+
+        ctx.save()
+        # Clip to node shape
+        self._rect_path(ctx, w, h, corner_radius)
+        ctx.clip()
+
+        # Set up scaled image pattern
+        pattern = cairo.SurfacePattern(img_surface)
+        pattern.set_filter(cairo.FILTER_BILINEAR)
+        # Pattern matrix maps from user space to pattern space (inverse of desired transform)
+        matrix = cairo.Matrix()
+        matrix.scale(1.0 / scale_x, 1.0 / scale_y)
+        pattern.set_matrix(matrix)
+
+        ctx.set_source(pattern)
+        paint_opacity = paint.get("opacity", 1.0) * opacity
+        if paint_opacity < 1.0:
+            ctx.paint_with_alpha(paint_opacity)
+        else:
+            ctx.paint()
+
+        ctx.restore()
+
+    def _render_placeholder(
+        self,
+        ctx: cairo.Context,
+        w: float,
+        h: float,
+        corner_radius: float,
+        opacity: float,
+    ) -> None:
+        """Render a gray placeholder rectangle for missing images."""
+        ctx.set_source_rgba(0.8, 0.8, 0.8, opacity)
         self._rect_path(ctx, w, h, corner_radius)
         ctx.fill()
 

@@ -31,6 +31,10 @@ class VirtualBaseNode {
   strokes: DslPaint[] = [];
   strokeWeight = 0;
   cornerRadius = 0;
+  topLeftRadius?: number;
+  topRightRadius?: number;
+  bottomLeftRadius?: number;
+  bottomRightRadius?: number;
   clipContent = false;
 
   protected _children: DslSceneNode[] = [];

@@ -16,6 +16,20 @@ const FONT_WEIGHT_TO_STYLE: Record<number, string> = {
 };
 
 /**
+ * Asynchronously set fontWeight on a text node, loading the required font first.
+ * This replaces the previous Proxy-based approach to avoid race conditions.
+ */
+export async function setFontWeight(
+  node: DslTextNode,
+  weight: number
+): Promise<void> {
+  const style = FONT_WEIGHT_TO_STYLE[weight] ?? 'Regular';
+  const family = (node as Record<string, unknown>).fontFamily as string ?? 'Inter';
+  await figma.loadFontAsync({ family, style });
+  (node as Record<string, unknown>).fontWeight = weight;
+}
+
+/**
  * Create a Figma Plugin API-backed DslFigmaApi implementation.
  * All calls delegate to the global `figma` object.
  */
@@ -28,25 +42,7 @@ export function createPluginApi(): DslFigmaApi {
     async createText(): Promise<DslTextNode> {
       const node = figma.createText();
       await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
-      // Wrap fontWeight setter to auto-load fonts
-      const original = node;
-      return new Proxy(original as unknown as DslTextNode, {
-        set(target: Record<string, unknown>, prop: string, value: unknown) {
-          if (prop === 'fontWeight' && typeof value === 'number') {
-            const style = FONT_WEIGHT_TO_STYLE[value] ?? 'Regular';
-            // Queue font loading - the setter will apply after load
-            figma.loadFontAsync({ family: (target as Record<string, unknown>).fontFamily as string ?? 'Inter', style }).then(() => {
-              (original as unknown as Record<string, unknown>)[prop] = value;
-            });
-            return true;
-          }
-          (target as Record<string, unknown>)[prop] = value;
-          return true;
-        },
-        get(target: Record<string, unknown>, prop: string) {
-          return (target as Record<string, unknown>)[prop];
-        },
-      });
+      return node as unknown as DslTextNode;
     },
 
     createRectangle(): DslRectangleNode {

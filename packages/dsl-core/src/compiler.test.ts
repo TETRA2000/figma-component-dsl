@@ -475,6 +475,87 @@ describe('Compiler — component compilation', () => {
     expect(instanceNode.overriddenProperties).toEqual({ label: 'Submit' });
   });
 
+  it('should compile per-corner radius properties when set', () => {
+    const compiler = makeCompiler();
+    const rect = api.createRectangle();
+    rect.name = 'RoundedRect';
+    rect.resize(100, 60);
+    rect.topLeftRadius = 16;
+    rect.topRightRadius = 0;
+    rect.bottomLeftRadius = 0;
+    rect.bottomRightRadius = 8;
+
+    const result = compiler.compile(rect);
+    expect(result.root.topLeftRadius).toBe(16);
+    expect(result.root.topRightRadius).toBe(0);
+    expect(result.root.bottomLeftRadius).toBe(0);
+    expect(result.root.bottomRightRadius).toBe(8);
+  });
+
+  it('should not emit per-corner radius when not set', () => {
+    const compiler = makeCompiler();
+    const rect = api.createRectangle();
+    rect.name = 'SimpleRect';
+    rect.resize(100, 60);
+    rect.cornerRadius = 10;
+
+    const result = compiler.compile(rect);
+    expect(result.root.cornerRadius).toBe(10);
+    expect(result.root.topLeftRadius).toBeUndefined();
+    expect(result.root.topRightRadius).toBeUndefined();
+    expect(result.root.bottomLeftRadius).toBeUndefined();
+    expect(result.root.bottomRightRadius).toBeUndefined();
+  });
+
+  it('should compile per-corner radius on frame nodes', () => {
+    const compiler = makeCompiler();
+    const frame = api.createFrame();
+    frame.name = 'RoundedFrame';
+    frame.resize(200, 100);
+    frame.topLeftRadius = 20;
+    frame.topRightRadius = 10;
+    frame.bottomLeftRadius = 5;
+    frame.bottomRightRadius = 0;
+
+    const result = compiler.compile(frame);
+    expect(result.root.topLeftRadius).toBe(20);
+    expect(result.root.topRightRadius).toBe(10);
+    expect(result.root.bottomLeftRadius).toBe(5);
+    expect(result.root.bottomRightRadius).toBe(0);
+  });
+
+  it('should compile letterSpacing on TEXT nodes', async () => {
+    const compiler = makeCompiler();
+    const text = await api.createText();
+    text.characters = 'Spaced';
+    text.fontSize = 14;
+    text.letterSpacing = { value: 5, unit: 'PERCENT' };
+
+    const root = api.createFrame();
+    root.resize(200, 100);
+    root.appendChild(text);
+
+    const result = compiler.compile(root);
+    const textNode = result.root.children[0];
+    expect(textNode.letterSpacing).toEqual({ value: 5, unit: 'PERCENT' });
+  });
+
+  it('should compile fontStyle Italic in fontMetaData', async () => {
+    const compiler = makeCompiler();
+    const text = await api.createText();
+    text.characters = 'Italic text';
+    text.fontSize = 14;
+    text.fontStyle = 'Italic';
+
+    const root = api.createFrame();
+    root.resize(200, 100);
+    root.appendChild(text);
+
+    const result = compiler.compile(root);
+    const textNode = result.root.children[0];
+    expect(textNode.derivedTextData!.fontMetaData[0].fontStyle).toBe('Italic');
+  });
+
   it('should compile COMPONENT_SET type', () => {
     const compiler = makeCompiler();
     const parent = api.createFrame();

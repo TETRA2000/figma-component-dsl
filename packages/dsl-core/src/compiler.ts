@@ -44,6 +44,10 @@ export interface FigmaNodeDict {
   strokes?: FigmaPaintOut[];
   strokeWeight?: number;
   cornerRadius?: number;
+  topLeftRadius?: number;
+  topRightRadius?: number;
+  bottomLeftRadius?: number;
+  bottomRightRadius?: number;
   opacity: number;
   visible: boolean;
   clipContent?: boolean;
@@ -64,6 +68,7 @@ export interface FigmaNodeDict {
   fontSize?: number;
   fontFamily?: string;
   textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
+  letterSpacing?: { value: number; unit: string };
 
   componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
   componentId?: string;
@@ -328,6 +333,10 @@ export class Compiler {
     }
     if (node.strokeWeight > 0) compiled.strokeWeight = node.strokeWeight;
     if (node.cornerRadius > 0) compiled.cornerRadius = node.cornerRadius;
+    if (node.topLeftRadius !== undefined) compiled.topLeftRadius = node.topLeftRadius;
+    if (node.topRightRadius !== undefined) compiled.topRightRadius = node.topRightRadius;
+    if (node.bottomLeftRadius !== undefined) compiled.bottomLeftRadius = node.bottomLeftRadius;
+    if (node.bottomRightRadius !== undefined) compiled.bottomRightRadius = node.bottomRightRadius;
     if (node.clipContent) compiled.clipContent = true;
 
     // Parent index

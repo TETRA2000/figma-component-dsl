@@ -10,7 +10,8 @@ vi.mock('@figma-dsl/core', () => ({
   setAutoLayout: vi.fn(),
 }));
 
-import { createPluginApi, hexToRGB, solidPaint, gradientPaint, defineTokens, tokenPaint, setAutoLayout } from './shim.js';
+import { createPluginApi, setFontWeight, hexToRGB, solidPaint, gradientPaint, defineTokens, tokenPaint, setAutoLayout } from './shim.js';
+import type { DslTextNode } from '@figma-dsl/core';
 
 // Mock global figma object
 const mockFigma = {
@@ -100,5 +101,80 @@ describe('createPluginApi', () => {
     const parent = { type: 'FRAME' } as any;
     api.createGroup(children, parent);
     expect(mockFigma.group).toHaveBeenCalled();
+  });
+
+  it('should return the text node directly without a Proxy', async () => {
+    const api = createPluginApi();
+    const text = await api.createText();
+    // The returned object should be the raw mock, not a Proxy
+    expect(text).toEqual(expect.objectContaining({ type: 'TEXT' }));
+    // Setting arbitrary properties should work directly
+    (text as any).someCustomProp = 'hello';
+    expect((text as any).someCustomProp).toBe('hello');
+  });
+});
+
+describe('setFontWeight', () => {
+  it('should await figma.loadFontAsync before assigning fontWeight', async () => {
+    const callOrder: string[] = [];
+
+    // Make loadFontAsync track call order and delay
+    mockFigma.loadFontAsync.mockImplementation(() => {
+      callOrder.push('loadFontAsync');
+      return Promise.resolve();
+    });
+
+    const node = {
+      fontFamily: 'Inter',
+      fontWeight: 400,
+    } as unknown as DslTextNode;
+
+    // Intercept fontWeight assignment to track order
+    let assignedWeight: number | undefined;
+    Object.defineProperty(node, 'fontWeight', {
+      get() { return assignedWeight ?? 400; },
+      set(v: number) {
+        callOrder.push('fontWeight_assigned');
+        assignedWeight = v;
+      },
+      configurable: true,
+    });
+
+    await setFontWeight(node, 700);
+
+    expect(mockFigma.loadFontAsync).toHaveBeenCalledWith({ family: 'Inter', style: 'Bold' });
+    expect(assignedWeight).toBe(700);
+    // Font must be loaded BEFORE weight is assigned
+    expect(callOrder).toEqual(['loadFontAsync', 'fontWeight_assigned']);
+  });
+
+  it('should use the correct font style for each weight', async () => {
+    const node = { fontFamily: 'Inter', fontWeight: 400 } as unknown as DslTextNode;
+
+    await setFontWeight(node, 500);
+    expect(mockFigma.loadFontAsync).toHaveBeenCalledWith({ family: 'Inter', style: 'Medium' });
+
+    await setFontWeight(node, 600);
+    expect(mockFigma.loadFontAsync).toHaveBeenCalledWith({ family: 'Inter', style: 'Semi Bold' });
+
+    await setFontWeight(node, 700);
+    expect(mockFigma.loadFontAsync).toHaveBeenCalledWith({ family: 'Inter', style: 'Bold' });
+
+    await setFontWeight(node, 400);
+    expect(mockFigma.loadFontAsync).toHaveBeenCalledWith({ family: 'Inter', style: 'Regular' });
+  });
+
+  it('should default to Regular style for unknown weights', async () => {
+    const node = { fontFamily: 'Inter', fontWeight: 400 } as unknown as DslTextNode;
+
+    await setFontWeight(node, 300);
+    expect(mockFigma.loadFontAsync).toHaveBeenCalledWith({ family: 'Inter', style: 'Regular' });
+  });
+
+  it('should default to Inter family when fontFamily is not set', async () => {
+    const node = { fontWeight: 400 } as unknown as DslTextNode;
+
+    await setFontWeight(node, 700);
+    expect(mockFigma.loadFontAsync).toHaveBeenCalledWith({ family: 'Inter', style: 'Bold' });
   });
 });
