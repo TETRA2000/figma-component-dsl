@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "Component Library",
+  "components": [
+    {
+      "type": "COMPONENT",
+      "name": "Button",
+      "size": { "x": 160, "y": 44 },
+      "opacity": 1,
+      "visible": true,
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": { "r": 0.07, "g": 0.33, "b": 0.83, "a": 1 },
+          "opacity": 1
+        }
+      ],
+      "cornerRadius": 12,
+      "stackMode": "HORIZONTAL",
+      "itemSpacing": 8,
+      "paddingTop": 10,
+      "paddingRight": 24,
+      "paddingBottom": 10,
+      "paddingLeft": 24,
+      "primaryAxisAlignItems": "CENTER",
+      "counterAxisAlignItems": "CENTER",
+      "children": [
+        {
+          "type": "TEXT",
+          "name": "Label",
+          "size": { "x": 72, "y": 24 },
+          "opacity": 1,
+          "visible": true,
+          "characters": "Continue",
+          "fontSize": 16,
+          "fontFamily": "Inter",
+          "fontWeight": 600,
+          "fontStyle": "Semi Bold",
+          "textAlignHorizontal": "CENTER",
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": { "r": 1, "g": 1, "b": 1, "a": 1 },
+              "opacity": 1
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "COMPONENT",
+      "name": "Card",
+      "size": { "x": 320, "y": 200 },
+      "opacity": 1,
+      "visible": true,
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "opacity": 1
+        }
+      ],
+      "cornerRadius": 8,
+      "stackMode": "VERTICAL",
+      "itemSpacing": 16,
+      "paddingTop": 16,
+      "paddingRight": 16,
+      "paddingBottom": 16,
+      "paddingLeft": 16,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "strokes": [
+        {
+          "color": { "r": 0.9, "g": 0.9, "b": 0.9, "a": 1 },
+          "weight": 1
+        }
+      ],
+      "children": [
+        {
+          "type": "TEXT",
+          "name": "Title",
+          "size": { "x": 288, "y": 24 },
+          "opacity": 1,
+          "visible": true,
+          "characters": "Card Title",
+          "fontSize": 18,
+          "fontFamily": "Inter",
+          "fontWeight": 600,
+          "fontStyle": "Semi Bold",
+          "textAlignHorizontal": "LEFT",
+          "children": []
+        },
+        {
+          "type": "TEXT",
+          "name": "Description",
+          "size": { "x": 288, "y": 40 },
+          "opacity": 1,
+          "visible": true,
+          "characters": "This is a card description with some sample text.",
+          "fontSize": 14,
+          "fontFamily": "Inter",
+          "fontWeight": 400,
+          "fontStyle": "Regular",
+          "textAlignHorizontal": "LEFT",
+          "textAutoResize": "HEIGHT",
+          "children": []
+        }
+      ]
+    }
+  ]
+}

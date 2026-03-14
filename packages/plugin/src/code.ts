@@ -1,57 +1,96 @@
 // Figma Plugin — DSL to Figma Components
 // This runs inside Figma's plugin sandbox with access to the `figma` global
 
-interface PluginNodeDef {
-  type: string;
-  name: string;
-  size: { x: number; y: number };
-  fills?: Array<{
-    type: string;
-    color?: { r: number; g: number; b: number; a: number };
-    opacity: number;
-    gradientStops?: Array<{ color: { r: number; g: number; b: number; a: number }; position: number }>;
-    gradientTransform?: [[number, number, number], [number, number, number]];
-  }>;
-  strokes?: Array<{
-    color: { r: number; g: number; b: number; a: number };
-    weight: number;
-    align?: string;
-  }>;
-  cornerRadius?: number;
-  opacity: number;
-  visible: boolean;
-  clipContent?: boolean;
-  children: PluginNodeDef[];
-  stackMode?: string;
-  itemSpacing?: number;
-  paddingTop?: number;
-  paddingRight?: number;
-  paddingBottom?: number;
-  paddingLeft?: number;
-  primaryAxisAlignItems?: string;
-  counterAxisAlignItems?: string;
-  layoutSizingHorizontal?: string;
-  layoutSizingVertical?: string;
-  characters?: string;
-  fontSize?: number;
-  fontFamily?: string;
-  fontWeight?: number;
-  fontStyle?: string;
-  textAlignHorizontal?: string;
-  textAutoResize?: string;
-  componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
-  componentId?: string;
-  overriddenProperties?: Record<string, string | boolean>;
-}
-
-interface PluginInput {
-  schemaVersion: string;
-  targetPage: string;
-  components: PluginNodeDef[];
-}
+import type {
+  PluginNodeDef,
+  PluginInput,
+  ComponentIdentity,
+  EditLogEntry,
+  ChangesetDocument,
+  ComponentChangeEntry,
+} from '@figma-dsl/core';
+import { diffNodes } from '@figma-dsl/core';
 
 const componentMap = new Map<string, ComponentNode>();
 const errors: string[] = [];
+
+// --- Edit Tracker State ---
+const PLUGIN_DATA_BASELINE = 'dsl-baseline';
+const PLUGIN_DATA_IDENTITY = 'dsl-identity';
+const PLUGIN_DATA_SIZE_LIMIT = 100_000; // 100KB per setPluginData entry
+
+const trackedNodeIds = new Set<string>();
+const editLog: EditLogEntry[] = [];
+let isTracking = false;
+
+function storeBaseline(node: SceneNode, def: PluginNodeDef): void {
+  const json = JSON.stringify(def);
+  if (json.length > PLUGIN_DATA_SIZE_LIMIT) {
+    errors.push(`Baseline for "${def.name}" exceeds 100KB limit (${json.length} bytes), truncating children`);
+    const truncated: PluginNodeDef = { ...def, children: [] };
+    node.setPluginData(PLUGIN_DATA_BASELINE, JSON.stringify(truncated));
+  } else {
+    node.setPluginData(PLUGIN_DATA_BASELINE, json);
+  }
+}
+
+function storeIdentity(node: SceneNode, componentName: string, dslSourcePath: string): void {
+  const identity: ComponentIdentity = {
+    componentName,
+    dslSourcePath,
+    importTimestamp: new Date().toISOString(),
+    originalNodeId: node.id,
+  };
+  node.setPluginData(PLUGIN_DATA_IDENTITY, JSON.stringify(identity));
+}
+
+function findTrackedAncestor(node: BaseNode | null): { node: SceneNode; identity: ComponentIdentity } | null {
+  let current = node;
+  while (current) {
+    if ('getPluginData' in current) {
+      const identityData = (current as SceneNode).getPluginData(PLUGIN_DATA_IDENTITY);
+      if (identityData) {
+        return {
+          node: current as SceneNode,
+          identity: JSON.parse(identityData) as ComponentIdentity,
+        };
+      }
+    }
+    current = current.parent;
+  }
+  return null;
+}
+
+function startTracking(): void {
+  if (isTracking) return;
+  isTracking = true;
+
+  figma.on('documentchange', (event) => {
+    for (const change of event.documentChanges) {
+      if (change.type !== 'PROPERTY_CHANGE' && change.type !== 'CREATE' && change.type !== 'DELETE') {
+        continue;
+      }
+
+      const changedNode = change.type === 'DELETE' ? null : (change as { node?: BaseNode }).node ?? null;
+      if (!changedNode) continue;
+
+      const ancestor = findTrackedAncestor(changedNode);
+      if (!ancestor) continue;
+
+      const entry: EditLogEntry = {
+        nodeId: changedNode.id,
+        componentName: ancestor.identity.componentName,
+        timestamp: new Date().toISOString(),
+        changeType: change.type as EditLogEntry['changeType'],
+        properties: change.type === 'PROPERTY_CHANGE' && 'properties' in change
+          ? (change as { properties: string[] }).properties
+          : [],
+        origin: 'LOCAL',
+      };
+      editLog.push(entry);
+    }
+  });
+}
 
 function toFigmaPaints(fills: PluginNodeDef['fills']): Paint[] {
   if (!fills) return [];
@@ -300,47 +339,350 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
   }
 }
 
+// --- Node Serializer ---
+// Reverse of createNode(): reads a Figma SceneNode and produces a PluginNodeDef
+
+function serializeFills(node: SceneNode): PluginNodeDef['fills'] {
+  if (!('fills' in node)) return undefined;
+  const fills = node.fills as ReadonlyArray<Paint>;
+  if (fills.length === 0) return undefined;
+
+  return fills.filter((f): f is SolidPaint | GradientPaint => f.visible !== false).map(f => {
+    if (f.type === 'SOLID') {
+      return {
+        type: 'SOLID',
+        color: { r: f.color.r, g: f.color.g, b: f.color.b, a: f.opacity ?? 1 },
+        opacity: 1,
+      };
+    }
+    if (f.type === 'GRADIENT_LINEAR') {
+      return {
+        type: 'GRADIENT_LINEAR',
+        color: undefined,
+        opacity: f.opacity ?? 1,
+        gradientStops: f.gradientStops.map(s => ({
+          color: { r: s.color.r, g: s.color.g, b: s.color.b, a: s.color.a },
+          position: s.position,
+        })),
+        gradientTransform: f.gradientTransform as [[number, number, number], [number, number, number]],
+      };
+    }
+    return { type: f.type, opacity: f.opacity ?? 1 };
+  });
+}
+
+function serializeStrokes(node: SceneNode): PluginNodeDef['strokes'] {
+  if (!('strokes' in node)) return undefined;
+  const strokes = (node as GeometryMixin).strokes as ReadonlyArray<Paint>;
+  if (strokes.length === 0) return undefined;
+
+  const weight = 'strokeWeight' in node ? (node as GeometryMixin).strokeWeight as number : 1;
+  return strokes.filter((s): s is SolidPaint => s.type === 'SOLID' && s.visible !== false).map(s => ({
+    color: { r: s.color.r, g: s.color.g, b: s.color.b, a: s.opacity ?? 1 },
+    weight,
+  }));
+}
+
+function serializeNode(node: SceneNode): PluginNodeDef {
+  const result: Record<string, unknown> = {
+    type: node.type,
+    name: node.name,
+    size: { x: 'width' in node ? (node as LayoutMixin).width : 0, y: 'height' in node ? (node as LayoutMixin).height : 0 },
+    opacity: 'opacity' in node ? (node as BlendMixin).opacity : 1,
+    visible: node.visible,
+    children: [] as PluginNodeDef[],
+  };
+
+  // Fills and strokes
+  const fills = serializeFills(node);
+  if (fills && fills.length > 0) result.fills = fills;
+  const strokes = serializeStrokes(node);
+  if (strokes && strokes.length > 0) result.strokes = strokes;
+
+  // Corner radius
+  if ('cornerRadius' in node) {
+    const cr = (node as RectangleNode).cornerRadius;
+    if (typeof cr === 'number' && cr > 0) result.cornerRadius = cr;
+  }
+
+  // Clip content
+  if ('clipsContent' in node && (node as FrameNode).clipsContent) {
+    result.clipContent = true;
+  }
+
+  // Auto-layout
+  if ('layoutMode' in node) {
+    const frame = node as FrameNode;
+    if (frame.layoutMode !== 'NONE') {
+      result.stackMode = frame.layoutMode;
+      result.itemSpacing = frame.itemSpacing;
+      result.paddingTop = frame.paddingTop;
+      result.paddingRight = frame.paddingRight;
+      result.paddingBottom = frame.paddingBottom;
+      result.paddingLeft = frame.paddingLeft;
+      result.primaryAxisAlignItems = frame.primaryAxisAlignItems;
+      result.counterAxisAlignItems = frame.counterAxisAlignItems;
+    }
+    if (frame.layoutSizingHorizontal !== 'FIXED') result.layoutSizingHorizontal = frame.layoutSizingHorizontal;
+    if (frame.layoutSizingVertical !== 'FIXED') result.layoutSizingVertical = frame.layoutSizingVertical;
+  }
+
+  // Text properties
+  if (node.type === 'TEXT') {
+    const textNode = node as TextNode;
+    result.characters = textNode.characters;
+    const fontSize = textNode.fontSize;
+    if (typeof fontSize === 'number') result.fontSize = fontSize;
+    const fontName = textNode.fontName;
+    if (fontName && typeof fontName !== 'symbol') {
+      result.fontFamily = fontName.family;
+      result.fontStyle = fontName.style;
+    }
+    result.textAlignHorizontal = textNode.textAlignHorizontal;
+    if (textNode.textAutoResize !== 'NONE') {
+      result.textAutoResize = textNode.textAutoResize;
+    }
+  }
+
+  // Component property definitions
+  if (node.type === 'COMPONENT' && 'componentPropertyDefinitions' in node) {
+    const defs = (node as ComponentNode).componentPropertyDefinitions;
+    if (Object.keys(defs).length > 0) {
+      const propDefs: Record<string, { type: string; defaultValue: string | boolean }> = {};
+      for (const [name, def] of Object.entries(defs)) {
+        propDefs[name] = { type: def.type, defaultValue: def.defaultValue as string | boolean };
+      }
+      result.componentPropertyDefinitions = propDefs;
+    }
+  }
+
+  // Instance properties
+  if (node.type === 'INSTANCE') {
+    const inst = node as InstanceNode;
+    if (inst.mainComponent) {
+      result.componentId = inst.mainComponent.name;
+    }
+  }
+
+  // Children
+  if ('children' in node) {
+    const children = (node as FrameNode).children;
+    result.children = children.map(child => serializeNode(child));
+  }
+
+  return result as unknown as PluginNodeDef;
+}
+
+function computeChangeset(nodeIds: ReadonlyArray<string>): ChangesetDocument {
+  const components: ComponentChangeEntry[] = [];
+
+  for (const nodeId of nodeIds) {
+    const node = figma.getNodeById(nodeId) as SceneNode | null;
+    if (!node) continue;
+
+    const identityData = node.getPluginData(PLUGIN_DATA_IDENTITY);
+    if (!identityData) continue;
+    const identity = JSON.parse(identityData) as ComponentIdentity;
+
+    const baselineData = node.getPluginData(PLUGIN_DATA_BASELINE);
+    if (!baselineData) continue;
+    const baseline = JSON.parse(baselineData) as PluginNodeDef;
+
+    const current = serializeNode(node);
+    const changes = diffNodes(baseline, current);
+
+    if (changes.length > 0) {
+      components.push({
+        componentName: identity.componentName,
+        componentId: nodeId,
+        changes,
+      });
+    }
+  }
+
+  return {
+    schemaVersion: '1.0',
+    timestamp: new Date().toISOString(),
+    source: {
+      pluginVersion: '0.1.0',
+      figmaFileName: figma.root.name,
+    },
+    components,
+  };
+}
+
+function computeCompleteExport(nodeIds: ReadonlyArray<string>, pageName: string): PluginInput {
+  const components: PluginNodeDef[] = [];
+
+  for (const nodeId of nodeIds) {
+    const node = figma.getNodeById(nodeId) as SceneNode | null;
+    if (!node) continue;
+    components.push(serializeNode(node));
+  }
+
+  return {
+    schemaVersion: '1.0.0',
+    targetPage: pageName,
+    components,
+  };
+}
+
+function getTrackedNodeIdsOnPage(): string[] {
+  const page = figma.currentPage;
+  const ids: string[] = [];
+  for (const child of page.children) {
+    if (child.getPluginData(PLUGIN_DATA_IDENTITY)) {
+      ids.push(child.id);
+    }
+  }
+  return ids;
+}
+
 const GRID_COLUMNS = 5;
 const GRID_SPACING = 50;
 
 figma.showUI(`<div style="padding:16px;font-family:Inter,sans-serif">
-  <h3>Figma DSL Import</h3>
-  <textarea id="input" style="width:100%;height:160px" placeholder="Paste plugin input JSON here..."></textarea>
-  <br><br>
-  <label><input type="checkbox" id="autoExport" checked> Auto-export PNGs after import</label>
-  <br><br>
-  <button id="import" style="padding:8px 16px;cursor:pointer">Import Components</button>
+  <style>
+    .tab-bar { display:flex; border-bottom:1px solid #ccc; margin-bottom:12px; }
+    .tab-bar button { padding:8px 16px; border:none; background:none; cursor:pointer; font-size:14px; border-bottom:2px solid transparent; }
+    .tab-bar button.active { border-bottom-color:#18A0FB; font-weight:600; }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+    .export-btn { padding:8px 16px; cursor:pointer; margin-right:8px; }
+    .copy-btn { padding:4px 12px; cursor:pointer; font-size:12px; }
+  </style>
+  <div class="tab-bar">
+    <button class="active" onclick="switchTab('import')">Import</button>
+    <button onclick="switchTab('export')">Export</button>
+  </div>
+
+  <div id="tab-import" class="tab-panel active">
+    <textarea id="input" style="width:100%;height:160px" placeholder="Paste plugin input JSON here..."></textarea>
+    <br><br>
+    <label><input type="checkbox" id="autoExport" checked> Auto-export PNGs after import</label>
+    <br><br>
+    <button id="import" style="padding:8px 16px;cursor:pointer">Import Components</button>
+  </div>
+
+  <div id="tab-export" class="tab-panel">
+    <div style="margin-bottom:8px">
+      <label><strong>Mode:</strong></label>
+      <select id="exportMode" style="margin-left:8px">
+        <option value="changeset">Changeset (diff)</option>
+        <option value="complete">Complete DSL JSON</option>
+      </select>
+    </div>
+    <div style="margin-bottom:12px">
+      <label><strong>Scope:</strong></label>
+      <select id="exportScope" style="margin-left:8px">
+        <option value="selection">Selected Components</option>
+        <option value="page">All on Page</option>
+      </select>
+    </div>
+    <button class="export-btn" id="exportBtn">Export</button>
+    <br><br>
+    <textarea id="exportOutput" style="width:100%;height:200px" readonly placeholder="Export result will appear here..."></textarea>
+    <br>
+    <button class="copy-btn" id="copyBtn">Copy to Clipboard</button>
+  </div>
+
   <div id="progress" style="font-size:12px;margin-top:8px;color:#666"></div>
   <pre id="output" style="font-size:12px;margin-top:8px;max-height:200px;overflow:auto"></pre>
-  <a id="downloadLink" style="display:none"></a>
   <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelector('.tab-bar button:nth-child(' + (tab === 'import' ? '1' : '2') + ')').classList.add('active');
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
     document.getElementById('import').onclick = () => {
       const input = document.getElementById('input').value;
       const autoExport = document.getElementById('autoExport').checked;
       parent.postMessage({ pluginMessage: { type: 'import', data: input, autoExport } }, '*');
+    };
+    document.getElementById('exportBtn').onclick = () => {
+      const mode = document.getElementById('exportMode').value;
+      const scope = document.getElementById('exportScope').value;
+      parent.postMessage({ pluginMessage: { type: 'export-' + mode, scope: scope } }, '*');
+    };
+    document.getElementById('copyBtn').onclick = () => {
+      const ta = document.getElementById('exportOutput');
+      ta.select();
+      document.execCommand('copy');
+      document.getElementById('progress').textContent = 'Copied to clipboard!';
+      setTimeout(() => { document.getElementById('progress').textContent = ''; }, 2000);
     };
     onmessage = (e) => {
       const msg = e.data.pluginMessage;
       if (msg.type === 'progress') {
         document.getElementById('progress').textContent = msg.text;
       } else if (msg.type === 'export-data') {
-        // Build and download ZIP-like bundle as individual data URLs
         const output = document.getElementById('output');
         output.textContent = msg.summary;
-        // Store node-id-map for copy
         if (msg.nodeIdMap) {
           output.textContent += '\\n\\nnode-id-map.json:\\n' + JSON.stringify(msg.nodeIdMap, null, 2);
         }
         document.getElementById('progress').textContent = 'Export complete!';
+      } else if (msg.type === 'export-result') {
+        document.getElementById('exportOutput').value = msg.json;
+        document.getElementById('progress').textContent = msg.summary;
       } else if (msg.result) {
         document.getElementById('output').textContent = msg.result;
         document.getElementById('progress').textContent = '';
       }
     };
   </script>
-</div>`, { width: 500, height: 500 });
+</div>`, { width: 500, height: 560 });
 
-figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean }) => {
+figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean; scope?: string }) => {
+  // Handle export requests
+  if (msg.type === 'export-changeset' || msg.type === 'export-complete') {
+    try {
+      figma.ui.postMessage({ type: 'progress', text: 'Serializing...' });
+
+      let nodeIds: string[];
+      if (msg.scope === 'selection') {
+        nodeIds = figma.currentPage.selection
+          .filter(n => n.getPluginData(PLUGIN_DATA_IDENTITY))
+          .map(n => n.id);
+        if (nodeIds.length === 0) {
+          figma.ui.postMessage({ type: 'export-result', json: '', summary: 'No tracked components selected. Select imported components first.' });
+          return;
+        }
+      } else {
+        nodeIds = getTrackedNodeIdsOnPage();
+        if (nodeIds.length === 0) {
+          figma.ui.postMessage({ type: 'export-result', json: '', summary: 'No tracked components on this page. Import components first.' });
+          return;
+        }
+      }
+
+      if (msg.type === 'export-changeset') {
+        const changeset = computeChangeset(nodeIds);
+        const totalChanges = changeset.components.reduce((sum, c) => sum + c.changes.length, 0);
+        const json = JSON.stringify(changeset, null, 2);
+        figma.ui.postMessage({
+          type: 'export-result',
+          json,
+          summary: `Changeset: ${changeset.components.length} components, ${totalChanges} changes`,
+        });
+      } else {
+        const pageName = figma.currentPage.name;
+        const complete = computeCompleteExport(nodeIds, pageName);
+        const json = JSON.stringify(complete, null, 2);
+        figma.ui.postMessage({
+          type: 'export-result',
+          json,
+          summary: `Complete export: ${complete.components.length} components`,
+        });
+      }
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      figma.ui.postMessage({ type: 'export-result', json: '', summary: `Export error: ${errMsg}` });
+    }
+    return;
+  }
+
   if (msg.type !== 'import') return;
 
   try {
@@ -389,6 +731,11 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
 
           componentIdMap[compDef.name] = node.id;
           createdNodes.push({ name: compDef.name, node });
+
+          // Store baseline snapshot and identity for edit tracking
+          storeBaseline(node, compDef);
+          storeIdentity(node, compDef.name, `${compDef.name}.dsl.ts`);
+          trackedNodeIds.add(node.id);
         }
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : String(err);
@@ -396,10 +743,15 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
       }
     }
 
+    // Start edit tracking after import
+    if (createdNodes.length > 0) {
+      startTracking();
+    }
+
     if (errors.length > 0) {
       figma.notify(`Import completed with ${errors.length} errors`, { error: true });
     } else {
-      figma.notify(`Import completed: ${createdNodes.length} components`);
+      figma.notify(`Import completed: ${createdNodes.length} components with tracking enabled`);
     }
 
     // Auto-export PNGs if requested
