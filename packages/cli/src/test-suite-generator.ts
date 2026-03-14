@@ -854,16 +854,20 @@ function menuCard(name: string, description: string, price: string, calories: st
         fills: [gradient([{ hex: '#fff8e1', position: 0 }, { hex: '#ffecb3', position: 1 }], 135)],
       }),
       frame('Content', {
-        autoLayout: vertical({ spacing: 8, padX: 16, padY: 16 }),
+        autoLayout: vertical({ spacing: 8, padX: 16, padY: 16, widthSizing: 'FIXED', heightSizing: 'HUG' }),
+        size: { x: 280, y: undefined },
         children: [
           ...(badgeNode ? [badgeNode] : []),
           text(name, { fontSize: 18, fontWeight: 700, color: '#292929' }),
           text(description, {
             fontSize: 13, fontWeight: 400, color: '#6f6f6f',
             lineHeight: { value: 150, unit: 'PERCENT' },
+            size: { x: 248 },
+            textAutoResize: 'HEIGHT',
           }),
           frame('PriceRow', {
-            autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
+            size: { x: 248, y: undefined },
+            autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN', counterAlign: 'CENTER', widthSizing: 'FIXED', heightSizing: 'HUG' }),
             children: [
               text(price, { fontSize: 20, fontWeight: 700, color: '#da291c' }),
               text(calories, { fontSize: 12, fontWeight: 400, color: '#999999' }),
