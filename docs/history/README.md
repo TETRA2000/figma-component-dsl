@@ -26,6 +26,7 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-14 — 20 Japanese Website Iterations (101-120)](2026-03-14-dogfooding-20-japanese-websites.md) — 20 Japanese website themes, 0 pipeline bugs | Features: CJK fonts, radial gradients, multi-stroke, stroke alignment INSIDE/OUTSIDE, text decoration UNDERLINE/STRIKETHROUGH, per-corner radii, canvas pooling, compiler validation, data tables, form inputs
 - [2026-03-14 — 50 Web-Referenced Iterations (51-100)](2026-03-14-dogfooding-50-iterations-web-ref.md) — 50 themes from real Japanese/international websites, 0 pipeline bugs | Features: multi-stop gradients (up to 7), negative spacing, negative letterSpacing, opacity fills, textAutoResize, lineHeight, cornerRadius 9999, thick strokes, SPACE_BETWEEN, nullable children
 - [2026-03-14 — 50 Iterations Stress Test](2026-03-14-dogfooding-50-iterations.md) — 50 themes, 0 pipeline bugs | Features: all DSL features comprehensively tested across gradients, auto-layout, fills, strokes, text wrapping, nested layouts, conditional children, dynamic sizing
 - [2026-03-14 — Travel Cards](2026-03-14-travel-cards.md) — 0 issues found, 0 pipeline fixes | Features: cornerRadius, clipContent, strokes, textAutoResize:HEIGHT, FILL sizing, SPACE_BETWEEN, nested auto-layout
