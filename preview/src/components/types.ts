@@ -43,3 +43,16 @@ export interface StatItem {
   value: string;
   label: string;
 }
+
+export interface Product {
+  image: string;
+  title: string;
+  rating?: number;
+  reviewCount?: number;
+  price: string;
+  originalPrice?: string;
+  discount?: string;
+  prime?: boolean;
+  badge?: string;
+  inStock?: boolean;
+}

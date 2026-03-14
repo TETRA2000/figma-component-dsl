@@ -1,0 +1,61 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  font-family: 'Speedee', system-ui, -apple-system, sans-serif;
+  transition: all 0.2s ease;
+}
+
+.icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.subtitle {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  opacity: 0.8;
+}
+
+.action {
+  flex-shrink: 0;
+}
+
+/* Variants */
+.promo {
+  background: linear-gradient(135deg, #da291c 0%, #ff5722 100%);
+  color: #ffffff;
+}
+
+.delivery {
+  background: linear-gradient(135deg, #ffbc0d 0%, #ffd54f 100%);
+  color: #292929;
+}
+
+.reward {
+  background: linear-gradient(135deg, #264f36 0%, #388e3c 100%);
+  color: #ffffff;
+}
+
+.info {
+  background: #f5f5f5;
+  color: #292929;
+  border: 1px solid #e0e0e0;
+}

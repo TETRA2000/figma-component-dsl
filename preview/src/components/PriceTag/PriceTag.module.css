@@ -1,0 +1,70 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+}
+
+/* Sizes */
+.sm .price {
+  font-size: var(--text-base);
+}
+
+.sm .discount,
+.sm .original {
+  font-size: var(--text-xs);
+}
+
+.md .price {
+  font-size: var(--text-xl);
+}
+
+.md .discount,
+.md .original {
+  font-size: var(--text-sm);
+}
+
+.lg .price {
+  font-size: var(--text-3xl);
+}
+
+.lg .discount,
+.lg .original {
+  font-size: var(--text-base);
+}
+
+/* Price */
+.price {
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: var(--leading-tight);
+}
+
+.label {
+  font-size: var(--text-xs);
+  vertical-align: super;
+  margin-right: 2px;
+}
+
+/* Discount badge */
+.discount {
+  color: #cc0c39;
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  .discount {
+    color: #ff6b6b;
+  }
+}
+
+/* Original price */
+.original {
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+}

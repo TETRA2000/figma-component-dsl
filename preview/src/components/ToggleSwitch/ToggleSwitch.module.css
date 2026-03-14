@@ -1,0 +1,106 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  user-select: none;
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.track {
+  position: relative;
+  display: inline-block;
+  border-radius: var(--radius-full);
+  background: var(--color-gray-300);
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.input:checked + .track {
+  background: var(--color-primary-500);
+}
+
+.input:focus-visible + .track {
+  outline: 2px solid var(--color-primary-400);
+  outline-offset: 2px;
+}
+
+.thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: var(--radius-full);
+  background: var(--color-white);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast);
+}
+
+.input:checked + .track .thumb {
+  transform: translateX(100%);
+}
+
+.label {
+  color: var(--text-primary);
+  line-height: var(--leading-normal);
+}
+
+/* Sizes */
+.sm .track {
+  width: 36px;
+  height: 20px;
+}
+
+.sm .thumb {
+  width: 16px;
+  height: 16px;
+}
+
+.sm .label {
+  font-size: var(--text-sm);
+}
+
+.md .track {
+  width: 44px;
+  height: 24px;
+}
+
+.md .thumb {
+  width: 20px;
+  height: 20px;
+}
+
+.md .label {
+  font-size: var(--text-base);
+}
+
+.lg .track {
+  width: 52px;
+  height: 28px;
+}
+
+.lg .thumb {
+  width: 24px;
+  height: 24px;
+}
+
+.lg .label {
+  font-size: var(--text-lg);
+}
+
+@media (prefers-color-scheme: dark) {
+  .track {
+    background: var(--color-gray-600);
+  }
+
+  .input:checked + .track {
+    background: var(--color-primary-500);
+  }
+}

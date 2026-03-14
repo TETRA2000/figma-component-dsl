@@ -1,0 +1,93 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'Speedee', system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border: 2px solid transparent;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+/* Sizes */
+.sm {
+  padding: 8px 20px;
+  font-size: 12px;
+}
+
+.md {
+  padding: 12px 28px;
+  font-size: 14px;
+}
+
+.lg {
+  padding: 16px 36px;
+  font-size: 16px;
+}
+
+/* Variants */
+.primary {
+  background: #da291c;
+  color: #ffffff;
+  border-color: #da291c;
+}
+
+.primary:hover {
+  background: #b71c1c;
+  border-color: #b71c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(218, 41, 28, 0.4);
+}
+
+.primary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.secondary {
+  background: #ffbc0d;
+  color: #292929;
+  border-color: #ffbc0d;
+}
+
+.secondary:hover {
+  background: #e5a800;
+  border-color: #e5a800;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 188, 13, 0.4);
+}
+
+.secondary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.outline {
+  background: transparent;
+  color: #da291c;
+  border-color: #da291c;
+}
+
+.outline:hover {
+  background: #da291c;
+  color: #ffffff;
+}
+
+.ghost {
+  background: transparent;
+  color: #292929;
+  border-color: transparent;
+}
+
+.ghost:hover {
+  background: rgba(41, 41, 41, 0.08);
+}
+
+.fullWidth {
+  width: 100%;
+}

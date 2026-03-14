@@ -1,0 +1,48 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e2e8f0;
+}
+
+.value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.track {
+  height: 8px;
+  border-radius: 4px;
+  background: #334155;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.blue {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+}
+
+.emerald {
+  background: linear-gradient(90deg, #10b981, #34d399);
+}
+
+.amber {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}

@@ -1,0 +1,47 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: #141414;
+  border: 1px solid #222222;
+}
+
+.top3 {
+  border-color: #ff2d55;
+  background: linear-gradient(135deg, rgba(255, 45, 85, 0.08), rgba(0, 212, 255, 0.08));
+}
+
+.rank {
+  font-size: 16px;
+  font-weight: 700;
+  color: #888888;
+  min-width: 36px;
+}
+
+.rankGlow {
+  color: #ff2d55;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00d4ff, #39ff14);
+  flex-shrink: 0;
+}
+
+.username {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  flex: 1;
+}
+
+.score {
+  font-size: 14px;
+  font-weight: 700;
+  color: #39ff14;
+  font-variant-numeric: tabular-nums;
+}
