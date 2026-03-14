@@ -9,7 +9,7 @@ A domain-specific language for defining Figma component structures declaratively
 git submodule update --init --recursive
 npm install
 
-# Run all tests (170 tests across 12 files)
+# Run all tests (218 tests across 14 files)
 npx vitest run
 ```
 
@@ -24,6 +24,7 @@ npx vitest run
 | `@figma-dsl/comparator` | Pixel-level image comparison with similarity scoring via pixelmatch |
 | `@figma-dsl/exporter` | Generates Figma plugin input JSON from compiled DSL |
 | `@figma-dsl/plugin` | Figma plugin that creates real Figma nodes from DSL definitions |
+| `@figma-dsl/validator` | DSL compatibility validator with 10 rules (file-structure, styling, AST-based) |
 | `@figma-dsl/cli` | CLI interface for all pipeline operations |
 
 ## CLI Usage
@@ -46,6 +47,10 @@ npx figma-dsl pipeline button.dsl.ts -u http://localhost:5173 -t 95
 
 # Export for Figma plugin
 npx figma-dsl export button.dsl.ts -o plugin-input.json
+
+# Validate component DSL compatibility
+npx figma-dsl validate src/components/Button
+npx figma-dsl validate src/components/ --format json --strict
 ```
 
 **Exit codes:** 0 = success, 1 = comparison below threshold, 2 = runtime error.
@@ -94,6 +99,35 @@ DSL Definition (.dsl.ts)
 └─────────┘     └──────────┘
 ```
 
+## Preview App
+
+The `preview/` directory contains a Vite + React app for live previewing components and landing pages. It includes all 16 reference components synced from the reference app.
+
+```bash
+cd preview && npm install --legacy-peer-deps && npm run dev
+```
+
+A sync script keeps reference components up to date:
+
+```bash
+preview/scripts/sync-reference-components.sh
+```
+
+## Claude Desktop Skills
+
+Four AI skills for Claude Desktop are available in `.claude/skills/`:
+
+| Skill | Description |
+|-------|-------------|
+| `create-landing-page` | Compose landing pages from registered components with live preview |
+| `create-react-component` | Scaffold 3-file components with validation and dual preview (React + DSL PNG) |
+| `export-to-figma` | Export components to Figma via MCP auto-publish, plugin JSON, or visual fidelity pipeline |
+| `export-to-html` | Build self-contained HTML files from React pages via vite-plugin-singlefile |
+
+Shared references (component registry and design tokens) are in `.claude/skills/shared/references/`.
+
+Preview server configurations for Claude Desktop are defined in `.claude/launch.json`.
+
 ## Technology
 
 - **TypeScript 5.9+** — strict mode, no `any`
@@ -109,6 +143,8 @@ Reference implementations used for research and specification development:
 
 - **figma_design_playground** — React 19 + TypeScript component library with 16 landing page components and Figma Code Connect integration. Includes a Figma plugin that programmatically generates matching design components.
 - **figma-html-renderer** — Python CLI tool that converts Figma `.fig` files into interactive HTML pages via a five-stage pipeline (Parse, Tree, Classify, Render, Output) using PyCairo for rasterization.
+
+- **skill-creator** — Anthropic's skill authoring toolkit with description optimization, eval grading, and review generation scripts.
 
 See `references/` for the full source of each project.
 
