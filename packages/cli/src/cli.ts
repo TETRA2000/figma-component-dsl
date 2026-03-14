@@ -540,12 +540,8 @@ async function cmdValidate(args: string[]): Promise<number> {
         }
         console.log(JSON.stringify(obj, null, 2));
       } else {
-        let hasFailures = false;
         for (const [name, result] of results) {
           printValidationResult(name, result);
-          if (result.errors.length > 0 || (strict && result.warnings.length > 0)) {
-            hasFailures = true;
-          }
         }
         console.log(`\nValidated ${results.size} component(s)`);
       }
