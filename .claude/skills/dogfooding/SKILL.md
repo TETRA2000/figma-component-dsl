@@ -185,6 +185,14 @@ For every pipeline fix:
 3. **Type-check:** `npx tsc --noEmit -p packages/<pkg>/`
 4. **Update docs** if the fix changes behavior documented in `docs/packages/*.md`
 
+**Update `docs/dsl-reference.md`** whenever you:
+- Fix a DSL authoring error (e.g., wrong `align` vs `counterAlign` usage) — add/update the relevant pattern or gotcha
+- Discover a new pipeline limitation — add it to the "Known Pipeline Limitations" table
+- Find a useful DSL pattern not yet documented (new UI patterns, layout tricks, workarounds) — add it to the "Authoring Patterns" section
+- Fix a pipeline bug that changes how a documented feature works — update the affected section
+
+This is the project's canonical DSL authoring reference. Keeping it current ensures future DSL authors don't hit the same issues.
+
 ### Step 8: Commit
 
 Stage and commit the changes from this iteration:
