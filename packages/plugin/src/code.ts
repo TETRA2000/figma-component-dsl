@@ -258,8 +258,10 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         setAutoLayoutConfig(comp, def);
 
         // Register component properties
+        // Skip VARIANT properties — they are only valid on COMPONENT_SET nodes.
         if (def.componentPropertyDefinitions) {
           for (const [propName, propDef] of Object.entries(def.componentPropertyDefinitions)) {
+            if (propDef.type === 'VARIANT') continue;
             comp.addComponentProperty(propName, propDef.type as 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', propDef.defaultValue as string);
           }
         }

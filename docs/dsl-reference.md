@@ -941,6 +941,8 @@ This was previously broken because the plugin set `layoutSizingHorizontal` befor
 
 **Solution:** Only use `type: 'TEXT'` and `type: 'BOOLEAN'` in `componentProperties` for standalone components. If you need variant support, the component must be part of a component set.
 
+> **Note:** The exporter now automatically strips VARIANT properties from standalone COMPONENT nodes during export, and the plugin skips them during import. DSL files with VARIANT properties on standalone components will export and import without errors, but the VARIANT properties will be silently removed.
+
 ```ts
 // Bad — fails on standalone component
 componentProperties: [
@@ -1022,7 +1024,7 @@ These limitations from earlier versions have been fixed:
 | `Module needs import attribute of type: json` | Passed compiled `.json` to `export` | Use the `.dsl.ts` source file instead |
 | `Unknown option '--format'` | `--format` flag not supported | Remove `--format plugin` from the command |
 | `FILL can only be set on children of auto-layout frames` | Plugin version too old | Update plugin — this was fixed by splitting setAutoLayout into config + sizing phases |
-| `Can only add variant property to a component set` | `type: 'VARIANT'` on standalone component | Use `type: 'TEXT'` or `type: 'BOOLEAN'` only |
+| `Can only add variant property to a component set` | `type: 'VARIANT'` on standalone component | Now auto-filtered by exporter and plugin; use `type: 'TEXT'` or `type: 'BOOLEAN'` for clarity |
 | `Component not found for instance: X` | `instance()` referencing missing component | Replace with inline `frame()` |
 | Sections scattered on canvas | No parent wrapper in merged JSON | Wrap sections in a parent FRAME with vertical layout |
 | Dividers are 1x1 px | Missing `layoutSizingHorizontal: 'FILL'` | Add `layoutSizingHorizontal: 'FILL'` to the divider rectangle |

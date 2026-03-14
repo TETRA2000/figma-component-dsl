@@ -338,7 +338,7 @@ Textarea for pasting PluginInput JSON, auto-export PNGs checkbox, Import button.
 6. **No enum validation**: Alignment and sizing values are cast without checks; invalid strings cause Figma API errors.
 7. **Missing font failure**: Font load failure causes entire TEXT node to fail.
 8. **PNG export incomplete**: Generates PNG data but doesn't download files to disk.
-9. **No VARIANT on standalone components**: Must use COMPONENT_SET with child COMPONENT nodes.
+9. ~~**No VARIANT on standalone components**~~: Fixed — VARIANT properties are now automatically skipped during `addComponentProperty()` for standalone components.
 10. **Grid-only positioning**: No absolute positioning support; grid layout always applied.
 
 ---
