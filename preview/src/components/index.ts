@@ -23,3 +23,6 @@ export { McButton } from './McButton/McButton';
 export { McBadge } from './McBadge/McBadge';
 export { McMenuCard } from './McMenuCard/McMenuCard';
 export { McOrderBanner } from './McOrderBanner/McOrderBanner';
+export { StatCard } from './StatCard/StatCard';
+export { ProgressBar } from './ProgressBar/ProgressBar';
+export { MetricRow } from './MetricRow/MetricRow';

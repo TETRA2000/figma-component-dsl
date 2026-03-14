@@ -1,0 +1,46 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  background: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 240px;
+}
+
+.accent {
+  width: 6px;
+  flex-shrink: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px;
+  gap: 4px;
+}
+
+.label {
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.change {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.change.up {
+  color: #10b981;
+}
+
+.change.down {
+  color: #f59e0b;
+}
