@@ -221,10 +221,12 @@ function positionChildren(
       if (child.layoutGrow && child.layoutGrow > 0) {
         fillCount++;
       } else if (primarySizing === 'FILL') {
-        // Inside a HUG parent, FILL is treated as HUG
+        // Inside a HUG parent, FILL is treated as HUG.
+        // A parent is considered non-HUG if it has an explicit sizing mode,
+        // an explicit size, OR if it itself is FILL-sized by its own parent.
         const parentSizing = isHorizontal
-          ? (al.widthSizing ?? al.sizing ?? (node.size?.x ? 'FIXED' : 'HUG'))
-          : (al.heightSizing ?? al.sizing ?? (node.size?.y ? 'FIXED' : 'HUG'));
+          ? (al.widthSizing ?? al.sizing ?? (node.size?.x ? 'FIXED' : (node.layoutSizingHorizontal === 'FILL' ? 'FILL' : 'HUG')))
+          : (al.heightSizing ?? al.sizing ?? (node.size?.y ? 'FIXED' : (node.layoutSizingVertical === 'FILL' ? 'FILL' : 'HUG')));
         if (parentSizing === 'HUG') {
           fixedTotal += isHorizontal ? childSize.width : childSize.height;
         } else {
@@ -249,8 +251,8 @@ function positionChildren(
         else childSize.height = fillSize;
       } else if (primarySizing === 'FILL') {
         const parentSizing = isHorizontal
-          ? (al.widthSizing ?? al.sizing ?? (node.size?.x ? 'FIXED' : 'HUG'))
-          : (al.heightSizing ?? al.sizing ?? (node.size?.y ? 'FIXED' : 'HUG'));
+          ? (al.widthSizing ?? al.sizing ?? (node.size?.x ? 'FIXED' : (node.layoutSizingHorizontal === 'FILL' ? 'FILL' : 'HUG')))
+          : (al.heightSizing ?? al.sizing ?? (node.size?.y ? 'FIXED' : (node.layoutSizingVertical === 'FILL' ? 'FILL' : 'HUG')));
         if (parentSizing !== 'HUG') {
           if (isHorizontal) childSize.width = fillSize;
           else childSize.height = fillSize;
