@@ -2,12 +2,23 @@
 
 ## Architecture
 
-The DSL project is currently in specification phase. The architecture is informed by two reference implementations that demonstrate complementary parts of the pipeline:
+The DSL is implemented as a TypeScript monorepo with npm workspaces under `packages/`. The architecture combines two directions informed by reference implementations: define components in code, render them visually, and export to Figma.
 
-- **figma_design_playground**: React component → Figma plugin → Figma component (TypeScript/React)
+**Core Pipeline**: DSL definition → compile (with layout) → render to PNG / export to Figma JSON → Figma plugin import
+
+**Monorepo Packages** (all `@figma-dsl/` scoped):
+- `dsl-core` — Node types, DSL builder API, bundled fonts
+- `compiler` — `compileWithLayout` with text measurement via @napi-rs/canvas
+- `renderer` — PNG rendering via @napi-rs/canvas
+- `exporter` — Figma plugin-compatible JSON export
+- `capturer` — Playwright-based React screenshot capture
+- `comparator` — Pixel-diff image comparison with similarity scoring
+- `cli` — 11-command CLI (`figma-dsl`) with bin stubs
+- `plugin` — Figma plugin (esbuild → IIFE) for importing JSON into Figma
+
+**Reference implementations** (git submodules in `references/`):
+- **figma_design_playground**: React 19 component library → Figma plugin → Figma component
 - **figma-html-renderer**: Figma binary → parsed tree → classified nodes → rendered PNG → HTML output (Python)
-
-The DSL will need to combine both directions: define components in code, render them visually, and export to Figma.
 
 ## Core Technologies
 
@@ -31,11 +42,18 @@ The DSL will need to combine both directions: define components in code, render 
 
 | Purpose | Library | Context |
 |---------|---------|---------|
-| Figma binary parsing | fig2sketch, fig-kiwi | Decode `.fig` format |
-| Vector rendering | PyCairo | Rasterize DSL to PNG |
+| PNG rendering & text measurement | @napi-rs/canvas | Node-native Canvas 2D API (replaces PyCairo) |
 | Browser automation | Playwright | React screenshot capture |
-| Figma node creation | Figma Plugin API | Export DSL to Figma |
-| Design-to-code mapping | @figma/code-connect | Dev Mode integration |
+| Figma node creation | Figma Plugin API | Export DSL to Figma via plugin |
+| Design-to-code mapping | @figma/code-connect | Dev Mode integration (reference app) |
+| Testing | vitest | All packages use vitest |
+| Plugin bundling | esbuild | IIFE bundle for Figma sandbox |
+
+### Reference-only Libraries
+| Purpose | Library | Context |
+|---------|---------|---------|
+| Figma binary parsing | fig2sketch, fig-kiwi | Decode `.fig` format (Python reference) |
+| Vector rendering | PyCairo | Rasterize to PNG (Python reference, superseded by @napi-rs/canvas) |
 
 ## Development Standards
 
@@ -48,9 +66,9 @@ Both references are minimalist — CSS Modules (not Tailwind), stdlib HTTP serve
 - **Python**: pytest for testing, type hints encouraged
 
 ### Testing
+- **DSL packages**: vitest for all packages (unit + integration)
 - React reference: No test infrastructure yet (gap identified)
 - Python reference: pytest with Playwright for browser tests
-- DSL project should include tests from the start
 
 ## Development Environment
 
@@ -70,11 +88,13 @@ pytest                   # Unit tests
 
 ## Key Technical Decisions
 
-1. **PyCairo for rendering** — Same technology as figma-html-renderer, proven for Figma-accurate rasterization
+1. **@napi-rs/canvas for rendering** — Node-native Canvas 2D API, replaces PyCairo to eliminate Python dependency; proven for Figma-accurate rasterization
 2. **CSS Modules over utility CSS** — Scoped styles consuming design tokens, no utility class bloat
 3. **Design tokens as CSS custom properties** — Single source of truth for colors, spacing, typography
-4. **Pipeline architecture** — Sequential stages with single-responsibility classes and immutable dataclasses between stages
+4. **Pipeline architecture** — Sequential stages with single-responsibility modules and typed interfaces between stages
 5. **Figma Plugin API (native)** — Direct manipulation of Figma's `figma` global, not wrapped in abstractions
+6. **npm workspaces monorepo** — Each package independently buildable/testable, cross-referenced via workspace dependencies
+7. **Node >= 22** — Required for native TypeScript support and top-level await in bin stubs
 
 ---
 _Document standards and patterns, not every dependency_

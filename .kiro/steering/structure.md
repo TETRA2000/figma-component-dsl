@@ -6,6 +6,21 @@ The project follows a **specification-driven, research-first** approach. Referen
 
 ## Directory Patterns
 
+### DSL Packages (Monorepo)
+**Location**: `packages/{package-name}/`
+**Purpose**: npm workspace packages implementing the DSL pipeline
+**Convention**: Each package has `src/`, `dist/`, `package.json`, and uses vitest. Scoped as `@figma-dsl/{name}`. Pattern: `index.ts` re-exports public API, one module per concern.
+
+### CLI Bin Stubs
+**Location**: `bin/`
+**Purpose**: Per-command entry points for the CLI (`figma-dsl`, `figma-dsl-compile`, etc.)
+**Convention**: Each stub imports from `packages/cli/dist/cli.js` and injects its command name. Also registered in root `package.json` `"bin"` field.
+
+### AI Skills
+**Location**: `.claude/skills/{skill-name}/`
+**Purpose**: Claude AI Skills with SKILL.md entrypoint and supporting files
+**Convention**: SKILL.md with YAML frontmatter (`name`, `description`), markdown instructions, optional `references/` subdirectory
+
 ### Specifications
 **Location**: `.kiro/specs/{feature-name}/`
 **Purpose**: Phased feature specifications (requirements.md, design.md, tasks.md)
@@ -88,12 +103,29 @@ from figma_html_renderer.parser import FigParser
 from figma_html_renderer.tree_builder import TreeBuilder
 ```
 
+## DSL Package Pattern
+
+Each package in `packages/` follows a consistent structure:
+
+```
+packages/{package-name}/
+├── src/
+│   ├── index.ts          # Public API re-exports
+│   ├── {module}.ts       # Implementation
+│   └── {module}.test.ts  # Tests (colocated)
+├── dist/                 # Compiled output
+├── package.json          # @figma-dsl/{name}, vitest, tsc build
+└── tsconfig.json         # Composite project references
+```
+
+**Pattern**: Single responsibility per package. Typed interfaces between packages. No circular dependencies. CLI orchestrates all packages.
+
 ## Code Organization Principles
 
-1. **Colocation**: Component logic, styles, and Figma bindings live together in one folder
-2. **Single responsibility**: Each module/class handles one concern
-3. **Immutable data flow**: Dataclasses passed between pipeline stages, no mutation
-4. **Barrel exports**: Components re-exported from `index.ts` for clean imports
+1. **Colocation**: Component logic, styles, and Figma bindings live together in one folder (reference app); tests colocated with source (DSL packages)
+2. **Single responsibility**: Each module/package handles one concern
+3. **Typed interfaces**: Packages communicate via typed exports, no shared mutable state
+4. **Barrel exports**: Public API re-exported from `index.ts` in each package and component directory
 5. **Design tokens centralized**: One `tokens.css` file consumed by all component CSS Modules
 
 ---
