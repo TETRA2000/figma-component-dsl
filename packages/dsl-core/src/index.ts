@@ -5,3 +5,4 @@ export * from './layout.js';
 export * from './changeset.js';
 export * from './plugin-types.js';
 export * from './diff.js';
+export * from './patterns.js';

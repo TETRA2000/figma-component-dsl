@@ -2,12 +2,14 @@ export type FigmaNodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ROUNDED_RECTANGLE'
   | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'VECTOR';
 
 export interface FigmaPaint {
-  type: 'SOLID' | 'GRADIENT_LINEAR';
+  type: 'SOLID' | 'GRADIENT_LINEAR' | 'GRADIENT_RADIAL';
   color?: { r: number; g: number; b: number; a: number };
   opacity: number;
   visible: boolean;
   gradientStops?: Array<{ color: { r: number; g: number; b: number; a: number }; position: number }>;
   gradientTransform?: [[number, number, number], [number, number, number]];
+  center?: { x: number; y: number };
+  radius?: number;
 }
 
 export interface FigmaStroke {
@@ -68,6 +70,7 @@ export interface FigmaNodeDict {
   fontFamily?: string;
   textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
   textAutoResize?: 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT';
+  textDecoration?: 'NONE' | 'UNDERLINE' | 'STRIKETHROUGH';
 
   // Component
   componentProperties?: Record<string, { type: string; defaultValue: string | boolean }>;

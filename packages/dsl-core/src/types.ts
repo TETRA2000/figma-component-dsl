@@ -30,7 +30,16 @@ export interface GradientFill {
   visible: boolean;
 }
 
-export type Fill = SolidFill | GradientFill;
+export interface RadialGradientFill {
+  type: 'GRADIENT_RADIAL';
+  gradientStops: GradientStop[];
+  center?: { x: number; y: number };  // 0-1 normalized, default (0.5, 0.5)
+  radius?: number;                      // 0-1 normalized, default 0.5
+  opacity: number;
+  visible: boolean;
+}
+
+export type Fill = SolidFill | GradientFill | RadialGradientFill;
 
 export interface StrokePaint {
   color: RgbaColor;
@@ -71,6 +80,7 @@ export interface TextStyle {
   letterSpacing?: { value: number; unit: 'PERCENT' | 'PIXELS' };
   textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
   textAutoResize?: 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT';
+  textDecoration?: 'NONE' | 'UNDERLINE' | 'STRIKETHROUGH';
   color?: string;            // hex string, convenience shorthand
 }
 

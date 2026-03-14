@@ -1,4 +1,4 @@
-import type { RgbaColor, SolidFill, GradientFill, GradientStop, ColorTokenMap } from './types.js';
+import type { RgbaColor, SolidFill, GradientFill, RadialGradientFill, GradientStop, ColorTokenMap } from './types.js';
 
 const HEX_PATTERN = /^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
 
@@ -50,6 +50,24 @@ export function gradient(
     type: 'GRADIENT_LINEAR',
     gradientStops,
     gradientTransform: angleToGradientTransform(angle),
+    opacity: 1,
+    visible: true,
+  };
+}
+
+export function radialGradient(
+  stops: { hex: string; position: number }[],
+  opts?: { center?: { x: number; y: number }; radius?: number },
+): RadialGradientFill {
+  const gradientStops: GradientStop[] = stops.map(s => ({
+    color: hex(s.hex),
+    position: s.position,
+  }));
+  return {
+    type: 'GRADIENT_RADIAL',
+    gradientStops,
+    center: opts?.center,
+    radius: opts?.radius,
     opacity: 1,
     visible: true,
   };

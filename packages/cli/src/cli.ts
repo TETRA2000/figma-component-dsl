@@ -115,6 +115,7 @@ async function cmdRender(args: string[]): Promise<number> {
       output: { type: 'string', short: 'o' },
       scale: { type: 'string', short: 's' },
       background: { type: 'string', short: 'b' },
+      'debug-layout': { type: 'boolean' },
       help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
@@ -132,6 +133,7 @@ Options:
   -o, --output <path>  Output PNG file path (required)
   -s, --scale <N>      Render scale factor (default: 1)
   -b, --background     Background color
+  --debug-layout       Overlay layout debug visualization
   -h, --help           Show this help message`);
     return 0;
   }
@@ -154,7 +156,8 @@ Options:
     }
 
     const scale = values.scale ? parseFloat(values.scale) : 1;
-    const result = renderToFile(compiled.root, resolve(values.output), { scale });
+    const debugLayout = values['debug-layout'] ?? false;
+    const result = renderToFile(compiled.root, resolve(values.output), { scale, debugLayout });
     console.log(`Rendered: ${values.output} (${result.width}×${result.height})`);
     return 0;
   } catch (err) {
