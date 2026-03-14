@@ -291,24 +291,47 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
   }
 }
 
+const GRID_COLUMNS = 5;
+const GRID_SPACING = 50;
+
 figma.showUI(`<div style="padding:16px;font-family:Inter,sans-serif">
   <h3>Figma DSL Import</h3>
-  <textarea id="input" style="width:100%;height:200px" placeholder="Paste plugin input JSON here..."></textarea>
+  <textarea id="input" style="width:100%;height:160px" placeholder="Paste plugin input JSON here..."></textarea>
+  <br><br>
+  <label><input type="checkbox" id="autoExport" checked> Auto-export PNGs after import</label>
   <br><br>
   <button id="import" style="padding:8px 16px;cursor:pointer">Import Components</button>
-  <pre id="output" style="font-size:12px;margin-top:12px"></pre>
+  <div id="progress" style="font-size:12px;margin-top:8px;color:#666"></div>
+  <pre id="output" style="font-size:12px;margin-top:8px;max-height:200px;overflow:auto"></pre>
+  <a id="downloadLink" style="display:none"></a>
   <script>
     document.getElementById('import').onclick = () => {
       const input = document.getElementById('input').value;
-      parent.postMessage({ pluginMessage: { type: 'import', data: input } }, '*');
+      const autoExport = document.getElementById('autoExport').checked;
+      parent.postMessage({ pluginMessage: { type: 'import', data: input, autoExport } }, '*');
     };
     onmessage = (e) => {
-      document.getElementById('output').textContent = e.data.pluginMessage.result;
+      const msg = e.data.pluginMessage;
+      if (msg.type === 'progress') {
+        document.getElementById('progress').textContent = msg.text;
+      } else if (msg.type === 'export-data') {
+        // Build and download ZIP-like bundle as individual data URLs
+        const output = document.getElementById('output');
+        output.textContent = msg.summary;
+        // Store node-id-map for copy
+        if (msg.nodeIdMap) {
+          output.textContent += '\\n\\nnode-id-map.json:\\n' + JSON.stringify(msg.nodeIdMap, null, 2);
+        }
+        document.getElementById('progress').textContent = 'Export complete!';
+      } else if (msg.result) {
+        document.getElementById('output').textContent = msg.result;
+        document.getElementById('progress').textContent = '';
+      }
     };
   </script>
-</div>`, { width: 500, height: 400 });
+</div>`, { width: 500, height: 500 });
 
-figma.ui.onmessage = async (msg: { type: string; data: string }) => {
+figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean }) => {
   if (msg.type !== 'import') return;
 
   try {
@@ -324,30 +347,92 @@ figma.ui.onmessage = async (msg: { type: string; data: string }) => {
     }
     await figma.setCurrentPageAsync(page);
 
-    let xOffset = 0;
+    const total = input.components.length;
+    const createdNodes: Array<{ name: string; node: SceneNode }> = [];
     const componentIdMap: Record<string, string> = {};
 
-    for (const compDef of input.components) {
-      const node = await createNode(compDef, page);
-      if (node) {
-        node.x = xOffset;
-        node.y = 0;
-        xOffset += compDef.size.x + 50;
-        componentIdMap[compDef.name] = node.id;
+    // Grid layout: arrange in rows of GRID_COLUMNS
+    let col = 0;
+    let row = 0;
+    let rowX = 0;
+    let rowY = 0;
+    let rowMaxHeight = 0;
+
+    for (let i = 0; i < total; i++) {
+      const compDef = input.components[i]!;
+      figma.ui.postMessage({ type: 'progress', text: `Importing ${i + 1}/${total}: ${compDef.name}` });
+
+      try {
+        const node = await createNode(compDef, page);
+        if (node) {
+          // Grid positioning
+          node.x = rowX;
+          node.y = rowY;
+          rowX += compDef.size.x + GRID_SPACING;
+          rowMaxHeight = Math.max(rowMaxHeight, compDef.size.y);
+
+          col++;
+          if (col >= GRID_COLUMNS) {
+            col = 0;
+            rowX = 0;
+            rowY += rowMaxHeight + GRID_SPACING;
+            rowMaxHeight = 0;
+          }
+
+          componentIdMap[compDef.name] = node.id;
+          createdNodes.push({ name: compDef.name, node });
+        }
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        errors.push(`Error creating "${compDef.name}": ${errMsg}`);
       }
     }
-
-    const result = errors.length > 0
-      ? `Created ${input.components.length} components with ${errors.length} errors:\n${errors.join('\n')}\n\nIDs: ${JSON.stringify(componentIdMap, null, 2)}`
-      : `Successfully created ${input.components.length} components.\n\nIDs: ${JSON.stringify(componentIdMap, null, 2)}`;
 
     if (errors.length > 0) {
       figma.notify(`Import completed with ${errors.length} errors`, { error: true });
     } else {
-      figma.notify('Import completed successfully!');
+      figma.notify(`Import completed: ${createdNodes.length} components`);
     }
 
-    figma.ui.postMessage({ result });
+    // Auto-export PNGs if requested
+    if (msg.autoExport && createdNodes.length > 0) {
+      figma.ui.postMessage({ type: 'progress', text: 'Exporting PNGs...' });
+
+      const exportedImages: Array<{ name: string; data: Uint8Array }> = [];
+      const exportErrors: string[] = [];
+
+      for (let i = 0; i < createdNodes.length; i++) {
+        const { name, node } = createdNodes[i]!;
+        figma.ui.postMessage({ type: 'progress', text: `Exporting ${i + 1}/${createdNodes.length}: ${name}` });
+
+        try {
+          const pngData = await node.exportAsync({
+            format: 'PNG',
+            constraint: { type: 'SCALE', value: 1 },
+          });
+          exportedImages.push({ name, data: pngData });
+        } catch (err) {
+          const errMsg = err instanceof Error ? err.message : String(err);
+          exportErrors.push(`Export failed for "${name}": ${errMsg}`);
+        }
+      }
+
+      const summary = `Exported ${exportedImages.length}/${createdNodes.length} PNGs.` +
+        (exportErrors.length > 0 ? `\n${exportErrors.length} export errors:\n${exportErrors.join('\n')}` : '') +
+        (errors.length > 0 ? `\n${errors.length} import errors:\n${errors.join('\n')}` : '');
+
+      figma.ui.postMessage({
+        type: 'export-data',
+        summary,
+        nodeIdMap: componentIdMap,
+        imageCount: exportedImages.length,
+      });
+    } else {
+      const result = errors.length > 0
+        ? `Created ${createdNodes.length} components with ${errors.length} errors:\n${errors.join('\n')}\n\nIDs: ${JSON.stringify(componentIdMap, null, 2)}`
+        : `Successfully created ${createdNodes.length} components.\n\nIDs: ${JSON.stringify(componentIdMap, null, 2)}`;
+      figma.ui.postMessage({ result });
+    }
   } catch (err) {
     const msg2 = err instanceof Error ? err.message : String(err);
     figma.notify(`Import failed: ${msg2}`, { error: true });

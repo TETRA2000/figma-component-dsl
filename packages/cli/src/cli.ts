@@ -9,6 +9,11 @@ import { renderToFile, initializeRenderer } from '@figma-dsl/renderer';
 import { compareFiles } from '@figma-dsl/comparator';
 import { captureUrl } from '@figma-dsl/capturer';
 import { exportToFile } from '@figma-dsl/exporter';
+import type { PropertyCategory } from './test-suite-generator.js';
+import { processBatch } from './batch-processor.js';
+import { batchCompare, formatReportMarkdown } from './calibration-reporter.js';
+import { captureFigmaImages, loadNodeIdMap } from './figma-capturer.js';
+import { runCalibration } from './calibrate-orchestrator.js';
 
 // Find font directory relative to packages
 function findFontDir(): string {
@@ -291,6 +296,166 @@ async function cmdExport(args: string[]): Promise<number> {
   }
 }
 
+async function cmdBatch(args: string[]): Promise<number> {
+  const { values, positionals } = parseArgs({
+    args,
+    options: {
+      output: { type: 'string', short: 'o' },
+      include: { type: 'string', multiple: true },
+      page: { type: 'string', short: 'p' },
+      scale: { type: 'string', short: 's' },
+    },
+    allowPositionals: true,
+  });
+
+  const input = positionals[0];
+  if (!input || !values.output) {
+    console.error('Usage: figma-dsl batch <dir|glob> -o <output-dir> [--include <path>...] [-p page] [-s scale]');
+    return 2;
+  }
+
+  try {
+    initServices();
+    const result = await processBatch({
+      input,
+      outputDir: resolve(values.output),
+      include: values.include,
+      pageName: values.page,
+      scale: values.scale ? parseFloat(values.scale) : undefined,
+    });
+
+    console.log(`\nBatch complete: ${result.successCount} success, ${result.errorCount} errors`);
+    console.log(`Plugin input: ${result.mergedPluginInputPath}`);
+    console.log(`Manifest: ${result.manifestPath}`);
+    return result.errorCount > 0 ? 1 : 0;
+  } catch (err) {
+    console.error(`Batch error: ${err instanceof Error ? err.message : String(err)}`);
+    return 2;
+  }
+}
+
+async function cmdBatchCompare(args: string[]): Promise<number> {
+  const { values, positionals } = parseArgs({
+    args,
+    options: {
+      output: { type: 'string', short: 'o' },
+      threshold: { type: 'string', short: 't' },
+      'diff-dir': { type: 'string' },
+    },
+    allowPositionals: true,
+  });
+
+  const dslDir = positionals[0];
+  const figmaDir = positionals[1];
+  if (!dslDir || !figmaDir) {
+    console.error('Usage: figma-dsl batch-compare <dsl-dir> <figma-dir> [-o report.json] [-t threshold] [--diff-dir dir]');
+    return 2;
+  }
+
+  try {
+    const outputPath = values.output ? resolve(values.output) : resolve('report.json');
+    const report = batchCompare({
+      dslDir: resolve(dslDir),
+      figmaDir: resolve(figmaDir),
+      outputPath,
+      diffDir: values['diff-dir'] ? resolve(values['diff-dir']) : undefined,
+      threshold: values.threshold ? parseFloat(values.threshold) : undefined,
+    });
+
+    const markdown = formatReportMarkdown(report);
+    console.log(markdown);
+    console.log(`\nReport written to: ${outputPath}`);
+
+    return report.summary.failed > 0 ? 1 : 0;
+  } catch (err) {
+    console.error(`Batch compare error: ${err instanceof Error ? err.message : String(err)}`);
+    return 2;
+  }
+}
+
+async function cmdCaptureFigma(args: string[]): Promise<number> {
+  const { values } = parseArgs({
+    args,
+    options: {
+      output: { type: 'string', short: 'o' },
+      'file-key': { type: 'string' },
+      token: { type: 'string' },
+      'node-id-map': { type: 'string' },
+      scale: { type: 'string', short: 's' },
+    },
+    allowPositionals: true,
+  });
+
+  if (!values.output || !values['file-key'] || !values.token || !values['node-id-map']) {
+    console.error('Usage: figma-dsl capture-figma -o <dir> --file-key <key> --token <token> --node-id-map <path>');
+    return 2;
+  }
+
+  try {
+    const nodeIdMap = loadNodeIdMap(values['node-id-map']);
+    const result = await captureFigmaImages({
+      outputDir: resolve(values.output),
+      fileKey: values['file-key'],
+      token: values.token,
+      nodeIdMap,
+      scale: values.scale ? parseFloat(values.scale) : undefined,
+    });
+
+    console.log(`\nCaptured ${result.capturedImages.length} images`);
+    if (result.missingComponents.length > 0) {
+      console.log(`Missing: ${result.missingComponents.join(', ')}`);
+    }
+    return result.missingComponents.length > 0 ? 1 : 0;
+  } catch (err) {
+    console.error(`Capture error: ${err instanceof Error ? err.message : String(err)}`);
+    return 2;
+  }
+}
+
+async function cmdCalibrate(args: string[]): Promise<number> {
+  const { values } = parseArgs({
+    args,
+    options: {
+      output: { type: 'string', short: 'o' },
+      property: { type: 'string', multiple: true },
+      include: { type: 'string', multiple: true },
+      'skip-generate': { type: 'boolean' },
+      'capture-mode': { type: 'string' },
+      'file-key': { type: 'string' },
+      token: { type: 'string' },
+      'node-id-map': { type: 'string' },
+      threshold: { type: 'string', short: 't' },
+    },
+    allowPositionals: true,
+  });
+
+  const outputDir = values.output ?? 'calibration';
+
+  try {
+    initServices();
+    const result = await runCalibration({
+      outputDir: resolve(outputDir),
+      properties: values.property as PropertyCategory[] | undefined,
+      include: values.include,
+      skipGenerate: values['skip-generate'],
+      captureMode: values['capture-mode'] === 'api' ? 'api' : undefined,
+      fileKey: values['file-key'],
+      token: values.token,
+      nodeIdMapPath: values['node-id-map'],
+      threshold: values.threshold ? parseFloat(values.threshold) : undefined,
+    });
+
+    console.log(`\n[calibrate] Run complete: ${result.runDir}`);
+    if (result.report) {
+      return result.report.summary.failed > 0 ? 1 : 0;
+    }
+    return 0;
+  } catch (err) {
+    console.error(`Calibrate error: ${err instanceof Error ? err.message : String(err)}`);
+    return 2;
+  }
+}
+
 export async function run(args: string[]): Promise<number> {
   const command = args[0];
   const subArgs = args.slice(1);
@@ -308,6 +473,14 @@ export async function run(args: string[]): Promise<number> {
       return cmdPipeline(subArgs);
     case 'export':
       return cmdExport(subArgs);
+    case 'batch':
+      return cmdBatch(subArgs);
+    case 'batch-compare':
+      return cmdBatchCompare(subArgs);
+    case 'capture-figma':
+      return cmdCaptureFigma(subArgs);
+    case 'calibrate':
+      return cmdCalibrate(subArgs);
     case 'help':
     case '--help':
     case '-h':
@@ -325,15 +498,21 @@ function printHelp(): void {
   console.log(`figma-dsl — Figma Component DSL CLI
 
 Commands:
-  compile <file.dsl.ts> [-o output.json]     Compile DSL to Figma node dict
-  render  <file|json> -o output.png [-s N]   Render to PNG image
-  capture <url> -o output.png [-v WxH]       Capture React component screenshot
-  compare <a.png> <b.png> [-t N] [-d diff]   Compare two images
-  pipeline <file.dsl.ts> -u <url> [opts]     Full pipeline (compile→render→capture→compare)
-  export  <file.dsl.ts> -o output.json       Generate Figma plugin input
+  compile  <file.dsl.ts> [-o output.json]      Compile DSL to Figma node dict
+  render   <file|json> -o output.png [-s N]    Render to PNG image
+  capture  <url> -o output.png [-v WxH]        Capture React component screenshot
+  compare  <a.png> <b.png> [-t N] [-d diff]    Compare two images
+  pipeline <file.dsl.ts> -u <url> [opts]       Full pipeline (compile→render→capture→compare)
+  export   <file.dsl.ts> -o output.json        Generate Figma plugin input
+
+Calibration:
+  calibrate      [-o dir] [--property cat]     Full calibration pipeline
+  batch          <dir> -o <dir> [--include ..]  Batch compile/render/export
+  batch-compare  <dsl-dir> <figma-dir> [-o ..]  Compare DSL vs Figma PNGs
+  capture-figma  -o <dir> --file-key --token    Capture from Figma REST API
 
 Exit codes:
   0  Success
-  1  Pipeline failure (comparison below threshold)
+  1  Pipeline/comparison failure
   2  Runtime error`);
 }
