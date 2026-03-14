@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { compile, compileToJson } from './compiler.js';
 import { frame, text, rectangle, ellipse, group, component, componentSet, instance } from '@figma-dsl/core';
-import { solid, gradient, defineTokens, token } from '@figma-dsl/core';
+import { solid, gradient, radialGradient, defineTokens, token } from '@figma-dsl/core';
 import { horizontal, vertical } from '@figma-dsl/core';
 
 describe('compile() — GUID assignment', () => {
@@ -389,5 +389,85 @@ describe('compile() — error handling', () => {
     const node = frame('Root', {});
     const result = compile(node);
     expect(result.errors).toEqual([]);
+  });
+});
+
+describe('compile() — validation errors', () => {
+  it('reports negative cornerRadius', () => {
+    const node = frame('Bad', { cornerRadius: -5 });
+    const result = compile(node);
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('cornerRadius');
+  });
+
+  it('reports invalid RGBA values', () => {
+    const node = frame('Bad', {
+      fills: [{ type: 'SOLID', color: { r: 2, g: 0, b: 0, a: 1 }, opacity: 1, visible: true }],
+    });
+    const result = compile(node);
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('RGBA');
+  });
+
+  it('reports non-positive strokeWeight', () => {
+    const node = rectangle('Bad', {
+      size: { x: 10, y: 10 },
+      strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 0 }],
+    });
+    const result = compile(node);
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('strokeWeight');
+  });
+
+  it('reports non-positive fontSize', () => {
+    const node = frame('Root', {
+      children: [text('Bad', { fontSize: 0 })],
+    });
+    const result = compile(node);
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('fontSize');
+  });
+
+  it('returns no errors for valid nodes', () => {
+    const node = frame('Root', {
+      fills: [solid('#ff0000')],
+      cornerRadius: 8,
+      strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 2 }],
+      children: [text('OK', { fontSize: 14 })],
+    });
+    const result = compile(node);
+    expect(result.errors).toEqual([]);
+  });
+});
+
+describe('compile() — textDecoration passthrough', () => {
+  it('passes through UNDERLINE textDecoration', () => {
+    const node = frame('Root', {
+      children: [text('Underlined', { fontSize: 14, textDecoration: 'UNDERLINE' })],
+    });
+    const result = compile(node);
+    expect(result.root.children[0]!.textDecoration).toBe('UNDERLINE');
+  });
+
+  it('omits NONE textDecoration', () => {
+    const node = frame('Root', {
+      children: [text('Normal', { fontSize: 14, textDecoration: 'NONE' })],
+    });
+    const result = compile(node);
+    expect(result.root.children[0]!.textDecoration).toBeUndefined();
+  });
+});
+
+describe('compile() — radial gradient', () => {
+  it('compiles radial gradient fills', () => {
+    const node = frame('Grad', {
+      fills: [radialGradient([
+        { hex: '#ff0000', position: 0 },
+        { hex: '#0000ff', position: 1 },
+      ])],
+    });
+    const result = compile(node);
+    expect(result.root.fillPaints[0]!.type).toBe('GRADIENT_RADIAL');
+    expect(result.root.fillPaints[0]!.gradientStops).toHaveLength(2);
   });
 });

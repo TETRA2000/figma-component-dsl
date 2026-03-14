@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { initializeRenderer, render, renderToFile, RenderError } from './renderer.js';
 import { compile, compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
 import { frame, text, rectangle, ellipse, group } from '@figma-dsl/core';
-import { solid, gradient } from '@figma-dsl/core';
+import { solid, gradient, radialGradient } from '@figma-dsl/core';
 import { horizontal, vertical } from '@figma-dsl/core';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -228,5 +228,135 @@ describe('render() — error handling', () => {
     const node = frame('Empty', {});
     const compiled = compile(node);
     expect(() => render(compiled.root)).toThrow(RenderError);
+  });
+});
+
+describe('render() — multi-stroke', () => {
+  it('renders multiple strokes on a rectangle', () => {
+    const node = frame('Root', {
+      size: { x: 100, y: 100 },
+      children: [rectangle('MultiStroke', {
+        size: { x: 80, y: 40 },
+        fills: [solid('#ffffff')],
+        strokes: [
+          { color: { r: 1, g: 0, b: 0, a: 1 }, weight: 3 },
+          { color: { r: 0, g: 0, b: 1, a: 1 }, weight: 1 },
+        ],
+      })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — stroke alignment', () => {
+  it('renders INSIDE stroke', () => {
+    const node = frame('Root', {
+      size: { x: 100, y: 100 },
+      children: [rectangle('Inside', {
+        size: { x: 80, y: 40 },
+        fills: [solid('#ffffff')],
+        strokes: [{ color: { r: 1, g: 0, b: 0, a: 1 }, weight: 4, align: 'INSIDE' }],
+      })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders OUTSIDE stroke', () => {
+    const node = frame('Root', {
+      size: { x: 100, y: 100 },
+      children: [rectangle('Outside', {
+        size: { x: 60, y: 30 },
+        fills: [solid('#ffffff')],
+        strokes: [{ color: { r: 0, g: 1, b: 0, a: 1 }, weight: 4, align: 'OUTSIDE' }],
+      })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — text decoration', () => {
+  it('renders underlined text', () => {
+    const node = frame('Root', {
+      size: { x: 200, y: 50 },
+      children: [text('Underlined', { fontSize: 16, color: '#000000', textDecoration: 'UNDERLINE' })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders strikethrough text', () => {
+    const node = frame('Root', {
+      size: { x: 200, y: 50 },
+      children: [text('Strikethrough', { fontSize: 16, color: '#000000', textDecoration: 'STRIKETHROUGH' })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — radial gradient', () => {
+  it('renders radial gradient fill', () => {
+    const node = frame('RadialBox', {
+      size: { x: 200, y: 200 },
+      fills: [radialGradient([
+        { hex: '#ff0000', position: 0 },
+        { hex: '#0000ff', position: 1 },
+      ])],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — debug layout overlay', () => {
+  it('renders without error with debugLayout=true', () => {
+    const node = frame('DebugRoot', {
+      size: { x: 200, y: 100 },
+      fills: [solid('#ffffff')],
+      autoLayout: horizontal({ spacing: 8, padX: 16, padY: 8 }),
+      children: [
+        text('Hello', { fontSize: 14, color: '#000000' }),
+      ],
+    });
+    const compiled = compileWithLayout(node, textMeasurer);
+    const result = render(compiled.root, { debugLayout: true });
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — CJK text', () => {
+  it('renders Japanese text without error', () => {
+    const node = frame('Root', {
+      size: { x: 300, y: 50 },
+      children: [text('こんにちは世界', { fontSize: 16, color: '#000000' })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — canvas pooling', () => {
+  it('renders correctly across multiple same-sized renders', () => {
+    const node = frame('Box', {
+      size: { x: 100, y: 50 },
+      fills: [solid('#ff0000')],
+    });
+    // Render multiple times with same dimensions to exercise pooling
+    for (let i = 0; i < 5; i++) {
+      const compiled = compile(node);
+      const result = render(compiled.root);
+      expect(result.width).toBe(100);
+      expect(result.height).toBe(50);
+    }
   });
 });

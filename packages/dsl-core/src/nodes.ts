@@ -46,6 +46,7 @@ export function text(
     letterSpacing: style.letterSpacing,
     textAlignHorizontal: style.textAlignHorizontal,
     textAutoResize: style.textAutoResize,
+    textDecoration: style.textDecoration,
     color: style.color,
   } : undefined;
 
