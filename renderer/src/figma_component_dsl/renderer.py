@@ -346,10 +346,23 @@ class DslRenderer:
         font_weight = meta.get("fontWeight", 400)
         font_size = meta.get("fontSize", 12)
 
-        # Map weight to Cairo
+        # Map weight and style to Cairo
         cairo_weight = cairo.FONT_WEIGHT_BOLD if font_weight >= 500 else cairo.FONT_WEIGHT_NORMAL
-        ctx.select_font_face(font_family, cairo.FONT_SLANT_NORMAL, cairo_weight)
+        font_style = meta.get("fontStyle", "Normal")
+        cairo_slant = cairo.FONT_SLANT_ITALIC if font_style == "Italic" else cairo.FONT_SLANT_NORMAL
+        ctx.select_font_face(font_family, cairo_slant, cairo_weight)
         ctx.set_font_size(font_size)
+
+        # Letter spacing
+        letter_spacing_data = node.get("letterSpacing")
+        extra_spacing = 0.0
+        if letter_spacing_data:
+            ls_value = letter_spacing_data.get("value", 0)
+            ls_unit = letter_spacing_data.get("unit", "PERCENT")
+            if ls_unit == "PERCENT":
+                extra_spacing = font_size * ls_value / 100.0
+            else:  # PIXELS
+                extra_spacing = ls_value
 
         # Text color from first fill
         fills = node.get("fillPaints", [])
@@ -372,15 +385,28 @@ class DslRenderer:
             # Alignment offset
             x_offset = 0.0
             if align in ("CENTER", "RIGHT"):
-                extents = ctx.text_extents(line)
-                text_w = extents.x_advance
+                if extra_spacing > 0 and line:
+                    # Calculate total width with letter spacing
+                    text_w = sum(ctx.text_extents(ch).x_advance + extra_spacing for ch in line) - extra_spacing
+                else:
+                    extents = ctx.text_extents(line)
+                    text_w = extents.x_advance
                 if align == "CENTER":
                     x_offset = (w - text_w) / 2
                 elif align == "RIGHT":
                     x_offset = w - text_w
 
-            ctx.move_to(x_offset, line_y)
-            ctx.show_text(line)
+            if extra_spacing > 0 and line:
+                # Render character by character with manual spacing
+                cur_x = x_offset
+                for ch in line:
+                    ctx.move_to(cur_x, line_y)
+                    ctx.show_text(ch)
+                    extents = ctx.text_extents(ch)
+                    cur_x += extents.x_advance + extra_spacing
+            else:
+                ctx.move_to(x_offset, line_y)
+                ctx.show_text(line)
 
     def _rect_path_per_corner(
         self,
