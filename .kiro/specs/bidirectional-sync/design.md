@@ -37,7 +37,7 @@ The current pipeline is unidirectional:
 
 Key constraints:
 - Plugin (`packages/plugin/`) is import-only with inline HTML UI
-- `PluginNodeDef` type is duplicated between `packages/plugin/` and `packages/exporter/`
+- `PluginNodeDef` type is currently duplicated between `packages/plugin/` and `packages/exporter/` — this feature consolidates the canonical definition in `@figma-dsl/core` (or exporter) and has the plugin import it via esbuild bundling at build time
 - Component identification relies on filename convention (`{Name}.dsl.ts` ↔ `{Name}.tsx`)
 - Comparator package already supports image diffing with similarity scoring
 - No existing export-from-Figma or change tracking functionality
@@ -99,7 +99,7 @@ graph TB
 | Layer | Choice / Version | Role in Feature | Notes |
 |-------|------------------|-----------------|-------|
 | Plugin Runtime | Figma Plugin API | Edit tracking via `documentchange`, metadata via `setPluginData` | No new dependencies |
-| Plugin Build | esbuild (IIFE) | Bundle extended plugin code | Existing toolchain |
+| Plugin Build | esbuild (IIFE) | Bundle extended plugin code; resolve @figma-dsl/core workspace imports at build time | Existing toolchain, extended config |
 | Shared Types | @figma-dsl/core | Changeset schema types, `PluginNodeDef` canonical definition | Extended, not new |
 | Image Comparison | @figma-dsl/comparator | Visual verification in AI skill | Existing package |
 | Screenshot | @figma-dsl/capturer (Playwright) | React component capture for verification | Existing package |
@@ -161,17 +161,17 @@ sequenceDiagram
     participant VerifySkill
     participant Comparator
 
-    Developer->>ApplySkill: Provide changeset JSON
+    Developer->>ApplySkill: Provide changeset JSON + complete DSL JSON export
     ApplySkill->>ApplySkill: Parse changeset
     ApplySkill->>ApplySkill: Map components to React files
     ApplySkill->>ApplySkill: Apply property changes to code
-    ApplySkill->>VerifySkill: Trigger verification
-    VerifySkill->>VerifySkill: Render DSL to PNG
-    VerifySkill->>VerifySkill: Capture React to PNG
-    VerifySkill->>Comparator: Compare images
+    ApplySkill->>VerifySkill: Trigger verification with complete DSL JSON
+    VerifySkill->>VerifySkill: Render complete DSL JSON export to reference PNG
+    VerifySkill->>VerifySkill: Capture React component to PNG
+    VerifySkill->>Comparator: Compare reference vs React capture
     alt Similarity below threshold
         Comparator->>VerifySkill: Fail with diff
-        VerifySkill->>VerifySkill: Analyze diff and fix code
+        VerifySkill->>VerifySkill: Analyze diff and fix React code
         VerifySkill->>Comparator: Re-compare
     end
     VerifySkill->>Developer: Final report with pass/fail
@@ -241,10 +241,11 @@ sequenceDiagram
 
 **Responsibilities & Constraints**
 - Register `documentchange` listener after component import completes
-- Store baseline snapshots on each imported top-level node via `setPluginData("dsl-baseline", ...)`
+- Store baseline snapshots on each imported top-level node via `setPluginData("dsl-baseline", ...)`. The baseline includes the full recursive child tree (matching the `PluginNodeDef.children` structure).
 - Store component identity metadata via `setPluginData("dsl-identity", ...)`
 - Maintain in-memory ordered edit log per component for real-time feedback
-- Filter changes to only tracked nodes (those with `dsl-identity` pluginData)
+- **Child node attribution**: When a `documentchange` event fires for any node, walk the `node.parent` chain upward until a node with `dsl-identity` pluginData is found. Attribute the change to that top-level component. Discard changes on nodes that have no tracked ancestor.
+- Filter changes to only tracked nodes and their descendants (those reachable via parent-chain traversal to a node with `dsl-identity` pluginData)
 
 **Dependencies**
 - External: Figma Plugin API (`figma.on("documentchange")`, `setPluginData`, `getPluginData`) — P0
@@ -400,8 +401,8 @@ interface ChangesetDocument {
 - `propertyPath` uses dot-notation matching `PluginNodeDef` field paths (e.g., `"fills.0.color.r"`, `"fontSize"`, `"children.2.characters"`)
 
 **Implementation Notes**
-- These types are exported from `@figma-dsl/core` and imported by the plugin (bundled by esbuild) and referenced in skill documentation
-- The plugin includes a copy of these types inline (since it runs in Figma sandbox without npm imports) — must be kept in sync
+- These types are exported from `@figma-dsl/core` and imported by the plugin at build time. The plugin's esbuild configuration resolves `@figma-dsl/core` as a workspace dependency and bundles the type-stripped JavaScript into the IIFE output. This eliminates type duplication — the plugin imports changeset types (and `PluginNodeDef`) directly from the canonical source, and esbuild inlines them at build time.
+- The existing `PluginNodeDef` duplication between `packages/plugin/` and `packages/exporter/` should also be consolidated: the canonical definition lives in `@figma-dsl/core` (or `@figma-dsl/exporter`), and the plugin imports it via esbuild bundling.
 
 ### AI Skills Domain
 
@@ -444,14 +445,15 @@ interface ChangesetDocument {
 | Requirements | 5.1, 5.2, 5.3, 5.4, 5.5, 5.6 |
 
 **Responsibilities & Constraints**
-- Compile and render the component's `.dsl.ts` file to PNG via existing pipeline
+- Render the **complete DSL JSON export** (from Requirement 3 — the Figma-side current state) to PNG as the reference image. This reflects the designer's intended changes, not the original `.dsl.ts` file which has not been updated.
 - Capture the React component via Playwright screenshot (existing capturer)
-- Compare images using existing comparator package
-- If similarity < threshold (default 95%), analyze the diff image and suggest/apply code fixes
+- Compare the reference (complete export render) against the React capture using the existing comparator package
+- If similarity < threshold (default 95%), analyze the diff image and suggest/apply code fixes to the React component
 - Iterate up to max rounds (default 3)
 - Present results using Claude Desktop preview feature (side-by-side images)
 
 **Dependencies**
+- Inbound: ApplySkill provides the complete DSL JSON export file alongside the changeset — P0
 - External: @figma-dsl/renderer — P0
 - External: @figma-dsl/capturer — P0
 - External: @figma-dsl/comparator — P0
@@ -460,9 +462,10 @@ interface ChangesetDocument {
 
 **Implementation Notes**
 - The skill is implemented as a Claude Code SKILL.md file in `.claude/skills/verify-changeset/`
-- Uses existing CLI commands: `figma-dsl compile`, `figma-dsl render`, `figma-dsl capture`, `figma-dsl compare`
+- The reference image is rendered from the complete DSL JSON export (not `.dsl.ts`). The skill uses `figma-dsl render` on the exported JSON file to produce the reference PNG, then `figma-dsl capture` for the React screenshot, then `figma-dsl compare` for the diff.
 - Claude Desktop preview displays images inline for visual inspection
 - The skill maintains iteration state and produces a final report
+- The developer must provide both the changeset JSON and the complete DSL JSON export from the plugin (both are available from the Export UI)
 
 ## Data Models
 

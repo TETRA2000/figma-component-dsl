@@ -107,6 +107,24 @@
 - **Selected Approach**: Define changeset TypeScript types in `@figma-dsl/core` package, since it is already the shared type foundation
 - **Rationale**: Avoids new package for a small type definition. Core package already defines `DslNode`, `Fill`, `AutoLayoutConfig` etc.
 
+### Decision: Plugin Types via esbuild Bundling (Design Review Fix #2)
+- **Context**: Plugin runs in Figma sandbox without npm imports. Previously, types were duplicated inline. Design review identified risk of type drift.
+- **Alternatives Considered**:
+  1. (a) esbuild resolves @figma-dsl/core imports at build time — single source of truth
+  2. (b) CI check validates plugin inline types match canonical definitions — manual sync
+- **Selected Approach**: (a) esbuild bundling. The plugin imports from `@figma-dsl/core` in source code, and esbuild inlines the resolved modules into the IIFE bundle at build time.
+- **Rationale**: Eliminates duplication entirely. No manual sync needed. Leverages existing esbuild toolchain.
+
+### Decision: Verification Reference from Complete DSL Export (Design Review Fix #1)
+- **Context**: After changeset application, the `.dsl.ts` file still reflects the original pre-edit state. Using it as the verification reference would always produce false mismatches.
+- **Selected Approach**: The VerifySkill renders the **complete DSL JSON export** (Requirement 3 output) as the reference image, not the `.dsl.ts` file. The developer provides both the changeset and the complete export from the plugin.
+- **Rationale**: The complete export reflects the designer's intended state in Figma, which is the correct baseline for verifying React code fidelity.
+
+### Decision: Parent-Chain Traversal for Child Attribution (Design Review Fix #3)
+- **Context**: `documentchange` fires for any node, including deeply nested children. Need to attribute changes to the correct top-level tracked component.
+- **Selected Approach**: Walk `node.parent` chain upward until a node with `dsl-identity` pluginData is found. Attribute the change to that component. Discard changes with no tracked ancestor.
+- **Rationale**: Simple, reliable, O(depth) per event. Figma component trees are typically <10 levels deep.
+
 ## Risks & Mitigations
 - **100KB pluginData limit** — Mitigate: compress baseline snapshots, split across keys if needed, or store only property subset relevant to changeset generation
 - **Auto-layout property tracking gap** — Mitigate: hybrid approach with snapshot diff at export time covers all properties
