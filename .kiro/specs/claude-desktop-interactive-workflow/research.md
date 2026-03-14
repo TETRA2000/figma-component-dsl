@@ -2,26 +2,25 @@
 
 ## Summary
 - **Feature**: `claude-desktop-interactive-workflow`
-- **Discovery Scope**: New Feature (greenfield skills + preview infrastructure)
+- **Discovery Scope**: New Feature (greenfield skills + preview infrastructure + validation packages + Figma auto-publish)
 - **Key Findings**:
-  - Claude Skills use YAML frontmatter (`name`, `description`, `allowed-tools`) in SKILL.md; `description` is the primary auto-invocation trigger
-  - `vite-plugin-singlefile` (86K weekly downloads) solves HTML export by inlining all CSS/JS into a single file — avoids custom SSR+CSS extraction
-  - Figma Code Connect uses `figma.connect(Component, URL, { props, example })` with `figma.enum`, `figma.string`, `figma.boolean` mappers; reference app already demonstrates the exact pattern
-  - `.claude/launch.json` supports multiple configurations with `runtimeExecutable`, `runtimeArgs`, `port`, `cwd`, and `autoPort`; no custom schema needed
+  - Figma MCP server's `generate_figma_design` tool enables auto-publishing designs to Figma files directly from Claude Desktop — eliminates manual plugin import
+  - Existing DSL pipeline already accumulates `CompileError[]` with node path tracking; a new `@figma-dsl/validator` package can extend this with React-to-DSL structural validation
+  - `vite-plugin-singlefile` (86K weekly downloads) solves HTML export by inlining all CSS/JS into a single file
+  - Figma REST API is read-only for file contents; only the Figma MCP server and Plugin API can create/modify designs
 
 ## Research Log
 
 ### Claude AI Skills SKILL.md Format
 - **Context**: Need to understand exact frontmatter spec for skills
-- **Sources**: [Claude Code Skills Docs](https://code.claude.com/docs/en/skills), [Anthropic Skills Repo](https://github.com/anthropics/skills), [SKILL.md Format Spec](https://deepwiki.com/anthropics/skills/2.2-skill.md-format-specification)
+- **Sources**: [Claude Code Skills Docs](https://code.claude.com/docs/en/skills), [Anthropic Skills Repo](https://github.com/anthropics/skills)
 - **Findings**:
   - Allowed frontmatter keys: `name`, `description`, `license`, `allowed-tools`, `metadata`, `compatibility`
   - `allowed-tools` grants tool access without per-use approval (CLI only, not SDK)
   - `description` field is the primary mechanism for auto-invocation — Claude matches user requests against descriptions
   - Skills support `$ARGUMENTS` and `$CLAUDE_SESSION_ID` string substitution
   - Supporting files go under subdirectories (`references/`, `scripts/`, `assets/`)
-  - Existing project skill (`magi-docs-writer`) uses `name` + `description` only (no `allowed-tools`)
-- **Implications**: Skills need descriptive `description` fields with trigger phrases. `allowed-tools` should include `Bash` (for CLI commands), `Read`, `Write`, `Edit`, `Glob`, `Grep` for file operations.
+- **Implications**: Skills need descriptive `description` fields with trigger phrases. `allowed-tools` should include `Bash`, `Read`, `Write`, `Edit`, `Glob`, `Grep`.
 
 ### `.claude/launch.json` Preview Configuration
 - **Context**: Need exact format for preview server configs
@@ -32,52 +31,98 @@
   - `autoVerify: true` (default) makes Claude take screenshots after edits to verify changes
   - `cwd` supports `${workspaceFolder}` variable
   - `autoPort: true` finds free port automatically if preferred port is in use
-  - JSON with comments supported
-- **Implications**: Two configs needed — Vite dev server (port 5173) and static file server for PNG previews. `autoVerify` should stay enabled for interactive workflows.
+- **Implications**: Two configs needed — Vite dev server (port 5173) and static file server for PNG previews.
 
 ### HTML Export Strategy — Vite Build + Single File
 - **Context**: Requirement 5 needs self-contained HTML from React components
 - **Sources**: [vite-plugin-singlefile](https://github.com/richardtallent/vite-plugin-singlefile), [Vite Build Docs](https://vite.dev/guide/build)
 - **Findings**:
   - `vite-plugin-singlefile` inlines all JS+CSS into `dist/index.html` — 86K weekly downloads, mature
-  - CSS Modules are handled natively by Vite's build pipeline — scoped class names resolved at build time
+  - CSS Modules are handled natively by Vite's build pipeline
   - Design tokens (`tokens.css`) imported as global CSS are automatically bundled
   - No custom SSR needed — standard Vite build with single-file plugin produces a complete, self-contained page
-  - Fonts/images require additional handling (base64 inline or asset copy)
-- **Implications**: HTML export skill instructs Claude to: (1) add `vite-plugin-singlefile` to the preview app, (2) run `vite build`, (3) output `dist/index.html` as the self-contained page. This eliminates the need for a custom `packages/html-renderer` package.
+- **Implications**: HTML export skill uses Vite build pipeline. No custom `packages/html-renderer` needed.
 
-### Figma Code Connect Binding Pattern
-- **Context**: Requirement 4.3 needs Code Connect generation guidance
-- **Sources**: [Figma Code Connect React Docs](https://developers.figma.com/docs/code-connect/react/), [npm @figma/code-connect](https://www.npmjs.com/package/@figma/code-connect)
+### Figma MCP Server — Auto-Publishing to Figma
+- **Context**: User requested automatic publishing of designs to Figma, eliminating manual plugin import
+- **Sources**: [Figma MCP Server Docs](https://developers.figma.com/docs/figma-mcp-server/), [Figma MCP Tools](https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/), [Figma REST API](https://developers.figma.com/docs/rest-api/)
 - **Findings**:
-  - Pattern: `figma.connect(Component, FIGMA_URL, { props: { ... }, example: (props) => <Component {...props} /> })`
-  - Prop mappers: `figma.enum('PropertyName', { FigmaValue: 'codeValue' })`, `figma.string('PropertyName')`, `figma.boolean('PropertyName')`
-  - Reference app already has 16 `.figma.tsx` files demonstrating this pattern
-  - Code Connect CLI can publish bindings to Figma, but creation is manual (no auto-generation from React interfaces)
-  - FIGMA_URL must point to an existing Figma component node
-- **Implications**: The Figma Export Skill provides a template and reference doc showing the Code Connect pattern. Claude generates `.figma.tsx` files by mapping React prop types to `figma.enum/string/boolean`. The FIGMA_URL is a placeholder until the component is published to Figma.
+  - **`generate_figma_design`** (write): Sends live UI as design layers to new or existing Figma files. Remote server only. Exempt from standard rate limits. Requires edit permissions for existing files. New files created in team/organization drafts.
+  - **`add_code_connect_map`** (write): Establishes mappings between Figma design nodes and code components. Figma Design files only.
+  - **`send_code_connect_mappings`** (write): Confirms Code Connect mappings after `get_code_connect_suggestions` detection.
+  - **`get_code_connect_suggestions`** (read): Detects and suggests Code Connect mappings from codebase.
+  - **`get_design_context`** (read): Returns design context for a layer/selection. Default output is React + Tailwind, customizable to other frameworks.
+  - **`get_variable_defs`** (read): Returns variables and styles (colors, spacing, typography) from Figma selection.
+  - **`get_screenshot`** (read): Captures visual representations of selections.
+  - **Authentication**: Figma MCP server handles auth internally when configured in Claude Desktop — users authenticate via Figma's OAuth flow.
+  - **Figma REST API limitation**: REST API is read-only for file contents — cannot create files or components. Only Plugin API and MCP server can write.
+- **Implications**:
+  - The Figma Export Skill can auto-publish designs via MCP's `generate_figma_design` instead of manual plugin JSON import
+  - Code Connect mappings can be auto-established via `add_code_connect_map` after design is published
+  - The existing exporter JSON format (PluginInput) is still useful for the Figma plugin fallback path
+  - MCP server must be configured in Claude Desktop's MCP settings — skill should document setup instructions
+  - Two publishing paths: (1) MCP server direct publish (preferred), (2) plugin JSON import (fallback)
 
-### Preview App Architecture
-- **Context**: Skills need a Vite+React app where Claude writes user-generated pages/components
-- **Sources**: Gap analysis, reference app structure
+### Figma REST API — Read-Only Limitation
+- **Context**: Investigated whether REST API could create/modify Figma files
+- **Sources**: [Figma REST API Introduction](https://developers.figma.com/docs/rest-api/), [Figma API Comparison](https://developers.figma.com/compare-apis/)
 - **Findings**:
-  - Reference app (`references/figma_design_playground/`) is a git submodule — read-only, cannot be modified
-  - Preview app needs: Vite config, React 19, CSS Modules, tokens.css, shared types
-  - Two approaches: (A) copy reference components into preview app, (B) alias `references/` via Vite `resolve.alias`
-  - Approach B is cleaner — avoids duplication, reference stays canonical
-  - Vite hot-reload works for new files added to watched directories
-  - Preview app should be at repo root as `preview/` (not in `packages/`) since it's not a publishable package
-- **Implications**: A `preview/` directory with minimal Vite+React scaffold. Vite config aliases `@/components` to reference app components. Skills write new pages/components into `preview/src/`. Launch.json `cwd` points to `preview/`.
+  - REST API is for reading/extracting design data, not creating
+  - `createComponent` exists only in the Plugin API (runs inside Figma editor)
+  - 2025 platform changes introduced granular scopes (`file_content:read`, `file_metadata:read`) replacing broad `file_read`
+  - No REST endpoint for creating components, frames, or files programmatically
+- **Implications**: MCP server `generate_figma_design` is the only external-to-Figma write path. Plugin JSON import remains as fallback.
+
+### DSL Compatibility Validation — Existing Pipeline Analysis
+- **Context**: User requested validation for React components to ensure DSL compatibility, enabling AI iteration
+- **Sources**: Codebase analysis of `packages/dsl-core`, `packages/compiler`, `packages/exporter`
+- **Findings**:
+  - **Existing validation** is minimal:
+    - `dsl-core/src/nodes.ts`: Name validation (non-empty), text validation (non-empty characters), instance validation (non-empty componentRef)
+    - `dsl-core/src/colors.ts`: Hex color pattern validation (`/^#?([0-9a-fA-F]{6})$/`), token existence check
+    - `compiler/src/compiler.ts`: Accumulates `CompileError[]` with `{ message, nodePath, nodeType }`
+    - `renderer/src/renderer.ts`: `RenderError` class with `nodePath` and `nodeType`
+  - **DSL node types** (`DslNode` in `dsl-core/src/types.ts`):
+    - `NodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE'`
+    - Components have `componentProperties: ComponentProperty[]` (type: `TEXT | BOOLEAN | INSTANCE_SWAP`)
+    - Auto-layout: direction, padding, spacing, alignment, sizing modes (`FIXED | HUG | FILL`)
+  - **Compiler input format** (`.dsl.ts` files):
+    - Import DSL factory functions from `@figma-dsl/core`
+    - Export default `DslNode` (NOT React components)
+    - Build tree using `frame()`, `text()`, `rectangle()`, `component()`, etc.
+    - CLI loads via dynamic import and validates `mod.default` exists
+  - **Exporter output** (`PluginInput`): `{ schemaVersion: "1.0.0", targetPage, components: PluginNodeDef[] }`
+  - **No schema validation library** — relies on TypeScript type system only
+- **Implications**:
+  - A new `@figma-dsl/validator` package can provide programmatic validation of React component structure against DSL constraints
+  - Validation rules: CSS Modules usage, design token references, prop interface patterns, className composition pattern
+  - The validator runs as a CLI command (`figma-dsl validate`) and as a programmatic API for skill-driven iteration
+  - Compiler errors (`CompileError[]`) already provide the reporting pattern — validator should follow the same interface
+  - React components are NOT `.dsl.ts` files — the validator bridges the gap by checking if a React component can be faithfully represented as DSL nodes
+
+### Figma Export Validation
+- **Context**: User asked whether validation of Figma export output is needed
+- **Sources**: Codebase analysis of `packages/exporter`
+- **Findings**:
+  - Exporter produces `PluginInput` JSON — the schema is well-defined (`PluginNodeDef` with typed fields)
+  - The Figma plugin (`packages/plugin`) consumes this JSON and uses `figma.createComponent()` — errors surface there
+  - MCP `generate_figma_design` accepts design layers, not raw JSON — validation is at the design-layer level
+  - Compile errors are already reported by the compiler; exporter transforms compile output deterministically
+- **Implications**:
+  - Exporter validation is less critical since it's a deterministic transform of compiler output
+  - Compile-time validation (`@figma-dsl/validator`) catches issues before they reach the exporter
+  - MCP path validation happens at the Figma server side — errors returned to Claude for iteration
+  - Recommend: Focus validation effort on the React→DSL compatibility gap (validator package), not on exporter output
 
 ## Architecture Pattern Evaluation
 
 | Option | Description | Strengths | Risks / Limitations | Notes |
 |--------|-------------|-----------|---------------------|-------|
-| Skills as Pure Docs | SKILL.md instructs Claude, no tooling code | Low complexity, fast delivery | HTML export consistency varies | Gap analysis Option A |
-| Skills + New Packages | Add packages/html-renderer, packages/token-resolver | Deterministic outputs | Over-engineering for skill-based workflow | Gap analysis Option B |
-| Skills + Vite Build | Skills instruct Claude, Vite build for HTML export | Leverages Vite ecosystem, deterministic HTML | Requires preview app scaffold | Selected approach |
+| Skills as Pure Docs | SKILL.md instructs Claude, no tooling | Low complexity | No programmatic validation, inconsistent outputs | v1 approach |
+| Skills + Validator Package | Add `@figma-dsl/validator` for React→DSL checks | Deterministic validation, AI iteration loop | New package to maintain | Selected approach |
+| Skills + Full Package Suite | Add validator + html-renderer + token-resolver | Maximum determinism | Over-engineering for skill workflow | Rejected — Vite handles HTML/tokens |
 
-**Selected**: Skills + Vite Build. Skills are documentation (SKILL.md), preview app provides the Vite scaffold, and HTML export uses `vite build` + `vite-plugin-singlefile` for deterministic output. No new TypeScript packages needed.
+**Selected**: Skills + Validator Package + Figma MCP. Skills provide workflow documentation, `@figma-dsl/validator` enables programmatic React→DSL compatibility checks, Figma MCP server handles auto-publishing.
 
 ## Design Decisions
 
@@ -88,7 +133,7 @@
   2. `preview/` — standalone directory at repo root
   3. User's own project directory — write into arbitrary locations
 - **Selected Approach**: `preview/` at repo root with Vite config that aliases reference components
-- **Rationale**: Not a publishable package (no need for monorepo integration). Keeps skill output isolated. Simple `cwd` in launch.json.
+- **Rationale**: Not a publishable package. Keeps skill output isolated. Simple `cwd` in launch.json.
 - **Trade-offs**: Extra directory, but clearly separated from source packages
 - **Follow-up**: Verify Vite hot-reload for dynamically added files
 
@@ -98,42 +143,60 @@
   1. Custom SSR with `react-dom/server` + CSS extraction
   2. Vite build + `vite-plugin-singlefile`
   3. Claude-constructed HTML from scratch
-- **Selected Approach**: Vite build with `vite-plugin-singlefile` — Claude updates `preview/src/App.tsx` with the target page, runs `vite build`, and copies `dist/index.html`
-- **Rationale**: Vite handles CSS Modules, design tokens, and asset bundling natively. Single-file plugin produces a complete, self-contained HTML file. No custom SSR code to maintain.
-- **Trade-offs**: Requires the preview app scaffold; build step takes a few seconds
+- **Selected Approach**: Vite build with `vite-plugin-singlefile`
+- **Rationale**: Vite handles CSS Modules, design tokens, and asset bundling natively. No custom SSR code to maintain.
+- **Trade-offs**: Requires preview app scaffold; build step takes a few seconds
 - **Follow-up**: Test with lucide-react icons (SVG inlining)
 
-### Decision: Reference Components via Vite Alias (Not Copy)
-- **Context**: Skills need access to the 16 reference components
+### Decision: Figma Auto-Publishing via MCP Server
+- **Context**: User requested automatic design publishing to Figma without manual plugin import
 - **Alternatives Considered**:
-  1. Copy components from `references/` into `preview/src/`
-  2. Vite `resolve.alias` to `references/figma_design_playground/src/`
-- **Selected Approach**: Vite alias — `@/components` resolves to reference app's `src/components/`
-- **Rationale**: Avoids duplication, reference stays canonical, changes to reference components are reflected immediately
-- **Trade-offs**: Tighter coupling to reference app structure; if reference app reorganizes, alias breaks
-- **Follow-up**: None — reference app is a stable submodule
+  1. Figma REST API — read-only, cannot create files
+  2. Figma Plugin API — requires running inside Figma editor
+  3. Figma MCP server `generate_figma_design` — remote write to Figma from Claude Desktop
+- **Selected Approach**: Primary path: MCP `generate_figma_design` for direct Figma publishing. Fallback: plugin JSON import via existing exporter pipeline.
+- **Rationale**: MCP server is the only external write path to Figma. No server-side code needed — Claude Desktop handles MCP communication. Exempt from rate limits.
+- **Trade-offs**: Requires Figma MCP server configured in Claude Desktop; remote-only (not local MCP). Fallback plugin path covers cases where MCP is unavailable.
+- **Follow-up**: Document MCP server setup in skill instructions. Test `generate_figma_design` with component hierarchies.
+
+### Decision: New `@figma-dsl/validator` Package for DSL Compatibility
+- **Context**: User requested validation enabling AI-driven iteration — Claude creates component, validates, fixes, repeats until valid
+- **Alternatives Considered**:
+  1. Validation logic embedded in SKILL.md instructions — Claude checks manually
+  2. Extend existing compiler with pre-compilation checks
+  3. New standalone validator package with CLI command
+- **Selected Approach**: New `@figma-dsl/validator` package with both programmatic API and CLI command (`figma-dsl validate`)
+- **Rationale**: Separates validation concerns from compilation. Enables programmatic validation in skill iteration loops. Follows existing monorepo pattern (`packages/validator`). CLI integration means skills can run `figma-dsl validate <file>` and parse structured output.
+- **Trade-offs**: New package to maintain. But validation logic is distinct from compilation and benefits from isolation.
+- **Follow-up**: Define validation rule set. Determine if rules are configurable or fixed.
+
+### Decision: Reference Components via Vite Alias
+- **Context**: Skills need access to the 16 reference components
+- **Selected Approach**: Vite `resolve.alias` — `@/components` resolves to reference app's `src/components/`
+- **Rationale**: Avoids duplication, reference stays canonical
 
 ### Decision: Component Registry as Shared Markdown Reference
 - **Context**: Requirement 6 needs a component catalog accessible to all skills
-- **Alternatives Considered**:
-  1. JSON schema file auto-generated from TypeScript
-  2. Markdown reference document with prop tables
-  3. TypeScript module exporting component metadata
 - **Selected Approach**: Markdown reference document under `.claude/skills/shared/references/component-registry.md`
-- **Rationale**: Skills read markdown references naturally. No build step. Human-readable. Easy to update. Claude can grep for prop interfaces.
-- **Trade-offs**: Manual maintenance (but Requirement 6.5 says the Component Creation Skill updates it)
-- **Follow-up**: Generate initial registry from reference app components
+- **Rationale**: Skills read markdown references naturally. No build step. Human-readable.
+- **Trade-offs**: Manual maintenance (Component Creation Skill updates it per 6.5)
 
 ## Risks & Mitigations
-- **Risk**: Vite hot-reload may not pick up newly added files in all cases → Mitigation: Skill instructs Claude to restart dev server if hot-reload fails
-- **Risk**: `vite-plugin-singlefile` may not inline all assets (fonts, external images) → Mitigation: Skill instructs Claude to use inline SVGs and base64 for small assets; emit separate files for large assets
-- **Risk**: Code Connect bindings require a valid FIGMA_URL that doesn't exist until component is published → Mitigation: Use placeholder URL in template, document update process after Figma plugin import
-- **Risk**: Design token CSS custom properties may not resolve identically across DSL render and React render → Mitigation: Skill references provide token-to-value mapping table for DSL context
+- **Risk**: Figma MCP server is remote-only and may not be configured in all Claude Desktop environments → Mitigation: Plugin JSON import as fallback; skill documents both paths
+- **Risk**: `generate_figma_design` input format may not map 1:1 to existing exporter JSON → Mitigation: Skill instructs Claude to use preview app's rendered output for MCP publishing (not raw JSON)
+- **Risk**: Validator rules may be too strict/loose for AI iteration → Mitigation: Start with core rules (CSS Modules, tokens, prop patterns); extend based on usage feedback
+- **Risk**: Vite hot-reload may not pick up newly added files → Mitigation: Skill instructs Claude to restart dev server if needed
+- **Risk**: Code Connect requires valid FIGMA_URL that doesn't exist pre-publish → Mitigation: MCP's `add_code_connect_map` establishes mappings after design is published
+- **Risk**: Design token CSS custom properties may not resolve identically across DSL and React → Mitigation: Token reference provides mapping table; validator checks token references
 
 ## References
+- [Figma MCP Server Documentation](https://developers.figma.com/docs/figma-mcp-server/)
+- [Figma MCP Tools & Prompts](https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/)
+- [Figma REST API](https://developers.figma.com/docs/rest-api/)
+- [Figma API Comparison](https://developers.figma.com/compare-apis/)
+- [Figma Code Connect React Docs](https://developers.figma.com/docs/code-connect/react/)
+- [Figma Plugin API — createComponent](https://www.figma.com/plugin-docs/api/properties/figma-createcomponent/)
 - [Claude Code Skills Documentation](https://code.claude.com/docs/en/skills)
 - [Claude Code Desktop / Preview](https://code.claude.com/docs/en/desktop)
-- [Figma Code Connect React Docs](https://developers.figma.com/docs/code-connect/react/)
 - [vite-plugin-singlefile](https://github.com/richardtallent/vite-plugin-singlefile)
 - [Vite Build Docs](https://vite.dev/guide/build)
-- [Anthropic Skills Repository](https://github.com/anthropics/skills)
