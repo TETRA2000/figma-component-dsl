@@ -303,6 +303,23 @@ describe('compile() — component compilation', () => {
     });
   });
 
+  it('reports error and skips VARIANT properties on standalone COMPONENT', () => {
+    const node = component('Card', {
+      componentProperties: [
+        { name: 'Title', type: 'TEXT', defaultValue: 'Hello' },
+        { name: 'Style', type: 'VARIANT' as any, defaultValue: 'Default' },
+      ],
+    });
+    const result = compile(node);
+    // VARIANT property should be excluded
+    expect(result.root.componentPropertyDefinitions!['Title']).toBeDefined();
+    expect(result.root.componentPropertyDefinitions!['Style']).toBeUndefined();
+    // Should report a compile error
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('VARIANT');
+    expect(result.errors[0]!.message).toContain('componentSet()');
+  });
+
   it('maps instance overrides', () => {
     const node = frame('Root', {
       children: [instance('Button', { Label: 'Submit' })],

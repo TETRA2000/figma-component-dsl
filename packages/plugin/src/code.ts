@@ -10,6 +10,15 @@ import type {
   ComponentChangeEntry,
 } from '@figma-dsl/core';
 import { diffNodes } from '@figma-dsl/core';
+import {
+  serializeNode as serializeNodeImpl,
+  collectSharedPropDefs,
+  getRegistrableProperties,
+  calculateComponentSetWidth,
+  COMPONENT_SET_GAP,
+  COMPONENT_SET_PAD,
+} from './serializer.js';
+import type { SerializableNode } from './serializer.js';
 
 const componentMap = new Map<string, ComponentNode>();
 const errors: string[] = [];
@@ -121,7 +130,7 @@ function toFigmaPaints(fills: PluginNodeDef['fills']): Paint[] {
 
 // Sets the node's OWN auto-layout configuration (makes it a layout container).
 // Must be called BEFORE children are created so they can use FILL sizing.
-function setAutoLayoutConfig(node: FrameNode | ComponentNode, def: PluginNodeDef): void {
+function setAutoLayoutConfig(node: FrameNode | ComponentNode | ComponentSetNode, def: PluginNodeDef): void {
   if (!def.stackMode) return;
 
   node.layoutMode = def.stackMode === 'HORIZONTAL' ? 'HORIZONTAL' : 'VERTICAL';
@@ -258,8 +267,10 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         setAutoLayoutConfig(comp, def);
 
         // Register component properties
+        // Skip VARIANT properties — they are only valid on COMPONENT_SET nodes.
         if (def.componentPropertyDefinitions) {
           for (const [propName, propDef] of Object.entries(def.componentPropertyDefinitions)) {
+            if (propDef.type === 'VARIANT') continue;
             comp.addComponentProperty(propName, propDef.type as 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', propDef.defaultValue as string);
           }
         }
@@ -283,6 +294,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
             comp.resize(child.size.x, child.size.y);
             comp.fills = toFigmaPaints(child.fills);
             if (child.cornerRadius) comp.cornerRadius = child.cornerRadius;
+            if (child.clipContent !== undefined) comp.clipsContent = child.clipContent;
             comp.opacity = child.opacity;
             comp.visible = child.visible;
             setAutoLayoutConfig(comp, child);
@@ -297,6 +309,42 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         if (variants.length > 0) {
           const set = figma.combineAsVariants(variants, parent as FrameNode | PageNode);
           set.name = def.name;
+
+          // Apply auto-layout to the COMPONENT_SET.
+          // combineAsVariants() creates the set but may not arrange children optimally.
+          // If the def specifies auto-layout, use it; otherwise default to horizontal wrap.
+          if (def.stackMode) {
+            setAutoLayoutConfig(set, def);
+          } else {
+            // Default: horizontal wrap grid using extracted helpers
+            const variantWidths = variants.map(v => v.width);
+            const totalWidth = calculateComponentSetWidth(variantWidths);
+
+            set.layoutMode = 'HORIZONTAL';
+            set.layoutWrap = 'WRAP';
+            set.itemSpacing = COMPONENT_SET_GAP;
+            set.counterAxisSpacing = COMPONENT_SET_GAP;
+            set.paddingTop = COMPONENT_SET_PAD;
+            set.paddingRight = COMPONENT_SET_PAD;
+            set.paddingBottom = COMPONENT_SET_PAD;
+            set.paddingLeft = COMPONENT_SET_PAD;
+            set.resize(totalWidth, set.height);
+            set.primaryAxisSizingMode = 'FIXED';
+            set.counterAxisSizingMode = 'AUTO';
+          }
+
+          // Register shared component properties on the set (not on variant children).
+          // Uses extracted helpers from serializer.ts for testability.
+          const sharedPropDefs = collectSharedPropDefs(def.children);
+          if (sharedPropDefs) {
+            for (const [propName, propDef] of getRegistrableProperties(sharedPropDefs)) {
+              try {
+                set.addComponentProperty(propName, propDef.type as 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', propDef.defaultValue as string);
+              } catch (e) {
+                errors.push(`Failed to add property "${propName}" to set "${def.name}": ${e instanceof Error ? e.message : String(e)}`);
+              }
+            }
+          }
           node = set;
         } else {
           return null;
@@ -352,141 +400,11 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
 }
 
 // --- Node Serializer ---
-// Reverse of createNode(): reads a Figma SceneNode and produces a PluginNodeDef
-
-function serializeFills(node: SceneNode): PluginNodeDef['fills'] {
-  if (!('fills' in node)) return undefined;
-  const fills = node.fills as ReadonlyArray<Paint>;
-  if (fills.length === 0) return undefined;
-
-  return fills.filter((f): f is SolidPaint | GradientPaint => f.visible !== false).map(f => {
-    if (f.type === 'SOLID') {
-      return {
-        type: 'SOLID',
-        color: { r: f.color.r, g: f.color.g, b: f.color.b, a: f.opacity ?? 1 },
-        opacity: 1,
-      };
-    }
-    if (f.type === 'GRADIENT_LINEAR') {
-      return {
-        type: 'GRADIENT_LINEAR',
-        color: undefined,
-        opacity: f.opacity ?? 1,
-        gradientStops: f.gradientStops.map(s => ({
-          color: { r: s.color.r, g: s.color.g, b: s.color.b, a: s.color.a },
-          position: s.position,
-        })),
-        gradientTransform: f.gradientTransform as [[number, number, number], [number, number, number]],
-      };
-    }
-    return { type: f.type, opacity: f.opacity ?? 1 };
-  });
-}
-
-function serializeStrokes(node: SceneNode): PluginNodeDef['strokes'] {
-  if (!('strokes' in node)) return undefined;
-  const strokes = (node as GeometryMixin).strokes as ReadonlyArray<Paint>;
-  if (strokes.length === 0) return undefined;
-
-  const weight = 'strokeWeight' in node ? (node as GeometryMixin).strokeWeight as number : 1;
-  return strokes.filter((s): s is SolidPaint => s.type === 'SOLID' && s.visible !== false).map(s => ({
-    color: { r: s.color.r, g: s.color.g, b: s.color.b, a: s.opacity ?? 1 },
-    weight,
-  }));
-}
+// Delegates to the extracted serializer module (src/serializer.ts) for testability.
+// Thin wrapper bridges Figma ambient types → SerializableNode interface.
 
 function serializeNode(node: SceneNode): PluginNodeDef {
-  const result: Record<string, unknown> = {
-    type: node.type,
-    name: node.name,
-    size: { x: 'width' in node ? (node as LayoutMixin).width : 0, y: 'height' in node ? (node as LayoutMixin).height : 0 },
-    opacity: 'opacity' in node ? (node as BlendMixin).opacity : 1,
-    visible: node.visible,
-    children: [] as PluginNodeDef[],
-  };
-
-  // Fills and strokes
-  const fills = serializeFills(node);
-  if (fills && fills.length > 0) result.fills = fills;
-  const strokes = serializeStrokes(node);
-  if (strokes && strokes.length > 0) result.strokes = strokes;
-
-  // Corner radius
-  if ('cornerRadius' in node) {
-    const cr = (node as RectangleNode).cornerRadius;
-    if (typeof cr === 'number' && cr > 0) result.cornerRadius = cr;
-  }
-
-  // Clip content
-  if ('clipsContent' in node && (node as FrameNode).clipsContent) {
-    result.clipContent = true;
-  }
-
-  // Auto-layout
-  if ('layoutMode' in node) {
-    const frame = node as FrameNode;
-    if (frame.layoutMode !== 'NONE') {
-      result.stackMode = frame.layoutMode;
-      result.itemSpacing = frame.itemSpacing;
-      result.paddingTop = frame.paddingTop;
-      result.paddingRight = frame.paddingRight;
-      result.paddingBottom = frame.paddingBottom;
-      result.paddingLeft = frame.paddingLeft;
-      result.primaryAxisAlignItems = frame.primaryAxisAlignItems;
-      result.counterAxisAlignItems = frame.counterAxisAlignItems;
-    }
-    if (frame.layoutSizingHorizontal !== 'FIXED') result.layoutSizingHorizontal = frame.layoutSizingHorizontal;
-    if (frame.layoutSizingVertical !== 'FIXED') result.layoutSizingVertical = frame.layoutSizingVertical;
-  }
-
-  // Text properties
-  if (node.type === 'TEXT') {
-    const textNode = node as TextNode;
-    result.characters = textNode.characters;
-    const fontSize = textNode.fontSize;
-    if (typeof fontSize === 'number') result.fontSize = fontSize;
-    const fontName = textNode.fontName;
-    if (fontName && typeof fontName !== 'symbol') {
-      result.fontFamily = fontName.family;
-      result.fontStyle = fontName.style;
-    }
-    const fontWeight = textNode.fontWeight;
-    if (typeof fontWeight === 'number') {
-      result.fontWeight = fontWeight;
-    }
-    result.textAlignHorizontal = textNode.textAlignHorizontal;
-    if (textNode.textAutoResize !== 'NONE') {
-      result.textAutoResize = textNode.textAutoResize;
-    }
-  }
-
-  // Component property definitions
-  if (node.type === 'COMPONENT' && 'componentPropertyDefinitions' in node) {
-    const defs = (node as ComponentNode).componentPropertyDefinitions;
-    if (Object.keys(defs).length > 0) {
-      const propDefs: Record<string, { type: string; defaultValue: string | boolean }> = {};
-      for (const [name, def] of Object.entries(defs)) {
-        propDefs[name] = { type: def.type, defaultValue: def.defaultValue as string | boolean };
-      }
-      result.componentPropertyDefinitions = propDefs;
-    }
-  }
-
-  // Instance properties
-  if (node.type === 'INSTANCE') {
-    const inst = node as InstanceNode;
-    if (inst.mainComponent) {
-      result.componentId = inst.mainComponent.name;
-    }
-  }
-
-  // Children
-  if ('children' in node) {
-    const children = (node as FrameNode).children;
-    result.children = children.map(child => serializeNode(child));
-  }
-
-  return result as unknown as PluginNodeDef;
+  return serializeNodeImpl(node as unknown as SerializableNode);
 }
 
 function computeChangeset(nodeIds: ReadonlyArray<string>): ChangesetDocument {

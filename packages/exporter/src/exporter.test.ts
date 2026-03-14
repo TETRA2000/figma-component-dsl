@@ -51,6 +51,25 @@ describe('generatePluginInput()', () => {
     });
   });
 
+  it('filters out VARIANT properties from standalone COMPONENT nodes', () => {
+    const node = component('PizzaCard', {
+      componentProperties: [
+        { name: 'Name', type: 'TEXT', defaultValue: 'Margherita' },
+        { name: 'Variant', type: 'VARIANT', defaultValue: 'Default' },
+        { name: 'Size', type: 'VARIANT', defaultValue: 'Medium' },
+      ],
+      children: [text('Hello')],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled);
+    const defs = input.components[0]!.componentPropertyDefinitions!;
+    // TEXT property should be preserved
+    expect(defs['Name']).toEqual({ type: 'TEXT', defaultValue: 'Margherita' });
+    // VARIANT properties should be stripped
+    expect(defs['Variant']).toBeUndefined();
+    expect(defs['Size']).toBeUndefined();
+  });
+
   it('preserves instance references', () => {
     const node = frame('Root', {
       size: { x: 200, y: 100 },

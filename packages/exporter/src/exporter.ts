@@ -73,9 +73,22 @@ function convertToPluginNode(node: FigmaNodeDict): PluginNodeDef {
     }
   }
 
-  // Component
+  // Component properties
+  // Filter out VARIANT properties for standalone COMPONENT nodes — Figma only
+  // allows VARIANT properties on COMPONENT_SET nodes.
   if (node.componentPropertyDefinitions) {
-    result.componentPropertyDefinitions = node.componentPropertyDefinitions;
+    if (node.type === 'COMPONENT') {
+      const filtered = Object.fromEntries(
+        Object.entries(node.componentPropertyDefinitions).filter(
+          ([, v]) => v.type !== 'VARIANT',
+        ),
+      );
+      if (Object.keys(filtered).length > 0) {
+        result.componentPropertyDefinitions = filtered;
+      }
+    } else {
+      result.componentPropertyDefinitions = node.componentPropertyDefinitions;
+    }
   }
 
   // Instance

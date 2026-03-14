@@ -91,7 +91,7 @@ The `createNode()` async function dispatches by node type:
 | TEXT | `figma.createText()` | Async font loading required; characters, alignment |
 | GROUP | `figma.group()` | Creates temp frame for children, groups, removes temp |
 | COMPONENT | `figma.createComponent()` | Registers in `componentMap`; adds property definitions |
-| COMPONENT_SET | `figma.combineAsVariants()` | Combines child COMPONENT nodes into variant set |
+| COMPONENT_SET | `figma.combineAsVariants()` | Combines child COMPONENT nodes into variant set; shared TEXT/BOOLEAN properties registered on the set after combining |
 | INSTANCE | `refComp.createInstance()` | Looks up `componentMap`; applies property overrides |
 | default | — | Logs error, returns null |
 
@@ -281,6 +281,8 @@ The edit log provides real-time feedback, but the final changeset is computed vi
 
 Properties serialized: type, name, size, opacity, visible, fills (SOLID + GRADIENT_LINEAR), strokes, cornerRadius, clipContent, auto-layout (stackMode, spacing, padding, alignment, sizing), text (characters, fontSize, fontFamily, fontStyle, textAlignHorizontal, textAutoResize), component property definitions, instance component references.
 
+**Variant component safety**: `componentPropertyDefinitions` is only read from standalone `COMPONENT` nodes and `COMPONENT_SET` nodes. Variant components (children of a `COMPONENT_SET`, created by `combineAsVariants()`) are skipped because Figma's Plugin API throws `"Can only get component property definitions of a component set or non-variant component"` when accessing this property on variant children.
+
 ### Changeset Export
 
 `computeChangeset(nodeIds)` computes a `ChangesetDocument` by:
@@ -338,7 +340,7 @@ Textarea for pasting PluginInput JSON, auto-export PNGs checkbox, Import button.
 6. **No enum validation**: Alignment and sizing values are cast without checks; invalid strings cause Figma API errors.
 7. **Missing font failure**: Font load failure causes entire TEXT node to fail.
 8. **PNG export incomplete**: Generates PNG data but doesn't download files to disk.
-9. **No VARIANT on standalone components**: Must use COMPONENT_SET with child COMPONENT nodes.
+9. ~~**No VARIANT on standalone components**~~: Fixed — VARIANT properties are now automatically skipped during `addComponentProperty()` for standalone components.
 10. **Grid-only positioning**: No absolute positioning support; grid layout always applied.
 
 ---

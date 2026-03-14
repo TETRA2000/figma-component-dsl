@@ -444,15 +444,59 @@ componentProperties: [
 ]
 ```
 
-**Supported types:**
+**Supported types on standalone `component()`:**
 
 | Type | Description | `defaultValue` |
 |------|-------------|----------------|
 | `'TEXT'` | Editable text content | `string` |
 | `'BOOLEAN'` | Toggle visibility/state | `boolean` |
-| `'VARIANT'` | Variant selector | `string` with `options: string[]` |
 
-> **Warning:** `type: 'VARIANT'` only works on **component sets** (groups of variants), NOT on standalone components. See [Figma Plugin Constraints](#figma-plugin-constraints).
+> **Note:** `type: 'VARIANT'` is NOT valid on standalone components. The compiler will report an error and skip VARIANT properties. Use `componentSet()` instead (see below).
+
+### Component Sets (Variants)
+
+To create a component with Figma variants (e.g., size, style), use `componentSet()` with child `component()` nodes. Each child's name encodes its variant values using Figma's `Property=Value` naming convention.
+
+```ts
+import { component, componentSet, text } from '@figma-dsl/core';
+
+function myVariant(style: string, size: string) {
+  return component(`Style=${style}, Size=${size}`, {
+    // Each child is a full component definition
+    componentProperties: [
+      { name: 'Label', type: 'TEXT', defaultValue: 'Click me' },
+    ],
+    children: [text('Click me', { fontSize: size === 'Large' ? 18 : 14 })],
+  });
+}
+
+export default componentSet('Button', {
+  children: [
+    myVariant('Primary', 'Small'),
+    myVariant('Primary', 'Large'),
+    myVariant('Secondary', 'Small'),
+    myVariant('Secondary', 'Large'),
+  ],
+});
+```
+
+Figma automatically creates variant properties (`Style`, `Size`) from the child component names. Use a helper function to generate all combinations:
+
+```ts
+const styles = ['Primary', 'Secondary'];
+const sizes = ['Small', 'Medium', 'Large'];
+const children = styles.flatMap(s => sizes.map(sz => myVariant(s, sz)));
+
+export default componentSet('Button', { children });
+```
+
+**When to use `component()` vs `componentSet()`:**
+
+| Scenario | Use |
+|----------|-----|
+| Single visual design, no variants | `component()` |
+| Multiple visual variants (size, style, state) | `componentSet()` with child `component()` nodes |
+| Configurable text/boolean props only | `component()` with `componentProperties` |
 
 ---
 
@@ -941,6 +985,8 @@ This was previously broken because the plugin set `layoutSizingHorizontal` befor
 
 **Solution:** Only use `type: 'TEXT'` and `type: 'BOOLEAN'` in `componentProperties` for standalone components. If you need variant support, the component must be part of a component set.
 
+> **Note:** The exporter now automatically strips VARIANT properties from standalone COMPONENT nodes during export, and the plugin skips them during import. DSL files with VARIANT properties on standalone components will export and import without errors, but the VARIANT properties will be silently removed.
+
 ```ts
 // Bad — fails on standalone component
 componentProperties: [
@@ -953,6 +999,14 @@ componentProperties: [
   { name: 'Checked', type: 'BOOLEAN', defaultValue: false },
 ]
 ```
+
+### ~~2b. `componentPropertyDefinitions` on variant children — FIXED~~
+
+**Error:** `"Can only get component property definitions of a component set or non-variant component"`
+
+**Cause:** After `combineAsVariants()`, child COMPONENT nodes become "variant components". Figma's Plugin API does not allow reading `componentPropertyDefinitions` from variant components — this property is only accessible on the parent COMPONENT_SET or standalone COMPONENTs.
+
+**Fix:** The plugin serializer (`serializeNode()`) now checks `node.parent?.type === 'COMPONENT_SET'` and skips `componentPropertyDefinitions` for variant children. Component property definitions are instead read from the COMPONENT_SET node itself, where `combineAsVariants()` promotes them.
 
 ### 3. `instance()` requires the component in the same import
 
@@ -1022,7 +1076,7 @@ These limitations from earlier versions have been fixed:
 | `Module needs import attribute of type: json` | Passed compiled `.json` to `export` | Use the `.dsl.ts` source file instead |
 | `Unknown option '--format'` | `--format` flag not supported | Remove `--format plugin` from the command |
 | `FILL can only be set on children of auto-layout frames` | Plugin version too old | Update plugin — this was fixed by splitting setAutoLayout into config + sizing phases |
-| `Can only add variant property to a component set` | `type: 'VARIANT'` on standalone component | Use `type: 'TEXT'` or `type: 'BOOLEAN'` only |
+| `Can only add variant property to a component set` | `type: 'VARIANT'` on standalone component | Now auto-filtered by exporter and plugin; use `type: 'TEXT'` or `type: 'BOOLEAN'` for clarity |
 | `Component not found for instance: X` | `instance()` referencing missing component | Replace with inline `frame()` |
 | Sections scattered on canvas | No parent wrapper in merged JSON | Wrap sections in a parent FRAME with vertical layout |
 | Dividers are 1x1 px | Missing `layoutSizingHorizontal: 'FILL'` | Add `layoutSizingHorizontal: 'FILL'` to the divider rectangle |
