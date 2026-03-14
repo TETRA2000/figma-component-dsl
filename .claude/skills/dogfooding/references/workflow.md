@@ -49,7 +49,7 @@ When picking, announce the theme and explain what DSL features it will stress:
 For each theme, create 2-4 components. Follow the create-react-component skill's 3-file pattern:
 
 ```
-preview/src/components/{ComponentName}/
+preview/src/components/_generated/{ComponentName}/
   ├── {ComponentName}.tsx         # React component
   ├── {ComponentName}.module.css  # CSS Module
   └── {ComponentName}.figma.tsx   # Code Connect binding
@@ -64,7 +64,7 @@ Key rules from the create-react-component skill:
 
 ### Page creation
 
-Create a showcase page at `preview/src/pages/{Theme}Showcase.tsx`:
+Create a showcase page at `preview/src/pages/_generated/{Theme}Showcase.tsx`:
 
 ```tsx
 import { ComponentA } from '../components/ComponentA/ComponentA';
@@ -91,13 +91,13 @@ function App() { return <ThemeShowcase />; }
 
 ### Register components
 
-Add exports to `preview/src/components/index.ts` below the `// --- END REFERENCE EXPORTS ---` comment.
+Append exports to `preview/src/components/_generated.ts` (create if missing). Do **not** modify `index.ts`.
 
 ### Validate
 
 Run the DSL validator on each new component:
 ```bash
-bin/figma-dsl validate preview/src/components/{ComponentName}/{ComponentName}.tsx
+bin/figma-dsl validate preview/src/components/_generated/{ComponentName}/{ComponentName}.tsx
 ```
 
 Fix any validation errors before proceeding.
@@ -192,7 +192,7 @@ If a feature doesn't work, that's a discovery — not a reason to restructure th
 
 ```bash
 # Compile DSL to JSON
-bin/figma-dsl compile examples/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
+bin/figma-dsl compile workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
 
 # Render JSON to PNG
 bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl.png
@@ -261,7 +261,7 @@ This is not optional. Before touching the `.dsl.ts` file, trace the property thr
 
 1. **Compile and inspect JSON:**
    ```bash
-   bin/figma-dsl compile examples/{theme}-page.dsl.ts -o /tmp/debug.json
+   bin/figma-dsl compile workspace/dsl/{theme}-page.dsl.ts -o /tmp/debug.json
    ```
    Read the JSON — is the property present and correct?
 
@@ -280,7 +280,7 @@ This is not optional. Before touching the `.dsl.ts` file, trace the property thr
 4. **Rebuild and re-render:**
    ```bash
    npm run build
-   bin/figma-dsl compile examples/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
+   bin/figma-dsl compile workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
    bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl-fix1.png
    ```
 
@@ -291,7 +291,7 @@ This is not optional. Before touching the `.dsl.ts` file, trace the property thr
 After pipeline investigation, if the issue is genuinely a DSL authoring error (wrong API, typo, logical mistake in the helper function), fix the `.dsl.ts` file:
 
 ```bash
-bin/figma-dsl compile examples/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
+bin/figma-dsl compile workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
 bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl-fix1.png
 ```
 
@@ -373,7 +373,7 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
 
 **Component addition commit** (optional, only if the user wants components committed):
 ```bash
-git add preview/src/components/<New>/ preview/src/pages/ examples/<theme>.dsl.ts
+git add preview/src/components/_generated/<New>/ preview/src/pages/_generated/ workspace/dsl/<theme>.dsl.ts
 git commit -m "feat: add <theme> components and DSL for dogfooding
 
 Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
@@ -471,7 +471,7 @@ After each iteration, provide a brief summary:
 | # | Description | Type | Fixed? | Affected file |
 |---|---|---|---|---|
 | 1 | Per-corner radii dropped | Pipeline | YES | types.ts, compiler.ts, renderer.ts |
-| 2 | Missing gradient in DSL | DSL | YES | examples/{theme}-page.dsl.ts |
+| 2 | Missing gradient in DSL | DSL | YES | workspace/dsl/{theme}-page.dsl.ts |
 
 **Pipeline commits:** <commit hashes>
 ```

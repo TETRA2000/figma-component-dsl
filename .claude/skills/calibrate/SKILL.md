@@ -358,16 +358,16 @@ To add a new theme or component category to calibration:
 
 ### Option B: Use standalone DSL files (quick one-off testing)
 
-Place `.dsl.ts` files anywhere and batch them directly:
+Place `.dsl.ts` files in the workspace and batch them directly:
 
 ```bash
-bin/figma-dsl batch examples/my-component.dsl.ts -o output/
+bin/figma-dsl batch workspace/dsl/my-component.dsl.ts -o output/
 ```
 
 Or batch an entire directory:
 
 ```bash
-bin/figma-dsl batch examples/ -o output/ --include "examples/my-*.dsl.ts"
+bin/figma-dsl batch workspace/dsl/ -o output/ --include "workspace/dsl/my-*.dsl.ts"
 ```
 
 ## Analyzing previous calibration results
@@ -413,7 +413,7 @@ When committing changes from a calibration run, only commit files under these pa
 - `packages/` — pipeline code fixes (compiler, renderer, dsl-core, etc.)
 - `docs/` — history logs, validation results, rendered PNGs
 
-Do **not** commit changes under `preview/`, `examples/`, `dogfooding/`, `calibration/`, or other directories. Those are working artifacts for local use, not tracked output. Stage files explicitly by path — never use `git add .` or `git add -A`.
+Do **not** commit changes under `preview/`, `examples/`, `workspace/`, `dogfooding/`, `calibration/`, or other directories. Those are working artifacts for local use, not tracked output. Stage files explicitly by path — never use `git add .` or `git add -A`.
 
 ## Reference
 

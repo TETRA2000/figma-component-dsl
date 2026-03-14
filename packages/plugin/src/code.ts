@@ -450,6 +450,10 @@ function serializeNode(node: SceneNode): PluginNodeDef {
       result.fontFamily = fontName.family;
       result.fontStyle = fontName.style;
     }
+    const fontWeight = textNode.fontWeight;
+    if (typeof fontWeight === 'number') {
+      result.fontWeight = fontWeight;
+    }
     result.textAlignHorizontal = textNode.textAlignHorizontal;
     if (textNode.textAutoResize !== 'NONE') {
       result.textAutoResize = textNode.textAutoResize;
@@ -745,7 +749,11 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
           createdNodes.push({ name: compDef.name, node });
 
           // Store baseline snapshot and identity for edit tracking
-          storeBaseline(node, compDef);
+          // IMPORTANT: serialize the *created* Figma node (not the DSL input) so
+          // the baseline uses the same serialization path as changeset export.
+          // This eliminates false diffs from Figma defaults, opacity compounding,
+          // float precision, and property normalization differences.
+          storeBaseline(node, serializeNode(node));
           storeIdentity(node, compDef.name, `${compDef.name}.dsl.ts`);
           trackedNodeIds.add(node.id);
         }
