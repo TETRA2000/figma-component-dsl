@@ -15,13 +15,15 @@ A domain-specific language (DSL) for defining Figma component structures declara
 - **Figma-free iteration**: Developers define and refine component structures in code, render to images, compare against live React components, and iterate — all without Figma's UI
 - **Design system synchronization**: Keep React component libraries and Figma design systems in sync programmatically
 - **Automated component generation**: Generate Figma components from React code via DSL as an intermediate representation
+- **Claude Desktop interactive workflows**: AI Skills enable conversational creation of landing pages, React components, Figma designs, and HTML pages with live preview
 
 ## Value Proposition
 
 - **Speed**: Code-based iteration is faster than manual Figma manipulation for developers
 - **Automation**: Programmatic generation eliminates manual duplication between code and design
 - **Fidelity**: DSL maps directly to Figma's data model (auto-layout, component sets, variants, design tokens)
-- **Pipeline**: CLI-driven workflow (compile, render, capture, compare, export) integrates into development toolchains
+- **Pipeline**: CLI-driven workflow (`figma-dsl` with 11 commands: compile, render, capture, compare, export, pipeline, batch, batch-compare, calibrate, generate-test-suite, capture-figma) integrates into development toolchains
+- **AI-assisted**: Claude AI Skills provide guided, conversational workflows for component and page creation with live preview
 
 ## Reference Implementations
 

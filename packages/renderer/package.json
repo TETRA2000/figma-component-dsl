@@ -1,0 +1,26 @@
+{
+  "name": "@figma-dsl/renderer",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@figma-dsl/core": "0.1.0",
+    "@figma-dsl/compiler": "0.1.0",
+    "@napi-rs/canvas": "^0.1.96"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0"
+  }
+}

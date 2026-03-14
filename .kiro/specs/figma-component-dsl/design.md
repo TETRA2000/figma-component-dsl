@@ -6,43 +6,41 @@
 
 **Users**: Component developers and design system engineers use the DSL to define component structures in code, iterate on visual accuracy without Figma, and synchronize components between React and Figma.
 
-**Impact**: Introduces a new toolchain (DSL core, compiler, renderer, comparison engine, CLI, Figma plugin) that bridges the gap between the two reference implementations — combining figma_design_playground's component creation patterns with figma-html-renderer's rendering pipeline.
+**Impact**: Introduces a new toolchain (DSL core, compiler, renderer, comparison engine, CLI, Figma plugin) that bridges the gap between the two reference implementations — combining figma_design_playground's component creation patterns with figma-html-renderer's rendering techniques, reimplemented as a single-language TypeScript pipeline.
 
 ### Goals
 - Provide a type-safe, declarative API for defining Figma node structures with auto-layout, colors, typography, and component variants
-- Render DSL definitions as PNG images using PyCairo, matching Figma's visual output
+- Render DSL definitions as PNG images using @napi-rs/canvas (Skia backend), matching Figma's visual output
 - Enable automated visual comparison between DSL renders and React component screenshots
 - Export DSL definitions to Figma via a plugin that creates real components with properties and variants
 - Expose all pipeline operations through a unified CLI
+- Eliminate all Python dependencies — the entire pipeline runs in a single TypeScript/Node.js process
 
 ### Non-Goals
 - Real-time collaborative editing of DSL definitions
 - Full Figma feature parity (effects, masks, boolean operations, constraints, prototyping)
 - DSL-to-React code generation (reverse direction)
-- Figma file parsing (`.fig` → DSL) — that is figma-html-renderer's domain
+- Figma file parsing (`.fig` → DSL)
 - Dark mode or responsive variant generation
 
 ## Architecture
 
 ### Architecture Pattern & Boundary Map
 
-**Selected pattern**: Pipeline with AST Core — sequential stages transform DSL definitions through compilation, rendering, comparison, and export. Each stage has a single responsibility and communicates via well-defined data contracts.
+**Selected pattern**: Single-Language Pipeline with AST Core — sequential stages transform DSL definitions through compilation, rendering, comparison, and export. All stages are TypeScript modules running in the same Node.js process.
 
-**Rationale**: Proven in the figma-html-renderer reference (5-stage pipeline). Natural fit for a compile → render → compare workflow. Stages are independently testable and replaceable.
+**Rationale**: Inspired by figma-html-renderer's 5-stage pipeline, but implemented entirely in TypeScript. Eliminates the cross-language bridge (Python subprocess) from the previous design. @napi-rs/canvas provides Skia-backed rendering with zero system dependencies, making the pipeline self-contained.
 
 ```mermaid
 graph TB
-    subgraph TypeScript
+    subgraph TypeScript Pipeline
         DSL[DSL Core - Factory Functions]
         Compiler[Compiler - Layout Resolution]
+        Renderer[Renderer - Skia Canvas]
         Capturer[Screenshot Capturer - Playwright]
         Comparator[Visual Comparator - pixelmatch]
         Exporter[Plugin Exporter - JSON Generator]
         CLI[CLI - Pipeline Orchestrator]
-    end
-
-    subgraph Python
-        Renderer[Renderer - PyCairo]
     end
 
     subgraph Figma
@@ -50,9 +48,9 @@ graph TB
     end
 
     DSL -->|DslNode tree| Compiler
-    Compiler -->|FigmaNodeDict JSON| Renderer
-    Compiler -->|FigmaNodeDict JSON| Exporter
-    Renderer -->|PNG file| Comparator
+    Compiler -->|FigmaNodeDict| Renderer
+    Compiler -->|FigmaNodeDict| Exporter
+    Renderer -->|PNG buffer| Comparator
     Capturer -->|PNG file| Comparator
     Exporter -->|Plugin input JSON| Plugin
     CLI --> DSL
@@ -66,50 +64,38 @@ graph TB
 **Domain boundaries**:
 - **DSL Core**: Node definition and tree construction (TypeScript)
 - **Compiler**: Layout resolution, GUID assignment, format conversion (TypeScript)
-- **Renderer**: Visual rasterization from node dictionaries (Python/PyCairo)
+- **Renderer**: Visual rasterization from compiled node dictionaries via Canvas 2D API (TypeScript/@napi-rs/canvas)
 - **Capturer**: React component screenshot isolation (TypeScript/Playwright)
 - **Comparator**: Pixel-level image diffing (TypeScript/pixelmatch)
 - **Exporter**: Figma plugin input generation (TypeScript)
 - **Plugin**: Figma node creation via Plugin API (TypeScript, runs in Figma sandbox)
 - **CLI**: User-facing orchestration of all stages (TypeScript/Node.js)
 
-**Existing patterns preserved**: Pipeline architecture from figma-html-renderer; component creation patterns from figma_design_playground plugin; CSS custom property design tokens; PyCairo rendering approach.
+**Existing patterns preserved**: Pipeline architecture from figma-html-renderer (reimplemented in TypeScript); component creation patterns from figma_design_playground plugin; CSS custom property design tokens.
 
-**New components rationale**: DSL Core provides type-safe node construction; Compiler bridges DSL trees to the renderer's expected format; Comparator and Capturer enable the visual iteration loop; CLI unifies all operations.
+**New components rationale**: DSL Core provides type-safe node construction; Compiler bridges DSL trees to the renderer's expected format; Renderer uses @napi-rs/canvas (Skia) instead of PyCairo; Comparator and Capturer enable the visual iteration loop; CLI unifies all operations.
 
-**Steering compliance**: TypeScript strict mode, no `any`; pipeline stages with single responsibility; immutable data between stages; no framework bloat; PyCairo for rendering.
+**Steering compliance**: TypeScript strict mode, no `any`; pipeline stages with single responsibility; immutable data between stages; no framework bloat; zero system dependency rendering via pre-built Skia binaries.
 
 ### Technology Stack
 
 | Layer | Choice / Version | Role in Feature | Notes |
 |-------|------------------|-----------------|-------|
 | DSL Core / CLI | TypeScript 5.9+, Node.js 22+ | DSL definition, compilation, orchestration | Strict mode, ES2023 target |
-| Renderer | Python 3.10+, PyCairo 1.27+ | Rasterize node dictionaries to PNG | Extends figma-html-renderer patterns |
+| Renderer | @napi-rs/canvas 0.1.96+ | Rasterize compiled nodes to PNG via Skia Canvas 2D API | Zero system deps, pre-built binaries |
 | Screenshot Capture | Playwright 1.50+ | Headless browser React component screenshots | Node.js API, element-level capture |
 | Image Comparison | pixelmatch 6.0+, pngjs 7.0+ | Pixel-level visual diff | Zero-dependency comparison, pngjs for PNG decode/encode |
 | Figma Plugin | Figma Plugin API, esbuild | Create Figma nodes from DSL definitions | Same build toolchain as reference plugin |
-| Package Management | npm workspaces | Monorepo for TypeScript packages | DSL core, CLI, and plugin as separate workspace packages |
-| Text Measurement | opentype.js 2.0+ | Font metric lookup for auto-layout HUG sizing | Parses .otf/.ttf for glyph advance widths |
-| Python Packaging | pyproject.toml + pip | Python renderer package management | Follows figma-html-renderer pattern |
+| Package Management | npm workspaces | Monorepo for TypeScript packages | DSL core, CLI, renderer, and plugin as separate workspace packages |
+| Text Measurement | @napi-rs/canvas (ctx.measureText) | Font metric lookup for auto-layout HUG sizing | Same Skia engine as Renderer — zero measurement-rendering discrepancy |
 
-### Cross-Language Environment Management
+> PyCairo, Pillow, fig2sketch, fig-kiwi, and all Python packaging (pyproject.toml, pip) have been removed. See `research.md` for the evaluation of alternatives and migration rationale.
 
-The system spans TypeScript (npm) and Python (PyCairo). The CLI must reliably invoke the Python renderer as a subprocess.
+### Font Assets
 
-**Python Environment Discovery**:
-- The CLI discovers the Python interpreter via the `FIGMA_DSL_PYTHON` environment variable, falling back to `python3` on PATH
-- On first use, the CLI runs a preflight check: `python3 -c "import cairo; print(cairo.version)"` and reports actionable errors if PyCairo is missing
-- The `figma-dsl doctor` command verifies all dependencies (Node.js, Python, PyCairo, Inter font) and reports their status
-
-**Python Package Structure**:
-- The Python renderer is packaged as `figma_component_dsl` with `pyproject.toml` (matching the figma-html-renderer pattern)
-- Installation: `pip install -e "./packages/renderer[dev]"` for development
-- System dependency: PyCairo requires the Cairo C library (`brew install cairo` on macOS, `apt install libcairo2-dev` on Linux)
-
-**Font Assets**:
 - The Inter font family (.otf files for Regular, Medium, Semi Bold, Bold weights) is bundled in `packages/dsl-core/fonts/`
-- opentype.js loads these files directly for text measurement — no system font dependency for the compiler
-- The Python renderer uses system fonts with Inter as the expected default; `figma-dsl doctor` warns if Inter is not installed
+- @napi-rs/canvas loads them via `GlobalFonts.registerFromPath()` for both text measurement (Compiler) and text rendering (Renderer) — no system font dependency
+- Both the Compiler (measurement via `ctx.measureText()`) and Renderer (drawing via `ctx.fillText()`) use the same Skia engine and bundled font files, producing zero measurement-rendering discrepancy
 
 ## System Flows
 
@@ -121,7 +107,7 @@ sequenceDiagram
     participant CLI
     participant DSL as DSL Core
     participant Compiler
-    participant Renderer as Renderer - Python
+    participant Renderer as Renderer - Skia
     participant Capturer as Capturer - Playwright
     participant Comparator
 
@@ -129,12 +115,12 @@ sequenceDiagram
     CLI->>DSL: import and execute DSL module
     DSL-->>CLI: DslNode tree
     CLI->>Compiler: compile(dslNode)
-    Compiler-->>CLI: FigmaNodeDict JSON
-    CLI->>Renderer: subprocess render(json, output.png)
-    Renderer-->>CLI: PNG file path
+    Compiler-->>CLI: FigmaNodeDict
+    CLI->>Renderer: render(figmaNodeDict, options)
+    Renderer-->>CLI: PNG buffer
     CLI->>Capturer: capture(ReactComponent, viewport)
     Capturer-->>CLI: PNG file path
-    CLI->>Comparator: compare(dsl.png, react.png, options)
+    CLI->>Comparator: compare(dslPng, reactPng, options)
     Comparator-->>CLI: ComparisonResult
     CLI-->>User: similarity score, diff image path
 ```
@@ -149,7 +135,7 @@ flowchart TB
     D --> E[Calculate Absolute Transforms]
     E --> F[Expand Text Data]
     F --> G[Set Parent-Child References]
-    G --> H[FigmaNodeDict JSON]
+    G --> H[FigmaNodeDict]
 
     D --> D1{Has Auto-Layout?}
     D1 -->|Yes| D2[Measure children sizes]
@@ -182,8 +168,8 @@ flowchart TB
 | Component | Domain/Layer | Intent | Req Coverage | Key Dependencies | Contracts |
 |-----------|--------------|--------|--------------|------------------|-----------|
 | DslCore | DSL / Core | Declarative factory functions for node tree construction | 1.1–1.7, 2.1–2.6, 3.1–3.6, 4.1–4.6, 5.1–5.5 | None (P0) | Service |
-| Compiler | DSL / Core | Resolve layout, assign GUIDs, produce FigmaNodeDict | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 | DslCore (P0), opentype.js (P0) | Service |
-| Renderer | Rendering / Python | Rasterize FigmaNodeDict to PNG via PyCairo | 6.1–6.4 | PyCairo (P0) | Service |
+| Compiler | DSL / Core | Resolve layout, assign GUIDs, produce FigmaNodeDict | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 | DslCore (P0), @napi-rs/canvas (P0) | Service |
+| Renderer | Rendering / TypeScript | Rasterize FigmaNodeDict to PNG via @napi-rs/canvas | 6.1–6.4 | @napi-rs/canvas (P0) | Service |
 | Capturer | Rendering / TypeScript | Capture React component screenshots via Playwright | 7.1–7.4 | Playwright (P0) | Service |
 | Comparator | Analysis / TypeScript | Pixel-level image diff with similarity scoring | 8.1–8.4 | pixelmatch (P0), pngjs (P0) | Service |
 | Exporter | Export / TypeScript | Generate Figma plugin input JSON from compiled nodes | 9.1–9.9 | Compiler (P0) | Service |
@@ -269,6 +255,13 @@ interface AutoLayoutConfig {
   heightSizing?: 'FIXED' | 'HUG' | 'FILL';
 }
 
+// --- Child Layout (any node when placed inside an auto-layout parent) ---
+interface ChildLayoutProps {
+  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+  layoutGrow?: number;
+}
+
 // --- Typography ---
 interface TextStyle {
   fontFamily?: string;       // default: 'Inter'
@@ -304,8 +297,10 @@ interface DslNode {
   clipContent?: boolean;
   children?: DslNode[];
 
-  // Auto-layout (FRAME, COMPONENT)
+  // Auto-layout container config (FRAME, COMPONENT only)
   autoLayout?: AutoLayoutConfig;
+
+  // Child sizing within parent's auto-layout (any node type when inside an auto-layout parent)
   layoutGrow?: number;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
@@ -327,7 +322,7 @@ interface DslNode {
 
 // --- Factory Functions ---
 function frame(name: string, props: FrameProps): DslNode;
-function text(characters: string, style?: TextStyle): DslNode;
+function text(characters: string, style?: TextStyle & ChildLayoutProps): DslNode;
 function rectangle(name: string, props: RectangleProps): DslNode;
 function ellipse(name: string, props: EllipseProps): DslNode;
 function group(name: string, children: DslNode[]): DslNode;
@@ -354,6 +349,7 @@ function vertical(config?: Partial<AutoLayoutConfig>): AutoLayoutConfig;
 - Factory function prop types (FrameProps, RectangleProps, etc.) are subsets of DslNode properties relevant to each node type — defined via `Pick` and `Partial` for type safety
 - `horizontal()` and `vertical()` are convenience wrappers that set `direction` and merge defaults
 - Color tokens are resolved at compile time, not at DSL construction time
+- **Sizing ownership**: `AutoLayoutConfig.sizing`/`widthSizing`/`heightSizing` control the *container's own* sizing (how the FRAME/COMPONENT determines its own width/height). `DslNode.layoutSizingHorizontal`/`layoutSizingVertical` (via `ChildLayoutProps`) control how a *child* sizes within its *parent's* auto-layout. These are orthogonal — a FRAME can be `sizing: 'FIXED'` while its children use `layoutSizingHorizontal: 'FILL'`.
 
 ---
 
@@ -361,7 +357,7 @@ function vertical(config?: Partial<AutoLayoutConfig>): AutoLayoutConfig;
 
 | Field | Detail |
 |-------|--------|
-| Intent | Transform DslNode trees into FigmaNodeDict JSON with resolved layout and absolute positions |
+| Intent | Transform DslNode trees into FigmaNodeDict with resolved layout and absolute positions |
 | Requirements | 1.6, 2.1–2.6, 3.1–3.5, 4.1–4.6, 5.1–5.5 |
 
 **Responsibilities & Constraints**
@@ -375,16 +371,21 @@ function vertical(config?: Partial<AutoLayoutConfig>): AutoLayoutConfig;
 
 **Dependencies**
 - Inbound: DslCore — provides DslNode tree (P0)
-- External: opentype.js 2.0+ — font metric lookup for text measurement (P0)
+- External: @napi-rs/canvas — `ctx.measureText()` for text measurement using the same Skia engine as the Renderer (P0)
 
 **Contracts**: Service [x]
 
 ##### Service Interface
 ```typescript
-// --- Compiled Output (matches figma-html-renderer node dict format) ---
+// --- Compiled Output (Figma node dictionary format) ---
+
+/** All node types supported in the compiled output */
+type FigmaNodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ROUNDED_RECTANGLE'
+  | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'VECTOR';
+
 interface FigmaNodeDict {
   guid: [number, number];                    // [sessionID, localID]
-  type: string;
+  type: FigmaNodeType;
   name: string;
   size: { x: number; y: number };
   transform: [[number, number, number],
@@ -461,7 +462,7 @@ interface CompilerService {
 ```
 - Preconditions: Input DslNode tree must be well-formed (validated by DslCore factories)
 - Postconditions: All nodes have assigned GUIDs, resolved transforms, and valid parentIndex references; auto-layout children have computed positions
-- Invariants: Output JSON conforms to FigmaNodeDict schema; GUID uniqueness within a compilation unit
+- Invariants: Output conforms to FigmaNodeDict schema; GUID uniqueness within a compilation unit
 
 **Implementation Notes**
 - Auto-layout algorithm implements a subset of CSS Flexbox: single-axis layout with spacing, padding, alignment, and sizing modes (FIXED/HUG/FILL). Does not support wrap, absolute positioning, or constraints.
@@ -470,31 +471,33 @@ interface CompilerService {
 
 ##### Text Measurement Strategy
 
-The Compiler must know text node dimensions to resolve HUG-contents sizing on parent frames. Since text rendering happens in the Python renderer (PyCairo), the Compiler uses **opentype.js** to measure text in TypeScript without a rendering engine.
+The Compiler must know text node dimensions to resolve HUG-contents sizing on parent frames. Since the Renderer is now in-process (not a subprocess), the Compiler uses **@napi-rs/canvas's `ctx.measureText()`** — the same Skia text shaping engine that renders the final output. This eliminates the dual-engine discrepancy that existed with the previous opentype.js approach.
 
 ```typescript
 interface TextMeasurement {
-  width: number;    // total advance width in pixels
+  width: number;    // measured advance width in pixels (from Skia)
   height: number;   // lineCount × lineHeight (or fontSize × 1.2 default)
 }
 
 interface TextMeasurer {
-  /** Load a font file (.otf/.ttf) and register it by family+weight */
-  loadFont(path: string, family: string, weight: number): void;
+  /** Initialize with font directory — registers fonts via GlobalFonts.registerFromPath() */
+  initialize(fontDir: string): void;
 
-  /** Measure text dimensions using loaded font metrics */
+  /** Measure text dimensions using Skia's ctx.measureText() */
   measure(characters: string, style: TextStyle): TextMeasurement;
 }
 ```
 
 **How it works**:
-- opentype.js parses `.otf`/`.ttf` files and provides per-glyph advance widths and font-level ascent/descent metrics
-- For each text node, the measurer sums glyph advance widths (scaled to `fontSize`) to compute width, and uses `lineHeight` (or `fontSize × 1.2` default) × line count for height
+- On initialization, registers Inter font files via `GlobalFonts.registerFromPath()` (same registration the Renderer uses)
+- Creates an internal scratch canvas context for measurement (lightweight — no pixel buffer allocated for `measureText()`)
+- Sets `ctx.font` to match the text style (e.g., `'600 14px Inter'`), then calls `ctx.measureText(text)` to get `TextMetrics`
+- Width comes from `textMetrics.width`; height uses `lineHeight` (or `fontSize × 1.2` default) × line count
 - Multi-line text splits on `\n`; width is the maximum line width
 - The Inter font files are bundled in `packages/dsl-core/fonts/` so measurement works offline without system fonts
-- Kerning and ligatures are applied using opentype.js's built-in GPOS/GSUB table support
+- Kerning, ligatures, and complex shaping are handled by Skia's text layout engine — the same engine that renders
 
-**Limitations**: Letter-perfect parity with PyCairo's text rendering is not guaranteed — minor width differences (< 1px per glyph) may occur. These differences are absorbed by the visual comparison threshold (default 95% similarity).
+**Advantages over previous opentype.js approach**: Zero measurement-rendering discrepancy — the Compiler measures with the exact same Skia engine that the Renderer draws with. No separate font parsing library needed (opentype.js removed from dependencies).
 
 ##### Layout Algorithm Specification
 
@@ -575,62 +578,74 @@ Pass 2 (top-down): Row height=26. "Label" (17px tall) centered at y = 4 + (26−
 
 | Field | Detail |
 |-------|--------|
-| Intent | Rasterize FigmaNodeDict JSON to PNG images using PyCairo |
+| Intent | Rasterize FigmaNodeDict to PNG images using @napi-rs/canvas (Skia backend) |
 | Requirements | 6.1–6.4 |
 
 **Responsibilities & Constraints**
-- Accept FigmaNodeDict JSON via stdin or file path
+- Accept FigmaNodeDict objects directly (in-process, no serialization boundary)
 - Render all supported node types: FRAME, COMPONENT, COMPONENT_SET, INSTANCE, RECTANGLE, ELLIPSE, TEXT, GROUP
 - Apply fills (solid colors, linear gradients), strokes, corner radius, opacity, clipping
-- Render text with correct font, size, weight, and baseline positioning
+- Render text with correct font, size, weight, and baseline positioning using registered fonts
 - Resolve image asset paths relative to a configurable asset directory
-- Output PNG to specified path; report errors as structured JSON on stderr
+- Return PNG buffer or write to specified path; throw typed errors on failure
 
 **Dependencies**
-- Inbound: Compiler — provides FigmaNodeDict JSON (P0)
-- External: PyCairo 1.27+ — vector rendering engine (P0)
-- External: Pillow — image fallback and format conversion (P1)
+- Inbound: Compiler — provides FigmaNodeDict (P0)
+- External: @napi-rs/canvas 0.1.96+ — Skia-based Canvas 2D API (P0)
 
 **Contracts**: Service [x]
 
 ##### Service Interface
-```python
-@dataclass
-class RenderOptions:
-    background_color: tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0)  # white
-    scale: float = 1.0
-    asset_dir: str | None = None
+```typescript
+interface RenderOptions {
+  backgroundColor: RgbaColor;     // default: {r: 1, g: 1, b: 1, a: 1} (white)
+  scale: number;                  // default: 1
+  assetDir?: string;              // base path for image asset resolution
+}
 
-@dataclass
-class RenderResult:
-    png_path: Path
-    width: int
-    height: int
+interface RenderResult {
+  pngBuffer: Buffer;
+  width: number;
+  height: number;
+}
 
-@dataclass
-class RenderError:
-    message: str
-    node_path: str
-    node_type: str
+interface RenderError {
+  message: string;
+  nodePath: string;
+  nodeType: string;
+}
 
-class DslRenderer:
-    def render(self, node_json: str, output_path: Path, options: RenderOptions) -> RenderResult:
-        """Render FigmaNodeDict JSON to PNG. Raises RenderError on failure."""
-        ...
+interface RendererService {
+  /** Initialize renderer and register bundled fonts */
+  initialize(fontDir: string): void;
 
-    def render_file(self, json_path: Path, output_path: Path, options: RenderOptions) -> RenderResult:
-        """Render from JSON file path."""
-        ...
+  /** Render FigmaNodeDict to PNG buffer */
+  render(node: FigmaNodeDict, options?: Partial<RenderOptions>): RenderResult;
+
+  /** Render and write to file */
+  renderToFile(node: FigmaNodeDict, outputPath: string, options?: Partial<RenderOptions>): RenderResult;
+}
 ```
-- Preconditions: Input JSON must conform to FigmaNodeDict schema; transforms must be pre-computed (no layout resolution)
-- Postconditions: Output PNG exists at specified path with correct dimensions
-- Invariants: Renderer is stateless — each render call is independent
+- Preconditions: Fonts must be registered via `initialize()` before first render; transforms must be pre-computed (no layout resolution)
+- Postconditions: Output PNG buffer contains correct rasterization at specified scale
+- Invariants: Renderer is stateless after initialization — each render call is independent
 
 **Implementation Notes**
-- Extends figma-html-renderer's `CanvasRenderer` patterns: Cairo context save/restore stack, transform matrix application, fill handling with `set_source_rgba` and `fill_preserve`
-- **New**: Adds gradient fill support using Cairo's `LinearGradient` pattern with gradient transform conversion from Figma's rotation matrix format
-- CLI invocation: `python -m figma_component_dsl.renderer --input nodes.json --output render.png [--scale 2] [--bg white|transparent] [--assets ./assets]`
-- Error output format: `{"error": "message", "node_path": "...", "node_type": "..."}`
+- Rendering follows a recursive tree traversal with Canvas 2D context save/restore stack:
+  1. `ctx.save()` → apply node transform via `ctx.setTransform(a, b, c, d, tx, ty)`
+  2. Apply opacity via `ctx.globalAlpha`
+  3. Apply clipping if `clipContent` is true: draw shape path then `ctx.clip()`
+  4. Draw fills: solid via `ctx.fillStyle = rgba(...)`, gradient via `ctx.createLinearGradient()` with stops
+  5. Draw shape: `ctx.fillRect()` for FRAME/RECTANGLE, `ctx.roundRect()` for rounded corners, `ctx.arc()` + `ctx.fill()` for ELLIPSE
+  6. Draw text: `ctx.font = 'weight size family'`, `ctx.fillText(characters, x, y)`
+  7. Draw strokes: `ctx.strokeStyle`, `ctx.lineWidth`, `ctx.stroke()`
+  8. Recurse into children
+  9. `ctx.restore()`
+- Gradient fills use `ctx.createLinearGradient(x0, y0, x1, y1)` with gradient transform applied — this was a gap in the PyCairo renderer that is resolved natively by the Canvas API
+- Font registration: `GlobalFonts.registerFromPath(fontPath, 'Inter')` called once during `initialize()`
+- Text rendering uses CSS font syntax: `ctx.font = '600 14px Inter'`
+- Canvas creation: `createCanvas(width * scale, height * scale)` with root node size determining canvas dimensions
+- PNG export: `canvas.toBuffer('image/png')` returns a Node.js Buffer
 
 ---
 
@@ -871,7 +886,7 @@ interface PluginOutput {
 
 **Responsibilities & Constraints**
 - Provide subcommands for each pipeline stage: `compile`, `render`, `capture`, `compare`, `pipeline`, `export`
-- Orchestrate cross-language calls (invoke Python renderer as subprocess)
+- Orchestrate all stages as in-process TypeScript module calls (no subprocess management)
 - Report errors with context (which stage failed, what input caused it) and exit with non-zero status
 - Support configuration via command-line flags and optional config file
 
@@ -902,9 +917,10 @@ interface PipelineOptions {
 
 **Implementation Notes**
 - Built with Node.js `parseArgs` (no framework dependency, matching "No Framework Bloat" principle)
-- Python renderer invoked via `child_process.execFile('python', ['-m', 'figma_component_dsl.renderer', ...])` with JSON piped to stdin or written to a temp file
+- All pipeline stages are direct TypeScript module calls — no subprocess management, no cross-language bridge
 - The `pipeline` command chains: compile → render → capture → compare, stopping on first error
 - Exit codes: 0 = success, 1 = pipeline failure (comparison below threshold), 2 = runtime error
+- The `render` command accepts either a DSL path (compile + render) or a pre-compiled JSON path (render only)
 
 ## Data Models
 
@@ -942,14 +958,14 @@ erDiagram
 
 ### Logical Data Model
 
-**FigmaNodeDict JSON Schema** (interchange format between TypeScript and Python):
+**FigmaNodeDict Schema** (internal TypeScript type, no cross-language serialization boundary):
 
 The FigmaNodeDict structure mirrors Figma's internal node representation as documented in the figma-html-renderer reference. Key fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | guid | [number, number] | Yes | Unique node identifier |
-| type | string | Yes | Node type enum |
+| type | FigmaNodeType | Yes | Typed union of supported node types |
 | name | string | Yes | Display name |
 | size | {x: number, y: number} | Yes | Width and height |
 | transform | number[3][3] | Yes | Absolute affine transform |
@@ -972,14 +988,14 @@ Full schema details for FigmaPaint, text properties, and component properties ar
 ## Error Handling
 
 ### Error Strategy
-Each pipeline stage produces typed errors with contextual information. Errors are categorized by recoverability.
+Each pipeline stage produces typed errors with contextual information. Errors are categorized by recoverability. All errors are TypeScript types — no cross-language error propagation.
 
 ### Error Categories and Responses
 **DSL Construction Errors** (immediate throw): Invalid hex string → `InvalidColorError` with hex value; missing required property → `MissingPropertyError` with node name and property; invalid node nesting → `InvalidChildError` with parent and child types.
 
 **Compile Errors** (accumulated, reported after pass): Layout overflow → warning with node path; circular component reference → `CircularRefError`; unresolved token → `UnresolvedTokenError`.
 
-**Render Errors** (subprocess, structured JSON): Missing font → warning with fallback notification; unsupported node type → skip with warning; invalid paint → skip fill with warning.
+**Render Errors** (in-process, typed): Missing font → warning with fallback notification; unsupported node type → skip with warning; invalid paint → skip fill with warning. All errors are thrown as `RenderError` instances, caught and reported by the CLI.
 
 **Pipeline Errors** (CLI level): Stage failure → stop pipeline, report which stage failed and the underlying error; comparison failure (below threshold) → exit code 1 with similarity report.
 
@@ -990,13 +1006,13 @@ Each pipeline stage produces typed errors with contextual information. Errors ar
 - **Color helpers**: Verify hex parsing, solid/gradient fill construction, token resolution for valid and edge-case inputs
 - **Compiler layout resolution**: Verify auto-layout computation for horizontal/vertical direction, spacing, padding, alignment, and sizing modes against expected transform matrices
 - **Compiler GUID assignment**: Verify unique, deterministic GUID generation across tree depths
+- **Renderer shape drawing**: Verify that rendering a single FRAME/RECTANGLE/ELLIPSE/TEXT node produces non-empty PNG with expected dimensions
 - **Comparator scoring**: Verify similarity calculation with identical images (100%), completely different images (~0%), and known diff patterns
 
 ### Integration Tests
 - **Compile + Render pipeline**: DSL definition → compile → render → verify output PNG exists and has expected dimensions
 - **Compile + Export pipeline**: DSL definition → compile → export → verify PluginInput JSON is valid and contains expected component structures
 - **Full pipeline**: DSL definition → compile → render → capture → compare → verify CompareResult matches expectations
-- **Error propagation**: Verify that renderer subprocess errors are correctly captured and reported by the CLI with context
 
 ### E2E Tests
 - **CLI compile command**: Invoke `figma-dsl compile` on sample DSL files, verify JSON output schema
