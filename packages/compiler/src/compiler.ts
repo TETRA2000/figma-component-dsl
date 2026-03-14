@@ -142,9 +142,17 @@ function compileNode(
     result.paddingLeft = pad.paddingLeft;
     result.primaryAxisAlignItems = al.align ?? 'MIN';
     result.counterAxisAlignItems = al.counterAlign ?? 'MIN';
+
+    // Map widthSizing/heightSizing to layoutSizingHorizontal/Vertical
+    if (al.widthSizing) {
+      result.layoutSizingHorizontal = al.widthSizing;
+    }
+    if (al.heightSizing) {
+      result.layoutSizingVertical = al.heightSizing;
+    }
   }
 
-  // Child layout sizing passthrough
+  // Child layout sizing passthrough (explicit overrides)
   if (node.layoutSizingHorizontal) {
     result.layoutSizingHorizontal = node.layoutSizingHorizontal;
   }
