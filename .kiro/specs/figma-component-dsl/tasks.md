@@ -177,8 +177,8 @@
   - _Requirements: 8.1, 8.2, 8.3, 8.4_
   - _Contracts: CompareService_
 
-- [ ] 8. Figma plugin runtime — Direct DSL execution via bundled code
-- [ ] 8.1 (P) Implement the plugin shim module and esbuild bundling
+- [x] 8. Figma plugin runtime — Direct DSL execution via bundled code
+- [x] 8.1 (P) Implement the plugin shim module and esbuild bundling
   - Create the plugin shim module that re-exports DSL functions backed by real Figma Plugin API: createFrame() → figma.createFrame(), createRectangle() → figma.createRectangle(), createEllipse() → figma.createEllipse(), createComponent() → figma.createComponent()
   - Implement async createText() shim: calls figma.createText(), awaits figma.loadFontAsync({ family: 'Inter', style: 'Regular' }), returns the text node
   - Implement async font-weight property setter: when fontWeight is set on a text node, intercept the assignment, map weight to style name (400→Regular, 500→Medium, 600→Semi Bold, 700→Bold), await figma.loadFontAsync() for that style before applying the value
@@ -188,7 +188,7 @@
   - _Requirements: 9.1, 9.2, 9.3_
   - _Contracts: PluginRuntime_
 
-- [ ] 8.2 Implement plugin UI, page management, and error handling
+- [x] 8.2 Implement plugin UI, page management, and error handling
   - Create plugin UI with text area for pasting bundle JS or file picker for loading it
   - Execute bundled DSL code where all factory calls delegate to real Figma Plugin API
   - Register component properties via addComponentProperty() for TEXT, BOOLEAN, and INSTANCE_SWAP types
@@ -199,8 +199,8 @@
   - Wrap each node creation in try/catch: accumulate errors, report via figma.notify(), continue without crashing
   - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8_
 
-- [ ] 9. CLI — Pipeline orchestration
-- [ ] 9.1 Implement compile, render, and bundle commands
+- [x] 9. CLI — Pipeline orchestration
+- [x] 9.1 Implement compile, render, and bundle commands
   - Implement compile command: dynamically import a DSL module (.dsl.ts), execute it with VirtualFigmaApi, compile the resulting node tree, output FigmaNodeDict JSON to file or stdout
   - Implement render command: invoke Python renderer as subprocess with JSON input (via stdin or temp file), passing --output, --scale, and --bg flags
   - Implement bundle command: use esbuild to package DSL definitions for Figma plugin execution, resolving 'figma-dsl' imports to the plugin shim module
@@ -209,7 +209,7 @@
   - _Requirements: 10.1, 10.2, 10.6_
   - _Contracts: CliCommands_
 
-- [ ] 9.2 (P) Implement capture, compare, and pipeline commands
+- [x] 9.2 (P) Implement capture, compare, and pipeline commands
   - Implement capture command: invoke screenshot capturer with component path or URL, viewport specification (WxH format), optional props JSON, and output path
   - Implement compare command: invoke visual comparator with two image paths, configurable threshold, and diff output path; display similarity score and pass/fail result
   - Implement pipeline command chaining: compile → render → capture → compare, stopping on first error and reporting which stage failed
@@ -218,13 +218,13 @@
   - Build CLI with Node.js parseArgs (no framework dependency)
   - _Requirements: 10.3, 10.4, 10.5, 10.7_
 
-- [ ] 9.3 (P) Implement doctor command for environment verification
+- [x] 9.3 (P) Implement doctor command for environment verification
   - Verify Node.js version (22+), Python version (3.10+), PyCairo availability, and Inter font file presence
   - Run preflight checks: Python interpreter discovery, `import cairo` validation, font file existence
   - Report status of each dependency with actionable error messages for missing items
   - _Requirements: 10.7_
 
-- [ ] 10. (P) AI skill — React-to-DSL generation
+- [x] 10. (P) AI skill — React-to-DSL generation
   - Create `.claude/skills/react-to-dsl/SKILL.md` with name, description frontmatter, and detailed instruction body
   - Document supported patterns: CSS Modules with design tokens, flexbox layout, CSS Grid, variant props (union types), boolean props, string content props, array data props via .map(), up to 3 composition levels, up to 15 nested elements
   - Document unsupported pattern handling: absolute/fixed positioning → `// TODO:` and skip; CSS animations/transitions/hover → generate default state only; responsive breakpoints → single viewport 1200px; dynamic state → initial state only; third-party UI libraries → report unsupported and skip
@@ -233,21 +233,21 @@
   - Include examples of Code Connect stub generation using figma.enum(), figma.string(), figma.boolean(), figma.instance()
   - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.11, 11.12, 11.13, 11.14, 12.1, 12.2, 12.3, 12.4, 12.5, 12.6, 12.7, 12.8, 12.9, 12.10, 12.11, 12.12_
 
-- [ ] 11. Integration and end-to-end testing
-- [ ] 11.1 Implement compile-to-render integration tests
+- [x] 11. Integration and end-to-end testing
+- [x] 11.1 Implement compile-to-render integration tests
   - Test full compile → render pipeline: create DSL definitions using VirtualFigmaApi, compile to FigmaNodeDict JSON, render via Python subprocess, verify output PNG exists with expected dimensions
   - Test error propagation: verify renderer subprocess errors are captured and reported with context by the TypeScript pipeline
   - Test JSON interchange format: verify compiler output is correctly consumed by the Python renderer
   - _Requirements: 6.1, 6.2, 10.1, 10.2_
 
-- [ ] 11.2 (P) Implement CLI end-to-end tests
+- [x] 11.2 (P) Implement CLI end-to-end tests
   - Test each CLI subcommand (compile, render, capture, compare, pipeline, bundle, doctor) with sample inputs and verify expected outputs
   - Test pipeline command end-to-end: DSL → compile → render → capture → compare, verifying similarity score and output files
   - Test error scenarios: invalid DSL input (non-zero exit code, descriptive error), missing Python environment (actionable message), comparison below threshold (exit code 1)
   - Test bundle command: verify output is valid JS that references expected Figma API call patterns
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7_
 
-- [ ] 11.3 Create DSL test definitions for primitive and card-level components
+- [x] 11.3 Create DSL test definitions for primitive and card-level components
   - **Button** (all 12 variants: 4 styles × 3 sizes) — gradient fills, pill-shaped corners, horizontal auto-layout with center alignment, size-dependent padding and font sizes, Full Width boolean property, using createComponent() + combineAsVariants()
   - **Badge** (4 variants) — solid fills with matching border colors, pill-shaped corners, compact padding, TEXT component property
   - **FeatureCard** — vertical layout, white background with border, nested icon placeholder using INSTANCE_SWAP, 24px padding, 16px corner radius
@@ -258,7 +258,7 @@
   - Compile each definition and verify valid FigmaNodeDict JSON with correct transforms and layout
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 4.5, 5.1, 5.2, 5.3, 5.4, 6.1, 6.2_
 
-- [ ] 11.4 Create DSL test definitions for section and page-level compositions
+- [x] 11.4 Create DSL test definitions for section and page-level compositions
   - **Navbar** — fixed-width horizontal layout with layoutGrow spacers, border stroke, gradient CTA button, testing flex-grow distribution
   - **Hero** (center + left variants) — multi-size text (60px title, 20px subtitle), nested badge component, horizontal button row, testing large text measurement
   - **Stats** (inline + cards variants) — inline with dividers, cards with individual frames, testing variant-based layout switching
