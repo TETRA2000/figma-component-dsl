@@ -121,8 +121,8 @@
   - Test component/variant/instance compilation produces correct FigmaNodeDict fields
   - _Requirements: 1.5, 2.1, 2.5, 2.6, 4.6, 5.5_
 
-- [ ] 5. Python renderer — PyCairo rendering pipeline
-- [ ] 5.1 (P) Implement frame and shape rendering with CLI entry point
+- [x] 5. Python renderer — PyCairo rendering pipeline
+- [x] 5.1 (P) Implement frame and shape rendering with CLI entry point
   - Render FRAME, COMPONENT, COMPONENT_SET, and INSTANCE nodes as rectangles with solid color fills, strokes, corner radius, opacity, and content clipping
   - Render RECTANGLE nodes with solid fills, stroke outlines, and rounded corners using Cairo arcs
   - Render ELLIPSE nodes using Cairo arc and scale transformations
@@ -134,7 +134,7 @@
   - _Requirements: 6.1, 6.2, 6.4_
   - _Contracts: DslRenderer_
 
-- [ ] 5.2 Implement text rendering and gradient fills
+- [x] 5.2 Implement text rendering and gradient fills
   - Render TEXT nodes using Cairo select_font_face and show_text with correct font family, weight, and size
   - Map font weight to Cairo values: 400→FONT_WEIGHT_NORMAL, 500–700→FONT_WEIGHT_BOLD
   - Position each text line using baseline data from derivedTextData (lineY and lineHeight)
@@ -145,7 +145,7 @@
   - Apply gradient fills alongside solid fills on multi-fill nodes
   - _Requirements: 6.1, 6.2_
 
-- [ ] 5.3 (P) Implement image asset handling and renderer tests
+- [x] 5.3 (P) Implement image asset handling and renderer tests
   - Resolve image asset paths relative to a configurable asset directory
   - Load images as Cairo surface patterns scaled to fill node bounds
   - Test frame/rectangle rendering: verify output PNG dimensions, solid fill colors, corner radius, opacity
@@ -154,7 +154,7 @@
   - Test error handling: missing font fallback, unsupported node type skip with warning
   - _Requirements: 6.3, 6.4_
 
-- [ ] 6. (P) Screenshot capturer — React component isolation via Playwright
+- [x] 6. (P) Screenshot capturer — React component isolation via Playwright
   - Launch headless Chromium via Playwright and render a single React component in isolation
   - Implement capture from a component module path by spinning up a minimal Vite server for isolated rendering
   - Implement captureUrl for navigating to an existing dev server URL
@@ -166,7 +166,7 @@
   - _Requirements: 7.1, 7.2, 7.3, 7.4_
   - _Contracts: CaptureService_
 
-- [ ] 7. (P) Visual comparator — Pixel-level image diff via pixelmatch
+- [x] 7. (P) Visual comparator — Pixel-level image diff via pixelmatch
   - Decode two PNG images to raw RGBA buffers using pngjs
   - When images differ in dimensions, pad the smaller image with background color and flag dimensionMatch as false
   - Run pixelmatch comparison with configurable sensitivity threshold (default 0.1) and anti-aliasing detection

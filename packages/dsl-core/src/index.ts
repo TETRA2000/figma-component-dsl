@@ -25,3 +25,7 @@ export { VirtualFigmaApi } from './virtual-api.js';
 export { hexToRGB, solidPaint, gradientPaint, defineTokens, tokenPaint, setAutoLayout } from './helpers.js';
 export { Compiler } from './compiler.js';
 export type { FigmaNodeDict, FigmaPaintOut, Baseline, FontMeta, CompileResult, CompileError } from './compiler.js';
+export { Comparator } from './comparator.js';
+export type { CompareOptions, CompareResult } from './comparator.js';
+export type { CaptureOptions, CaptureResult, CaptureService } from './capturer.js';
+export { PlaywrightCapturer } from './capturer.js';
