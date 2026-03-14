@@ -57,6 +57,33 @@ Categories are defined in `packages/cli/src/test-suite-generator.ts`. Each categ
 
 ## Full calibration run
 
+### Step 0: Install dependencies and build
+
+Always start by ensuring dependencies are installed and packages are built:
+
+```bash
+npm i && npm run build
+```
+
+This guarantees the CLI and all pipeline packages are up to date before generating or rendering anything.
+
+### Step 0.5: Create history directory
+
+Create a directory under `docs/history/` for this calibration run, named with a timestamp and the theme/category being tested:
+
+```bash
+mkdir -p docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>
+```
+
+Examples:
+- `docs/history/2026-03-14_15-30-corner-radius`
+- `docs/history/2026-03-14_16-00-hamburger-theme`
+- `docs/history/2026-03-14_16-30-full-suite`
+
+For full runs across all categories, use `full-suite` as the theme name. For fix iterations, append `-fix<N>` (e.g., `2026-03-14_15-30-corner-radius-fix1`).
+
+Copy rendered PNGs and the batch manifest into this directory after each batch render step so there is a persistent record of every iteration's output.
+
 ### Step 1: Generate test suite
 
 ```bash
@@ -77,6 +104,13 @@ This produces:
 - `batch-manifest.json` -- metadata with dimensions and status per component
 
 Check the batch output for errors. Any component that fails compilation shows in the manifest with `"status": "error"`.
+
+After batch completes, copy outputs to the history directory created in Step 0.5:
+
+```bash
+cp calibration/<timestamp>/dsl/*.png docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/
+cp calibration/<timestamp>/batch-manifest.json docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/
+```
 
 ### Step 3: Inspect rendered PNGs
 
@@ -212,9 +246,16 @@ For issues tagged as pipeline bugs, follow this systematic process. The key insi
    bin/figma-dsl batch calibration/<timestamp>/test-suite/<category> -o calibration/<timestamp>-fix<N>
    ```
 
-6. **Re-inspect** -- Read the new PNGs and compare with previous iteration.
+6. **Save to history** -- Copy outputs to a new history directory for this fix iteration:
+   ```bash
+   mkdir -p docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>-fix<N>
+   cp calibration/<timestamp>-fix<N>/dsl/*.png docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>-fix<N>/
+   cp calibration/<timestamp>-fix<N>/batch-manifest.json docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>-fix<N>/
+   ```
 
-7. **Repeat** until all issues are resolved or max iterations reached.
+7. **Re-inspect** -- Read the new PNGs and compare with previous iteration.
+
+8. **Repeat** until all issues are resolved or max iterations reached.
 
 Ask the user before starting the fix loop: "Found N issues (M in DSL files, K in pipeline code). Want me to attempt fixes? (default: up to 3 iterations)"
 

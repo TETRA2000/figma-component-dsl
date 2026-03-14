@@ -1,7 +1,24 @@
-# Dogfooding History
+# Rendering History
 
-This directory contains logs from dogfooding iterations. Each session gets its own markdown file with embedded render screenshots and a summary of issues found and fixed.
+This directory stores output snapshots from calibration and dogfooding runs. Each run creates a subdirectory named with timestamp and theme:
 
-## Index
+```
+docs/history/
+  2026-03-14_15-30-corner-radius/     # calibration run
+  2026-03-14_16-00-hamburger-theme/    # calibration run
+  2026-03-14_16-30-full-suite/         # full calibration
+  2026-03-14_16-30-full-suite-fix1/    # fix iteration
+  2026-03-14_17-00-retro-diner/        # dogfooding run
+```
 
-<!-- New entries are prepended below this line -->
+## Naming convention
+
+- Format: `<YYYY-MM-DD_HH-mm>-<theme-name>`
+- Fix iterations append `-fix<N>` (e.g., `-fix1`, `-fix2`)
+- Full calibration runs use `full-suite` as the theme name
+
+## Contents per directory
+
+- `*.png` — rendered component PNGs
+- `batch-manifest.json` — component metadata and status
+- Dogfooding runs may also include comparison screenshots and iteration logs
