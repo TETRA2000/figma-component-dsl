@@ -276,8 +276,8 @@
   - Track regression over time by committing baseline scores
   - _Requirements: 6.2, 7.1, 7.2, 7.3, 7.4, 8.1, 8.2, 8.3, 8.4_
 
-- [ ] 12. Gap fixes — Image asset rendering and per-corner radius
-- [ ] 12.1 (P) Implement image asset loading and rendering in the Python renderer
+- [x] 12. Gap fixes — Image asset rendering and per-corner radius
+- [x] 12.1 (P) Implement image asset loading and rendering in the Python renderer
   - Accept an asset directory path and resolve image references from node fill data
   - Load PNG/JPEG images as Cairo surface patterns, scaling them to fill the node bounds
   - Apply clipping to constrain images within node boundaries (respecting cornerRadius)
@@ -285,7 +285,7 @@
   - Add tests: render a node referencing an image asset, verify output PNG contains non-background pixels; test missing asset fallback
   - _Requirements: 6.3_
 
-- [ ] 12.2 (P) Add per-corner radius support across types, compiler, and renderer
+- [x] 12.2 (P) Add per-corner radius support across types, compiler, and renderer
   - Extend the DSL scene node type to include optional per-corner radius properties (topLeftRadius, topRightRadius, bottomLeftRadius, bottomRightRadius)
   - Update the virtual node implementation to accept and store per-corner radius values
   - Update the compiler to emit per-corner radius values in FigmaNodeDict output when set
@@ -293,34 +293,34 @@
   - Add tests: compile and render a rectangle with mixed corner radii (e.g., 16px top-left, 0px others), verify correct shape in output
   - _Requirements: 1.6_
 
-- [ ] 13. Gap fixes — Typography and transform fidelity
-- [ ] 13.1 (P) Add letter-spacing to compiler output and renderer
+- [x] 13. Gap fixes — Typography and transform fidelity
+- [x] 13.1 (P) Add letter-spacing to compiler output and renderer
   - Include the letterSpacing property (value and unit) in the compiler's FigmaNodeDict text output
   - Implement letter-spacing rendering in the Python renderer by adjusting character advance widths
   - Add tests: compile a text node with letterSpacing set, verify it appears in JSON output; render and verify text width changes with spacing
   - _Requirements: 4.4_
 
-- [ ] 13.2 (P) Implement rotation rendering in the Python renderer
+- [x] 13.2 (P) Implement rotation rendering in the Python renderer
   - Parse the rotation component from the 3×3 affine transform matrix (currently only translation is applied)
   - Apply Cairo matrix rotation before rendering the node content
   - Ensure child nodes inherit the composed parent+child rotation
   - Add tests: render a rotated rectangle at 45° and verify the output image differs from the non-rotated version
   - _Requirements: 6.2_
 
-- [ ] 13.3 (P) Add font style (italic) support to compiler and renderer
+- [x] 13.3 (P) Add font style (italic) support to compiler and renderer
   - Support a fontStyle property on text nodes (e.g., 'Normal', 'Italic')
   - Include fontStyle in the compiler's derivedTextData fontMetaData output
   - Apply Cairo FONT_SLANT_ITALIC when fontStyle is 'Italic' in the renderer
   - Add tests: compile and render italic text, verify fontMetaData includes style and rendered output differs from normal text
   - _Requirements: 4.1_
 
-- [ ] 14. (P) Gap fix — Plugin font-weight race condition
+- [x] 14. (P) Gap fix — Plugin font-weight race condition
   - Replace the Proxy-based fontWeight setter with a synchronous queueing approach that awaits font loading before applying the weight value
   - Ensure that multiple fontWeight changes on the same text node are serialized correctly
   - Add a test verifying that figma.loadFontAsync is awaited before the weight value is assigned to the node
   - _Requirements: 9.2_
 
-- [ ] 15. Gap fix — Ellipse aspect ratio rendering
+- [x] 15. Gap fix — Ellipse aspect ratio rendering
   - Update the Python renderer to support true ellipses with different horizontal and vertical radii, not just circles
   - Use Cairo scale transformation to stretch a unit circle to the ellipse dimensions
   - Add tests: render an ellipse with width=100 and height=50, verify the output differs from a 100×100 circle
