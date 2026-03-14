@@ -5,7 +5,7 @@ import { pathToFileURL } from 'url';
 import { compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
 import type { CompileResult } from '@figma-dsl/compiler';
 import type { DslNode } from '@figma-dsl/core';
-import { renderToFile, initializeRenderer } from '@figma-dsl/renderer';
+import { renderToFile, initializeRenderer, collectImageSources, preloadImages } from '@figma-dsl/renderer';
 import { compareFiles } from '@figma-dsl/comparator';
 import { captureUrl } from '@figma-dsl/capturer';
 import { exportToFile } from '@figma-dsl/exporter';
@@ -116,6 +116,7 @@ async function cmdRender(args: string[]): Promise<number> {
       scale: { type: 'string', short: 's' },
       background: { type: 'string', short: 'b' },
       'debug-layout': { type: 'boolean' },
+      'asset-dir': { type: 'string' },
       help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
@@ -134,6 +135,7 @@ Options:
   -s, --scale <N>      Render scale factor (default: 1)
   -b, --background     Background color
   --debug-layout       Overlay layout debug visualization
+  --asset-dir <path>   Base directory for resolving image paths (default: input file's directory)
   -h, --help           Show this help message`);
     return 0;
   }
@@ -157,7 +159,15 @@ Options:
 
     const scale = values.scale ? parseFloat(values.scale) : 1;
     const debugLayout = values['debug-layout'] ?? false;
-    const result = renderToFile(compiled.root, resolve(values.output), { scale, debugLayout });
+    const assetDir = values['asset-dir'] ? resolve(values['asset-dir']) : dirname(resolve(inputPath));
+
+    // Pre-load images
+    const imageSources = collectImageSources(compiled.root);
+    const imageCache = imageSources.size > 0
+      ? await preloadImages(imageSources, assetDir)
+      : undefined;
+
+    const result = renderToFile(compiled.root, resolve(values.output), { scale, debugLayout, imageCache });
     console.log(`Rendered: ${values.output} (${result.width}×${result.height})`);
     return 0;
   } catch (err) {
@@ -363,6 +373,7 @@ async function cmdExport(args: string[]): Promise<number> {
     options: {
       output: { type: 'string', short: 'o' },
       page: { type: 'string', short: 'p' },
+      'asset-dir': { type: 'string' },
       help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
@@ -379,6 +390,7 @@ Arguments:
 Options:
   -o, --output <path>  Output JSON file path (required)
   -p, --page <name>    Page name for Figma import
+  --asset-dir <path>   Base directory for resolving image paths (default: input file's directory)
   -h, --help           Show this help message`);
     return 0;
   }
@@ -393,7 +405,8 @@ Options:
     initServices();
     const dslNode = await loadDslModule(dslPath);
     const compiled = compileWithLayout(dslNode, textMeasurer);
-    exportToFile(compiled, resolve(values.output), values.page);
+    const assetDir = values['asset-dir'] ? resolve(values['asset-dir']) : dirname(resolve(dslPath));
+    exportToFile(compiled, resolve(values.output), values.page, { assetDir });
     console.log(`Exported: ${values.output}`);
     return 0;
   } catch (err) {

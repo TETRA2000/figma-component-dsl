@@ -1,6 +1,6 @@
 // --- Node Types ---
 export type NodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ELLIPSE' | 'GROUP'
-  | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE';
+  | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'IMAGE';
 
 // --- Color & Fill ---
 export interface RgbaColor {
@@ -39,7 +39,17 @@ export interface RadialGradientFill {
   visible: boolean;
 }
 
-export type Fill = SolidFill | GradientFill | RadialGradientFill;
+export type ImageScaleMode = 'FILL' | 'FIT' | 'CROP' | 'TILE';
+
+export interface ImageFill {
+  type: 'IMAGE';
+  src: string;
+  scaleMode: ImageScaleMode;
+  opacity: number;
+  visible: boolean;
+}
+
+export type Fill = SolidFill | GradientFill | RadialGradientFill | ImageFill;
 
 export interface StrokePaint {
   color: RgbaColor;
@@ -116,6 +126,10 @@ export interface DslNode {
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
 
+  // Image (IMAGE only)
+  imageSrc?: string;
+  imageScaleMode?: ImageScaleMode;
+
   // Text (TEXT only)
   characters?: string;
   textStyle?: TextStyle;
@@ -186,6 +200,17 @@ export interface ComponentSetProps {
   children?: DslNode[];
   variantAxes?: Record<string, string[]>;
   autoLayout?: AutoLayoutConfig;
+}
+
+export interface ImageProps {
+  src: string;
+  size: { x: number; y: number };
+  fit?: ImageScaleMode;
+  cornerRadius?: number;
+  opacity?: number;
+  visible?: boolean;
+  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
 }
 
 export interface ColorTokenMap {

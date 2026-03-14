@@ -234,4 +234,53 @@ describe('describeChange', () => {
   it('generates generic description for unknown paths', () => {
     expect(describeChange('visible', true, false)).toContain('Property visible changed');
   });
+
+  it('generates image change description', () => {
+    expect(describeChange('fills.0.imageHash', 'abc123', 'def456')).toContain('Image changed');
+  });
+
+  it('generates image scale mode change description', () => {
+    expect(describeChange('fills.0.imageScaleMode', 'FILL', 'FIT')).toContain('Image scale mode changed');
+  });
+});
+
+describe('diffNodes — IMAGE fills', () => {
+  it('detects image hash change', () => {
+    const baseline = makeNode({
+      fills: [{ type: 'IMAGE', opacity: 1, imageHash: 'hash1', imageScaleMode: 'FILL' }],
+    });
+    const current = makeNode({
+      fills: [{ type: 'IMAGE', opacity: 1, imageHash: 'hash2', imageScaleMode: 'FILL' }],
+    });
+    const changes = diffNodes(baseline, current);
+    expect(changes.some(c => c.propertyPath.includes('imageHash'))).toBe(true);
+  });
+
+  it('detects image scale mode change', () => {
+    const baseline = makeNode({
+      fills: [{ type: 'IMAGE', opacity: 1, imageHash: 'hash1', imageScaleMode: 'FILL' }],
+    });
+    const current = makeNode({
+      fills: [{ type: 'IMAGE', opacity: 1, imageHash: 'hash1', imageScaleMode: 'FIT' }],
+    });
+    const changes = diffNodes(baseline, current);
+    expect(changes.some(c => c.propertyPath.includes('imageScaleMode'))).toBe(true);
+  });
+
+  it('detects added image fill', () => {
+    const baseline = makeNode({ fills: undefined });
+    const current = makeNode({
+      fills: [{ type: 'IMAGE', opacity: 1, imageHash: 'hash1', imageScaleMode: 'FILL' }],
+    });
+    const changes = diffNodes(baseline, current);
+    expect(changes.some(c => c.propertyPath.includes('fills'))).toBe(true);
+  });
+
+  it('detects no change for identical image fills', () => {
+    const fill = { type: 'IMAGE' as const, opacity: 1, imageHash: 'hash1', imageScaleMode: 'FILL' as const };
+    const baseline = makeNode({ fills: [fill] });
+    const current = makeNode({ fills: [fill] });
+    const changes = diffNodes(baseline, current);
+    expect(changes).toHaveLength(0);
+  });
 });

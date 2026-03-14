@@ -1,4 +1,4 @@
-import type { RgbaColor, SolidFill, GradientFill, RadialGradientFill, GradientStop, ColorTokenMap } from './types.js';
+import type { RgbaColor, SolidFill, GradientFill, RadialGradientFill, GradientStop, ColorTokenMap, ImageFill, ImageScaleMode } from './types.js';
 
 const HEX_PATTERN = /^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
 
@@ -69,6 +69,22 @@ export function radialGradient(
     center: opts?.center,
     radius: opts?.radius,
     opacity: 1,
+    visible: true,
+  };
+}
+
+export function imageFill(
+  src: string,
+  options?: { scaleMode?: ImageScaleMode; opacity?: number },
+): ImageFill {
+  if (!src) {
+    throw new Error('Image fill src must be a non-empty string.');
+  }
+  return {
+    type: 'IMAGE',
+    src,
+    scaleMode: options?.scaleMode ?? 'FILL',
+    opacity: options?.opacity ?? 1,
     visible: true,
   };
 }

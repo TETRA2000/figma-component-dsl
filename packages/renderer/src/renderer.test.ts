@@ -1,12 +1,14 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { initializeRenderer, render, renderToFile, RenderError } from './renderer.js';
 import { compile, compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
-import { frame, text, rectangle, ellipse, group } from '@figma-dsl/core';
-import { solid, gradient, radialGradient } from '@figma-dsl/core';
+import { frame, text, rectangle, ellipse, group, image } from '@figma-dsl/core';
+import { solid, gradient, radialGradient, imageFill } from '@figma-dsl/core';
 import { horizontal, vertical } from '@figma-dsl/core';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { existsSync, unlinkSync } from 'fs';
+import { createCanvas } from '@napi-rs/canvas';
+import type { ImageCache } from './image-loader.js';
 
 const __dirname2 = dirname(fileURLToPath(import.meta.url));
 const fontDir = join(__dirname2, '../../dsl-core/fonts');
@@ -358,5 +360,86 @@ describe('render() — canvas pooling', () => {
       expect(result.width).toBe(100);
       expect(result.height).toBe(50);
     }
+  });
+});
+
+// Helper: create a small test image as an Image object
+function createTestImage(width: number, height: number) {
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+  ctx.fillRect(0, 0, width, height);
+  return canvas;
+}
+
+describe('render() — IMAGE nodes', () => {
+  it('renders IMAGE node with placeholder when no cache', () => {
+    const node = image('Photo', { src: './photo.png', size: { x: 100, y: 80 } });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+    expect(result.width).toBe(100);
+    expect(result.height).toBe(80);
+  });
+
+  it('renders IMAGE node with placeholder when image not in cache', () => {
+    const node = image('Photo', { src: './missing.png', size: { x: 100, y: 80 } });
+    const compiled = compile(node);
+    const emptyCache: ImageCache = new Map();
+    const result = render(compiled.root, { imageCache: emptyCache });
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders IMAGE node with cached image', () => {
+    const testImg = createTestImage(200, 150);
+    const cache: ImageCache = new Map([['./photo.png', testImg as never]]);
+
+    const node = image('Photo', { src: './photo.png', size: { x: 100, y: 80 } });
+    const compiled = compile(node);
+    const result = render(compiled.root, { imageCache: cache });
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders IMAGE node with cornerRadius clipping', () => {
+    const node = image('Round', { src: './photo.png', size: { x: 100, y: 100 }, cornerRadius: 16 });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+  });
+
+  it('renders IMAGE node as child of FRAME', () => {
+    const node = frame('Container', {
+      size: { x: 200, y: 200 },
+      fills: [solid('#ffffff')],
+      children: [image('Photo', { src: './photo.png', size: { x: 100, y: 80 } })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+    expect(result.width).toBe(200);
+  });
+});
+
+describe('render() — IMAGE fills', () => {
+  it('renders frame with imageFill placeholder when no cache', () => {
+    const node = frame('BgImage', {
+      size: { x: 200, y: 150 },
+      fills: [imageFill('./hero.jpg')],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+  });
+
+  it('renders frame with mixed solid and image fills', () => {
+    const node = frame('Mixed', {
+      size: { x: 200, y: 150 },
+      fills: [solid('#ff0000'), imageFill('./overlay.png')],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
   });
 });

@@ -9,6 +9,7 @@ export interface PropertyChange {
   readonly oldValue?: unknown;
   readonly newValue?: unknown;
   readonly description: string;
+  readonly imageData?: string;
 }
 
 export interface ComponentChangeEntry {

@@ -1,6 +1,7 @@
 import type {
   DslNode, FrameProps, RectangleProps, EllipseProps,
   ComponentProps, ComponentSetProps, TextStyle, ChildLayoutProps,
+  ImageProps,
 } from './types.js';
 import { hex as parseHex } from './colors.js';
 
@@ -159,6 +160,25 @@ export function componentSet(name: string, props: ComponentSetProps): DslNode {
     children: props.children ? [...props.children] : undefined,
     variantAxes: props.variantAxes,
     autoLayout: props.autoLayout,
+  };
+}
+
+export function image(name: string, props: ImageProps): DslNode {
+  validateName(name);
+  if (!props.src) {
+    throw new Error('Image src must be a non-empty string.');
+  }
+  return {
+    type: 'IMAGE',
+    name,
+    visible: props.visible ?? true,
+    opacity: props.opacity ?? 1,
+    size: props.size,
+    cornerRadius: props.cornerRadius,
+    imageSrc: props.src,
+    imageScaleMode: props.fit ?? 'FILL',
+    layoutSizingHorizontal: props.layoutSizingHorizontal,
+    layoutSizingVertical: props.layoutSizingVertical,
   };
 }
 
