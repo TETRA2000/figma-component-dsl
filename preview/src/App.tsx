@@ -1,10 +1,7 @@
+import { McDonaldsShowcase } from './pages/McDonaldsShowcase';
+
 function App() {
-  return (
-    <div>
-      <h1>Figma DSL Preview</h1>
-      <p>Skills will update this file to render target pages and components.</p>
-    </div>
-  )
+  return <McDonaldsShowcase />;
 }
 
-export default App
+export default App;

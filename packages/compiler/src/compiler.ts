@@ -171,6 +171,12 @@ function compileNode(
     result.fontFamily = fontFamily;
     result.textAlignHorizontal = style.textAlignHorizontal ?? 'LEFT';
 
+    // textAutoResize passthrough
+    const textAutoResize = node.textAutoResize ?? style.textAutoResize;
+    if (textAutoResize) {
+      result.textAutoResize = textAutoResize;
+    }
+
     const baselines: Baseline[] = [];
     let charIndex = 0;
     for (let i = 0; i < lines.length; i++) {

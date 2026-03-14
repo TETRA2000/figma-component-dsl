@@ -43,6 +43,7 @@ export interface PluginNodeDef {
   fontWeight?: number;
   fontStyle?: string;
   textAlignHorizontal?: string;
+  textAutoResize?: string;
   lineHeight?: { value: number; unit: string };
   letterSpacing?: { value: number; unit: string };
 
@@ -117,6 +118,9 @@ function convertToPluginNode(node: FigmaNodeDict): PluginNodeDef {
     result.fontSize = node.fontSize;
     result.fontFamily = node.fontFamily;
     result.textAlignHorizontal = node.textAlignHorizontal;
+    if (node.textAutoResize) {
+      result.textAutoResize = node.textAutoResize;
+    }
     if (node.derivedTextData?.fontMetaData[0]) {
       const meta = node.derivedTextData.fontMetaData[0];
       result.fontWeight = meta.fontWeight;

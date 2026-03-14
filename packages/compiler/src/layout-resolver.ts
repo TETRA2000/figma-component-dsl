@@ -51,6 +51,24 @@ function measureNode(
 ): ResolvedSize {
   // Leaf node: TEXT
   if (node.type === 'TEXT' && node.characters) {
+    const textAutoResize = node.textAutoResize ?? node.textStyle?.textAutoResize;
+    const explicitWidth = node.size?.x;
+
+    // If textAutoResize is 'HEIGHT' and explicit width given, measure with wrapping
+    if (textAutoResize === 'HEIGHT' && explicitWidth && explicitWidth > 0) {
+      const measurement = measurer.measureWrapped(node.characters, explicitWidth, {
+        fontFamily: node.textStyle?.fontFamily,
+        fontWeight: node.textStyle?.fontWeight,
+        fontSize: node.textStyle?.fontSize,
+        lineHeight: node.textStyle?.lineHeight,
+        letterSpacing: node.textStyle?.letterSpacing,
+      });
+      const size = { width: explicitWidth, height: measurement.height };
+      sizes.set(node, size);
+      return size;
+    }
+
+    // Default: auto-size from content (WIDTH_AND_HEIGHT or no setting)
     const measurement = measurer.measure(node.characters, {
       fontFamily: node.textStyle?.fontFamily,
       fontWeight: node.textStyle?.fontWeight,

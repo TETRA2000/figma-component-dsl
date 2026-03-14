@@ -55,6 +55,52 @@ export const textMeasurer: TextMeasurer = {
       height: lines.length * lineHeightValue,
     };
   },
+
+  measureWrapped(characters: string, maxWidth: number, style): TextMeasurement {
+    const context = ensureContext();
+    const fontSize = style.fontSize ?? 14;
+    const fontWeight = style.fontWeight ?? 400;
+    const fontFamily = style.fontFamily ?? 'Inter';
+
+    context.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+
+    const lineHeightValue = style.lineHeight
+      ? style.lineHeight.unit === 'PERCENT'
+        ? (style.lineHeight.value / 100) * fontSize
+        : style.lineHeight.value
+      : fontSize * 1.2;
+
+    // Split on explicit newlines first, then word-wrap each paragraph
+    const paragraphs = characters.split('\n');
+    let totalLines = 0;
+
+    for (const paragraph of paragraphs) {
+      if (paragraph === '') {
+        totalLines++;
+        continue;
+      }
+      const words = paragraph.split(/\s+/);
+      let currentLine = '';
+      for (const word of words) {
+        const testLine = currentLine ? `${currentLine} ${word}` : word;
+        const metrics = context.measureText(testLine);
+        if (metrics.width > maxWidth && currentLine) {
+          totalLines++;
+          currentLine = word;
+        } else {
+          currentLine = testLine;
+        }
+      }
+      if (currentLine) {
+        totalLines++;
+      }
+    }
+
+    return {
+      width: maxWidth,
+      height: totalLines * lineHeightValue,
+    };
+  },
 };
 
 export function resetTextMeasurer(): void {
