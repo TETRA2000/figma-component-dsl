@@ -198,6 +198,43 @@ rectangle('Avatar', {
 | `x` | `number` | Absolute X position (for non-auto-layout children) |
 | `y` | `number` | Absolute Y position (for non-auto-layout children) |
 
+#### `image(name, options)`
+
+Creates an image node. Renders an image from a local file path or URL.
+
+```ts
+// Simple image
+image('Logo', {
+  src: './assets/logo.png',
+  size: { x: 120, y: 40 },
+})
+
+// Image with rounded corners and fit mode
+image('Avatar', {
+  src: './assets/avatar.jpg',
+  size: { x: 48, y: 48 },
+  cornerRadius: 24,  // circle
+  fit: 'FILL',
+})
+```
+
+**Options:**
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `src` | `string` | *(required)* | Image source — relative path, absolute path, or URL |
+| `size` | `{ x: number, y: number }` | | Width and height |
+| `fit` | `ImageScaleMode` | `'FILL'` | How the image fills its bounds |
+| `cornerRadius` | `number` | | Border radius (use half of size for circle) |
+| `opacity` | `number` | `1` | Opacity (0–1) |
+| `visible` | `boolean` | `true` | Visibility |
+| `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | | Horizontal sizing in auto-layout |
+| `layoutSizingVertical` | `'FIXED' \| 'HUG' \| 'FILL'` | | Vertical sizing in auto-layout |
+
+**ImageScaleMode values:** `'FILL'` (cover, may crop), `'FIT'` (contain, may letterbox), `'CROP'` (center crop), `'TILE'` (repeat pattern).
+
+> **Note:** Use `--asset-dir` in CLI commands to set the base directory for resolving relative image paths. Supported formats: PNG, JPG, JPEG, WebP.
+
 #### `component(name, options)`
 
 Creates a Figma component node. Same options as `frame()` plus `componentProperties`.
@@ -386,6 +423,36 @@ fills: [
 |----------|------|-------------|
 | `hex` | `string` | Color in hex format (6 or 8 digit, e.g., `#ff0000` or `#ff000080`) |
 | `position` | `number` | Position along gradient (0–1) |
+
+#### `imageFill(src, options?)`
+
+Creates an image fill that can be applied to any node's `fills` array. Useful for adding background images to frames or rectangles.
+
+```ts
+// Background image on a frame
+frame('Hero', {
+  size: { x: 800, y: 400 },
+  fills: [imageFill('./assets/hero-bg.jpg')],
+  children: [
+    text('Welcome', { fontSize: 32, color: '#ffffff' }),
+  ],
+})
+
+// Tiled pattern fill
+rectangle('Pattern', {
+  size: { x: 200, y: 200 },
+  fills: [imageFill('./assets/texture.png', { scaleMode: 'TILE' })],
+})
+```
+
+**Options:**
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `scaleMode` | `ImageScaleMode` | `'FILL'` | How the image fills the node |
+| `opacity` | `number` | `1` | Fill opacity (0–1) |
+
+**ImageScaleMode values:** `'FILL'`, `'FIT'`, `'CROP'`, `'TILE'` (same as `image()` node).
 
 #### `hex(colorStr)`
 

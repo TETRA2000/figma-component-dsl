@@ -471,6 +471,7 @@ async function cmdBatch(args: string[]): Promise<number> {
       include: { type: 'string', multiple: true },
       page: { type: 'string', short: 'p' },
       scale: { type: 'string', short: 's' },
+      'asset-dir': { type: 'string' },
       help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
@@ -489,6 +490,7 @@ Options:
   --include <path>     Additional glob patterns to include (repeatable)
   -p, --page <name>    Page name for merged plugin input
   -s, --scale <N>      Render scale factor (default: 1)
+  --asset-dir <path>   Base directory for resolving image paths (default: input file's directory)
   -h, --help           Show this help message`);
     return 0;
   }
@@ -507,6 +509,7 @@ Options:
       include: values.include,
       pageName: values.page,
       scale: values.scale ? parseFloat(values.scale) : undefined,
+      assetDir: values['asset-dir'] ? resolve(values['asset-dir']) : undefined,
     });
 
     console.log(`\nBatch complete: ${result.successCount} success, ${result.errorCount} errors`);

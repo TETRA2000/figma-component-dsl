@@ -1,9 +1,9 @@
-import { resolve, join, basename, relative } from 'path';
+import { resolve, join, basename, dirname, relative } from 'path';
 import { mkdirSync, writeFileSync } from 'fs';
 import { pathToFileURL } from 'url';
 import { compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
 import type { DslNode } from '@figma-dsl/core';
-import { renderToFile } from '@figma-dsl/renderer';
+import { renderToFile, collectImageSources, preloadImages } from '@figma-dsl/renderer';
 import { generatePluginInput } from '@figma-dsl/exporter';
 import type { PluginInput, PluginNodeDef } from '@figma-dsl/exporter';
 import { glob } from './glob-util.js';
@@ -14,6 +14,7 @@ export interface BatchOptions {
   include?: string[];
   pageName?: string;
   scale?: number;
+  assetDir?: string;
 }
 
 export interface BatchComponentResult {
@@ -78,14 +79,24 @@ export async function processBatch(options: BatchOptions): Promise<BatchResult> 
       const dslNode = await loadDslModule(dslPath);
       const compiled = compileWithLayout(dslNode, textMeasurer);
 
+      // Resolve asset directory: explicit option > DSL file's directory
+      const assetDir = options.assetDir ?? dirname(resolve(dslPath));
+
+      // Pre-load images
+      const imageSources = collectImageSources(compiled.root);
+      const imageCache = imageSources.size > 0
+        ? await preloadImages(imageSources, assetDir)
+        : undefined;
+
       // Render to PNG
       const pngPath = join(dslDir, `${name}.png`);
       const renderResult = renderToFile(compiled.root, pngPath, {
         scale: options.scale ?? 1,
+        imageCache,
       });
 
       // Generate plugin input and collect nodes
-      const pluginInput = generatePluginInput(compiled, options.pageName);
+      const pluginInput = generatePluginInput(compiled, options.pageName, { assetDir });
       allPluginNodes.push(...pluginInput.components);
 
       components.push({
