@@ -279,14 +279,25 @@ function compileNode(
 
   // Component property definitions
   if (node.type === 'COMPONENT' && node.componentProperties) {
+    const validTypes = new Set(['TEXT', 'BOOLEAN', 'INSTANCE_SWAP']);
     const defs: Record<string, { type: string; defaultValue: string | boolean }> = {};
     for (const prop of node.componentProperties) {
+      if (!validTypes.has(prop.type)) {
+        errors.push({
+          message: `Invalid componentProperty type '${prop.type}' on standalone COMPONENT '${node.name}'. Only TEXT, BOOLEAN, and INSTANCE_SWAP are allowed. Use componentSet() with variantAxes for variant properties.`,
+          nodePath: path,
+          nodeType: node.type,
+        });
+        continue;
+      }
       defs[prop.name] = {
         type: prop.type,
         defaultValue: prop.defaultValue,
       };
     }
-    result.componentPropertyDefinitions = defs;
+    if (Object.keys(defs).length > 0) {
+      result.componentPropertyDefinitions = defs;
+    }
   }
 
   // Instance compilation
