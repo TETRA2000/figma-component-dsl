@@ -9,7 +9,7 @@ A domain-specific language for defining Figma component structures declaratively
 git submodule update --init --recursive
 npm install
 
-# Run all tests (218 tests across 14 files)
+# Run all tests (235 tests across 14 files)
 npx vitest run
 ```
 
@@ -131,7 +131,7 @@ bin/figma-dsl-batch-compare calibration/output/dsl/ calibration/figma/ -o calibr
 
 ## Preview App
 
-The `preview/` directory contains a Vite + React app for live previewing components and landing pages. It includes all 16 reference components synced from the reference app.
+The `preview/` directory contains a Vite + React app for live previewing components and landing pages. It includes 25 React components and 4 page templates.
 
 ```bash
 cd preview && npm install --legacy-peer-deps && npm run dev
@@ -142,6 +142,22 @@ A sync script keeps reference components up to date:
 ```bash
 preview/scripts/sync-reference-components.sh
 ```
+
+## Component Catalog (Storybook)
+
+A Storybook-based catalog for browsing all components and page templates with interactive controls, variant grids, and DSL artifact inspection.
+
+```bash
+cd preview && npm run storybook
+```
+
+Features:
+- **29 stories** — 25 component stories + 4 page template stories with interactive controls
+- **All Variants grid** — every component includes a grid view showing all variant combinations
+- **DSL Panel addon** — view DSL source code, compiled JSON, and rendered PNG alongside React previews
+- **Side-by-side comparison** — toggle between React-only, DSL-only, and side-by-side views
+- **Viewport switching** — desktop, tablet, and mobile presets for page templates
+- **Pre-built artifacts** — DSL files are compiled and rendered to PNG before Storybook starts (`prestorybook` script)
 
 ## Claude Desktop Skills
 
