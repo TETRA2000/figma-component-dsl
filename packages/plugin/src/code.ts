@@ -10,6 +10,12 @@ import type {
   ComponentChangeEntry,
 } from '@figma-dsl/core';
 import { diffNodes } from '@figma-dsl/core';
+import {
+  serializeNode as serializeNodeImpl,
+  collectSharedPropDefs,
+  getRegistrableProperties,
+} from './serializer.js';
+import type { SerializableNode } from './serializer.js';
 
 const componentMap = new Map<string, ComponentNode>();
 const errors: string[] = [];
@@ -278,8 +284,6 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
 
       case 'COMPONENT_SET': {
         const variants: ComponentNode[] = [];
-        // Collect shared component property definitions from the first child
-        let sharedPropDefs: Record<string, { type: string; defaultValue: string | boolean }> | undefined;
         for (const child of def.children) {
           if (child.type === 'COMPONENT') {
             const comp = figma.createComponent();
@@ -296,20 +300,17 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
             for (const grandchild of child.children) {
               await createNode(grandchild, comp);
             }
-            // Capture shared property definitions from first child
-            if (!sharedPropDefs && child.componentPropertyDefinitions) {
-              sharedPropDefs = child.componentPropertyDefinitions;
-            }
             variants.push(comp);
           }
         }
         if (variants.length > 0) {
           const set = figma.combineAsVariants(variants, parent as FrameNode | PageNode);
           set.name = def.name;
-          // Register shared component properties on the set (not on variant children)
+          // Register shared component properties on the set (not on variant children).
+          // Uses extracted helpers from serializer.ts for testability.
+          const sharedPropDefs = collectSharedPropDefs(def.children);
           if (sharedPropDefs) {
-            for (const [propName, propDef] of Object.entries(sharedPropDefs)) {
-              if (propDef.type === 'VARIANT') continue;
+            for (const [propName, propDef] of getRegistrableProperties(sharedPropDefs)) {
               try {
                 set.addComponentProperty(propName, propDef.type as 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', propDef.defaultValue as string);
               } catch (e) {
@@ -372,144 +373,11 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
 }
 
 // --- Node Serializer ---
-// Reverse of createNode(): reads a Figma SceneNode and produces a PluginNodeDef
-
-function serializeFills(node: SceneNode): PluginNodeDef['fills'] {
-  if (!('fills' in node)) return undefined;
-  const fills = node.fills as ReadonlyArray<Paint>;
-  if (fills.length === 0) return undefined;
-
-  return fills.filter((f): f is SolidPaint | GradientPaint => f.visible !== false).map(f => {
-    if (f.type === 'SOLID') {
-      return {
-        type: 'SOLID',
-        color: { r: f.color.r, g: f.color.g, b: f.color.b, a: f.opacity ?? 1 },
-        opacity: 1,
-      };
-    }
-    if (f.type === 'GRADIENT_LINEAR') {
-      return {
-        type: 'GRADIENT_LINEAR',
-        color: undefined,
-        opacity: f.opacity ?? 1,
-        gradientStops: f.gradientStops.map(s => ({
-          color: { r: s.color.r, g: s.color.g, b: s.color.b, a: s.color.a },
-          position: s.position,
-        })),
-        gradientTransform: f.gradientTransform as [[number, number, number], [number, number, number]],
-      };
-    }
-    return { type: f.type, opacity: f.opacity ?? 1 };
-  });
-}
-
-function serializeStrokes(node: SceneNode): PluginNodeDef['strokes'] {
-  if (!('strokes' in node)) return undefined;
-  const strokes = (node as GeometryMixin).strokes as ReadonlyArray<Paint>;
-  if (strokes.length === 0) return undefined;
-
-  const weight = 'strokeWeight' in node ? (node as GeometryMixin).strokeWeight as number : 1;
-  return strokes.filter((s): s is SolidPaint => s.type === 'SOLID' && s.visible !== false).map(s => ({
-    color: { r: s.color.r, g: s.color.g, b: s.color.b, a: s.opacity ?? 1 },
-    weight,
-  }));
-}
+// Delegates to the extracted serializer module (src/serializer.ts) for testability.
+// Thin wrapper bridges Figma ambient types → SerializableNode interface.
 
 function serializeNode(node: SceneNode): PluginNodeDef {
-  const result: Record<string, unknown> = {
-    type: node.type,
-    name: node.name,
-    size: { x: 'width' in node ? (node as LayoutMixin).width : 0, y: 'height' in node ? (node as LayoutMixin).height : 0 },
-    opacity: 'opacity' in node ? (node as BlendMixin).opacity : 1,
-    visible: node.visible,
-    children: [] as PluginNodeDef[],
-  };
-
-  // Fills and strokes
-  const fills = serializeFills(node);
-  if (fills && fills.length > 0) result.fills = fills;
-  const strokes = serializeStrokes(node);
-  if (strokes && strokes.length > 0) result.strokes = strokes;
-
-  // Corner radius
-  if ('cornerRadius' in node) {
-    const cr = (node as RectangleNode).cornerRadius;
-    if (typeof cr === 'number' && cr > 0) result.cornerRadius = cr;
-  }
-
-  // Clip content
-  if ('clipsContent' in node && (node as FrameNode).clipsContent) {
-    result.clipContent = true;
-  }
-
-  // Auto-layout
-  if ('layoutMode' in node) {
-    const frame = node as FrameNode;
-    if (frame.layoutMode !== 'NONE') {
-      result.stackMode = frame.layoutMode;
-      result.itemSpacing = frame.itemSpacing;
-      result.paddingTop = frame.paddingTop;
-      result.paddingRight = frame.paddingRight;
-      result.paddingBottom = frame.paddingBottom;
-      result.paddingLeft = frame.paddingLeft;
-      result.primaryAxisAlignItems = frame.primaryAxisAlignItems;
-      result.counterAxisAlignItems = frame.counterAxisAlignItems;
-    }
-    if (frame.layoutSizingHorizontal !== 'FIXED') result.layoutSizingHorizontal = frame.layoutSizingHorizontal;
-    if (frame.layoutSizingVertical !== 'FIXED') result.layoutSizingVertical = frame.layoutSizingVertical;
-  }
-
-  // Text properties
-  if (node.type === 'TEXT') {
-    const textNode = node as TextNode;
-    result.characters = textNode.characters;
-    const fontSize = textNode.fontSize;
-    if (typeof fontSize === 'number') result.fontSize = fontSize;
-    const fontName = textNode.fontName;
-    if (fontName && typeof fontName !== 'symbol') {
-      result.fontFamily = fontName.family;
-      result.fontStyle = fontName.style;
-    }
-    const fontWeight = textNode.fontWeight;
-    if (typeof fontWeight === 'number') {
-      result.fontWeight = fontWeight;
-    }
-    result.textAlignHorizontal = textNode.textAlignHorizontal;
-    if (textNode.textAutoResize !== 'NONE') {
-      result.textAutoResize = textNode.textAutoResize;
-    }
-  }
-
-  // Component property definitions
-  // Variant components (children of COMPONENT_SET) do NOT support componentPropertyDefinitions.
-  // Only read from standalone COMPONENTs or COMPONENT_SET nodes.
-  const isVariantComponent = node.type === 'COMPONENT' && node.parent?.type === 'COMPONENT_SET';
-  if ((node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') && !isVariantComponent && 'componentPropertyDefinitions' in node) {
-    const defs = (node as ComponentNode | ComponentSetNode).componentPropertyDefinitions;
-    if (Object.keys(defs).length > 0) {
-      const propDefs: Record<string, { type: string; defaultValue: string | boolean }> = {};
-      for (const [name, def] of Object.entries(defs)) {
-        propDefs[name] = { type: def.type, defaultValue: def.defaultValue as string | boolean };
-      }
-      result.componentPropertyDefinitions = propDefs;
-    }
-  }
-
-  // Instance properties
-  if (node.type === 'INSTANCE') {
-    const inst = node as InstanceNode;
-    if (inst.mainComponent) {
-      result.componentId = inst.mainComponent.name;
-    }
-  }
-
-  // Children
-  if ('children' in node) {
-    const children = (node as FrameNode).children;
-    result.children = children.map(child => serializeNode(child));
-  }
-
-  return result as unknown as PluginNodeDef;
+  return serializeNodeImpl(node as unknown as SerializableNode);
 }
 
 function computeChangeset(nodeIds: ReadonlyArray<string>): ChangesetDocument {
