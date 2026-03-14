@@ -96,6 +96,28 @@
 - **Rationale**: Hashes are tiny (~40 chars), bytes are large; only materialize bytes when needed
 - **Trade-offs**: Changeset export is slower (must fetch bytes), but this is an infrequent operation
 
+### Decision: Split image-utils into pure and native modules
+- **Context**: Design review identified that placing `image-utils.ts` (with `@napi-rs/canvas` dependency) in `dsl-core` would break its zero-runtime-dependency architecture
+- **Alternatives Considered**:
+  1. Single `image-utils.ts` in `dsl-core` (original design)
+  2. Separate `image-helpers.ts` (pure, dsl-core) + `image-loader.ts` (native, renderer)
+  3. New `@figma-dsl/image-utils` package
+- **Selected Approach**: Option 2 — split into `dsl-core/src/image-helpers.ts` (pure math: `computeDrawInstruction`, `isSupportedImageFormat`) and `renderer/src/image-loader.ts` (native: `preloadImages`, `collectImageSources`, `resolveImageSource`)
+- **Rationale**: Preserves `dsl-core`'s zero-dependency guarantee. Pure functions are importable anywhere without pulling in 50MB native binary. Native I/O stays in renderer which already depends on `@napi-rs/canvas`.
+- **Trade-offs**: Exporter needs to inline trivial `imageToBase64()` (fs.readFile + Buffer.toString) rather than importing from a shared module
+- **Follow-up**: Verify exporter does not need any other image-loader functions
+
+### Decision: Discriminated union for DrawInstruction (TILE mode fix)
+- **Context**: Design review identified that `ScaleResult` (single source→dest rectangle) cannot express TILE mode, which uses `ctx.createPattern()` instead of `ctx.drawImage()`
+- **Alternatives Considered**:
+  1. Single `ScaleResult` with special sentinel values for TILE
+  2. Discriminated union: `SingleDrawInstruction | TileInstruction`
+  3. Document TILE as handled separately, outside `computeScaleMode()`
+- **Selected Approach**: Option 2 — `DrawInstruction = SingleDrawInstruction | TileInstruction` discriminated by `type: 'draw' | 'tile'`
+- **Rationale**: Type-safe dispatch in renderer via exhaustive switch. No sentinel values or special cases. Renderer explicitly handles both branches.
+- **Trade-offs**: Slightly more complex interface, but eliminates ambiguity
+- **Follow-up**: None
+
 ## Risks & Mitigations
 - **Image loading failures (network/disk)**: Draw crosshatch placeholder, log warning, continue rendering — never fail entire pipeline
 - **Large images slowing pipeline**: Validator warns at >10 MB; exporter warns at >4 MB base64; no hard failures

@@ -47,7 +47,7 @@ graph TB
         Types[types.ts - ImageFill, IMAGE NodeType]
         Nodes[nodes.ts - image builder]
         Colors[colors.ts - imageFill builder]
-        ImageUtils[image-utils.ts - loading, caching, format, scale math]
+        ImageHelpers[image-helpers.ts - scale math, format check]
         PluginTypes[plugin-types.ts - image fields on PluginNodeDef]
         Diff[diff.ts - image property comparison]
     end
@@ -58,11 +58,12 @@ graph TB
     end
 
     subgraph Renderer[renderer]
-        Render[renderer.ts - IMAGE case, pre-load cache]
+        ImageLoader[image-loader.ts - preload, cache, resolve]
+        Render[renderer.ts - IMAGE case, draw with cache]
     end
 
     subgraph Exporter[exporter]
-        Export[exporter.ts - base64 embedding]
+        Export[exporter.ts - base64 embedding, inline imageToBase64]
     end
 
     subgraph Plugin[plugin]
@@ -80,8 +81,9 @@ graph TB
     Types --> CompTypes
     Nodes --> CompMain
     Colors --> CompMain
-    ImageUtils --> Render
-    ImageUtils --> Export
+    ImageHelpers --> Render
+    ImageHelpers --> ImageLoader
+    ImageLoader --> Render
     CompTypes --> Render
     CompTypes --> Export
     PluginTypes --> PluginCode
@@ -90,11 +92,11 @@ graph TB
 ```
 
 **Architecture Integration**:
-- **Selected pattern**: Extend existing pipeline stages (hybrid approach from gap analysis Option C)
-- **Domain boundaries**: Each package retains single responsibility; shared image utilities live in `dsl-core/src/image-utils.ts`
+- **Selected pattern**: Extend existing pipeline stages (hybrid approach from gap analysis Option C, refined per review)
+- **Domain boundaries**: Each package retains single responsibility. Pure image utilities (scale math, format check) live in `dsl-core/src/image-helpers.ts` with zero runtime dependencies. Native-dependent image I/O (loading, caching via `@napi-rs/canvas`) lives in `renderer/src/image-loader.ts`. The exporter inlines trivial `imageToBase64()` (2-line `fs.readFile` + `Buffer.toString('base64')`) to avoid a renderer dependency.
 - **Existing patterns preserved**: Builder pattern for nodes/fills, discriminated unions for types, switch-based dispatch in compiler/renderer/exporter
-- **New components**: Only `image-utils.ts` (shared module) and `image-validation.ts` (validator rule) are new files
-- **Steering compliance**: TypeScript strict mode, no `any`, vitest for tests, @napi-rs/canvas for rendering
+- **New files**: `dsl-core/src/image-helpers.ts` (pure, zero deps), `renderer/src/image-loader.ts` (native deps), `validator/src/rules/image-validation.ts`
+- **Steering compliance**: TypeScript strict mode, no `any`, vitest for tests, `dsl-core` maintains zero runtime dependencies
 
 ### Technology Stack
 
@@ -116,16 +118,17 @@ graph TB
 sequenceDiagram
     participant CLI
     participant Compiler
-    participant PreLoader
+    participant ImageLoader as renderer/image-loader
     participant Renderer
 
     CLI->>Compiler: compileWithLayout(dslNode)
     Compiler-->>CLI: FigmaNodeDict tree
-    CLI->>PreLoader: collectImageSources(tree)
-    PreLoader-->>CLI: string[] sources
-    CLI->>PreLoader: loadAll(sources, assetDir)
-    PreLoader-->>CLI: Map of string to Image cache
-    CLI->>Renderer: renderNode(tree, cache)
+    CLI->>ImageLoader: collectImageSources(tree)
+    ImageLoader-->>CLI: string[] sources
+    CLI->>ImageLoader: preloadImages(sources, assetDir)
+    ImageLoader-->>CLI: ImageCache (Map of string to Image)
+    CLI->>Renderer: renderNode(tree, {imageCache})
+    Renderer->>Renderer: computeDrawInstruction() from image-helpers
     Renderer-->>CLI: PNG buffer
 ```
 
@@ -175,7 +178,7 @@ sequenceDiagram
 | 1.1–1.7 | IMAGE node builder | `image()` in nodes.ts, `ImageProps` | DslNode with imageSrc, imageScaleMode | — |
 | 2.1–2.4 | Image fill builder | `imageFill()` in colors.ts, `ImageFill` type | Fill union extension | — |
 | 3.1–3.4 | Compiler handling | mapNodeType, convertFill in compiler.ts | FigmaNodeType, FigmaPaint extension | — |
-| 4.1–4.8 | Renderer drawing | renderNode IMAGE case, pre-load cache | ImageCache, RenderOptions.assetDir | Render flow |
+| 4.1–4.8 | Renderer drawing | renderNode IMAGE case, image-loader, image-helpers | ImageCache, DrawInstruction, RenderOptions.assetDir | Render flow |
 | 5.1–5.4 | Exporter encoding | convertToPluginNode in exporter.ts | PluginNodeDef image fields | — |
 | 6.1–6.4 | Plugin import | toFigmaPaints, createImage in code.ts | PluginNodeDef, Figma Paint | Import flow |
 | 7.1–7.4 | CLI asset resolution | cli.ts --asset-dir, batch path resolution | CLI options | — |
@@ -189,10 +192,11 @@ sequenceDiagram
 | ImageFill type | dsl-core/types | IMAGE fill in Fill union | 2.1–2.4 | — | State |
 | image() builder | dsl-core/nodes | Create IMAGE DslNode | 1.1–1.7 | types.ts (P0) | Service |
 | imageFill() builder | dsl-core/colors | Create ImageFill object | 2.1–2.3 | types.ts (P0) | Service |
-| image-utils | dsl-core/shared | Loading, caching, format checks, scale math | 4.1–4.8, 5.1 | @napi-rs/canvas (P0) | Service |
+| image-helpers | dsl-core/image-helpers | Pure scale math, format check (zero deps) | 4.4, 8.1 | — | Service |
+| image-loader | renderer/image-loader | Pre-load, cache, resolve image sources | 4.1–4.3, 4.7, 4.8 | @napi-rs/canvas (P0) | Service |
 | Compiler IMAGE support | compiler | Compile IMAGE nodes and fills | 3.1–3.4 | dsl-core types (P0) | Service |
-| Renderer IMAGE support | renderer | Draw images on canvas | 4.1–4.8 | image-utils (P0), @napi-rs/canvas (P0) | Service |
-| Exporter IMAGE support | exporter | Base64-embed images | 5.1–5.4 | image-utils (P1) | Service |
+| Renderer IMAGE support | renderer | Draw images on canvas | 4.1–4.8 | image-loader (P0), image-helpers (P0) | Service |
+| Exporter IMAGE support | exporter | Base64-embed images | 5.1–5.4 | fs, Buffer (P0) | Service |
 | Plugin IMAGE import | plugin | createImage + IMAGE fill | 6.1–6.4 | Figma API (P0) | Service |
 | Plugin IMAGE serialize | plugin | Serialize/deserialize IMAGE fills | 9.1–9.10 | Figma API (P0) | Service |
 | image-validation rule | validator | Validate image references | 8.1–8.4 | fs, URL (P2) | Service |
@@ -286,23 +290,29 @@ function imageFill(
 - Preconditions: `src` is non-empty string
 - Postconditions: Returns `ImageFill` with `type: 'IMAGE'`, defaults: `scaleMode: 'FILL'`, `opacity: 1`, `visible: true`
 
-#### image-utils Module
+#### image-helpers Module (dsl-core — zero runtime dependencies)
 
 | Field | Detail |
 |-------|--------|
-| Intent | Shared image loading, caching, format detection, and scale mode math |
-| Requirements | 4.1–4.8, 5.1, 8.1 |
+| Intent | Pure scale mode math and format detection with no runtime dependencies |
+| Requirements | 4.4, 8.1 |
+
+**Responsibilities & Constraints**
+- Contains only pure functions — no file I/O, no network, no native dependencies
+- Preserves `dsl-core`'s zero-runtime-dependency architecture
+- Importable by any package without pulling in `@napi-rs/canvas`
 
 **Contracts**: Service [x]
 
 ##### Service Interface
 
 ```typescript
-import type { Image } from '@napi-rs/canvas';
+// --- Scale Mode Types (discriminated union) ---
 
-type ImageCache = Map<string, Image>;
+type ImageScaleMode = 'FILL' | 'FIT' | 'CROP' | 'TILE';
 
-interface ScaleResult {
+interface SingleDrawInstruction {
+  readonly type: 'draw';
   readonly sx: number;   // Source x
   readonly sy: number;   // Source y
   readonly sw: number;   // Source width
@@ -313,7 +323,59 @@ interface ScaleResult {
   readonly dh: number;   // Destination height
 }
 
-// Collect all image source references from a compiled tree
+interface TileInstruction {
+  readonly type: 'tile';
+  // Renderer uses ctx.createPattern(image, 'repeat') and ctx.fillRect()
+  // No source/dest coordinates needed — pattern fills the entire frame
+}
+
+type DrawInstruction = SingleDrawInstruction | TileInstruction;
+
+// Compute draw instruction for a scale mode
+// Returns SingleDrawInstruction for FILL/FIT/CROP, TileInstruction for TILE
+function computeDrawInstruction(
+  mode: ImageScaleMode,
+  imageWidth: number,
+  imageHeight: number,
+  frameWidth: number,
+  frameHeight: number,
+): DrawInstruction;
+
+// Check if a file extension is a supported image format (PNG, JPEG, WebP)
+function isSupportedImageFormat(filePath: string): boolean;
+```
+
+- Preconditions: All dimensions must be positive numbers
+- Postconditions for `computeDrawInstruction`:
+  - FILL: `SingleDrawInstruction` with source cropped to cover frame
+  - FIT: `SingleDrawInstruction` with source scaled to fit within frame (letterboxed)
+  - CROP: `SingleDrawInstruction` with source centered at original size
+  - TILE: `TileInstruction` (renderer uses `ctx.createPattern`)
+
+### Renderer Layer
+
+#### image-loader Module (renderer — @napi-rs/canvas dependency)
+
+| Field | Detail |
+|-------|--------|
+| Intent | Image loading, caching, path resolution, and tree traversal for image sources |
+| Requirements | 4.1, 4.2, 4.3, 4.7, 4.8 |
+
+**Dependencies**
+- External: @napi-rs/canvas `loadImage()` (P0)
+- Inbound: dsl-core image-helpers for `isSupportedImageFormat()` (P1)
+
+**Contracts**: Service [x]
+
+##### Service Interface
+
+```typescript
+import type { Image } from '@napi-rs/canvas';
+import type { FigmaNodeDict } from '@figma-dsl/compiler';
+
+type ImageCache = Map<string, Image>;
+
+// Collect all image source references from a compiled node tree
 function collectImageSources(node: FigmaNodeDict): string[];
 
 // Pre-load all images into cache (async entry point before sync render)
@@ -322,27 +384,12 @@ function preloadImages(
   assetDir?: string
 ): Promise<ImageCache>;
 
-// Resolve an image source to absolute path
+// Resolve an image source to absolute path (relative to assetDir, or URL passthrough)
 function resolveImageSource(src: string, assetDir?: string): string;
-
-// Compute draw coordinates for a scale mode
-function computeScaleMode(
-  mode: 'FILL' | 'FIT' | 'CROP' | 'TILE',
-  imageWidth: number,
-  imageHeight: number,
-  frameWidth: number,
-  frameHeight: number,
-): ScaleResult;
-
-// Check if a file is a supported image format
-function isSupportedImageFormat(filePath: string): boolean;
-
-// Read image file and return base64-encoded string
-function imageToBase64(filePath: string): Promise<string>;
 ```
 
 - Preconditions for `preloadImages`: All sources are valid paths or URLs
-- Postconditions: Cache contains loaded Image for each resolvable source; missing images logged as warnings, not in cache
+- Postconditions: Cache contains loaded `Image` for each resolvable source; missing images logged as warnings, not in cache
 - Invariant: Cache is immutable after creation (read-only for render pass)
 
 ### Compiler Layer
@@ -381,8 +428,6 @@ Extensions to `compiler.ts`:
 - Validation: Warn if local file path does not exist at compile time (non-blocking)
 - Layout: IMAGE nodes participate in auto-layout using their declared `size`, identical to RECTANGLE/ELLIPSE behavior
 
-### Renderer Layer
-
 #### Renderer IMAGE Support
 
 | Field | Detail |
@@ -392,8 +437,9 @@ Extensions to `compiler.ts`:
 
 **Dependencies**
 - Inbound: CLI — provides RenderOptions with assetDir (P0)
-- External: @napi-rs/canvas `loadImage()`, `Image`, `ctx.drawImage()` (P0)
-- Inbound: image-utils — pre-load cache, scale math (P0)
+- Inbound: image-loader — pre-loaded `ImageCache` (P0)
+- Inbound: dsl-core/image-helpers — `computeDrawInstruction()`, `DrawInstruction` (P0)
+- External: @napi-rs/canvas `ctx.drawImage()`, `ctx.createPattern()` (P0)
 
 **Contracts**: Service [x]
 
@@ -405,16 +451,19 @@ Extension to existing `RenderOptions`:
 interface RenderOptions {
   // existing fields...
   assetDir?: string;
-  imageCache?: ImageCache;  // Pre-loaded images from image-utils
+  imageCache?: ImageCache;  // Pre-loaded images from image-loader
 }
 ```
 
 Extension to `renderNode()`:
-- New case `'IMAGE'` in node type switch: look up image from `imageCache` by `imageSrc`, compute scale mode, draw with `ctx.drawImage()`, apply cornerRadius clipping
+- New case `'IMAGE'` in node type switch: look up image from `imageCache` by `imageSrc`, call `computeDrawInstruction()` from `image-helpers`, dispatch on result type:
+  - `type: 'draw'` → `ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh)`
+  - `type: 'tile'` → `ctx.createPattern(image, 'repeat')` + `ctx.fillRect(0, 0, frameW, frameH)`
+- Apply cornerRadius clipping before drawing
 - New handling in `applyFills()` for `type: 'IMAGE'` paints: same image lookup and drawing logic, applied as a fill layer
 
 **Implementation Notes**
-- Integration: CLI pre-loads images via `preloadImages()` before calling `renderNode()`; cache is passed through RenderOptions
+- Integration: CLI pre-loads images via `preloadImages()` from `image-loader` before calling `renderNode()`; cache is passed through RenderOptions
 - Validation: If image not in cache (load failed), draw crosshatch placeholder (diagonal lines at 45°, gray on transparent)
 - cornerRadius clipping: Reuse existing `ctx.roundRect()` clip path from ROUNDED_RECTANGLE rendering
 
@@ -455,6 +504,8 @@ Extension to `convertToPluginNode()`:
 **Implementation Notes**
 - The exporter becomes async (needs to read image files and encode)
 - `generatePluginInput()` signature changes to `async generatePluginInput(...)`
+- Base64 encoding is inlined (`fs.readFile` + `Buffer.toString('base64')`) — no dependency on renderer or dsl-core image modules. This keeps the exporter's dependency graph clean (no `@napi-rs/canvas` transitive dependency).
+- Path resolution for image sources uses `resolveImageSource()` from `renderer/image-loader`, or the exporter can duplicate the trivial path logic (path.resolve with assetDir) to avoid a renderer dependency
 
 ### Plugin Layer
 
@@ -641,9 +692,10 @@ All image errors follow graceful degradation — pipeline continues with visual 
 ### Unit Tests
 - `image()` builder: validates required `src`, defaults, DslNode shape (dsl-core)
 - `imageFill()` builder: validates src, scaleMode defaults, ImageFill shape (dsl-core)
-- `computeScaleMode()`: FILL/FIT/CROP/TILE calculations for various image/frame aspect ratios (image-utils)
-- `collectImageSources()`: traverses nested tree, collects all image references (image-utils)
-- `resolveImageSource()`: relative paths, absolute paths, URLs (image-utils)
+- `computeDrawInstruction()`: FILL/FIT/CROP returns SingleDrawInstruction, TILE returns TileInstruction, various aspect ratios (dsl-core/image-helpers)
+- `isSupportedImageFormat()`: accepts PNG/JPEG/WebP, rejects others (dsl-core/image-helpers)
+- `collectImageSources()`: traverses nested tree, collects all image references (renderer/image-loader)
+- `resolveImageSource()`: relative paths, absolute paths, URLs (renderer/image-loader)
 
 ### Integration Tests
 - Compile pipeline: DSL with image nodes → compiled JSON with imageSrc fields (compiler)
