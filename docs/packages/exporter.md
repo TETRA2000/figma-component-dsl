@@ -27,9 +27,9 @@
 ## Overview
 **Confidence**: 0.96 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-The `@figma-dsl/exporter` package is the final step in the DSL compilation pipeline, transforming compiled `CompileResult` objects into a plugin-consumable `PluginInput` JSON format. It provides two functions (`generatePluginInput` for in-memory transformation and `exportToFile` for filesystem persistence), a recursive node conversion utility, and two TypeScript interfaces (`PluginNodeDef`, `PluginInput`) that define the schema consumed by the Figma plugin.
+The `@figma-dsl/exporter` package is the final step in the DSL compilation pipeline, transforming compiled `CompileResult` objects into a plugin-consumable `PluginInput` JSON format. It provides two functions (`generatePluginInput` for in-memory transformation and `exportToFile` for filesystem persistence) and a recursive node conversion utility.
 
-The module is lightweight (~170 LOC of core logic), dependency-minimal, and focused on property projection — selectively mapping compiler output to plugin schema with one notable constraint: corner radius clamping.
+The canonical `PluginNodeDef` and `PluginInput` types are now defined in `@figma-dsl/core` and re-exported by this package for backward compatibility. The module is lightweight (~170 LOC of core logic), dependency-minimal, and focused on property projection — selectively mapping compiler output to plugin schema with one notable constraint: corner radius clamping.
 
 ---
 
@@ -73,10 +73,12 @@ Returns `PluginInput` with schema version `'1.0.0'`, target page, and components
 
 Convenience wrapper: calls `generatePluginInput()` → creates directories recursively → writes pretty-printed JSON (2-space indent) → returns the generated `PluginInput`.
 
-### Exported Interfaces
+### Re-exported Types
 
-- **`PluginNodeDef`**: Complete tree node representation for plugin consumption
-- **`PluginInput`**: Envelope structure (`schemaVersion`, `targetPage`, `components[]`)
+- **`PluginNodeDef`**: Re-exported from `@figma-dsl/core` (canonical definition)
+- **`PluginInput`**: Re-exported from `@figma-dsl/core` (canonical definition)
+
+These types were previously defined inline in this package. They have been consolidated into `@figma-dsl/core` and are re-exported here for backward compatibility: `export type { PluginNodeDef, PluginInput } from '@figma-dsl/core';`
 
 **Evidence**: `src/exporter.ts:141-170`
 
@@ -242,7 +244,7 @@ Calls `exportToFile()` internally.
 `batch-processor.ts` calls `generatePluginInput()` per file, collects all `PluginNodeDef[]`, and writes a single merged `plugin-input.json`.
 
 ### Plugin Consumption
-The Figma plugin (`plugin/src/code.ts`) receives `PluginInput` JSON and recursively reconstructs Figma nodes via the plugin API. The `PluginNodeDef` interface is independently defined in both packages (type parity, not shared import).
+The Figma plugin (`plugin/src/code.ts`) receives `PluginInput` JSON and recursively reconstructs Figma nodes via the plugin API. Both packages now import `PluginNodeDef` from the canonical definition in `@figma-dsl/core` (consolidated from previous independent definitions).
 
 **Evidence**: CLI `src/cli.ts:272-299`, `src/batch-processor.ts:88-120`
 
@@ -300,7 +302,7 @@ Schema validation, auto-layout preservation, component properties, instance refe
 1. **lineHeight/letterSpacing gap**: Declared in `PluginNodeDef` but never populated during conversion (`textAutoResize` is now populated).
 2. **No input validation**: Assumes valid CompileResult from compiler (no null checks for children, no enum validation).
 3. **Schema version hardcoded**: No migration strategy for breaking schema changes.
-4. **Type parity risk**: `PluginNodeDef` is independently defined in both exporter and plugin packages — risk of drift.
+4. ~~**Type parity risk**~~: Resolved — `PluginNodeDef` is now consolidated in `@figma-dsl/core` and imported by both exporter and plugin.
 5. **Single font metadata**: Only first `fontMetaData[0]` entry extracted for text nodes.
 6. **Synchronous I/O**: `exportToFile()` uses `writeFileSync` — blocks event loop.
 

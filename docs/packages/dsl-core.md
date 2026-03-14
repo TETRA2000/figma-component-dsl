@@ -39,9 +39,13 @@ packages/dsl-core/
 │   ├── nodes.ts           # Node factory functions (8 constructors)
 │   ├── colors.ts          # Color utilities & fill factories
 │   ├── layout.ts          # Auto-layout configuration helpers
-│   ├── *.test.ts          # Test files (4 suites)
+│   ├── changeset.ts       # Changeset schema types (ChangesetDocument, PropertyChange)
+│   ├── plugin-types.ts    # Canonical PluginNodeDef, PluginInput, ComponentIdentity, EditLogEntry
+│   ├── diff.ts            # PluginNodeDef diff algorithm (diffNodes, diffValues, describeChange)
+│   ├── *.test.ts          # Test files (7 suites)
 │   └── index.ts           # Re-export barrel
 ├── fonts/                 # Inter font family (Regular, Medium, SemiBold, Bold)
+├── fixtures/              # Sample changeset and complete export JSON files
 ├── dist/
 ├── package.json
 └── tsconfig.json
@@ -53,7 +57,10 @@ index.ts
   ├── types.ts (types only, leaf)
   ├── nodes.ts → colors.ts (hex parser), types.ts
   ├── colors.ts → types.ts
-  └── layout.ts → types.ts
+  ├── layout.ts → types.ts
+  ├── changeset.ts (types only, leaf)
+  ├── plugin-types.ts (types only, leaf)
+  └── diff.ts → plugin-types.ts, changeset.ts
 ```
 
 **Export points**:
@@ -315,6 +322,118 @@ All factories are pure functions — same inputs always produce structurally ide
 
 ---
 
+## Changeset Schema Types
+**Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
+
+Shared types for the bidirectional sync changeset format, used by the Figma plugin (at build time via esbuild) and AI skills.
+
+### Types
+
+```typescript
+type ChangeType = 'modified' | 'added' | 'removed';
+
+interface PropertyChange {
+  readonly propertyPath: string;   // Dot-notation, e.g. "fills.0.color.r"
+  readonly changeType: ChangeType;
+  readonly oldValue?: unknown;     // Never `any`
+  readonly newValue?: unknown;
+  readonly description: string;    // Human-readable description
+}
+
+interface ComponentChangeEntry {
+  readonly componentName: string;
+  readonly componentId: string;
+  readonly changes: ReadonlyArray<PropertyChange>;
+}
+
+interface ChangesetSource {
+  readonly pluginVersion: string;
+  readonly figmaFileName: string;
+}
+
+interface ChangesetDocument {
+  readonly schemaVersion: string;  // "1.0"
+  readonly timestamp: string;      // ISO 8601
+  readonly source: ChangesetSource;
+  readonly components: ReadonlyArray<ComponentChangeEntry>;
+}
+```
+
+All types use `readonly` and `ReadonlyArray` to enforce immutability. The `oldValue`/`newValue` fields use `unknown` (never `any`) to force type narrowing at consumption sites.
+
+**Evidence**: `src/changeset.ts:1-30`
+
+---
+
+## Plugin Types (Canonical Definitions)
+**Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
+
+Canonical type definitions for the Figma plugin import/export format. Previously duplicated in `packages/plugin/` and `packages/exporter/`, now consolidated here as the single source of truth.
+
+### PluginNodeDef
+
+The recursive node tree type used by both the exporter (code→Figma) and the plugin serializer (Figma→code). Contains 25+ optional fields organized into categories:
+
+- **Structural**: `type`, `name`, `size`, `opacity`, `visible`, `children`
+- **Visual**: `fills`, `strokes`, `cornerRadius`, `clipContent`
+- **Auto-layout**: `stackMode`, `itemSpacing`, `padding*`, `primaryAxisAlignItems`, `counterAxisAlignItems`, `layoutSizing*`
+- **Text**: `characters`, `fontSize`, `fontFamily`, `fontWeight`, `fontStyle`, `textAlignHorizontal`, `textAutoResize`, `lineHeight`, `letterSpacing`
+- **Component**: `componentPropertyDefinitions`
+- **Instance**: `componentId`, `overriddenProperties`
+
+### PluginInput
+
+Envelope type: `schemaVersion`, `targetPage`, `components: ReadonlyArray<PluginNodeDef>`.
+
+### Edit Tracker Types
+
+```typescript
+interface ComponentIdentity {
+  readonly componentName: string;
+  readonly dslSourcePath: string;
+  readonly importTimestamp: string;  // ISO 8601
+  readonly originalNodeId: string;
+}
+
+interface EditLogEntry {
+  readonly nodeId: string;
+  readonly componentName: string;
+  readonly timestamp: string;
+  readonly changeType: 'PROPERTY_CHANGE' | 'CREATE' | 'DELETE';
+  readonly properties: ReadonlyArray<string>;
+  readonly origin: 'LOCAL' | 'REMOTE';
+}
+```
+
+**Consumers**: `@figma-dsl/exporter` (import type), `@figma-dsl/plugin` (import type + runtime via esbuild bundling).
+
+**Evidence**: `src/plugin-types.ts:1-80`
+
+---
+
+## Diff Algorithm
+**Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
+
+Computes property-level diffs between baseline and current `PluginNodeDef` trees. Used by the plugin's changeset export (bundled via esbuild) and tested independently in dsl-core.
+
+### Functions
+
+#### `diffNodes(baseline: PluginNodeDef, current: PluginNodeDef): PropertyChange[]`
+Compares all tracked properties between two nodes and recursively diffs children. Returns an array of `PropertyChange` entries with dot-notation paths (e.g., `"fills.0.color.r"`, `"children.2.characters"`).
+
+#### `diffValues(path: string, oldVal: unknown, newVal: unknown, changes: PropertyChange[]): void`
+Generic deep diff for arbitrary values. Handles primitives, objects (key-by-key), and arrays (element-by-element). Produces `added`, `removed`, or `modified` change entries.
+
+#### `describeChange(path: string, oldVal: unknown, newVal: unknown): string`
+Generates human-readable descriptions for property changes based on path patterns (color, fontSize, characters, spacing, etc.).
+
+### Compared Properties
+`name`, `size`, `opacity`, `visible`, `fills`, `strokes`, `cornerRadius`, `clipContent`, `stackMode`, `itemSpacing`, `paddingTop/Right/Bottom/Left`, `primaryAxisAlignItems`, `counterAxisAlignItems`, `layoutSizingHorizontal/Vertical`, `characters`, `fontSize`, `fontFamily`, `fontWeight`, `fontStyle`, `textAlignHorizontal`, `textAutoResize`.
+
+**Evidence**: `src/diff.ts:1-90`
+
+---
+
 ## Dependencies & Build
 **Confidence**: 0.98 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
@@ -339,12 +458,15 @@ The `fonts/` directory includes Inter font family:
 
 ### Test Coverage
 
-| Test File | Suites | Key Coverage |
-|-----------|--------|-------------|
+| Test File | Tests | Key Coverage |
+|-----------|-------|-------------|
 | `nodes.test.ts` | 8 | All factories, defaults, validation, tree nesting, defensive copy |
 | `colors.test.ts` | 5 | Hex parsing, solid fills, gradients, tokens, errors |
-| `layout.test.ts` | 4 | horizontal/vertical, alignment, sizing, child props |
-| `components.test.ts` | 4 | component, componentSet, instance, properties, variants |
+| `layout.test.ts` | 10 | horizontal/vertical, alignment, sizing, child props |
+| `components.test.ts` | 10 | component, componentSet, instance, properties, variants |
+| `changeset.test.ts` | 8 | Changeset type structure, usage patterns, schema validation |
+| `plugin-types.test.ts` | 8 | PluginNodeDef, PluginInput, ComponentIdentity, EditLogEntry |
+| `diff.test.ts` | 22 | diffValues, diffNodes, describeChange, nested diffs, structural changes |
 
 **Evidence**: `package.json:14-22`, `tsconfig.json`
 
