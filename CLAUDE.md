@@ -17,6 +17,9 @@ Kiro-style Spec Driven Development implementation on AI-DLC (AI Development Life
 - Check `.kiro/specs/` for active specifications
 - Use `/kiro:spec-status [feature-name]` to check progress
 
+## Key References
+- **DSL Reference**: `docs/dsl-reference.md` — Complete DSL API, layout helpers, authoring patterns, CLI commands, Figma plugin constraints, and known pipeline limitations. Read this before writing or reviewing any `.dsl.ts` file.
+
 ## Prerequisites
 - Before starting development, ensure all git submodules are initialized and up to date: `git submodule update --init --recursive`
 

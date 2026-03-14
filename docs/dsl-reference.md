@@ -101,6 +101,7 @@ frame('Card', {
 | `opacity` | `number` | 0–1 opacity |
 | `visible` | `boolean` | Visibility toggle |
 | `children` | `Node[]` | Child nodes |
+| `clipContent` | `boolean` | Clip children that overflow the frame bounds |
 | `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | Horizontal sizing mode (see [constraints](#figma-plugin-constraints)) |
 | `layoutSizingVertical` | `'FIXED' \| 'HUG' \| 'FILL'` | Vertical sizing mode |
 
@@ -141,6 +142,27 @@ text('Long description text that wraps at 228px width.', {
 | `lineHeight` | `{ value: number, unit: 'PERCENT' \| 'PIXELS' }` | Line height |
 | `letterSpacing` | `{ value: number, unit: 'PERCENT' \| 'PIXELS' }` | Letter spacing |
 | `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | Horizontal sizing mode |
+
+#### `ellipse(name, options)`
+
+Creates an ellipse shape. Commonly used for circular indicators, status dots, and chart elements.
+
+```ts
+// Status dot
+ellipse('StatusDot', {
+  size: { x: 8, y: 8 },
+  fills: [solid('#22c55e')],
+})
+
+// Chart donut ring (stroke-only circle)
+ellipse('Ring', {
+  size: { x: 120, y: 120 },
+  fills: [],
+  strokes: [{ color: hex('#7c3aed'), weight: 12, align: 'INSIDE' }],
+})
+```
+
+**Options:** Same as `rectangle()` (see below).
 
 #### `rectangle(name, options)`
 
@@ -256,6 +278,58 @@ autoLayout: horizontal({
 | `'CENTER'` | Center horizontally | Center vertically |
 | `'MAX'` | Pack right | Pack bottom |
 | `'SPACE_BETWEEN'` | Distribute evenly with space between | Distribute evenly with space between |
+
+| `counterAlign` value | `horizontal()` effect | `vertical()` effect |
+|----------------------|----------------------|---------------------|
+| `'MIN'` | Align children to top | Align children to left |
+| `'CENTER'` | Vertically center children | Horizontally center children |
+| `'MAX'` | Align children to bottom | Align children to right |
+
+> **Common gotcha — `align` vs `counterAlign` in `vertical()` layouts:**
+> - `align` controls the **vertical** (primary) axis — top/center/bottom/distribute
+> - `counterAlign` controls the **horizontal** (cross) axis — left/center/right
+>
+> To horizontally center children in a vertical layout, use `counterAlign: 'CENTER'`, NOT `align: 'CENTER'`.
+> `align: 'CENTER'` in vertical layouts centers children vertically (between top and bottom padding).
+
+**Practical alignment examples:**
+
+```ts
+// Horizontally center a heading inside a vertical layout
+frame('Header', {
+  autoLayout: vertical({ spacing: 12, counterAlign: 'CENTER' }),
+  layoutSizingHorizontal: 'FILL',
+  children: [
+    text('Centered Title', { fontSize: 32, fontWeight: 700, color: '#fff' }),
+  ],
+})
+
+// Push content to the bottom of a fixed-height container
+frame('Poster', {
+  size: { x: 230, y: 130 },
+  autoLayout: vertical({ spacing: 4, padX: 8, padY: 8, align: 'MAX' }),
+  fills: [gradient([...], 135)],
+  children: [
+    text('Title at bottom', { fontSize: 12, fontWeight: 600, color: '#fff' }),
+  ],
+})
+
+// Push a CTA button to the bottom using FILL sizing on the middle section
+frame('Card', {
+  autoLayout: vertical({ spacing: 16, padX: 24, padY: 24 }),
+  size: { x: 320, y: 480 },
+  children: [
+    text('Title', { fontSize: 20, fontWeight: 700, color: '#fff' }),
+    frame('Features', {
+      autoLayout: vertical({ spacing: 8 }),
+      layoutSizingHorizontal: 'FILL',
+      layoutSizingVertical: 'FILL',   // ← acts like CSS flex: 1
+      children: [/* feature items */],
+    }),
+    frame('CTA', { /* button pinned to bottom */ }),
+  ],
+})
+```
 
 ---
 
@@ -395,6 +469,20 @@ bin/figma-dsl export examples/navbar.dsl.ts -o output/navbar.figma.json
 ```bash
 bin/figma-dsl render output/navbar.json -o output/navbar.png
 ```
+
+### `compare` — Compare two rendered PNGs
+
+```bash
+bin/figma-dsl compare image-a.png image-b.png -t 85
+```
+
+| Parameter | Description |
+|-----------|-------------|
+| First argument | Path to first PNG |
+| Second argument | Path to second PNG |
+| `-t` | Similarity threshold percentage (e.g., 85 = 85% match required) |
+
+Both images must have the same dimensions.
 
 ### `validate` — Check token compatibility
 
@@ -656,6 +744,63 @@ rectangle('Avatar', {
 })
 ```
 
+#### Invisible Spacer
+
+Use a zero-opacity rectangle to add vertical space inside auto-layout frames (useful when you can't use padding alone):
+
+```ts
+rectangle('Spacer', { size: { x: 1, y: 40 }, opacity: 0 })
+```
+
+#### Progress Bar
+
+```ts
+frame('ProgressTrack', {
+  size: { x: 300, y: 4 },
+  fills: [solid('#5a5a5a')],
+  cornerRadius: 2,
+  clipContent: true,
+  autoLayout: horizontal({ spacing: 0 }),
+  children: [
+    rectangle('ProgressFill', {
+      size: { x: 180, y: 4 },  // width = track width × percentage
+      fills: [solid('#e50914')],
+    }),
+  ],
+})
+```
+
+#### Thumbnail Card with Gradient Background
+
+```ts
+frame('Thumbnail', {
+  size: { x: 230, y: 130 },
+  fills: [gradient([
+    { hex: '#4a2a0a', position: 0 },
+    { hex: '#1a0a00', position: 1 },
+  ], 135)],
+  autoLayout: vertical({ spacing: 4, padX: 8, padY: 8, align: 'MAX' }),
+  cornerRadius: 4,
+  clipContent: true,
+  children: [
+    text('Title', { fontSize: 12, fontWeight: 600, color: '#ffffff' }),
+  ],
+})
+```
+
+#### Metadata Badge with Stroke Border
+
+```ts
+frame('Badge: 16+', {
+  autoLayout: horizontal({ padX: 6, padY: 1, align: 'CENTER', counterAlign: 'CENTER' }),
+  strokes: [{ color: { r: 0.5, g: 0.5, b: 0.5, a: 1 }, weight: 1, align: 'INSIDE' }],
+  cornerRadius: 2,
+  children: [
+    text('16+', { fontSize: 11, fontWeight: 600, color: '#bcbcbc' }),
+  ],
+})
+```
+
 #### SPACE_BETWEEN Row (e.g., Navbar, Copyright)
 
 ```ts
@@ -774,6 +919,18 @@ frame('Button', {
 **Cause:** Each top-level entry in the `components` array becomes an independent frame on the Figma canvas.
 
 **Solution:** Wrap sections in a parent frame with vertical auto-layout in the merged JSON. See [Page-Level Export](#page-level-export-multiple-sections).
+
+---
+
+## Known Pipeline Limitations
+
+These are limitations of the DSL pipeline itself (compiler/renderer), distinct from the Figma Plugin constraints above.
+
+| Limitation | Description | Workaround |
+|------------|-------------|------------|
+| No per-stop gradient alpha | Gradient stops only accept 6-digit hex (`#rrggbb`). 8-digit hex with alpha (`#rrggbbaa`) causes a compile error. | Use `solid(hex, opacity)` for semi-transparent fills instead of gradient stops with alpha. |
+| No absolute positioning in auto-layout | DSL auto-layout does not support overlapping children like CSS `position: absolute`. | Use invisible spacers (`opacity: 0` rectangles) to push content, or use separate stacked frames. |
+| Gradient angle approximation | Gradient angles are mapped to Figma's gradient handle positions, which may differ slightly from CSS `linear-gradient()` angles. | Test visually and adjust angle if needed. |
 
 ---
 
