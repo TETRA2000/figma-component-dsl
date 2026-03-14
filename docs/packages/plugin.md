@@ -26,27 +26,31 @@
 ## Overview
 **Confidence**: 0.95 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-The Figma DSL Import plugin is a Figma plugin that receives JSON-serialized component definitions (from the `@figma-dsl/exporter` package) and creates native Figma nodes within a design file. It supports 9 node types (FRAME, ROUNDED_RECTANGLE, RECTANGLE, ELLIPSE, TEXT, GROUP, COMPONENT, COMPONENT_SET, INSTANCE), auto-layout, fills, strokes, component properties, and optional PNG export. The plugin runs in Figma's sandboxed environment and communicates via an embedded HTML UI.
+The Figma DSL plugin is a bidirectional Figma plugin that imports JSON-serialized component definitions (from the `@figma-dsl/exporter` package) and creates native Figma nodes, and also exports changesets and complete DSL JSON from edited Figma components. It supports 9 node types (FRAME, ROUNDED_RECTANGLE, RECTANGLE, ELLIPSE, TEXT, GROUP, COMPONENT, COMPONENT_SET, INSTANCE), auto-layout, fills, strokes, component properties, edit tracking, changeset export, and optional PNG export. The plugin runs in Figma's sandboxed environment and communicates via an embedded HTML UI with tabbed Import/Export views.
 
 ---
 
 ## Architecture
 **Confidence**: 0.95 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-The plugin is a **monolithic single-file** (`src/code.ts`, ~441 lines) organized into functional sections:
+The plugin is a **monolithic single-file** (`src/code.ts`, ~650 lines) organized into functional sections:
 
-| Section | Lines | Purpose |
-|---------|-------|---------|
-| Type definitions | 4–50 | `PluginNodeDef` and `PluginInput` interfaces |
-| Global state | 52–53 | `componentMap`, `errors` array |
-| Paint conversion | 55–80 | `toFigmaPaints()` |
-| Layout helper | 82–105 | `setAutoLayout()` |
-| Node factory | 107–292 | `createNode()` — async recursive factory |
-| Grid constants | 294–295 | `GRID_COLUMNS=5`, `GRID_SPACING=50` |
-| UI presentation | 297–332 | Embedded HTML template |
-| Event handler | 334–441 | `figma.ui.onmessage` — import/export orchestration |
+| Section | Purpose |
+|---------|---------|
+| Type imports | `PluginNodeDef`, `PluginInput`, `ComponentIdentity`, `EditLogEntry`, `ChangesetDocument` from `@figma-dsl/core` |
+| Global state | `componentMap`, `errors`, `trackedNodeIds`, `editLog`, `isTracking` |
+| Edit Tracker | `storeBaseline()`, `storeIdentity()`, `findTrackedAncestor()`, `startTracking()` |
+| Paint conversion | `toFigmaPaints()` |
+| Layout helpers | `setAutoLayoutConfig()`, `setLayoutSizing()` |
+| Node factory | `createNode()` — async recursive factory |
+| Node serializer | `serializeNode()`, `serializeFills()`, `serializeStrokes()` — reverse of createNode |
+| Diff & export | `computeChangeset()`, `computeCompleteExport()`, `getTrackedNodeIdsOnPage()` — uses `diffNodes` from `@figma-dsl/core` |
+| UI presentation | Tabbed HTML template (Import + Export tabs) |
+| Event handler | `figma.ui.onmessage` — import, export-changeset, export-complete |
 
-**Build output**: `dist/code.js` (IIFE bundle via esbuild, ~15KB). IIFE format required by Figma's sandbox (no ES modules).
+**Build output**: `dist/code.js` (IIFE bundle via esbuild, ~32KB). IIFE format required by Figma's sandbox (no ES modules). The `@figma-dsl/core` workspace dependency is resolved and bundled at build time.
+
+**Dependencies**: `@figma/plugin-typings` (types only), `@figma-dsl/core` (types + diff algorithm, bundled by esbuild).
 
 **Evidence**: `src/code.ts`, `manifest.json`, `package.json`
 
@@ -64,16 +68,13 @@ The plugin is a **monolithic single-file** (`src/code.ts`, ~441 lines) organized
 }
 ```
 
-### PluginNodeDef (25 fields)
-- **Structural**: `type`, `name`, `size: {x, y}`, `children: PluginNodeDef[]`
-- **Visual**: `fills?`, `strokes?`, `cornerRadius?`, `opacity`, `visible`, `clipContent?`
-- **Layout**: `stackMode?`, `itemSpacing?`, `padding*?`, `primaryAxisAlignItems?`, `counterAxisAlignItems?`, `layoutSizingH/V?`
-- **Text**: `characters?`, `fontSize?`, `fontFamily?`, `fontWeight?`, `fontStyle?`, `textAlignHorizontal?`, `textAutoResize?`
-- **Component**: `componentPropertyDefinitions?`, `componentId?`, `overriddenProperties?`
+### PluginNodeDef (25+ fields)
+
+The canonical `PluginNodeDef` type is now defined in `@figma-dsl/core` and imported by the plugin at build time (esbuild resolves the workspace dependency). See [`docs/packages/dsl-core.md`](dsl-core.md#plugin-types-canonical-definitions) for the full type definition.
 
 No runtime schema validation — type safety is compile-time only via TypeScript. The `schemaVersion` field is defined but never checked.
 
-**Evidence**: `src/code.ts:4-50`
+**Evidence**: `@figma-dsl/core/src/plugin-types.ts`
 
 ---
 
@@ -94,7 +95,7 @@ The `createNode()` async function dispatches by node type:
 | INSTANCE | `refComp.createInstance()` | Looks up `componentMap`; applies property overrides |
 | default | — | Logs error, returns null |
 
-Each node follows: create → set name/size → apply fills/strokes/opacity → set layout → append to parent → recurse children.
+Each node follows: create → set name/size → apply fills/strokes/opacity → set auto-layout config → append to parent → set layout sizing (FILL/HUG) → recurse children. The two-phase layout setup ensures `layoutSizingHorizontal: 'FILL'` is set after the node is appended to its auto-layout parent.
 
 **Evidence**: `src/code.ts:107-292`
 
@@ -116,13 +117,23 @@ Each node follows: create → set name/size → apply fills/strokes/opacity → 
 ## Auto-Layout Configuration
 **Confidence**: 0.93 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-`setAutoLayout()` applies flex-like layout to FRAME and COMPONENT nodes when `stackMode` is defined:
+Auto-layout is applied in two phases to work around Figma's API requirement that `FILL` sizing can only be set on children of auto-layout frames:
 
+**Phase 1 — `setAutoLayoutConfig()`** (called before `appendChild`):
+Sets the node's own layout container properties:
 - Layout mode: HORIZONTAL or VERTICAL
 - Padding: `paddingTop/Right/Bottom/Left` (defaults to 0)
 - Spacing: `itemSpacing` (defaults to 0)
-- Alignment: `primaryAxisAlignItems` and `counterAxisAlignItems` — cast to Figma enums without validation
-- Sizing: `layoutSizingHorizontal/Vertical` — cast to `'FIXED' | 'HUG' | 'FILL'`
+- Alignment: `primaryAxisAlignItems` and `counterAxisAlignItems`
+
+**Phase 2 — `setLayoutSizing()`** (called after `appendChild`):
+Sets the node's sizing within its parent:
+- `layoutSizingHorizontal`: `'FIXED' | 'HUG' | 'FILL'`
+- `layoutSizingVertical`: `'FIXED' | 'HUG' | 'FILL'`
+
+This split is critical: `FILL` requires the node to already be a child of an auto-layout parent. The previous single-function approach (`setAutoLayout()`) set sizing before `appendChild()`, causing `"FILL can only be set on children of auto-layout frames"` errors.
+
+`setLayoutSizing()` is also called for RECTANGLE and TEXT nodes (after `appendChild`), enabling dividers and text to use `FILL`.
 
 **Note**: The compiler now infers `FIXED` when a node has auto-layout and an explicit size but no `widthSizing`/`heightSizing`. This ensures frames with explicit dimensions (e.g., `size: { x: 1440, y: 64 }`) are imported at their specified size rather than defaulting to HUG.
 
@@ -167,21 +178,9 @@ The `componentMap` is cleared on each import. Instances **cannot** reference com
 ## UI & Message Protocol
 **Confidence**: 0.96 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-**UI**: 500×500px dialog with textarea input, auto-export checkbox, import button, progress display, and output area.
+**UI**: 500×560px dialog with tabbed navigation (Import/Export), textarea inputs, progress display, and output areas. See [Export UI](#export-ui) section for the updated message protocol.
 
-### Messages
-
-**UI → Plugin**:
-```typescript
-{ type: 'import', data: string, autoExport?: boolean }
-```
-
-**Plugin → UI**:
-- `{ type: 'progress', text: string }` — streaming status
-- `{ type: 'export-data', summary, nodeIdMap, imageCount }` — export results
-- `{ result: string }` — final summary with node IDs
-
-**Evidence**: `src/code.ts:297-332,334-441`
+**Evidence**: `src/code.ts`
 
 ---
 
@@ -246,9 +245,85 @@ npm run build  # esbuild src/code.ts --bundle --outfile=dist/code.js --format=ii
 }
 ```
 
-**Dependencies**: `@figma/plugin-typings` (types only). No runtime npm dependencies. **No test suite** in this package.
+**Dependencies**: `@figma/plugin-typings` (types only), `@figma-dsl/core` (workspace dependency, bundled by esbuild at build time — provides `PluginNodeDef`, changeset types, and `diffNodes` algorithm). **No test suite** in this package (plugin code requires Figma sandbox; diff algorithm is tested in `@figma-dsl/core`).
 
 **Evidence**: `package.json`, `manifest.json`
+
+---
+
+## Edit Tracking (Bidirectional Sync)
+**Confidence**: 0.95 | **Sources**: Code review
+
+The plugin now supports bidirectional sync: after importing components, it tracks design changes and can export them as structured changesets or complete DSL JSON.
+
+### Baseline Snapshot Storage
+
+After each top-level component is created during import:
+1. The `PluginNodeDef` used to create it is serialized to JSON and stored via `setPluginData("dsl-baseline", ...)`
+2. A `ComponentIdentity` record (name, DSL source path, timestamp, original node ID) is stored via `setPluginData("dsl-identity", ...)`
+3. The node ID is added to the in-memory `trackedNodeIds` set
+
+If a baseline exceeds the 100KB `setPluginData` limit, children are truncated with a warning.
+
+### documentchange Listener
+
+After import completes, a `figma.on("documentchange")` listener is registered. For each `PROPERTY_CHANGE`, `CREATE`, or `DELETE` event:
+1. The changed node's parent chain is walked upward via `findTrackedAncestor()`
+2. If a node with `dsl-identity` pluginData is found, the change is attributed to that component
+3. An `EditLogEntry` is appended to the in-memory ordered edit log
+4. Changes on nodes with no tracked ancestor are discarded
+
+The edit log provides real-time feedback, but the final changeset is computed via snapshot diff at export time (hybrid approach — see design).
+
+### Node Serializer
+
+`serializeNode()` is the inverse of `createNode()`: it reads a Figma `SceneNode` and produces a `PluginNodeDef`. Handles all supported node types (FRAME, RECTANGLE, ELLIPSE, TEXT, GROUP, COMPONENT, COMPONENT_SET, INSTANCE) and recursively serializes children.
+
+Properties serialized: type, name, size, opacity, visible, fills (SOLID + GRADIENT_LINEAR), strokes, cornerRadius, clipContent, auto-layout (stackMode, spacing, padding, alignment, sizing), text (characters, fontSize, fontFamily, fontStyle, textAlignHorizontal, textAutoResize), component property definitions, instance component references.
+
+### Changeset Export
+
+`computeChangeset(nodeIds)` computes a `ChangesetDocument` by:
+1. For each tracked node, reading the current state via `serializeNode()`
+2. Loading the baseline from `getPluginData("dsl-baseline")`
+3. Computing a property-level diff using `diffNodes()` from `@figma-dsl/core`
+4. Producing `PropertyChange` entries with dot-notation paths, change types, old/new values, and human-readable descriptions
+
+### Complete DSL JSON Export
+
+`computeCompleteExport(nodeIds, pageName)` serializes tracked nodes into a `PluginInput` document reflecting the current edited state (not the original baseline). This export is directly re-importable by the plugin.
+
+---
+
+## Export UI
+**Confidence**: 0.95 | **Sources**: Code review
+
+The plugin UI now has tabbed navigation with **Import** and **Export** tabs.
+
+### Import Tab (existing)
+Textarea for pasting PluginInput JSON, auto-export PNGs checkbox, Import button.
+
+### Export Tab (new)
+- **Mode selector**: Changeset (diff) or Complete DSL JSON
+- **Scope selector**: Selected Components or All on Page
+- **Export button**: Triggers serialization
+- **Output textarea**: Read-only, scrollable, shows exported JSON
+- **Copy button**: Copies JSON to clipboard
+
+### Messages (updated)
+
+**UI → Plugin**:
+```typescript
+{ type: 'import', data: string, autoExport?: boolean }
+{ type: 'export-changeset', scope: 'selection' | 'page' }
+{ type: 'export-complete', scope: 'selection' | 'page' }
+```
+
+**Plugin → UI**:
+- `{ type: 'progress', text: string }` — streaming status
+- `{ type: 'export-data', summary, nodeIdMap, imageCount }` — PNG export results
+- `{ type: 'export-result', json: string, summary: string }` — changeset/complete export results
+- `{ result: string }` — final summary with node IDs
 
 ---
 
@@ -257,7 +332,7 @@ npm run build  # esbuild src/code.ts --bundle --outfile=dist/code.js --format=ii
 
 1. **No cross-import references**: Instances only link to components created in the same import batch.
 2. **No schema validation**: `schemaVersion` is never checked; malformed input may cause runtime errors.
-3. **FILL on standalone components**: `layoutSizingHorizontal: FILL` not supported on standalone components (Figma API limitation).
+3. ~~**FILL on standalone components**~~: Fixed — `layoutSizingHorizontal: FILL` now works correctly via two-phase layout setup.
 4. **Silent fill fallback**: Unrecognized fill types become black SOLID with no warning.
 5. **Opacity inconsistency**: SOLID fills compound opacity (`fill.opacity * color.a`); gradients apply opacity directly.
 6. **No enum validation**: Alignment and sizing values are cast without checks; invalid strings cause Figma API errors.

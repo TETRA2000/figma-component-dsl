@@ -1,68 +1,13 @@
 import type { FigmaNodeDict, CompileResult } from '@figma-dsl/compiler';
+import type { PluginNodeDef, PluginInput } from '@figma-dsl/core';
 import { writeFileSync, mkdirSync } from 'fs';
 import { dirname } from 'path';
 
-export interface PluginNodeDef {
-  type: string;
-  name: string;
-  size: { x: number; y: number };
-  fills?: Array<{
-    type: string;
-    color?: { r: number; g: number; b: number; a: number };
-    opacity: number;
-    gradientStops?: Array<{ color: { r: number; g: number; b: number; a: number }; position: number }>;
-    gradientTransform?: [[number, number, number], [number, number, number]];
-  }>;
-  strokes?: Array<{
-    color: { r: number; g: number; b: number; a: number };
-    weight: number;
-    align?: string;
-  }>;
-  cornerRadius?: number;
-  opacity: number;
-  visible: boolean;
-  clipContent?: boolean;
-  children: PluginNodeDef[];
-
-  // Auto-layout
-  stackMode?: string;
-  itemSpacing?: number;
-  paddingTop?: number;
-  paddingRight?: number;
-  paddingBottom?: number;
-  paddingLeft?: number;
-  primaryAxisAlignItems?: string;
-  counterAxisAlignItems?: string;
-  layoutSizingHorizontal?: string;
-  layoutSizingVertical?: string;
-
-  // Text
-  characters?: string;
-  fontSize?: number;
-  fontFamily?: string;
-  fontWeight?: number;
-  fontStyle?: string;
-  textAlignHorizontal?: string;
-  textAutoResize?: string;
-  lineHeight?: { value: number; unit: string };
-  letterSpacing?: { value: number; unit: string };
-
-  // Component
-  componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
-
-  // Instance
-  componentId?: string;
-  overriddenProperties?: Record<string, string | boolean>;
-}
-
-export interface PluginInput {
-  schemaVersion: string;
-  targetPage: string;
-  components: PluginNodeDef[];
-}
+export type { PluginNodeDef, PluginInput } from '@figma-dsl/core';
 
 function convertToPluginNode(node: FigmaNodeDict): PluginNodeDef {
-  const result: PluginNodeDef = {
+  // Build a mutable record then return as readonly PluginNodeDef
+  const result: Record<string, unknown> = {
     type: node.type,
     name: node.name,
     size: node.size,
@@ -139,7 +84,7 @@ function convertToPluginNode(node: FigmaNodeDict): PluginNodeDef {
     result.overriddenProperties = node.overriddenProperties;
   }
 
-  return result;
+  return result as unknown as PluginNodeDef;
 }
 
 export function generatePluginInput(

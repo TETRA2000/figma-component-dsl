@@ -102,7 +102,7 @@ frame('Card', {
 | `visible` | `boolean` | Visibility toggle |
 | `children` | `Node[]` | Child nodes |
 | `clipContent` | `boolean` | Clip children that overflow the frame bounds |
-| `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | Horizontal sizing mode (see [constraints](#figma-plugin-constraints)) |
+| `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | Horizontal sizing mode |
 | `layoutSizingVertical` | `'FIXED' \| 'HUG' \| 'FILL'` | Vertical sizing mode |
 
 #### `text(content, options)`
@@ -687,7 +687,7 @@ rectangle('Divider', {
 })
 ```
 
-> **Note:** Without `layoutSizingHorizontal: 'FILL'`, dividers import as 1x1 px in Figma. This is a known trade-off due to plugin constraints. Manually stretch them in Figma after import, or set an explicit width matching the parent.
+> **Tip:** Use `layoutSizingHorizontal: 'FILL'` on dividers so they stretch to fill their parent's width in Figma.
 
 #### Card with Subtle Border
 
@@ -856,19 +856,9 @@ Apple-style dark theme colors used across the landing page:
 
 These are critical limitations of the Figma Plugin API that affect how DSL files must be authored for successful import.
 
-### 1. `layoutSizingHorizontal: 'FILL'` is not supported
+### ~~1. `layoutSizingHorizontal: 'FILL'` — FIXED~~
 
-**Error:** `"FILL can only be set on children of auto-layout frames"`
-
-**Cause:** The Figma plugin creates nodes top-down. When setting `layoutSizingHorizontal: 'FILL'` on a child node, its parent's auto-layout has not yet been configured. This fails at every nesting level, not just the root.
-
-**Solution:** Never use `layoutSizingHorizontal: 'FILL'` (or `layoutSizingVertical: 'FILL'`) in any DSL file intended for Figma plugin export. Use explicit `size` values instead, or rely on parent auto-layout defaults.
-
-**Affected patterns:**
-- Cards inside grid rows (feature cards, stat cards, testimonial cards)
-- FAQ items and dividers inside lists
-- Text nodes that should stretch to fill parent width
-- Any child frame meant to fill its parent
+This was previously broken because the plugin set `layoutSizingHorizontal` before calling `parent.appendChild()`. The plugin now splits auto-layout setup into two phases: `setAutoLayoutConfig()` (own layout mode, called before appendChild) and `setLayoutSizing()` (sizing within parent, called after appendChild). **`FILL` is now fully supported** for both `layoutSizingHorizontal` and `layoutSizingVertical`.
 
 ### 2. `type: 'VARIANT'` only works on component sets
 
@@ -941,11 +931,11 @@ These are limitations of the DSL pipeline itself (compiler/renderer), distinct f
 | `EISDIR: illegal operation on a directory` | `-o` flag points to a directory | Use a full file path: `-o output/name.json` |
 | `Module needs import attribute of type: json` | Passed compiled `.json` to `export` | Use the `.dsl.ts` source file instead |
 | `Unknown option '--format'` | `--format` flag not supported | Remove `--format plugin` from the command |
-| `FILL can only be set on children of auto-layout frames` | `layoutSizingHorizontal: 'FILL'` used | Remove all `layoutSizingHorizontal: 'FILL'` |
+| `FILL can only be set on children of auto-layout frames` | Plugin version too old | Update plugin — this was fixed by splitting setAutoLayout into config + sizing phases |
 | `Can only add variant property to a component set` | `type: 'VARIANT'` on standalone component | Use `type: 'TEXT'` or `type: 'BOOLEAN'` only |
 | `Component not found for instance: X` | `instance()` referencing missing component | Replace with inline `frame()` |
 | Sections scattered on canvas | No parent wrapper in merged JSON | Wrap sections in a parent FRAME with vertical layout |
-| Dividers are 1x1 px | No `layoutSizingHorizontal: 'FILL'` (can't use it) | Set explicit width or manually adjust in Figma |
+| Dividers are 1x1 px | Missing `layoutSizingHorizontal: 'FILL'` | Add `layoutSizingHorizontal: 'FILL'` to the divider rectangle |
 
 ---
 

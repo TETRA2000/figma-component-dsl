@@ -9,7 +9,7 @@ A domain-specific language for defining Figma component structures declaratively
 git submodule update --init --recursive
 npm install
 
-# Run all tests (235 tests across 14 files)
+# Run all tests (273 tests across 17 files)
 npx vitest run
 ```
 
@@ -17,13 +17,13 @@ npx vitest run
 
 | Package | Description |
 |---------|-------------|
-| `@figma-dsl/core` | DSL node primitives, color/fill helpers, layout config, component/variant system |
+| `@figma-dsl/core` | DSL node primitives, color/fill helpers, layout config, component/variant system, changeset schema, canonical PluginNodeDef types, diff algorithm |
 | `@figma-dsl/compiler` | Compiles DslNode trees to FigmaNodeDict with GUID assignment, text measurement, and two-pass auto-layout |
 | `@figma-dsl/renderer` | Renders compiled nodes to PNG via @napi-rs/canvas (Skia) |
 | `@figma-dsl/capturer` | Captures React component screenshots via Playwright |
 | `@figma-dsl/comparator` | Pixel-level image comparison with similarity scoring via pixelmatch |
 | `@figma-dsl/exporter` | Generates Figma plugin input JSON from compiled DSL |
-| `@figma-dsl/plugin` | Figma plugin that creates real Figma nodes from DSL definitions |
+| `@figma-dsl/plugin` | Figma plugin: imports DSL definitions as Figma nodes, tracks edits, exports changesets and complete DSL JSON |
 | `@figma-dsl/validator` | DSL compatibility validator with 10 rules (file-structure, styling, AST-based) |
 | `@figma-dsl/cli` | CLI interface for all pipeline operations |
 
@@ -108,10 +108,24 @@ DSL Definition (.dsl.ts)
 
     │
     ▼
-┌─────────┐     ┌──────────┐
-│  Export  │────▶│  Plugin  │──▶ Figma
-│  (JSON)  │     │ (import) │
-└─────────┘     └──────────┘
+┌─────────┐     ┌──────────────────────────────┐
+│  Export  │────▶│  Plugin (import + tracking)  │──▶ Figma
+│  (JSON)  │     └──────────┬───────────────────┘
+└─────────┘                 │
+                            ▼
+               ┌────────────────────────┐
+               │ Export (changeset/JSON) │
+               └────────────┬───────────┘
+                            │
+                            ▼
+               ┌────────────────────────┐
+               │  Apply Changeset Skill │──▶ React/CSS
+               └────────────┬───────────┘
+                            │
+                            ▼
+               ┌────────────────────────┐
+               │  Verify Changeset Skill│──▶ Visual comparison
+               └────────────────────────┘
 ```
 
 ## Calibration
@@ -161,7 +175,7 @@ Features:
 
 ## Claude Desktop Skills
 
-Four AI skills for Claude Desktop are available in `.claude/skills/`:
+Six AI skills for Claude Desktop are available in `.claude/skills/`:
 
 | Skill | Description |
 |-------|-------------|
@@ -169,6 +183,8 @@ Four AI skills for Claude Desktop are available in `.claude/skills/`:
 | `create-react-component` | Scaffold 3-file components with validation and dual preview (React + DSL PNG) |
 | `export-to-figma` | Export components to Figma via MCP auto-publish, plugin JSON, or visual fidelity pipeline |
 | `export-to-html` | Build self-contained HTML files from React pages via vite-plugin-singlefile |
+| `apply-changeset` | Apply Figma design changesets to React/CSS source code with property mapping |
+| `verify-changeset` | Verify visual fidelity between Figma exports and React components with iterative correction |
 
 Shared references (component registry and design tokens) are in `.claude/skills/shared/references/`.
 
