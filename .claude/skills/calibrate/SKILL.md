@@ -45,6 +45,9 @@ bin/figma-dsl batch <input-dir-or-glob> -o <output-dir> [--include <extra-glob>.
 # Compare DSL renders vs Figma captures (when Figma PNGs are available)
 bin/figma-dsl batch-compare <dsl-dir> <figma-dir> [-o report.json] [-t <threshold>]
 
+# Validate components for DSL compatibility
+bin/figma-dsl validate <component-dir> [--format json] [--strict] [--skip <rules>]
+
 # Full orchestrated pipeline
 bin/figma-dsl calibrate -o <output-dir> [--property <category>...] [-t <threshold>]
 ```
@@ -83,6 +86,28 @@ Examples:
 For full runs across all categories, use `full-suite` as the theme name. For fix iterations, append `-fix<N>` (e.g., `2026-03-14_15-30-corner-radius-fix1`).
 
 Copy rendered PNGs and the batch manifest into this directory after each batch render step so there is a persistent record of every iteration's output.
+
+### Step 0.7: Validate components
+
+Run the validator on all components that will be part of this calibration to catch structural issues early. This step serves two purposes: (1) catching problems before rendering, and (2) building a log of common validation errors that informs how components should be authored.
+
+```bash
+bin/figma-dsl validate preview/src/components --format json > docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/validation.json
+bin/figma-dsl validate preview/src/components --format text > docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/validation.log
+```
+
+The validator checks 10 rules including `css-modules`, `no-inline-style`, `classname-prop`, `variant-union`, `html-attrs`, `design-tokens`, `dsl-compatible-layout`, and others. See `packages/validator/src/rules/` for the full rule set.
+
+**Review the validation output.** Errors (not warnings) indicate components that will likely cause issues downstream. Common patterns to watch for:
+
+| Rule | What it means | Impact on calibration |
+|---|---|---|
+| `no-inline-style` | Uses `style={{}}` instead of CSS Modules | DSL can't map inline styles — renders will diverge |
+| `dsl-compatible-layout` | Missing `display: flex/grid` | Auto-layout won't compile correctly |
+| `variant-union` | `variant: string` instead of literal union | Component properties won't map to Figma variants |
+| `css-modules` | No CSS Module import | Styling won't be captured in DSL conversion |
+
+The accumulated `validation.json` files in `docs/history/` create a record of recurring issues. When the same rule fails repeatedly across iterations, it signals a pattern that component creation guidance (e.g., in the create-react-component skill or steering docs) should address to prevent the issue at authoring time.
 
 ### Step 1: Generate test suite
 

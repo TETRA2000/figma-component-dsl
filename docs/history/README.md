@@ -22,3 +22,8 @@ docs/history/
 - `*.png` — rendered component PNGs
 - `batch-manifest.json` — component metadata and status
 - Dogfooding runs may also include comparison screenshots and iteration logs
+
+## Dogfooding Sessions
+
+<!-- New entries are prepended below this line -->
+- [2026-03-14 — Travel Cards](2026-03-14-travel-cards.md) — 0 issues found, 0 pipeline fixes | Features: cornerRadius, clipContent, strokes, textAutoResize:HEIGHT, FILL sizing, SPACE_BETWEEN, nested auto-layout
