@@ -150,7 +150,21 @@ See `references/` for the full source of each project.
 
 ## Documentation
 
-MAGI consensus-generated documentation for each reference project:
+MAGI consensus-generated documentation (multi-agent analysis with confidence scoring):
+
+### Package Documentation
+
+- [`docs/packages/dsl-core.md`](docs/packages/dsl-core.md) — Node factories, color/fill system, auto-layout, component/variant types
+- [`docs/packages/compiler.md`](docs/packages/compiler.md) — Two-pass layout algorithm, text measurement, GUID assignment
+- [`docs/packages/renderer.md`](docs/packages/renderer.md) — Skia canvas rendering, fill/stroke/text pipeline, transform model
+- [`docs/packages/capturer.md`](docs/packages/capturer.md) — Playwright screenshot capture, viewport/selector/delay options
+- [`docs/packages/comparator.md`](docs/packages/comparator.md) — Pixel-level comparison, dimension padding, threshold configuration
+- [`docs/packages/exporter.md`](docs/packages/exporter.md) — Plugin JSON generation, corner radius clamping, schema versioning
+- [`docs/packages/plugin.md`](docs/packages/plugin.md) — Figma node creation, component/instance linking, grid layout
+- [`docs/packages/validator.md`](docs/packages/validator.md) — 10-rule validation system, severity model, pattern matching
+- [`docs/packages/cli.md`](docs/packages/cli.md) — 12-command CLI, batch processing, calibration workflows
+
+### Reference Project Documentation
 
 - [`docs/figma_design_playground.md`](docs/figma_design_playground.md) — Architecture, component APIs, Figma integration workflow, design tokens, and known gaps.
 - [`docs/figma-html-renderer.md`](docs/figma-html-renderer.md) — Pipeline architecture, CLI reference, classification system, security considerations, and performance characteristics.
