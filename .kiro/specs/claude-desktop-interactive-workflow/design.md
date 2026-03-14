@@ -6,7 +6,7 @@
 
 **Users**: Claude Code (Claude Desktop) users working on the figma-component-dsl project will use these skills for rapid visual prototyping, component creation, Figma export with auto-publishing, and HTML generation.
 
-**Impact**: Adds `.claude/launch.json`, a `preview/` Vite+React scaffold, `packages/validator` for DSL compatibility checks, four skill directories under `.claude/skills/`, Figma MCP server integration for auto-publishing, and shared reference documents.
+**Impact**: Adds `.claude/launch.json`, a `preview/` Vite+React scaffold, `packages/validator` for DSL compatibility checks, four skill directories under `.claude/skills/` authored using Anthropic's skill-creator methodology, Figma MCP server integration for auto-publishing, eval infrastructure per skill, and shared reference documents.
 
 ### Goals
 - Provide discoverable AI Skills that Claude auto-invokes based on user intent
@@ -14,6 +14,7 @@
 - Auto-publish designs to Figma via MCP server's `generate_figma_design` tool
 - Programmatic DSL compatibility validation enabling AI-driven create→validate→fix iteration loops
 - Maintain design token consistency across React, DSL, Figma, and HTML outputs
+- Author all skills following Anthropic's skill-creator methodology (progressive disclosure, pushy descriptions, eval infrastructure, bundled scripts)
 
 ### Non-Goals
 - No server-side rendering infrastructure — all React rendering is client-side via Vite
@@ -113,17 +114,18 @@ graph TB
 ```
 
 **Architecture Integration**:
-- Selected pattern: Skills as documentation (SKILL.md) + Vite scaffold + validator package + Figma MCP
-- Domain boundaries: Each skill owns one workflow; `@figma-dsl/validator` owns DSL compatibility rules; Figma MCP handles external publishing
+- Selected pattern: Skills (authored via skill-creator methodology) + Vite scaffold + validator package + Figma MCP
+- Domain boundaries: Each skill owns one workflow; `@figma-dsl/validator` owns DSL compatibility rules; Figma MCP handles external publishing; skill-creator provides authoring methodology and eval infrastructure
 - Existing patterns preserved: CLI commands unchanged, reference app unchanged, monorepo structure extended
-- New components: `preview/` app, `packages/validator`, 4 skill directories, shared references, `.claude/launch.json`, Figma MCP integration
+- New components: `preview/` app, `packages/validator`, 4 skill directories (each with `evals/`, `scripts/`, `references/`), shared references, `.claude/launch.json`, Figma MCP integration, skill-creator reference submodule
 - Steering compliance: TypeScript strict, CSS Modules, design tokens as CSS custom properties, single-responsibility packages
 
 ### Technology Stack
 
 | Layer | Choice / Version | Role in Feature | Notes |
 |-------|------------------|-----------------|-------|
-| Skills | SKILL.md (YAML + Markdown) | Workflow instructions for Claude | Follows existing magi-docs-writer pattern |
+| Skills | SKILL.md (YAML + Markdown) | Workflow instructions for Claude | Authored via skill-creator methodology |
+| Skill Authoring | skill-creator (reference submodule) | Eval infrastructure, description optimization | [anthropics/skills](https://github.com/anthropics/skills) |
 | Preview | Vite 8 + React 19 | Live preview app | Same stack as reference app |
 | HTML Export | vite-plugin-singlefile | Inline CSS+JS into single HTML | 86K weekly downloads, mature |
 | Validation | `@figma-dsl/validator` (new) | React→DSL compatibility checks | New monorepo package |
@@ -278,6 +280,7 @@ sequenceDiagram
 |-----------|--------|--------|--------------|-----------------|-----------|
 | `.claude/launch.json` | Infrastructure | Preview server config | 1.3, 1.4 | Vite (P0) | Config |
 | `preview/` app | Infrastructure | Vite+React scaffold for rendering | 1.3, 2.3, 3.4, 5.1, 5.6 | Vite (P0), React (P0), reference app (P1) | — |
+| skill-creator submodule | Infrastructure | Eval infrastructure and description optimization | 1.1, 1.2 | Python 3 (P1) | — |
 | `@figma-dsl/validator` | Package | DSL compatibility validation | 3.2, 4.6, 7.2 | dsl-core (P0), compiler (P1) | Service |
 | Landing Page Skill | Skill | Guide Claude to compose landing pages | 2.1–2.7 | Registry (P0), preview app (P0) | — |
 | Component Creation Skill | Skill | Guide Claude to scaffold React components | 3.1–3.7 | Templates (P0), Validator (P0), Registry (P0) | — |
@@ -510,6 +513,14 @@ Output (JSON format):
 
 ### Skills Layer
 
+All skills follow the [skill-creator methodology](https://github.com/anthropics/skills/tree/main/skills/skill-creator) with these patterns:
+- **Progressive disclosure**: SKILL.md body <500 lines; detailed docs in `references/`; deterministic helpers in `scripts/`
+- **Pushy descriptions**: Descriptions include both what the skill does AND specific trigger contexts, compensating for Claude's tendency to "undertrigger"
+- **Imperative instructions**: Explain "why" over rigid MUSTs; use imperative form
+- **Bundled scripts**: Repetitive operations (validation wrappers, preview launchers) bundled in `scripts/` to avoid reinventing per invocation
+- **Eval infrastructure**: Each skill includes `evals/evals.json` with 2-3 test cases and assertions for regression testing
+- **Description optimization**: After functional completion, run `references/skill-creator/scripts/run_loop.py` with 20 trigger queries per skill
+
 #### Landing Page Skill
 
 | Field | Detail |
@@ -535,10 +546,14 @@ Output (JSON format):
 ---
 name: create-landing-page
 description: >
-  Create landing pages by composing React components. Use this skill when the
-  user asks to create a landing page, build a marketing page, compose page
-  sections, or prototype a web page layout. Triggers on: "create a landing
-  page", "build a page", "compose sections", "marketing page", "prototype page".
+  Create landing pages by composing React components with live preview. Use
+  this skill whenever the user mentions landing pages, marketing pages, web
+  page layouts, page sections, or wants to prototype any kind of multi-section
+  web page — even if they don't explicitly say "landing page". Also trigger
+  when the user asks to compose Hero, Navbar, Footer, Pricing, FAQ, or other
+  page sections together, or wants to build a page from existing components.
+  Covers: "create a landing page", "build a page", "compose sections",
+  "marketing page", "prototype page", "put together a homepage".
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 ```
@@ -548,8 +563,12 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ```
 .claude/skills/create-landing-page/
 ├── SKILL.md
-└── references/
-    └── landing-page-example.md
+├── scripts/
+│   └── launch-preview.sh         # Deterministic preview launcher
+├── references/
+│   └── landing-page-example.md   # Reference patterns from LandingPage.tsx
+└── evals/
+    └── evals.json                # Test cases for skill regression testing
 ```
 
 #### Component Creation Skill
@@ -581,12 +600,17 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 name: create-react-component
 description: >
-  Create new React components with live preview and DSL validation. Use this
-  skill when the user asks to create a component, build a UI element, design
-  a widget, or scaffold a new component. Supports dual preview: React dev
-  server and DSL-rendered PNG. Validates DSL compatibility automatically.
-  Triggers on: "create a component", "new component", "build a button",
-  "design a card", "scaffold component".
+  Create new React components with live preview and automatic DSL validation.
+  Use this skill whenever the user wants to create any kind of UI component,
+  widget, element, or building block — buttons, cards, modals, forms, inputs,
+  badges, alerts, or any custom component. Supports dual preview: React dev
+  server rendering and DSL-rendered PNG for Figma comparison. Automatically
+  validates DSL compatibility and iterates until the component passes all
+  checks. Also trigger when the user asks to scaffold, design, or prototype
+  a component, even if they just describe what it should look like without
+  using the word "component". Covers: "create a component", "new component",
+  "build a button", "design a card", "scaffold component", "make a widget",
+  "I need a dropdown", "add a tooltip component".
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 ```
@@ -596,12 +620,16 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ```
 .claude/skills/create-react-component/
 ├── SKILL.md
+├── scripts/
+│   └── validate-and-preview.sh   # Runs validation + dual preview pipeline
 ├── assets/
 │   ├── Component.tsx.template
 │   ├── Component.module.css.template
 │   └── Component.figma.tsx.template
-└── references/
-    └── component-constraints.md
+├── references/
+│   └── component-constraints.md  # Reference app constraints reference
+└── evals/
+    └── evals.json                # Test cases for skill regression testing
 ```
 
 **Template Interface (Component.tsx.template)**
@@ -669,11 +697,16 @@ export function {{ComponentName}}({
 ---
 name: export-to-figma
 description: >
-  Export React components to Figma with auto-publishing. Use this skill when
-  the user asks to export to Figma, create Figma components, generate design
-  data, publish to Figma, or produce Figma-compatible output. Also triggers
-  on: "Code Connect", "figma publish", "design export", "figma import",
-  "push to Figma".
+  Export React components to Figma with automatic publishing via MCP server.
+  Use this skill whenever the user wants to get their components into Figma,
+  create Figma design components from code, publish designs, generate Figma-
+  compatible data, set up Code Connect bindings, or bridge the gap between
+  their React code and Figma design files. Also trigger when the user mentions
+  Figma in the context of their components, even casually — e.g., "can we
+  see this in Figma?", "push this to our design file", "I need the Figma
+  version". Covers: "export to Figma", "Figma publish", "Code Connect",
+  "design export", "figma import", "push to Figma", "create Figma components",
+  "sync with Figma".
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 ```
@@ -683,10 +716,14 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ```
 .claude/skills/export-to-figma/
 ├── SKILL.md
-└── references/
-    ├── figma-export-schema.md
-    ├── code-connect-pattern.md
-    └── mcp-setup-guide.md
+├── scripts/
+│   └── compile-and-export.sh     # Deterministic compile→export pipeline
+├── references/
+│   ├── figma-export-schema.md    # Plugin JSON schema reference
+│   ├── code-connect-pattern.md   # Code Connect binding patterns
+│   └── mcp-setup-guide.md       # Figma MCP server setup instructions
+└── evals/
+    └── evals.json                # Test cases for skill regression testing
 ```
 
 **Publishing Paths**
@@ -737,9 +774,13 @@ Path 2 — Plugin JSON Import (fallback):
 name: export-to-html
 description: >
   Generate self-contained HTML pages from React components. Use this skill
-  when the user asks to export HTML, generate a static page, create a
-  deployable web page, or produce standalone HTML. Triggers on: "export HTML",
-  "static page", "generate HTML", "deployable page", "standalone HTML".
+  whenever the user wants to produce a deployable web page, export their work
+  as HTML, create a static page they can share or host, or generate a
+  standalone file that works without a dev server. Also trigger when the user
+  wants to share their page with someone, deploy it, or create a portable
+  version — even if they don't say "HTML" explicitly. Covers: "export HTML",
+  "static page", "generate HTML", "deployable page", "standalone HTML",
+  "share this page", "make it portable", "deploy this", "download as HTML".
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 ```
@@ -749,9 +790,46 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ```
 .claude/skills/export-to-html/
 ├── SKILL.md
-└── references/
-    └── html-export-guide.md
+├── scripts/
+│   └── build-and-export.sh       # Deterministic Vite build + copy pipeline
+├── references/
+│   └── html-export-guide.md      # Asset handling and export patterns
+└── evals/
+    └── evals.json                # Test cases for skill regression testing
 ```
+
+### Skill Authoring Infrastructure
+
+#### skill-creator Reference Submodule
+
+| Field | Detail |
+|-------|--------|
+| Intent | Provide eval infrastructure and description optimization tooling |
+| Requirements | 1.1, 1.2 |
+
+**Location**: `references/skill-creator/` (git submodule from `anthropics/skills/skills/skill-creator`)
+
+**Key Assets Used**:
+- `eval-viewer/generate_review.py` — HTML review UI for evaluating skill outputs
+- `scripts/run_loop.py` — Description optimization loop (20 queries, 5 iterations, 60/40 train/test split)
+- `scripts/aggregate_benchmark.py` — Benchmark aggregation for timing/tokens/pass_rate
+- `agents/grader.md` — Assertion evaluation agent instructions
+- `references/schemas.md` — JSON schemas for `evals.json`, `grading.json`, `benchmark.json`
+
+**Eval Workflow Per Skill**:
+1. Draft SKILL.md following progressive disclosure and pushy description patterns
+2. Create `evals/evals.json` with 2-3 realistic test prompts
+3. Run test prompts with/without skill via subagents
+4. Grade outputs against assertions
+5. Review via `generate_review.py` HTML viewer
+6. Iterate skill based on feedback
+7. After functional completion, optimize description via `run_loop.py`
+
+**Implementation Notes**
+- Python 3 required for eval scripts
+- `run_loop.py` uses `claude -p` CLI — must match the model powering the session
+- Eval queries should be substantive (not simple one-step tasks) — Claude only consults skills for complex tasks
+- The submodule is read-only reference material, not modified by skills
 
 ### Shared References
 
@@ -885,10 +963,14 @@ Two error surfaces: (1) programmatic validation via `@figma-dsl/validator` retur
 - CLI `validate` command tests with text and JSON output formats
 - Edge cases: empty files, missing CSS module, TypeScript syntax errors
 
-### Skill Validation
+### Skill Validation (skill-creator eval loop)
 - Verify each SKILL.md has valid YAML frontmatter (`name`, `description`, `allowed-tools`)
-- Verify all referenced files exist (templates, references, registry)
+- Verify SKILL.md body is under 500 lines (progressive disclosure compliance)
+- Verify all referenced files exist (templates, references, registry, scripts)
 - Verify trigger phrases are distinct across skills (no overlapping invocations)
+- Run `evals/evals.json` test cases per skill via skill-creator eval loop (2-3 test prompts each)
+- Grade outputs against defined assertions using `agents/grader.md`
+- Run description optimization via `run_loop.py` (20 trigger queries, should/shouldn't trigger mix)
 
 ### Preview App Validation
 - Verify `npm install` succeeds in `preview/`

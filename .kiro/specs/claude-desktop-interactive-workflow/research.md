@@ -2,12 +2,12 @@
 
 ## Summary
 - **Feature**: `claude-desktop-interactive-workflow`
-- **Discovery Scope**: New Feature (greenfield skills + preview infrastructure + validation packages + Figma auto-publish)
+- **Discovery Scope**: New Feature (greenfield skills + preview infrastructure + validation packages + Figma auto-publish + skill-creator methodology)
 - **Key Findings**:
+  - Anthropic's `skill-creator` provides a proven methodology for creating, testing, and iterating skills — includes eval framework, description optimization, and progressive disclosure patterns
   - Figma MCP server's `generate_figma_design` tool enables auto-publishing designs to Figma files directly from Claude Desktop — eliminates manual plugin import
   - Existing DSL pipeline already accumulates `CompileError[]` with node path tracking; a new `@figma-dsl/validator` package can extend this with React-to-DSL structural validation
   - `vite-plugin-singlefile` (86K weekly downloads) solves HTML export by inlining all CSS/JS into a single file
-  - Figma REST API is read-only for file contents; only the Figma MCP server and Plugin API can create/modify designs
 
 ## Research Log
 
@@ -114,6 +114,28 @@
   - MCP path validation happens at the Figma server side — errors returned to Claude for iteration
   - Recommend: Focus validation effort on the React→DSL compatibility gap (validator package), not on exporter output
 
+### Anthropic skill-creator — Skill Authoring Methodology
+- **Context**: User requested using the `skill-creator` from the Anthropic skills repository for better skill quality
+- **Sources**: [skill-creator on GitHub](https://github.com/anthropics/skills/tree/main/skills/skill-creator), [skill-creator SKILL.md](https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md)
+- **Findings**:
+  - **Core workflow**: intent capture → skill drafting → testing → evaluation → improvement → repeat
+  - **Progressive disclosure**: 3-level loading system — (1) Metadata (name+description, ~100 words, always in context), (2) SKILL.md body (<500 lines, loaded on trigger), (3) Bundled resources (loaded on demand, unlimited size)
+  - **Description optimization**: Descriptions should be "pushy" — include both what the skill does AND specific trigger contexts. Claude tends to "undertrigger" skills, so descriptions need explicit trigger phrases and near-miss coverage
+  - **Eval infrastructure**: `evals/evals.json` for test cases, `eval-viewer/generate_review.py` for HTML review UI, grading via assertions, benchmarking with `benchmark.json`
+  - **Skill anatomy**: `SKILL.md` (required), optional `scripts/` (deterministic helpers), `references/` (docs loaded as needed), `assets/` (templates, icons)
+  - **Writing style**: Explain "why" over rigid MUSTs. Use imperative form. Make instructions general, not overfitted to examples. Remove instructions that don't pull their weight.
+  - **Bundled scripts pattern**: If all test runs independently write similar helper scripts, bundle that script into the skill's `scripts/` directory
+  - **Description optimization script**: `scripts/run_loop.py` tests 20 trigger queries (mix of should/shouldn't trigger) and iterates descriptions up to 5 times using 60/40 train/test split
+  - **Eval schemas**: `evals.json` (prompts+assertions), `grading.json` (pass/fail+evidence), `benchmark.json` (timing+tokens+pass_rate), `comparison.json` (blind A/B), `analysis.json` (patterns)
+- **Implications**:
+  - Install skill-creator as a git submodule under `references/skill-creator/` for access to eval infrastructure and scripts
+  - Use skill-creator's eval loop during implementation: draft each skill → test with 2-3 prompts → evaluate → iterate
+  - Follow progressive disclosure: keep SKILL.md <500 lines, put detailed reference docs in `references/` subdirectories
+  - Make descriptions "pushy" with comprehensive trigger phrases and near-miss coverage
+  - Bundle deterministic helper scripts (e.g., validation wrappers, preview launchers) in `scripts/` within each skill
+  - Run description optimization via `run_loop.py` after each skill is functionally complete
+  - Adopt eval infrastructure: `evals/evals.json` per skill for regression testing
+
 ## Architecture Pattern Evaluation
 
 | Option | Description | Strengths | Risks / Limitations | Notes |
@@ -170,6 +192,17 @@
 - **Trade-offs**: New package to maintain. But validation logic is distinct from compilation and benefits from isolation.
 - **Follow-up**: Define validation rule set. Determine if rules are configurable or fixed.
 
+### Decision: Use skill-creator Methodology and Eval Infrastructure
+- **Context**: User requested using Anthropic's skill-creator for better skill quality
+- **Alternatives Considered**:
+  1. Write SKILL.md files manually based on existing magi-docs-writer pattern
+  2. Copy skill-creator patterns without tooling
+  3. Install skill-creator as submodule and use its full eval infrastructure
+- **Selected Approach**: Install skill-creator as a reference submodule, adopt its writing patterns (progressive disclosure, pushy descriptions, imperative instructions), and use its eval infrastructure (`evals/evals.json`, grading, benchmarking) for quality assurance during implementation
+- **Rationale**: skill-creator provides a proven, battle-tested methodology from Anthropic. The eval infrastructure enables measurable skill quality. Progressive disclosure keeps SKILL.md files focused and fast-loading. Description optimization ensures reliable triggering.
+- **Trade-offs**: Additional submodule dependency. Eval infrastructure is optional but valuable. Python scripts for `run_loop.py` and `generate_review.py` require Python 3.
+- **Follow-up**: Run description optimization for each skill after functional completion. Create 2-3 eval test cases per skill.
+
 ### Decision: Reference Components via Vite Alias
 - **Context**: Skills need access to the 16 reference components
 - **Selected Approach**: Vite `resolve.alias` — `@/components` resolves to reference app's `src/components/`
@@ -188,6 +221,7 @@
 - **Risk**: Vite hot-reload may not pick up newly added files → Mitigation: Skill instructs Claude to restart dev server if needed
 - **Risk**: Code Connect requires valid FIGMA_URL that doesn't exist pre-publish → Mitigation: MCP's `add_code_connect_map` establishes mappings after design is published
 - **Risk**: Design token CSS custom properties may not resolve identically across DSL and React → Mitigation: Token reference provides mapping table; validator checks token references
+- **Risk**: Skill descriptions may not trigger reliably across varied user phrasings → Mitigation: Run skill-creator's description optimization (`run_loop.py`) with 20 trigger eval queries per skill
 
 ## References
 - [Figma MCP Server Documentation](https://developers.figma.com/docs/figma-mcp-server/)
@@ -200,3 +234,5 @@
 - [Claude Code Desktop / Preview](https://code.claude.com/docs/en/desktop)
 - [vite-plugin-singlefile](https://github.com/richardtallent/vite-plugin-singlefile)
 - [Vite Build Docs](https://vite.dev/guide/build)
+- [Anthropic skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)
+- [skill-creator SKILL.md](https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md)
