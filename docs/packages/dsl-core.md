@@ -42,9 +42,10 @@ packages/dsl-core/
 │   ├── changeset.ts       # Changeset schema types (ChangesetDocument, PropertyChange)
 │   ├── plugin-types.ts    # Canonical PluginNodeDef, PluginInput, ComponentIdentity, EditLogEntry
 │   ├── diff.ts            # PluginNodeDef diff algorithm (diffNodes, diffValues, describeChange)
+│   ├── patterns.ts        # Pre-built UI pattern helpers (card, badge, navBar, etc.)
 │   ├── *.test.ts          # Test files (7 suites)
 │   └── index.ts           # Re-export barrel
-├── fonts/                 # Inter font family (Regular, Medium, SemiBold, Bold)
+├── fonts/                 # Inter + Noto Sans JP font families
 ├── fixtures/              # Sample changeset and complete export JSON files
 ├── dist/
 ├── package.json
@@ -58,6 +59,7 @@ index.ts
   ├── nodes.ts → colors.ts (hex parser), types.ts
   ├── colors.ts → types.ts
   ├── layout.ts → types.ts
+  ├── patterns.ts → nodes.ts, colors.ts, layout.ts, types.ts
   ├── changeset.ts (types only, leaf)
   ├── plugin-types.ts (types only, leaf)
   └── diff.ts → plugin-types.ts, changeset.ts
@@ -112,13 +114,16 @@ All factories validate inputs, apply defaults (`visible: true`, `opacity: 1`), d
 ### Functions
 
 #### `hex(value: string): RgbaColor`
-Parses 6-digit hex strings (`"#ff0000"` or `"ff0000"`). Returns `{r, g, b, a}` with values normalized to 0–1. Alpha is always 1.0. Throws on invalid input with descriptive error message.
+Parses 6-digit or 8-digit hex strings (`"#ff0000"` or `"#ff000080"`). Returns `{r, g, b, a}` with values normalized to 0–1. For 6-digit hex, alpha is 1.0; for 8-digit, the last two digits set the alpha channel. Throws on invalid input with descriptive error message.
 
 #### `solid(hexValue: string, opacity = 1): SolidFill`
 Convenience wrapper creating `{type: 'SOLID', color, opacity, visible: true}`.
 
 #### `gradient(stops: {hex: string, position: number}[], angle = 0): GradientFill`
-Creates `GRADIENT_LINEAR` fill. Stops use 0–1 positions. Angle in degrees (0° = left-to-right). Transform matrix computed via rotation around center (0.5, 0.5) in UV space.
+Creates `GRADIENT_LINEAR` fill. Stops use 0–1 positions. Angle in degrees (0° = left-to-right). Transform matrix computed via rotation around center (0.5, 0.5) in UV space. Stops support 8-digit hex for per-stop alpha.
+
+#### `radialGradient(stops: {hex: string, position: number}[], opts?): RadialGradientFill`
+Creates `GRADIENT_RADIAL` fill. Optional `center` (default `{x: 0.5, y: 0.5}`) and `radius` (default `0.5`) in 0–1 normalized coordinates. The renderer computes actual pixel center and radius from node dimensions.
 
 #### `defineTokens(tokens: Record<string, string>): ColorTokenMap`
 Eagerly parses all hex values at definition time. Returns opaque `ColorTokenMap` with `readonly _tokens` field.
@@ -129,7 +134,7 @@ Looks up token by name. Throws descriptive error listing available tokens if not
 ### Fill Types
 
 ```typescript
-type Fill = SolidFill | GradientFill;  // Discriminated union via 'type' field
+type Fill = SolidFill | GradientFill | RadialGradientFill;  // Discriminated union via 'type' field
 
 interface SolidFill {
   type: 'SOLID'; color: RgbaColor; opacity: number; visible: boolean;
@@ -139,9 +144,16 @@ interface GradientFill {
   type: 'GRADIENT_LINEAR'; gradientStops: GradientStop[];
   gradientTransform: number[][]; opacity: number; visible: boolean;
 }
+
+interface RadialGradientFill {
+  type: 'GRADIENT_RADIAL'; gradientStops: GradientStop[];
+  center?: { x: number; y: number };  // 0-1 normalized, default (0.5, 0.5)
+  radius?: number;                      // 0-1 normalized, default 0.5
+  opacity: number; visible: boolean;
+}
 ```
 
-**Evidence**: `src/colors.ts:1-77`, `src/types.ts:5-33`
+**Evidence**: `src/colors.ts:1-96`, `src/types.ts:5-42`
 
 ---
 
@@ -195,6 +207,7 @@ Sets `direction: 'VERTICAL'` with same merge behavior.
 | `letterSpacing` | `{value, unit: 'PERCENT' \| 'PIXELS'}` | — | Dual-unit letter spacing |
 | `textAlignHorizontal` | `'LEFT' \| 'CENTER' \| 'RIGHT'` | — | Horizontal alignment |
 | `textAutoResize` | `'NONE' \| 'WIDTH_AND_HEIGHT' \| 'HEIGHT'` | — | Text sizing mode (HEIGHT = fixed width, auto height) |
+| `textDecoration` | `'NONE' \| 'UNDERLINE' \| 'STRIKETHROUGH'` | — | Text decoration line |
 | `color` | `string` | — | Hex shorthand (auto-converted to fill) |
 
 The `text()` factory accepts `TextStyle & ChildLayoutProps & { size?: { x: number; y?: number } }`, allowing typography, layout control, and explicit width constraint in a single call. The `color` shorthand is auto-converted to a `SolidFill` via `parseHex()`. When `textAutoResize: 'HEIGHT'` is set with an explicit `size.x`, the text wraps at the given width and auto-calculates height.
@@ -319,6 +332,28 @@ This prevents caller mutations from affecting created nodes. Verified by tests: 
 All factories are pure functions — same inputs always produce structurally identical outputs, with no side effects or global state.
 
 **Evidence**: `src/nodes.ts:21,26,78,110,122,132,147`, `src/nodes.test.ts:38-44`
+
+---
+
+## Authoring Pattern Helpers
+**Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
+
+The `patterns.ts` module provides pre-built helper functions for common UI patterns, reducing boilerplate in DSL files. All helpers return `DslNode` instances and are composable with the core API.
+
+### Functions
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `card` | `card(name, opts?)` | Frame with `clipContent`, `cornerRadius` (default 12), vertical layout |
+| `badge` | `badge(label, bgColor?, textColor?, opts?)` | Pill shape (9999 radius), centered text |
+| `statBlock` | `statBlock(value, label, opts?)` | Large value + small label, vertically centered |
+| `navBar` | `navBar(brand, links, opts?)` | SPACE_BETWEEN horizontal layout with brand + nav links |
+| `sectionHeader` | `sectionHeader(title, opts?)` | Padded frame with large title text |
+| `divider` | `divider(color?, height?)` | Thin rectangle with `layoutSizingHorizontal: 'FILL'` |
+
+All helpers use sensible defaults (e.g., white card background, 12px spacing) that can be overridden via the `opts` parameter.
+
+**Evidence**: `src/patterns.ts:1-173`
 
 ---
 
@@ -450,11 +485,17 @@ npm run test     # vitest run
 
 ### Bundled Assets
 
-The `fonts/` directory includes Inter font family:
+The `fonts/` directory includes two font families:
+
+**Inter** (Latin script):
 - `Inter-Regular.otf` (400)
 - `Inter-Medium.otf` (500)
 - `Inter-SemiBold.otf` (600)
 - `Inter-Bold.otf` (700)
+
+**Noto Sans JP** (CJK/Japanese script):
+- `NotoSansJP-Regular.ttf` (400)
+- `NotoSansJP-Bold.ttf` (700)
 
 ### Test Coverage
 

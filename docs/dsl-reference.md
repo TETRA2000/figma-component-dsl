@@ -52,7 +52,7 @@ Example skeleton:
 ```ts
 import {
   frame, text, rectangle,
-  solid, gradient,
+  solid, gradient, radialGradient,
   horizontal, vertical,
 } from '@figma-dsl/core';
 
@@ -98,6 +98,7 @@ frame('Card', {
 | `fills` | `Fill[]` | Background fills |
 | `strokes` | `Stroke[]` | Border strokes |
 | `cornerRadius` | `number` | Border radius for all corners |
+| `cornerRadii` | `{ topLeft, topRight, bottomLeft, bottomRight }` | Per-corner border radii (overrides `cornerRadius`) |
 | `opacity` | `number` | 0–1 opacity |
 | `visible` | `boolean` | Visibility toggle |
 | `children` | `Node[]` | Child nodes |
@@ -141,6 +142,7 @@ text('Long description text that wraps at 228px width.', {
 | `size` | `{ x: number, y?: number }` | Explicit size constraint. Used with `textAutoResize: 'HEIGHT'` for width-constrained wrapping |
 | `lineHeight` | `{ value: number, unit: 'PERCENT' \| 'PIXELS' }` | Line height |
 | `letterSpacing` | `{ value: number, unit: 'PERCENT' \| 'PIXELS' }` | Letter spacing |
+| `textDecoration` | `'NONE' \| 'UNDERLINE' \| 'STRIKETHROUGH'` | Text decoration (underline or strikethrough) |
 | `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | Horizontal sizing mode |
 
 #### `ellipse(name, options)`
@@ -358,11 +360,31 @@ fills: [
 ]
 ```
 
-**Stop format:**
+Gradient stops support 8-digit hex with alpha (e.g., `#FF000080` for 50% red).
+
+#### `radialGradient(stops, opts?)`
+
+Creates a radial gradient fill.
+
+```ts
+fills: [
+  radialGradient([
+    { hex: '#ffffff', position: 0 },       // Center color
+    { hex: '#000000', position: 1 },       // Edge color
+  ], { center: { x: 0.5, y: 0.3 }, radius: 0.6 })
+]
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `center` | `{ x: number, y: number }` | `{ x: 0.5, y: 0.5 }` | Center position (0–1 normalized) |
+| `radius` | `number` | `0.5` | Gradient radius (0–1 normalized) |
+
+**Stop format (shared by `gradient` and `radialGradient`):**
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `hex` | `string` | Color in hex format |
+| `hex` | `string` | Color in hex format (6 or 8 digit, e.g., `#ff0000` or `#ff000080`) |
 | `position` | `number` | Position along gradient (0–1) |
 
 #### `hex(colorStr)`
@@ -468,7 +490,14 @@ bin/figma-dsl export examples/navbar.dsl.ts -o output/navbar.figma.json
 
 ```bash
 bin/figma-dsl render output/navbar.json -o output/navbar.png
+bin/figma-dsl render output/navbar.json -o output/navbar-debug.png --debug-layout
 ```
+
+| Parameter | Description |
+|-----------|-------------|
+| First argument | Path to compiled `.json` file |
+| `-o` | Output PNG file path |
+| `--debug-layout` | Overlay layout debug info (frame borders, padding areas, computed sizes) |
 
 ### `compare` — Compare two rendered PNGs
 
@@ -602,7 +631,51 @@ Each `.figma.json` file follows this structure:
 
 ## Authoring Patterns
 
-### Helper Functions
+### Built-in Pattern Helpers
+
+The `@figma-dsl/core` package includes pre-built pattern helpers for common UI elements. Import them alongside the core API:
+
+```ts
+import { card, badge, statBlock, navBar, sectionHeader, divider } from '@figma-dsl/core';
+```
+
+#### `card(name, opts?)`
+Frame with `clipContent`, `cornerRadius`, and vertical layout.
+```ts
+card('ProductCard', { width: 300, cornerRadius: 16, spacing: 12, children: [...] })
+```
+
+#### `badge(label, bgColor?, textColor?, opts?)`
+Pill-shaped frame (9999 radius) with centered text.
+```ts
+badge('NEW', '#7C3AED', '#FFFFFF', { fontSize: 11 })
+```
+
+#### `statBlock(value, label, opts?)`
+Vertical frame with large value + small label.
+```ts
+statBlock('1,234', 'Users', { valueColor: '#1d1d1f' })
+```
+
+#### `navBar(brand, links, opts?)`
+Horizontal SPACE_BETWEEN layout with brand text and nav links.
+```ts
+navBar('Acme', ['Products', 'Pricing', 'Docs'], { width: 1440 })
+```
+
+#### `sectionHeader(title, opts?)`
+Padded frame with large title text.
+```ts
+sectionHeader('Features', { fontSize: 32, color: '#111827' })
+```
+
+#### `divider(color?, height?)`
+Thin horizontal line spanning full width via `layoutSizingHorizontal: 'FILL'`.
+```ts
+divider('#E5E7EB')
+```
+
+### Custom Helper Functions
 
 Extract repeated structures into TypeScript functions for reuse:
 
@@ -918,9 +991,26 @@ These are limitations of the DSL pipeline itself (compiler/renderer), distinct f
 
 | Limitation | Description | Workaround |
 |------------|-------------|------------|
-| No per-stop gradient alpha | Gradient stops only accept 6-digit hex (`#rrggbb`). 8-digit hex with alpha (`#rrggbbaa`) causes a compile error. | Use `solid(hex, opacity)` for semi-transparent fills instead of gradient stops with alpha. |
 | No absolute positioning in auto-layout | DSL auto-layout does not support overlapping children like CSS `position: absolute`. | Use invisible spacers (`opacity: 0` rectangles) to push content, or use separate stacked frames. |
 | Gradient angle approximation | Gradient angles are mapped to Figma's gradient handle positions, which may differ slightly from CSS `linear-gradient()` angles. | Test visually and adjust angle if needed. |
+| No shadow/blur effects | Drop shadows, inner shadows, and blur effects are not supported. | Use layered frames with gradient fills to approximate shadow effects. |
+| No dashed/dotted strokes | Stroke dash patterns are not supported. | Use rectangles as visual separators. |
+| CJK font coverage | CJK text uses Noto Sans JP; other CJK scripts (Chinese, Korean) may render with fallback glyphs. | Stick to Japanese text for best results. |
+
+### Resolved Limitations
+
+These limitations from earlier versions have been fixed:
+
+| Previously | Resolution |
+|------------|------------|
+| ~~No per-stop gradient alpha~~ | 8-digit hex (`#rrggbbaa`) is now supported in gradient stops. |
+| ~~Single stroke only~~ | Multiple strokes are now rendered (layered in order). |
+| ~~Stroke alignment ignored~~ | `INSIDE`, `CENTER`, and `OUTSIDE` alignment are now implemented. |
+| ~~No radial gradients~~ | `radialGradient()` is now supported. |
+| ~~Inter font only~~ | CJK text is auto-detected and rendered using Noto Sans JP. |
+| ~~No canvas reuse~~ | Canvas pooling (`acquireCanvas`/`releaseCanvas`) is now used in batch operations. |
+| ~~No text decoration~~ | `textDecoration: 'UNDERLINE' \| 'STRIKETHROUGH'` is now supported. |
+| ~~No compiler validation~~ | `validateNode()` now checks cornerRadius, RGBA bounds, strokeWeight, fontSize. |
 
 ---
 
