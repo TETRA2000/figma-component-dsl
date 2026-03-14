@@ -88,7 +88,12 @@ function convertToPluginNode(node: FigmaNodeDict): PluginNodeDef {
     }));
   }
 
-  if (node.cornerRadius !== undefined) result.cornerRadius = node.cornerRadius;
+  if (node.cornerRadius !== undefined) {
+    // Clamp corner radius to half the smallest dimension.
+    // Canvas 2D roundRect() does this automatically, but Figma does not.
+    const maxRadius = Math.min(node.size.x, node.size.y) / 2;
+    result.cornerRadius = Math.min(node.cornerRadius, maxRadius);
+  }
   if (node.clipContent) result.clipContent = node.clipContent;
 
   // Auto-layout
