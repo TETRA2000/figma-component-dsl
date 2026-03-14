@@ -90,6 +90,9 @@ Registers TTF/OTF fonts from directory. Idempotent — skips if already initiali
 #### `textMeasurer.measure(characters: string, style): TextMeasurement`
 Computes text dimensions using canvas 2D context. Handles multi-line text. Returns `{ width, height }`.
 
+#### `textMeasurer.measureWrapped(characters: string, maxWidth: number, style): TextMeasurement`
+Computes text dimensions with word-wrapping at the given `maxWidth`. Splits on explicit newlines, then wraps each paragraph at word boundaries. Returns `{ width: maxWidth, height: totalLines × lineHeight }`. Used when `textAutoResize: 'HEIGHT'` is set with an explicit width.
+
 #### `resetTextMeasurer(): void`
 Clears initialization state. Used in tests.
 
@@ -206,7 +209,7 @@ Cascade order: per-side values (`padTop`, `padRight`, etc.) override shorthand v
 
 Computes intrinsic sizes for each node into `Map<DslNode, ResolvedSize>`:
 
-1. **TEXT nodes**: Use `TextMeasurer.measure()` → `{width, height}`
+1. **TEXT nodes**: Use `TextMeasurer.measure()` → `{width, height}`. When `textAutoResize: 'HEIGHT'` is set with an explicit `size.x`, uses `TextMeasurer.measureWrapped()` to compute height at the constrained width.
 2. **Leaf shapes** (no children): Use explicit `node.size` or `{0, 0}`
 3. **Containers with explicit FIXED size** (no autoLayout): Use `node.size`
 4. **Auto-layout containers**:
@@ -255,6 +258,7 @@ Computes child offsets into `Map<DslNode, {x, y}>`:
 
 For each TEXT node, generates:
 - **textData**: `{characters, lines[]}` (split by `\n`)
+- **textAutoResize**: Passthrough from `node.textAutoResize` or `style.textAutoResize` (if set)
 - **derivedTextData**: `{baselines[], fontMetaData[]}`
 
 **Baselines** (per line):
@@ -326,7 +330,7 @@ Root node always has identity (no parent). Translation is additive through the t
 - **Geometry**: `size: {x, y}`, `transform: number[3][3]`
 - **Visual**: `fillPaints: FigmaPaint[]`, `strokes: FigmaStroke[]`, `opacity`, `visible`, `cornerRadius`, `clipContent`
 - **Layout**: `stackMode`, `itemSpacing`, `padding*`, `primaryAxisAlignItems`, `counterAxisAlignItems`, `layoutSizingHorizontal/Vertical`
-- **Text**: `textData`, `derivedTextData`, `fontSize`, `fontFamily`, `textAlignHorizontal`
+- **Text**: `textData`, `derivedTextData`, `fontSize`, `fontFamily`, `textAlignHorizontal`, `textAutoResize`
 - **Component**: `componentPropertyDefinitions`, `componentId`, `overriddenProperties`
 - **Hierarchy**: `children: FigmaNodeDict[]`, `parentIndex: {guid, position}`
 

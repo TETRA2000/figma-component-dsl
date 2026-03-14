@@ -187,9 +187,10 @@ Sets `direction: 'VERTICAL'` with same merge behavior.
 | `lineHeight` | `{value, unit: 'PERCENT' \| 'PIXELS'}` | — | Dual-unit line height |
 | `letterSpacing` | `{value, unit: 'PERCENT' \| 'PIXELS'}` | — | Dual-unit letter spacing |
 | `textAlignHorizontal` | `'LEFT' \| 'CENTER' \| 'RIGHT'` | — | Horizontal alignment |
+| `textAutoResize` | `'NONE' \| 'WIDTH_AND_HEIGHT' \| 'HEIGHT'` | — | Text sizing mode (HEIGHT = fixed width, auto height) |
 | `color` | `string` | — | Hex shorthand (auto-converted to fill) |
 
-The `text()` factory accepts `TextStyle & ChildLayoutProps`, allowing both typography and layout control in a single call. The `color` shorthand is auto-converted to a `SolidFill` via `parseHex()`.
+The `text()` factory accepts `TextStyle & ChildLayoutProps & { size?: { x: number; y?: number } }`, allowing typography, layout control, and explicit width constraint in a single call. The `color` shorthand is auto-converted to a `SolidFill` via `parseHex()`. When `textAutoResize: 'HEIGHT'` is set with an explicit `size.x`, the text wraps at the given width and auto-calculates height.
 
 **Evidence**: `src/types.ts:65-74`, `src/nodes.ts:34-68`
 
@@ -248,7 +249,7 @@ All node types share a unified `DslNode` interface with optional type-specific f
 - `layoutGrow?`, `layoutSizingHorizontal?`, `layoutSizingVertical?`
 
 **Text** (TEXT only):
-- `characters`, `textStyle?`
+- `characters`, `textStyle?`, `textAutoResize?`
 
 **Component** (COMPONENT only):
 - `componentProperties?`

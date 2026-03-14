@@ -117,6 +117,15 @@ text('Hello World', {
   lineHeight: { value: 150, unit: 'PERCENT' },
   letterSpacing: { value: -0.5, unit: 'PERCENT' },
 })
+
+// Constrained-width text that wraps automatically
+text('Long description text that wraps at 228px width.', {
+  fontSize: 13,
+  color: '#6f6f6f',
+  lineHeight: { value: 150, unit: 'PERCENT' },
+  size: { x: 228 },
+  textAutoResize: 'HEIGHT',
+})
 ```
 
 **Options:**
@@ -127,6 +136,8 @@ text('Hello World', {
 | `fontWeight` | `number` | Font weight (100–900) |
 | `color` | `string` | Hex color shorthand (sets fills internally) |
 | `textAlignHorizontal` | `'LEFT' \| 'CENTER' \| 'RIGHT'` | Horizontal text alignment |
+| `textAutoResize` | `'NONE' \| 'WIDTH_AND_HEIGHT' \| 'HEIGHT'` | Text sizing mode. `HEIGHT` = fixed width (via `size.x`), auto height |
+| `size` | `{ x: number, y?: number }` | Explicit size constraint. Used with `textAutoResize: 'HEIGHT'` for width-constrained wrapping |
 | `lineHeight` | `{ value: number, unit: 'PERCENT' \| 'PIXELS' }` | Line height |
 | `letterSpacing` | `{ value: number, unit: 'PERCENT' \| 'PIXELS' }` | Letter spacing |
 | `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | Horizontal sizing mode |

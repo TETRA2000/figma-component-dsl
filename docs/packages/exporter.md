@@ -115,6 +115,7 @@ interface PluginNodeDef {
   fontSize?: number; fontFamily?: string;
   fontWeight?: number; fontStyle?: string;
   textAlignHorizontal?: string;
+  textAutoResize?: string;    // 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT'
   lineHeight?: { value: number; unit: string };
   letterSpacing?: { value: number; unit: string };
 
@@ -207,9 +208,10 @@ Layout sizing (`layoutSizingHorizontal/Vertical`) is exported independently if t
 
 When `node.textData` exists:
 - Extracts `characters`, `fontSize`, `fontFamily`, `textAlignHorizontal`
+- Extracts `textAutoResize` if present on the node (enables constrained-width text wrapping in the plugin)
 - Extracts `fontWeight` and `fontStyle` from first font metadata entry (`derivedTextData.fontMetaData[0]`)
 
-**Gap**: `lineHeight` and `letterSpacing` are declared in the `PluginNodeDef` interface but never populated during conversion. This is identified by all agents.
+**Gap**: `lineHeight` and `letterSpacing` are declared in the `PluginNodeDef` interface but never populated during conversion.
 
 **Evidence**: `src/exporter.ts:115-125`
 
@@ -295,7 +297,7 @@ Schema validation, auto-layout preservation, component properties, instance refe
 ## Known Limitations
 **Confidence**: 0.90 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-1. **lineHeight/letterSpacing gap**: Declared in `PluginNodeDef` but never populated during conversion.
+1. **lineHeight/letterSpacing gap**: Declared in `PluginNodeDef` but never populated during conversion (`textAutoResize` is now populated).
 2. **No input validation**: Assumes valid CompileResult from compiler (no null checks for children, no enum validation).
 3. **Schema version hardcoded**: No migration strategy for breaking schema changes.
 4. **Type parity risk**: `PluginNodeDef` is independently defined in both exporter and plugin packages — risk of drift.
