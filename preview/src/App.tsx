@@ -1,7 +1,7 @@
-import { NeonGamingShowcase } from './pages/NeonGamingShowcase';
+import { AnalyticsDashboardShowcase } from './pages/AnalyticsDashboardShowcase';
 
 function App() {
-  return <NeonGamingShowcase />;
+  return <AnalyticsDashboardShowcase />;
 }
 
 export default App;
