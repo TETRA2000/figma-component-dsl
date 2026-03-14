@@ -31,26 +31,41 @@ npx vitest run
 
 ```bash
 # Compile DSL to Figma node dictionary
-npx figma-dsl compile button.dsl.ts -o compiled.json
+bin/figma-dsl-compile button.dsl.ts -o compiled.json
 
 # Render DSL to PNG
-npx figma-dsl render button.dsl.ts -o button.png
+bin/figma-dsl-render button.dsl.ts -o button.png
 
 # Capture a React component screenshot
-npx figma-dsl capture http://localhost:5173 -o screenshot.png -v 1280x720
+bin/figma-dsl-capture http://localhost:5173 -o screenshot.png -v 1280x720
 
 # Compare two images
-npx figma-dsl compare dsl-render.png react-screenshot.png -t 95 -d diff.png
+bin/figma-dsl-compare dsl-render.png react-screenshot.png -t 95 -d diff.png
 
 # Full pipeline: compile → render → capture → compare
-npx figma-dsl pipeline button.dsl.ts -u http://localhost:5173 -t 95
+bin/figma-dsl-pipeline button.dsl.ts -u http://localhost:5173 -t 95
 
 # Export for Figma plugin
-npx figma-dsl export button.dsl.ts -o plugin-input.json
+bin/figma-dsl-export button.dsl.ts -o plugin-input.json
 
 # Validate component DSL compatibility
-npx figma-dsl validate src/components/Button
-npx figma-dsl validate src/components/ --format json --strict
+bin/figma-dsl-validate src/components/Button
+bin/figma-dsl-validate src/components/ --format json --strict
+
+# Batch compile, render, and export multiple DSL files
+bin/figma-dsl-batch examples/ -o output/
+
+# Batch compare DSL renders against Figma captures
+bin/figma-dsl-batch-compare output/dsl/ output/figma/ -o output/report.json
+
+# Capture component images from Figma via REST API
+bin/figma-dsl-capture-figma --file-key FILE_KEY --node-map node-map.json -o output/figma/
+
+# Generate calibration test suite DSL files
+bin/figma-dsl-generate-test-suite -o calibration/tests/
+
+# Run full calibration pipeline (generate → batch → capture-figma → compare)
+bin/figma-dsl-calibrate -o calibration/ --file-key FILE_KEY
 ```
 
 **Exit codes:** 0 = success, 1 = comparison below threshold, 2 = runtime error.
@@ -97,6 +112,21 @@ DSL Definition (.dsl.ts)
 │  Export  │────▶│  Plugin  │──▶ Figma
 │  (JSON)  │     │ (import) │
 └─────────┘     └──────────┘
+```
+
+## Calibration
+
+The calibration pipeline measures rendering fidelity by comparing DSL-rendered PNGs against Figma's own output. It auto-generates test DSL files covering property categories (corner radius, fills, strokes, auto-layout, typography, opacity, etc.), batch compiles and renders them, optionally captures the corresponding components from a Figma file via REST API, and produces a detailed comparison report with per-category similarity breakdowns and worst-case differences.
+
+```bash
+# Full calibration workflow (all steps in one command)
+bin/figma-dsl-calibrate -o calibration/ --file-key FILE_KEY
+
+# Or run each step individually:
+bin/figma-dsl-generate-test-suite -o calibration/tests/
+bin/figma-dsl-batch calibration/tests/ -o calibration/output/
+bin/figma-dsl-capture-figma --file-key FILE_KEY --node-map calibration/output/node-map.json -o calibration/figma/
+bin/figma-dsl-batch-compare calibration/output/dsl/ calibration/figma/ -o calibration/report.json
 ```
 
 ## Preview App
