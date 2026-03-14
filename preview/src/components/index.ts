@@ -23,3 +23,6 @@ export { McButton } from './McButton/McButton';
 export { McBadge } from './McBadge/McBadge';
 export { McMenuCard } from './McMenuCard/McMenuCard';
 export { McOrderBanner } from './McOrderBanner/McOrderBanner';
+export { PropertyCard } from './PropertyCard/PropertyCard';
+export { PriceBadge } from './PriceBadge/PriceBadge';
+export { FilterChip } from './FilterChip/FilterChip';
