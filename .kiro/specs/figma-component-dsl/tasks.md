@@ -1,7 +1,7 @@
 # Implementation Plan
 
-- [ ] 1. Project setup and monorepo infrastructure
-- [ ] 1.1 Initialize npm workspaces monorepo with shared TypeScript configuration
+- [x] 1. Project setup and monorepo infrastructure
+- [x] 1.1 Initialize npm workspaces monorepo with shared TypeScript configuration
   - Set up workspace packages: `packages/dsl-core` (types, virtual API, helpers, compiler), `packages/cli` (pipeline orchestration), `packages/plugin` (Figma plugin runtime)
   - Configure TypeScript 5.9+ strict mode with no `any` and ES2023 target as shared base configuration
   - Add vitest as the shared test runner across TypeScript packages
@@ -10,8 +10,8 @@
   - Verify development installation works: `npm install` for TypeScript packages, `pip install -e .` for Python renderer
   - _Requirements: 10.1_
 
-- [ ] 2. DSL Core — Shared type hierarchy and VirtualFigmaApi
-- [ ] 2.1 Define the shared DSL type hierarchy
+- [x] 2. DSL Core — Shared type hierarchy and VirtualFigmaApi
+- [x] 2.1 Define the shared DSL type hierarchy
   - Define `DslSceneNode` base interface with common properties: name, x, y, width, height, rotation, opacity, visible, fills, strokes, strokeWeight, cornerRadius, clipContent, children, appendChild(), resize()
   - Define `DslFrameNode` extending `DslSceneNode` with auto-layout properties: layoutMode, itemSpacing, paddingTop/Right/Bottom/Left, primaryAxisAlignItems, counterAxisAlignItems, layoutSizingHorizontal, layoutSizingVertical
   - Define `DslTextNode` extending `DslSceneNode` with text properties: characters, fontFamily, fontWeight, fontSize, lineHeight, letterSpacing, textAlignHorizontal
@@ -23,7 +23,7 @@
   - Define `DslNodeType` discriminated union: FRAME, TEXT, RECTANGLE, ELLIPSE, GROUP, COMPONENT, COMPONENT_SET, INSTANCE
   - _Requirements: 1.1, 1.2, 1.6, 1.7, 1.8, 1.9, 1.10_
 
-- [ ] 2.2 Implement the DslFigmaApi interface and VirtualFigmaApi
+- [x] 2.2 Implement the DslFigmaApi interface and VirtualFigmaApi
   - Define the `DslFigmaApi` interface with factory methods: createFrame(), createText() (async, returning Promise<DslTextNode>), createRectangle(), createEllipse(), createComponent(), createGroup(), combineAsVariants()
   - Implement `VirtualFigmaApi` returning VirtualNode objects that implement the DSL type interfaces with mutable property setters
   - Implement appendChild() on container nodes, maintaining insertion-order children arrays with correct parent-child relationships
@@ -36,7 +36,7 @@
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.11, 1.12, 5.1, 5.2, 5.3, 5.4, 5.5_
   - _Contracts: DslFigmaApi, FigmaApiAdapter_
 
-- [ ] 2.3 (P) Add unit tests for VirtualFigmaApi and DSL types
+- [x] 2.3 (P) Add unit tests for VirtualFigmaApi and DSL types
   - Test that createFrame(), createText(), createRectangle(), createEllipse(), createComponent() produce nodes with correct types and default values
   - Test that appendChild() builds correct tree hierarchies with parent-child relationships and insertion-order children
   - Test combineAsVariants() postconditions: reparenting, Key=Value naming validation, ComponentSetNode creation
@@ -45,8 +45,8 @@
   - Test property constraint validation: layoutMode rejection on non-container nodes, characters on non-TEXT nodes
   - _Requirements: 1.1, 1.5, 1.11, 5.3, 5.4, 5.5_
 
-- [ ] 3. DSL Core — Shared helper functions
-- [ ] 3.1 (P) Implement color and fill helpers
+- [x] 3. DSL Core — Shared helper functions
+- [x] 3.1 (P) Implement color and fill helpers
   - Implement hexToRGB() converting 6-digit hex strings (with # prefix) to { r, g, b } in 0.0–1.0 range
   - Implement solidPaint() accepting hex string and optional opacity, returning DslSolidPaint compatible with Figma's paint format
   - Implement gradientPaint() accepting color stops array and angle in degrees, computing rotation transform matrix [[cos(θ), sin(θ), 0.5], [-sin(θ), cos(θ), 0.5]]
@@ -54,7 +54,7 @@
   - Validate hex string format and report clear errors for invalid inputs
   - _Requirements: 3.1, 3.2, 3.3, 3.5, 3.6_
 
-- [ ] 3.2 (P) Implement auto-layout and typography helpers
+- [x] 3.2 (P) Implement auto-layout and typography helpers
   - Implement setAutoLayout() accepting a DslFrameNode and AutoLayoutOptions, setting layoutMode, itemSpacing, padding (uniform via padX/padY, or per-side padTop/padRight/padBottom/padLeft), primaryAxisAlignItems, counterAxisAlignItems, and sizing mode properties
   - Support separate widthSizing and heightSizing overrides alongside unified sizing option
   - Map padX to paddingLeft + paddingRight, padY to paddingTop + paddingBottom
@@ -62,7 +62,7 @@
   - These helpers are pure data transforms identical in both virtual and plugin environments
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 3.4_
 
-- [ ] 3.3 (P) Add unit tests for shared helpers
+- [x] 3.3 (P) Add unit tests for shared helpers
   - Test hexToRGB with valid hex strings, edge cases (black #000000, white #FFFFFF), and invalid inputs
   - Test solidPaint output matches Figma SolidPaint format with type, color, and opacity fields
   - Test gradientPaint rotation matrix correctness for 0°, 45°, 90°, 180° angles

@@ -1,14 +1,15 @@
 {
-  "name": "@figma-dsl/core",
+  "name": "@figma-dsl/plugin",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
   "dependencies": {
-    "opentype.js": "^1.3.4"
+    "@figma-dsl/core": "*"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.0.0"
   }
 }
