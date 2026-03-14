@@ -20,7 +20,7 @@ The project follows a **specification-driven, research-first** approach. Referen
 **Location**: `.claude/skills/{skill-name}/`
 **Purpose**: Claude AI Skills with SKILL.md entrypoint and supporting files
 **Convention**: SKILL.md with YAML frontmatter (`name`, `description`), markdown instructions, optional `references/` subdirectory, optional `evals/`, `scripts/`
-**Active Skills**: calibrate, create-landing-page, create-react-component, export-to-figma, export-to-html, magi-docs-writer (plus `shared/` for common references like component-registry and design-tokens)
+**Active Skills**: calibrate, create-landing-page, create-react-component, dogfooding, export-to-figma, export-to-html, magi-docs-writer, playwright-cli (plus `shared/` for common references like component-registry and design-tokens)
 
 ### Specifications
 **Location**: `.kiro/specs/{feature-name}/`
