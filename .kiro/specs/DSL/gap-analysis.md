@@ -1,219 +1,112 @@
-# Gap Analysis: DSL Image Support Enhancement
+# Gap Analysis: DSL Image Support Enhancement (Post-Implementation)
 
-## 1. Current State Investigation
+## Analysis Summary
 
-### Key Files and Modules
-
-| Package | File | Lines | Role |
-|---------|------|-------|------|
-| `dsl-core` | `src/types.ts` | NodeType union, Fill discriminated union, DslNode interface | Core type system |
-| `dsl-core` | `src/nodes.ts` | 8 builder functions (frame, text, rectangle, ellipse, group, component, componentSet, instance) | DSL API |
-| `dsl-core` | `src/colors.ts` | Fill builders: `solid()`, `gradient()`, `radialGradient()`, `hex()`, `defineTokens()`, `token()` | Fill API |
-| `dsl-core` | `src/plugin-types.ts` | `PluginNodeDef`, `PluginInput` interfaces | Figma plugin format |
-| `dsl-core` | `src/diff.ts` | `diffNodes()`, `diffValues()` with epsilon tolerances | Changeset diffing |
-| `dsl-core` | `src/changeset.ts` | `ChangesetDocument`, `PropertyChange`, `ComponentChangeEntry` types | Changeset schema |
-| `compiler` | `src/compiler.ts` | `compileWithLayout()`, `compileNode()`, `mapNodeType()`, `convertFill()` | DSL → intermediate JSON |
-| `compiler` | `src/types.ts` | `FigmaNodeDict`, `FigmaNodeType`, `FigmaPaint` | Compiled output types |
-| `renderer` | `src/renderer.ts` | `renderNode()`, `applyFills()`, `RenderOptions` (with unused `assetDir`) | JSON → PNG |
-| `exporter` | `src/exporter.ts` | `convertToPluginNode()`, `generatePluginInput()` | JSON → Figma plugin JSON |
-| `plugin` | `src/code.ts` | 814 lines: import, serialize, baseline, changeset, edit tracking | Figma plugin |
-| `validator` | `src/rules/` | 10 validation rules for React components | DSL compatibility |
-| `cli` | `src/cli.ts` | 859 lines: 12 commands, no `--asset-dir` option | CLI orchestration |
-
-### Architecture Patterns
-
-- **Builder pattern**: All node factories (`frame()`, `rectangle()`) follow validate → create → spread defaults
-- **Fill discriminated union**: `Fill = SolidFill | GradientFill | RadialGradientFill` (no IMAGE type)
-- **Pipeline stages**: Each stage transforms types — DslNode → FigmaNodeDict → PluginNodeDef → Figma nodes
-- **Synchronous rendering**: `@napi-rs/canvas` rendering is synchronous; `loadImage()` from the same library is async
-- **Epsilon-based diffing**: Float comparisons use `COLOR_EPSILON`, `SIZE_EPSILON` tolerances
-- **Plugin data storage**: Baselines stored as JSON in Figma plugin data, 100KB limit per entry
-
-### Integration Surfaces
-
-- **Fill system**: `fills: Fill[]` on DslNode → `fillPaints: FigmaPaint[]` on FigmaNodeDict → `fills` on PluginNodeDef → Figma `Paint[]`
-- **Changeset flow**: `serializeNode()` → `diffNodes(baseline, current)` → `ChangesetDocument` → apply-changeset skill
-- **CLI path resolution**: `resolve()` from cwd, `pathToFileURL()` for dynamic imports
+- **Implementation Status**: All 10 task groups are marked complete with 390 tests passing across 20 test files. The core image pipeline (DSL → compile → render → export → plugin import → bidirectional sync) is fully implemented.
+- **Minor Gaps Identified**: 2 minor gaps found against requirements — one non-functional (informational metadata), one functional but low-impact.
+- **No Regressions**: Full test suite passes; existing non-image DSL files compile, render, and export without regression.
+- **Architecture Alignment**: Implementation follows the hybrid approach (Option C from design) — extending existing pipeline stages with new IMAGE handling while adding new files (`image-helpers.ts`, `image-loader.ts`, `image-refs.ts`) for distinct responsibilities.
+- **Effort**: Implementation is complete (was L scope as estimated). Remaining gaps are S (< 1 day).
 
 ---
 
-## 2. Requirements-to-Asset Map
+## Requirement-to-Asset Map
 
-### Requirement 1: DSL Image Node API
-| Need | Status | Gap |
-|------|--------|-----|
-| `IMAGE` in NodeType union | **Missing** | Must add to `dsl-core/src/types.ts` |
-| `image()` builder function | **Missing** | Must add to `dsl-core/src/nodes.ts` |
-| `src` option (path/URL) | **Missing** | New field on DslNode: `imageSrc?: string` |
-| `fit` option (FILL/FIT/CROP/TILE) | **Missing** | New field on DslNode: `imageScaleMode?: string` |
-| Export from index.ts | **Missing** | Already auto-exported via `export * from './nodes.js'` — no change needed |
-
-### Requirement 2: Image Fill on Existing Nodes
-| Need | Status | Gap |
-|------|--------|-----|
-| `ImageFill` in Fill union | **Missing** | Must extend `Fill` discriminated union in `types.ts` |
-| `imageFill()` builder | **Missing** | Must add to `colors.ts` |
-| Image fill layering | **Existing pattern** | Fill array ordering already works for layering |
-
-### Requirement 3: Compiler Image Handling
-| Need | Status | Gap |
-|------|--------|-----|
-| `IMAGE` in FigmaNodeType | **Missing** | `VECTOR` exists but `IMAGE` does not in `compiler/src/types.ts` |
-| `IMAGE` in FigmaPaint type | **Missing** | Only SOLID, GRADIENT_LINEAR, GRADIENT_RADIAL |
-| Image metadata in FigmaNodeDict | **Missing** | Need `imageSrc`, `imageScaleMode` fields |
-| `convertFill()` IMAGE case | **Missing** | Must extend switch statement |
-| `mapNodeType()` IMAGE case | **Missing** | Must extend switch/mapping |
-| Layout measurement for IMAGE | **Existing pattern** | IMAGE nodes use declared `size` like RECTANGLE/ELLIPSE — minimal change |
-
-### Requirement 4: Renderer Image Drawing
-| Need | Status | Gap |
-|------|--------|-----|
-| `assetDir` in RenderOptions | **Existing** | Declared but **unused** — wiring needed |
-| `loadImage()` from @napi-rs/canvas | **Research Needed** | Available in library; is it async-only or sync-compatible? |
-| IMAGE case in renderNode() switch | **Missing** | Must add case alongside RECTANGLE, ELLIPSE |
-| Scale mode rendering (FILL/FIT/CROP/TILE) | **Missing** | Requires sizing/clipping math |
-| cornerRadius clipping on images | **Existing pattern** | Already done for ROUNDED_RECTANGLE — reusable |
-| Placeholder on load failure | **Missing** | Need crosshatch/stripe drawing utility |
-| URL fetching + caching | **Missing** | Need HTTP fetch with session-level cache |
-| Batch image reuse | **Missing** | Need image cache keyed by source path/URL |
-
-### Requirement 5: Exporter Image Encoding
-| Need | Status | Gap |
-|------|--------|-----|
-| Base64 image embedding | **Missing** | Must read image file and encode to base64 |
-| Image metadata in PluginNodeDef | **Missing** | Need `imageData`, `imageScaleMode`, `imageDimensions` fields |
-| 4 MB size limit | **Missing** | Size check + warning logic |
-| Graceful error on load failure | **Missing** | Error marker pattern |
-
-### Requirement 6: Figma Plugin Image Import
-| Need | Status | Gap |
-|------|--------|-----|
-| `figma.createImage()` | **Missing** | Not used anywhere in plugin code |
-| Image fill application | **Missing** | `toFigmaPaints()` doesn't handle IMAGE type |
-| scaleMode mapping | **Missing** | Map DSL scale mode → Figma `ImagePaint.scaleMode` |
-| cornerRadius on image nodes | **Existing** | Plugin already sets `cornerRadius` on all node types |
-
-### Requirement 7: CLI Asset Resolution
-| Need | Status | Gap |
-|------|--------|-----|
-| `--asset-dir` CLI option | **Missing** | Not in parseArgs; `assetDir` in RenderOptions is unused |
-| Relative path resolution from DSL source | **Missing** | CLI currently resolves from cwd |
-| Per-file resolution in batch mode | **Missing** | Batch processor uses uniform options |
-
-### Requirement 8: Image Format and Validation
-| Need | Status | Gap |
-|------|--------|-----|
-| Image validation rule | **Missing** | No image-related rule in validator's 10 rules |
-| Format checking (PNG/JPEG/WebP) | **Missing** | Need file extension + magic byte check |
-| URL syntax validation | **Missing** | Simple URL.parse() check |
-| File size warning (>10 MB) | **Missing** | Need stat check |
-
-### Requirement 9: Bidirectional Image Sync
-| Need | Status | Gap |
-|------|--------|-----|
-| Image fills in baseline snapshot | **Missing** | `serializeFills()` skips IMAGE paints |
-| Image change detection | **Missing** | Edit log doesn't track image hash changes |
-| `figma.getImageByHash()` for export | **Missing** | Not used in plugin |
-| Image data in changeset JSON | **Missing** | `ChangesetDocument` has no image payload field |
-| Changeset application for images | **Missing** | apply-changeset skill has no image property mapping |
-| Scale mode change tracking | **Missing** | `PROPS_TO_COMPARE` in diff.ts doesn't include image properties |
+| Req | Summary | Status | Assets | Notes |
+|-----|---------|--------|--------|-------|
+| 1.1–1.7 | IMAGE node builder | ✅ Complete | `dsl-core/src/nodes.ts:166` (`image()`), `types.ts` (IMAGE NodeType, ImageProps, ImageScaleMode) | Exported via index.ts |
+| 2.1–2.4 | Image fill builder | ✅ Complete | `dsl-core/src/colors.ts:76` (`imageFill()`), `types.ts` (ImageFill) | Layering with solid/gradient fills verified in tests |
+| 3.1–3.4 | Compiler handling | ✅ Complete | `compiler/src/compiler.ts` (IMAGE fill conversion, node passthrough, path validation) | Auto-layout sizing consistent with RECT/ELLIPSE |
+| 4.1–4.8 | Renderer drawing | ✅ Complete | `renderer/src/renderer.ts` (IMAGE case, fills), `renderer/src/image-loader.ts` (preload/cache/resolve), `dsl-core/src/image-helpers.ts` (scale math) | All 4 scale modes, cornerRadius clipping, crosshatch placeholder |
+| 5.1 | Base64 embedding | ✅ Complete | `exporter/src/exporter.ts` (`embedImageData()`, `convertFillForPlugin()`) | Synchronous via readFileSync |
+| 5.2 | Image metadata | ⚠️ Partial | `exporter/src/exporter.ts:27` | `imageDimensions` declared in return type but never populated — format and scaleMode are included |
+| 5.3 | 4 MB size warning | ✅ Complete | `exporter/src/exporter.ts:42` | Checks buffer.length against 4 MB threshold |
+| 5.4 | Error handling | ✅ Complete | `exporter/src/exporter.ts:50` | Returns `imageError` marker on read failure |
+| 6.1–6.4 | Plugin import | ✅ Complete | `plugin/src/code.ts` (`toFigmaPaints()`, `applyFillsWithImages()`) | Uses `figma.base64Decode` + `figma.createImage`, placeholder on failure |
+| 7.1 | Compile path resolution | ✅ N/A | Compiler validates syntax only; resolution happens at render time | Correct per design |
+| 7.2–7.3 | Render --asset-dir | ✅ Complete | `cli/src/cli.ts:119,162` | Defaults to input file's parent directory |
+| 7.4 | Batch image resolution | ⚠️ Gap | `cli/src/batch-processor.ts` | No image preloading or --asset-dir in batch command |
+| 8.1–8.4 | Image validation | ✅ Complete | `validator/src/rules/image-refs.ts` | File existence, format check, URL syntax, 10 MB warning |
+| 9.1 | Baseline serialization | ✅ Complete | `plugin/src/code.ts` (`serializeFills()`) | Stores imageHash + scaleMode (not bytes) |
+| 9.2–9.6 | Change detection | ✅ Complete | `plugin/src/code.ts` (`computeChangeset()`), `dsl-core/src/diff.ts` | Async changeset with `getBytesAsync()`, error markers for missing images |
+| 9.7–9.8 | Changeset application | ✅ Complete | `dsl-core/src/changeset.ts` (`imageData` field on PropertyChange) | Type infrastructure in place |
+| 9.9–9.10 | Image byte retrieval | ✅ Complete | `plugin/src/code.ts` (`embedImageDataForChange()`) | Uses `figma.getImageByHash()` + `getBytesAsync()` |
 
 ---
 
-## 3. Implementation Approach Options
+## Gap Details
 
-### Option A: Extend Existing Components (Recommended)
+### Gap 1: Exporter `imageDimensions` Not Populated (Req 5.2) — Low Risk
 
-Add image support by extending existing types, functions, and switch statements across all packages.
+**Current state**: The `embedImageData()` function at `exporter/src/exporter.ts:24` declares `imageDimensions` in its return type but never populates it. The function returns `imageData` (base64) and `imageFormat` but has no code to extract image width/height.
 
-**Changes per package:**
+**Impact**: Plugin import works correctly because Figma's API creates images from bytes and determines dimensions internally. This metadata is informational only — no downstream consumer uses it.
 
-| Package | Files Modified | Nature of Change |
-|---------|---------------|-----------------|
-| `dsl-core` | `types.ts`, `nodes.ts`, `colors.ts`, `plugin-types.ts`, `diff.ts` | Add IMAGE to unions, new builders, new fields |
-| `compiler` | `types.ts`, `compiler.ts` | Add IMAGE cases to mapNodeType, convertFill |
-| `renderer` | `renderer.ts` | Add IMAGE rendering with loadImage, scale modes |
-| `exporter` | `exporter.ts` | Add base64 encoding, image metadata mapping |
-| `plugin` | `code.ts` | Add createImage, serializeFills IMAGE case, changeset image data |
-| `validator` | `rules/image-validation.ts` | New rule file (only new file needed) |
-| `cli` | `cli.ts` | Add `--asset-dir` option, pass to renderer |
+**Options**:
+- **A) Parse image headers**: Read PNG/JPEG/WebP header bytes to extract dimensions without loading the full image. No new dependency, ~20 lines of code.
+- **B) Accept as-is**: The dimensions are unused by any consumer. Remove the field from the return type to avoid confusion.
 
-**Trade-offs:**
-- ✅ Follows established pipeline architecture perfectly
-- ✅ Each change is small and localized within its package
-- ✅ No new packages or architectural concepts
-- ✅ Image nodes and fills integrate naturally with existing auto-layout, opacity, clipping
-- ❌ Touches many files across many packages (wide but shallow)
-- ❌ Renderer becomes async (loadImage is async in @napi-rs/canvas)
+**Recommendation**: Option B — remove unused `imageDimensions` from the return type signature, or add a TODO comment.
 
-### Option B: New Image Asset Package
+### Gap 2: Batch Command Missing Image Support (Req 7.4) — Medium Risk
 
-Create a new `@figma-dsl/image-assets` package responsible for all image loading, caching, format validation, and base64 encoding.
+**Current state**: `cmdBatch()` at `cli/src/cli.ts:466` delegates to `processBatch()` at `cli/src/batch-processor.ts`, which has no image awareness — no `--asset-dir` option, no `collectImageSources()` call, no `preloadImages()` call.
 
-**New package responsibilities:**
-- Image loading (local files + URL fetching)
-- Format detection and validation
-- Base64 encoding/decoding
-- Session-level caching
-- Scale mode calculations (FILL/FIT/CROP/TILE)
+**Impact**: Batch rendering of DSL files containing images will show crosshatch placeholders instead of real images. The pipeline won't crash (graceful degradation), but visual output will be incorrect for image-containing DSL files.
 
-**Trade-offs:**
-- ✅ Clean separation of image concerns
-- ✅ Reusable across renderer, exporter, and CLI
-- ✅ Easier to test image logic in isolation
-- ❌ Introduces a new package and dependency between packages
-- ❌ Overkill for what is primarily a data-flow concern
-- ❌ More files to navigate for a conceptually simple feature
+**Fix**: Modify `processBatch()` to:
+1. Accept optional `assetDir` parameter
+2. For each DSL file, collect image sources from compiled output
+3. Preload images using file's parent directory (or provided assetDir) as base
+4. Pass image cache to renderer
+5. Add `--asset-dir` option to `cmdBatch()` parseArgs
 
-### Option C: Hybrid Approach
-
-Extend existing packages for type definitions and pipeline integration (Option A), but extract image loading/caching utilities into a shared module within `dsl-core`.
-
-**Structure:**
-- `dsl-core/src/image-utils.ts` — shared loading, caching, format validation, scale math
-- All other packages extend their existing files, importing from `image-utils`
-
-**Trade-offs:**
-- ✅ Keeps pipeline integration in existing files
-- ✅ Shared image utilities avoid duplication between renderer and exporter
-- ✅ No new npm package, just one new module
-- ❌ Slightly more complex than pure Option A
+**Effort**: S (< 1 day)
 
 ---
 
-## 4. Research Needed (for Design Phase)
+## Design Deviations (Acceptable)
 
-1. **@napi-rs/canvas `loadImage()` behavior**: Is it async-only? Can the renderer remain synchronous by pre-loading all images before rendering? What formats does it support natively?
-2. **Figma Plugin API `createImage()` + `getImageByHash()`**: Exact API signatures, size limits, supported formats, and whether base64 or Uint8Array is required
-3. **Plugin data size limits**: Baseline snapshots with embedded image data may exceed the 100KB `PLUGIN_DATA_SIZE_LIMIT` — need strategy (hash references vs. embedded data)
-4. **URL image fetching**: Use Node's native `fetch()` (Node 22+) or `@napi-rs/canvas` `loadImage(url)` directly? Caching strategy for batch operations.
-5. **Scale mode math**: Exact algorithms for FILL (cover), FIT (contain), CROP (centered crop), TILE (repeat) — particularly for non-square images in non-square frames
-
----
-
-## 5. Implementation Complexity & Risk
-
-**Effort: L (1–2 weeks)**
-Justification: 9 requirements across 7+ packages, each requiring type changes, logic additions, and tests. The renderer async migration and Figma plugin image APIs add integration complexity.
-
-**Risk: Medium**
-Justification: All changes extend established patterns (new node type, new fill type, new switch cases). The main unknowns are @napi-rs/canvas async image loading and Figma plugin image API behavior, both of which are well-documented libraries. No architectural shifts required.
+| Deviation | Design Spec | Actual Implementation | Assessment |
+|-----------|------------|----------------------|------------|
+| Exporter sync/async | `async generatePluginInput()` | Synchronous with `readFileSync` | ✅ Acceptable — simpler, no API break needed |
+| Validator rule ID | `'image-references'` | `'image-refs'` | ✅ Functionally identical |
+| collectImageSources return | `string[]` | `Set<string>` | ✅ Improvement — deduplicates |
+| ImageCache type | `Map<string, Image>` | `ReadonlyMap<string, Image>` | ✅ Improvement — better immutability |
+| image-helpers file name | `image-helpers.ts` | `image-helpers.ts` | ✅ Matches design |
+| image-loader file name | `image-loader.ts` | `image-loader.ts` | ✅ Matches design |
 
 ---
 
-## 6. Recommendations for Design Phase
+## Test Coverage Summary
 
-### Preferred Approach
-**Option C (Hybrid)**: Extend all existing packages (Option A) plus create a shared `image-utils.ts` module in `dsl-core` for loading, caching, and format validation. This avoids a new npm package while preventing code duplication between renderer and exporter.
+| Package | Image Tests | Key Areas Covered |
+|---------|------------|-------------------|
+| dsl-core | ~25 tests | Builders, scale math (4 modes × multiple ratios), format detection, diff, changeset types |
+| compiler | 14 tests | IMAGE nodes, fills, validation warnings, auto-layout sizing |
+| renderer | 18 tests | IMAGE rendering, placeholder fallback, cornerRadius clipping, image-loader (collect, resolve, preload) |
+| exporter | 5 tests | Base64 embedding, 4 MB size warning, error handling, test PNG generation |
+| validator | 6 tests | Format checking, file existence, URL syntax, size warnings |
+| dsl-core/diff | 6 tests | Image hash comparison, scaleMode comparison, fill additions/removals |
 
-### Key Design Decisions Needed
-1. **Image data flow**: Should compiled JSON embed image bytes or keep source references? (Impacts file sizes and portability)
-2. **Renderer async strategy**: Pre-load all images before render pass, or make renderNode() async?
-3. **Plugin baseline storage**: Store image hashes only (not full image data) in baselines to stay under 100KB limit?
-4. **Changeset image embedding**: Inline base64 in changeset JSON, or write image files and reference by path?
+**Total**: 390 tests across 20 files, all passing.
 
-### Research Items to Carry Forward
-- @napi-rs/canvas `loadImage()` async behavior and format support
-- Figma Plugin API `figma.createImage()` and `figma.getImageByHash()` exact signatures
-- Plugin data size constraints with image content
-- Scale mode rendering algorithms
+---
+
+## Implementation Complexity & Risk
+
+| Area | Effort | Risk | Justification |
+|------|--------|------|---------------|
+| Core implementation (Tasks 1-10) | L (complete) | Low | All 390 tests pass, architecture aligned with design |
+| Gap 1: imageDimensions | S (< 1 hour) | Low | Informational only, no consumer |
+| Gap 2: Batch image support | S (< 1 day) | Medium | Batch is used in calibration pipeline; affects visual output correctness |
+
+---
+
+## Recommendations
+
+1. **Fix Gap 2 (batch image support)**: Wire image preloading into `processBatch()` to enable batch rendering of DSL files with images. This is the only functional gap.
+
+2. **Clean up Gap 1**: Either populate `imageDimensions` by parsing image headers, or remove the unused field from the `embedImageData()` return type.
+
+3. **Consider E2E test with committed image**: Task 10 verification was done manually. A small committed test image (~1KB PNG) with an automated E2E test would prevent regressions in CI.
