@@ -260,7 +260,7 @@
   - Test error scenarios: invalid DSL input (non-zero exit code, descriptive error), comparison below threshold (exit code 1)
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7_
 
-- [ ] 12.3 Create DSL test definitions for primitive and card-level components
+- [x] 12.3 Create DSL test definitions for primitive and card-level components
   - **Button** (all 12 variants: 4 styles x 3 sizes) — gradient fills (purple to indigo), pill-shaped corners (9999), horizontal auto-layout with center alignment, size-dependent padding and font sizes, Full Width boolean property
   - **Badge** (4 variants: Default, Primary, Success, Warning) — solid fills with matching border colors, pill-shaped corners, compact horizontal padding (12x6), TEXT component property for label
   - **FeatureCard** — vertical card layout with 16px spacing, white background with 1px gray border, nested icon placeholder using INSTANCE_SWAP property, 24px uniform padding, 16px corner radius
@@ -272,7 +272,7 @@
   - Render each definition via RendererService and verify output PNG dimensions and visual correctness
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 4.5, 5.1, 5.2, 5.3, 5.4, 6.1, 6.2, 12.4, 12.5, 12.13, 12.14, 12.15_
 
-- [ ] 12.4 Create DSL test definitions for section and page-level compositions
+- [x] 12.4 Create DSL test definitions for section and page-level compositions
   - **Navbar** — fixed-width (1200px) horizontal layout with spacers (layoutGrow) between logo, nav links, and CTA button; 1px bottom border stroke; gradient CTA button nested inside; tests flex-grow distribution
   - **Hero** (center + left alignment variants) — vertical layout with 24px spacing, multi-size text (60px title with -2.5px letter-spacing, 20px subtitle), nested badge component, horizontal button row with two CTA styles; tests large text measurement and alignment variants
   - **Stats** (inline + cards variants) — inline variant: horizontal layout with divider separators between stat groups; cards variant: stat values in individual white card frames with borders; purple stat values (36px, 700 weight) with gray labels; tests variant-based layout switching
@@ -286,7 +286,7 @@
   - These page-level compositions exercise: layoutGrow spacers, INSTANCE nodes with overrides, multi-column layouts, dark backgrounds, fixed-width containers, and deeply nested auto-layout trees (3+ levels)
   - _Requirements: 1.6, 2.5, 2.6, 2.7, 3.6, 4.3, 4.4, 4.6, 5.3, 5.4, 5.5, 6.1, 6.2, 12.6, 12.7, 12.8, 12.16, 12.17, 12.18, 12.19, 12.20_
 
-- [ ]* 12.5 Run full visual regression comparison against React component screenshots
+- [x]* 12.5 Run full visual regression comparison against React component screenshots
   - Capture React component screenshots for all 16 reference components using the screenshot capturer with matching viewport sizes
   - Run visual comparison (DSL render vs React screenshot) for each component and establish baseline similarity scores
   - Document expected similarity ranges per component type: simple shapes (>98%), text-heavy layouts (>92%), gradient components (>90%)
