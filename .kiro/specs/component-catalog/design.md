@@ -195,7 +195,7 @@ sequenceDiagram
 | ArtifactGenerator | Build/Pipeline | Pre-generate DSL source, compiled JSON, and PNG artifacts | 4.1, 5.1, 5.2, 6.1, 6.2, 7.1, 7.3 | `@figma-dsl/compiler` (P0), `@figma-dsl/renderer` (P0) | Service |
 | DslAssociationMap | Build/Pipeline | Map React component names to DSL file paths | 7.1, 7.2 | File system (P1) | Service |
 | DSLPanelAddon | UI/Addon | Custom Storybook panel displaying DSL source, JSON, and PNG | 4.1–4.3, 5.1–5.4, 6.1–6.5 | Storybook Manager API (P0) | State |
-| AllVariantsTemplate | UI/Catalog | Shared utility rendering all variants of a component in a grid | 2.3 | React components (P0) | — |
+| AllVariantsTemplate | UI/Catalog | Shared utility rendering all variants of a component in a grid | 2.3 | React components (P0) | State |
 
 ### Build / Pipeline
 
@@ -254,6 +254,11 @@ function generateDslArtifacts(options: GenerateArtifactsOptions): Promise<DslMan
 - Reuse `processBatch` from `@figma-dsl/cli` for compilation and rendering
 - Association logic: convert PascalCase component name to kebab-case, match against `{name}.dsl.ts` or `{name}-*.dsl.ts` in examples directory
 - Add to `.gitignore`: `preview/.storybook/dsl-artifacts/`
+- **Build Coordination**: The `prestorybook` script must ensure monorepo packages are built before artifact generation. The script chain in `preview/package.json`:
+  - `"prestorybook": "npm run build --workspace=packages && node scripts/generate-dsl-artifacts.mjs"`
+  - This runs the root-level `tsc -b` build for all packages first, then generates artifacts
+  - For `build-storybook` (static build), add a matching `prebuild-storybook` script with the same chain
+  - Developers who have already built packages can skip the build step by running `node scripts/generate-dsl-artifacts.mjs` directly followed by `npx storybook dev`
 
 #### DslAssociationMap
 
@@ -357,7 +362,48 @@ interface DslPanelState {
 - Exports an `AllVariants` story using `AllVariantsTemplate` utility
 - Uses `args` and `argTypes` for interactive controls derived from component props
 
-**Implementation Note**: Use a shared `createDslParameters()` helper that reads from the generated manifest to populate `parameters.dsl` for each story.
+**Artifact Import Strategy**: Story files consume DSL artifacts via a shared `createDslParameters()` helper that synchronously reads the pre-generated manifest at module scope. The manifest is a JSON file imported using Vite's JSON import support (`import manifest from '../.storybook/dsl-artifacts/manifest.json'`). The helper resolves DSL data for a given component name and returns a `DslStoryParameters` object (or `null` fields when no DSL file exists). This approach:
+- Avoids dynamic imports or fetch calls
+- Fails fast at Storybook startup if artifacts are missing (clear error message)
+- Works identically in dev and static builds
+
+```typescript
+// preview/src/stories/dsl-helpers.ts
+import type { DslManifestFile } from './types';
+import manifest from '../.storybook/dsl-artifacts/manifest.json';
+
+interface DslStoryParameters {
+  source: string | null;
+  compiledJson: string | null;
+  renderedPngUrl: string | null;
+  error: string | null;
+}
+
+function createDslParameters(componentName: string): DslStoryParameters {
+  const typedManifest = manifest as DslManifestFile;
+  const kebabName = componentName
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .toLowerCase();
+  const artifact = typedManifest.artifacts[kebabName];
+  if (!artifact) {
+    return { source: null, compiledJson: null, renderedPngUrl: null, error: null };
+  }
+  return {
+    source: artifact.sourcePath ? /* read inline during generation */ artifact.source ?? null : null,
+    compiledJson: artifact.compiledJson ?? null,
+    renderedPngUrl: artifact.pngPath ? `/dsl-artifacts/${kebabName}/rendered.png` : null,
+    error: artifact.error ?? null,
+  };
+}
+```
+
+**Manifest Type Declaration**: Add a `dsl-artifacts.d.ts` file in `preview/src/` declaring the JSON module type so TypeScript resolves the import without errors:
+```typescript
+declare module '**/dsl-artifacts/manifest.json' {
+  const manifest: import('./stories/types').DslManifestFile;
+  export default manifest;
+}
+```
 
 #### PageStoryFiles (Page Template Stories)
 
@@ -379,10 +425,29 @@ interface DslPanelState {
 | Intent | Shared utility that renders all meaningful variant combinations of a component in a grid layout |
 | Requirements | 2.3 |
 
-**Summary-only**: A React component and story helper that:
-- Accepts a component reference and variant definitions (prop name → value array)
-- Renders a CSS grid with each cell showing one variant combination
-- Labels each cell with the variant values
+**Contracts**: State [x]
+
+##### Interface Contract
+```typescript
+interface VariantAxis<V = string | number | boolean> {
+  prop: string;       // Prop name (e.g., 'variant', 'size', 'disabled')
+  values: V[];        // All values to render (e.g., ['primary', 'secondary', 'outline'])
+  labels?: string[];  // Optional display labels (defaults to String(value))
+}
+
+interface AllVariantsGridProps<C extends React.ComponentType<Record<string, unknown>>> {
+  component: C;
+  axes: VariantAxis[];           // 1-2 axes: rows × columns (single axis = single row)
+  baseProps?: Partial<React.ComponentProps<C>>; // Shared props applied to every cell
+  cellStyle?: React.CSSProperties;             // Optional per-cell sizing override
+}
+```
+
+**Behavior**:
+- Single axis: renders a horizontal row of variants with labels above each cell
+- Two axes: renders a grid where rows = first axis, columns = second axis, with row/column headers
+- Each cell renders the component with `{...baseProps, [axis.prop]: value}` for each axis combination
+- Labels default to `String(value)` (e.g., `true` → `"true"`, `'primary'` → `"primary"`)
 - Used in each component's `AllVariants` story export
 
 ### Infrastructure

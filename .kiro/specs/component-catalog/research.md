@@ -117,6 +117,28 @@
 - **Rationale**: Allows per-component customization while enforcing consistent structure via shared helpers
 - **Trade-offs**: Initial authoring effort for 25 components (mitigated by scaffold script)
 
+### Decision: Static JSON import for artifact consumption (refinement)
+- **Context**: Design review identified ambiguity in how story files consume DSL artifacts
+- **Alternatives Considered**:
+  1. Dynamic `fetch()` at story render time — async complexity, doesn't work in static builds
+  2. Vite virtual module — elegant but adds build-time coupling and debugging complexity
+  3. Static JSON import via Vite's built-in JSON support — simple, type-safe, fails fast
+- **Selected Approach**: Import `manifest.json` statically in a `createDslParameters()` helper; add a `.d.ts` type declaration for the JSON module
+- **Rationale**: Vite natively supports JSON imports; TypeScript declaration file ensures type safety; if artifacts are missing, Storybook fails at startup with a clear import error rather than silently showing empty panels
+- **Trade-offs**: Requires manifest to exist before TypeScript compilation (mitigated by `prestorybook` script always running first)
+
+### Decision: Typed VariantAxis contract for AllVariantsTemplate (refinement)
+- **Context**: Design review identified that the AllVariantsTemplate lacked a concrete typed interface for heterogeneous prop types
+- **Selected Approach**: `VariantAxis<V>` interface with `prop`, `values`, and optional `labels` fields; `AllVariantsGridProps<C>` generic on the component type for type-safe `baseProps`
+- **Rationale**: Handles enum unions, booleans, and numeric props uniformly; generic constraint ensures baseProps match the component's actual props
+- **Trade-offs**: Generic constraint adds complexity but prevents runtime errors from mismatched props
+
+### Decision: Explicit build coordination in prestorybook (refinement)
+- **Context**: Design review identified that `prestorybook` depends on built monorepo packages but didn't specify the build chain
+- **Selected Approach**: `prestorybook` script chains `npm run build --workspace=packages` before artifact generation
+- **Rationale**: Ensures clean-state `npm run storybook` always works; developers with pre-built packages can bypass via direct script invocation
+- **Trade-offs**: Adds ~10s build overhead on each Storybook start (mitigated: TypeScript incremental compilation makes repeated builds near-instant)
+
 ## Risks & Mitigations
 - **Risk**: Storybook 10 + Vite 8 edge cases — **Mitigation**: Pin to known-good versions; Storybook team actively tracks Vite 8 compat
 - **Risk**: `react-docgen` fails to extract props from `types.ts` — **Mitigation**: Test with current component structure; fall back to manual argTypes if needed
