@@ -51,7 +51,10 @@ export function text(
 
   // Auto-convert color shorthand to fill
   const fills = style?.color
-    ? [{ type: 'SOLID' as const, color: parseHex(style.color), opacity: 1, visible: true }]
+    ? (() => {
+        const parsed = parseHex(style.color!);
+        return [{ type: 'SOLID' as const, color: { ...parsed, a: 1 }, opacity: parsed.a, visible: true }];
+      })()
     : undefined;
 
   // Text node size — if width specified, pass it through for constrained text
