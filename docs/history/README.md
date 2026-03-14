@@ -26,4 +26,5 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-14 — Neon Gaming](2026-03-14-neon-gaming.md) — 0 pipeline issues found, 0 pipeline fixes | Features: gradient, strokes, opacity, ellipse, cornerRadius, clipContent, SPACE_BETWEEN, nested auto-layout
 - [2026-03-14 — Travel Cards](2026-03-14-travel-cards.md) — 0 issues found, 0 pipeline fixes | Features: cornerRadius, clipContent, strokes, textAutoResize:HEIGHT, FILL sizing, SPACE_BETWEEN, nested auto-layout

@@ -1,7 +1,7 @@
-import { McDonaldsShowcase } from './pages/McDonaldsShowcase';
+import { NeonGamingShowcase } from './pages/NeonGamingShowcase';
 
 function App() {
-  return <McDonaldsShowcase />;
+  return <NeonGamingShowcase />;
 }
 
 export default App;
