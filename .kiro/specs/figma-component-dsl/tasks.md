@@ -70,8 +70,8 @@
   - Test defineTokens/tokenPaint round-trip: define tokens → resolve by name → correct DslSolidPaint
   - _Requirements: 2.1, 3.1, 3.2, 3.3, 3.6_
 
-- [ ] 4. Compiler — Layout resolution and FigmaNodeDict output
-- [ ] 4.1 Implement GUID assignment, parent references, and basic compilation
+- [x] 4. Compiler — Layout resolution and FigmaNodeDict output
+- [x] 4.1 Implement GUID assignment, parent references, and basic compilation
   - Traverse VirtualNode tree depth-first, assigning counter-based GUIDs ([0, N] with auto-incrementing N) to each node
   - Generate parentIndex references linking each non-root node to its parent's GUID and position
   - Convert DSL paint types to FigmaNodeDict fillPaints array format, preserving fill array ordering
@@ -82,7 +82,7 @@
   - _Requirements: 1.5, 1.11, 3.5, 3.6_
   - _Contracts: CompilerService_
 
-- [ ] 4.2 Integrate opentype.js text measurer
+- [x] 4.2 Integrate opentype.js text measurer
   - Load Inter font files (.otf) for four weights (Regular 400, Medium 500, Semi Bold 600, Bold 700) via opentype.js
   - Measure text width by summing scaled glyph advance widths with kerning support
   - Compute text height as line count × line height (defaulting to fontSize × 1.2 when line height is unspecified)
@@ -90,7 +90,7 @@
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
   - _Contracts: TextMeasurer_
 
-- [ ] 4.3 Implement two-pass auto-layout resolution algorithm
+- [x] 4.3 Implement two-pass auto-layout resolution algorithm
   - Pass 1 (bottom-up measurement): compute intrinsic sizes for leaf nodes (TEXT via TextMeasurer, shapes via explicit size); resolve HUG sizing from children (primary axis sum + spacing + padding, counter axis max + padding); FIXED uses explicit size; FILL defers sizing to Pass 2
   - Pass 2 (top-down positioning): compute available space per container, allocate FIXED and HUG children first, distribute remaining space equally among FILL children, position children sequentially with spacing gaps
   - Apply primary axis alignment: MIN packs start, CENTER centers the block, MAX packs end, SPACE_BETWEEN distributes gaps between children
@@ -100,7 +100,7 @@
   - Compute absolute 3×3 affine transform matrices: parent transform × child offset for each node
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7_
 
-- [ ] 4.4 (P) Implement text data expansion and component compilation
+- [x] 4.4 (P) Implement text data expansion and component compilation
   - Generate textData containing characters and lines array (split by \n) for each TEXT node
   - Generate derivedTextData with baseline entries per line: lineY position, lineHeight, first and end character indices
   - Generate fontMetaData with fontFamily, fontStyle name (Regular/Medium/Semi Bold/Bold from weight), fontWeight, and fontSize
@@ -110,7 +110,7 @@
   - Report circular component references and unresolved references as CompileErrors
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 5.1, 5.2, 5.3, 5.4, 5.5_
 
-- [ ] 4.5 Add compiler unit tests
+- [x] 4.5 Add compiler unit tests
   - Test GUID assignment produces unique, deterministic IDs across a multi-node tree
   - Test parent-child reference generation with correct position ordering
   - Test two-pass layout against design document worked examples: horizontal button (HUG sizing), vertical card with FILL-width children, nested badge row with counter-axis centering

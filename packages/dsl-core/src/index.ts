@@ -23,3 +23,5 @@ export type {
 
 export { VirtualFigmaApi } from './virtual-api.js';
 export { hexToRGB, solidPaint, gradientPaint, defineTokens, tokenPaint, setAutoLayout } from './helpers.js';
+export { Compiler } from './compiler.js';
+export type { FigmaNodeDict, FigmaPaintOut, Baseline, FontMeta, CompileResult, CompileError } from './compiler.js';
