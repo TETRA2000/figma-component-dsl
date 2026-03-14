@@ -7,11 +7,16 @@ set -euo pipefail
 COMPONENT_NAME="${1:?Usage: validate-and-preview.sh <ComponentName>}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../../../" && pwd)"
-COMPONENT_PATH="$PROJECT_ROOT/preview/src/components/$COMPONENT_NAME/$COMPONENT_NAME.tsx"
+COMPONENT_PATH="$PROJECT_ROOT/preview/src/components/_generated/$COMPONENT_NAME/$COMPONENT_NAME.tsx"
 OUTPUT_DIR="$PROJECT_ROOT/output"
 
+# Also check the non-generated path for reference components
 if [ ! -f "$COMPONENT_PATH" ]; then
-  echo "ERROR: Component not found at $COMPONENT_PATH"
+  COMPONENT_PATH="$PROJECT_ROOT/preview/src/components/$COMPONENT_NAME/$COMPONENT_NAME.tsx"
+fi
+
+if [ ! -f "$COMPONENT_PATH" ]; then
+  echo "ERROR: Component not found in _generated/ or reference components"
   exit 1
 fi
 

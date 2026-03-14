@@ -145,7 +145,13 @@ bin/figma-dsl-batch-compare calibration/output/dsl/ calibration/figma/ -o calibr
 
 ## Preview App
 
-The `preview/` directory contains a Vite + React app for live previewing components and landing pages. It includes 25 React components and 4 page templates.
+The `preview/` directory contains a Vite + React app for live previewing components and landing pages. Reference components (16 components in `preview/src/components/`) are checked into git. Skill-generated components and pages live under `_generated/` directories which are gitignored.
+
+On a fresh clone, the preview app won't build because `_generated/` directories are missing. To get started:
+
+1. Run any component-generating skill (e.g., `/create-react-component` or `/dogfooding`)
+2. Or manually create `preview/src/pages/_generated/DogfoodingGallery.tsx` that exports a `DogfoodingGallery` component
+3. Then run:
 
 ```bash
 cd preview && npm install --legacy-peer-deps && npm run dev

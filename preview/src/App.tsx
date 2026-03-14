@@ -1,4 +1,4 @@
-import { DogfoodingGallery } from './pages/DogfoodingGallery';
+import { DogfoodingGallery } from './pages/_generated/DogfoodingGallery';
 
 function App() {
   return <DogfoodingGallery />;

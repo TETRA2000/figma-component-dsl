@@ -95,9 +95,9 @@ The goal is variety — each iteration should stress a different combination of 
 
 ### Step 2: Create React components
 
-Use the `/create-react-component` skill pattern to generate 2-4 components matching the theme. Create them at `preview/src/components/{ComponentName}/` with the standard 3-file structure (`.tsx`, `.module.css`, `.figma.tsx`).
+Use the `/create-react-component` skill pattern to generate 2-4 components matching the theme. Create them at `preview/src/components/_generated/{ComponentName}/` with the standard 3-file structure (`.tsx`, `.module.css`, `.figma.tsx`).
 
-Then create a showcase page at `preview/src/pages/{Theme}Showcase.tsx` that renders all the components together. Temporarily point `preview/src/App.tsx` at the new page.
+Then create a showcase page at `preview/src/pages/_generated/{Theme}Showcase.tsx` that renders all the components together. Temporarily point `preview/src/App.tsx` at the new page.
 
 ### Step 3: Render via browser
 
@@ -123,11 +123,11 @@ take_screenshot → save to dogfooding/<timestamp>/iteration-<N>/browser.png
 
 ### Step 4: Create DSL equivalent and render
 
-Write a `.dsl.ts` file that recreates the same page layout using DSL primitives (`frame`, `text`, `rectangle`, `solid`, `gradient`, `horizontal`, `vertical`, etc.). Place it at `examples/{theme-name}-page.dsl.ts`.
+Write a `.dsl.ts` file that recreates the same page layout using DSL primitives (`frame`, `text`, `rectangle`, `solid`, `gradient`, `horizontal`, `vertical`, etc.). Place it at `workspace/dsl/{theme-name}-page.dsl.ts`.
 
 Then compile and render:
 ```bash
-bin/figma-dsl compile examples/{theme-name}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
+bin/figma-dsl compile workspace/dsl/{theme-name}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
 bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl.png
 ```
 

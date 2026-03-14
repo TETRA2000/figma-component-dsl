@@ -46,7 +46,7 @@ From the user's request, determine:
 
 ### Step 3: Generate Component Files
 
-Create a 3-file component at `preview/src/components/{ComponentName}/`:
+Create a 3-file component at `preview/src/components/_generated/{ComponentName}/`:
 
 #### 3a. `{ComponentName}.tsx` — React component
 
@@ -165,7 +165,7 @@ Key rules:
 Run the figma-dsl validator:
 
 ```bash
-bin/figma-dsl validate preview/src/components/{ComponentName}/{ComponentName}.tsx
+bin/figma-dsl validate preview/src/components/_generated/{ComponentName}/{ComponentName}.tsx
 ```
 
 If validation fails:
@@ -194,7 +194,7 @@ Create a quick preview page or update `App.tsx` to render the new component with
 For DSL-rendered PNG comparison:
 
 ```bash
-bin/figma-dsl compile preview/src/components/{ComponentName}/{ComponentName}.tsx -o output/
+bin/figma-dsl compile preview/src/components/_generated/{ComponentName}/{ComponentName}.tsx -o output/
 bin/figma-dsl render output/{ComponentName}.json -o output/{ComponentName}.png
 ```
 
@@ -202,14 +202,13 @@ This produces a PNG rendering of how the component will look in Figma.
 
 ### Step 7: Register the Component
 
-Add the new component export to `preview/src/components/index.ts`, inserting it **below the END marker comment**:
+Append the new component export to `preview/src/components/_generated.ts` (create this file if it doesn't exist):
 
 ```ts
-// --- END REFERENCE EXPORTS ---
-export { ComponentName } from './ComponentName/ComponentName';
+export { ComponentName } from './_generated/ComponentName/ComponentName';
 ```
 
-If the component defines new shared types, add them to `preview/src/components/types.ts`.
+Do **not** modify `preview/src/components/index.ts` — that file is reserved for reference exports only. If the component defines new shared types, add them to `preview/src/components/types.ts`.
 
 ## Template Files
 
