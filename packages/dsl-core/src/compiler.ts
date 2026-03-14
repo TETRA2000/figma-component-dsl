@@ -619,7 +619,7 @@ export class Compiler {
       baselines,
       fontMetaData: [{
         fontFamily: text.fontFamily,
-        fontStyle: weightToStyle(text.fontWeight),
+        fontStyle: text.fontStyle === 'Italic' ? 'Italic' : weightToStyle(text.fontWeight),
         fontWeight: text.fontWeight,
         fontSize: text.fontSize,
       }],
@@ -628,5 +628,9 @@ export class Compiler {
     compiled.fontSize = text.fontSize;
     compiled.fontFamily = text.fontFamily;
     compiled.textAlignHorizontal = text.textAlignHorizontal;
+
+    if (text.letterSpacing && (text.letterSpacing.value !== 0 || text.letterSpacing.unit !== 'PERCENT')) {
+      compiled.letterSpacing = { value: text.letterSpacing.value, unit: text.letterSpacing.unit };
+    }
   }
 }

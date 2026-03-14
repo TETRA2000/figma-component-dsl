@@ -102,6 +102,24 @@ class DslRenderer:
 
         ctx.restore()
 
+    def _get_corner_radii(
+        self,
+        node: dict[str, Any],
+    ) -> tuple[float, float, float, float] | None:
+        """Extract per-corner radii from node, returning None if not set."""
+        tl = node.get("topLeftRadius")
+        tr = node.get("topRightRadius")
+        bl = node.get("bottomLeftRadius")
+        br = node.get("bottomRightRadius")
+        if tl is not None or tr is not None or bl is not None or br is not None:
+            return (
+                tl if tl is not None else 0,
+                tr if tr is not None else 0,
+                bl if bl is not None else 0,
+                br if br is not None else 0,
+            )
+        return None
+
     def _render_rect_like(
         self,
         ctx: cairo.Context,
@@ -112,13 +130,14 @@ class DslRenderer:
         w = node["size"]["x"]
         h = node["size"]["y"]
         corner_radius = node.get("cornerRadius", 0)
+        per_corner = self._get_corner_radii(node)
 
         # Fills
         for paint in node.get("fillPaints", []):
             if paint.get("type") == "SOLID":
-                self._apply_solid_fill(ctx, paint, w, h, corner_radius, opacity)
+                self._apply_solid_fill(ctx, paint, w, h, corner_radius, opacity, per_corner)
             elif paint.get("type") == "GRADIENT_LINEAR":
-                self._apply_gradient_fill(ctx, paint, w, h, corner_radius, opacity)
+                self._apply_gradient_fill(ctx, paint, w, h, corner_radius, opacity, per_corner)
             elif paint.get("type") == "IMAGE":
                 self._apply_image_fill(ctx, paint, w, h, corner_radius, opacity, options)
 
@@ -129,9 +148,23 @@ class DslRenderer:
                 color = stroke["color"]
                 paint_opacity = stroke.get("opacity", 1.0) * opacity
                 ctx.set_source_rgba(color["r"], color["g"], color["b"], paint_opacity)
-                self._rect_path(ctx, w, h, corner_radius)
+                self._make_rect_path(ctx, w, h, corner_radius, per_corner)
                 ctx.set_line_width(stroke_weight)
                 ctx.stroke()
+
+    def _make_rect_path(
+        self,
+        ctx: cairo.Context,
+        w: float,
+        h: float,
+        corner_radius: float,
+        per_corner: tuple[float, float, float, float] | None = None,
+    ) -> None:
+        """Build rect path using per-corner radii if available, else uniform."""
+        if per_corner is not None:
+            self._rect_path_per_corner(ctx, w, h, per_corner)
+        else:
+            self._rect_path(ctx, w, h, corner_radius)
 
     def _apply_solid_fill(
         self,
@@ -141,11 +174,12 @@ class DslRenderer:
         h: float,
         corner_radius: float,
         opacity: float,
+        per_corner: tuple[float, float, float, float] | None = None,
     ) -> None:
         color = paint["color"]
         paint_opacity = paint.get("opacity", 1.0) * opacity
         ctx.set_source_rgba(color["r"], color["g"], color["b"], paint_opacity)
-        self._rect_path(ctx, w, h, corner_radius)
+        self._make_rect_path(ctx, w, h, corner_radius, per_corner)
         ctx.fill()
 
     def _apply_gradient_fill(
@@ -156,6 +190,7 @@ class DslRenderer:
         h: float,
         corner_radius: float,
         opacity: float,
+        per_corner: tuple[float, float, float, float] | None = None,
     ) -> None:
         gt = paint.get("gradientTransform", [[1, 0, 0.5], [0, 1, 0.5]])
         # Convert Figma gradient transform to Cairo linear gradient coordinates
@@ -180,7 +215,7 @@ class DslRenderer:
             gradient.add_color_stop_rgba(stop["position"], color["r"], color["g"], color["b"], a)
 
         ctx.set_source(gradient)
-        self._rect_path(ctx, w, h, corner_radius)
+        self._make_rect_path(ctx, w, h, corner_radius, per_corner)
         ctx.fill()
 
     def _apply_image_fill(
@@ -192,6 +227,7 @@ class DslRenderer:
         corner_radius: float,
         opacity: float,
         options: RenderOptions | None = None,
+        per_corner: tuple[float, float, float, float] | None = None,
     ) -> None:
         image_ref = paint.get("imageRef", "")
         asset_dir = options.asset_dir if options else None
@@ -224,7 +260,7 @@ class DslRenderer:
 
         ctx.save()
         # Clip to node shape
-        self._rect_path(ctx, w, h, corner_radius)
+        self._make_rect_path(ctx, w, h, corner_radius, per_corner)
         ctx.clip()
 
         # Set up scaled image pattern
@@ -335,6 +371,38 @@ class DslRenderer:
 
             ctx.move_to(x_offset, line_y)
             ctx.show_text(line)
+
+    def _rect_path_per_corner(
+        self,
+        ctx: cairo.Context,
+        w: float,
+        h: float,
+        radii: tuple[float, float, float, float],
+    ) -> None:
+        """Draw a rectangle path with different radius per corner (TL, TR, BL, BR)."""
+        tl, tr, bl, br = radii
+        tl = min(tl, w / 2, h / 2)
+        tr = min(tr, w / 2, h / 2)
+        bl = min(bl, w / 2, h / 2)
+        br = min(br, w / 2, h / 2)
+        ctx.new_path()
+        if tl > 0:
+            ctx.arc(tl, tl, tl, math.pi, 1.5 * math.pi)
+        else:
+            ctx.move_to(0, 0)
+        if tr > 0:
+            ctx.arc(w - tr, tr, tr, 1.5 * math.pi, 2 * math.pi)
+        else:
+            ctx.line_to(w, 0)
+        if br > 0:
+            ctx.arc(w - br, h - br, br, 0, 0.5 * math.pi)
+        else:
+            ctx.line_to(w, h)
+        if bl > 0:
+            ctx.arc(bl, h - bl, bl, 0.5 * math.pi, math.pi)
+        else:
+            ctx.line_to(0, h)
+        ctx.close_path()
 
     def _rect_path(
         self,

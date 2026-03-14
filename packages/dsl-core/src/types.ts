@@ -84,6 +84,7 @@ export interface DslTextNode extends DslSceneNode {
   lineHeight: DslLineHeight;
   letterSpacing: DslLetterSpacing;
   textAlignHorizontal: 'LEFT' | 'CENTER' | 'RIGHT';
+  fontStyle?: 'Normal' | 'Italic';
 }
 
 export interface DslRectangleNode extends DslSceneNode {

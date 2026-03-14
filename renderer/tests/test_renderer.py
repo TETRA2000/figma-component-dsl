@@ -194,6 +194,67 @@ class TestRendererText:
         result = renderer.render(json.dumps(root), tmp_path / "out.png", RenderOptions())
         assert result.png_path.exists()
 
+    def test_render_text_with_letter_spacing(self, tmp_path):
+        """Should render text with letter spacing and produce a PNG."""
+        renderer = DslRenderer()
+        text = make_text_node(characters="Spaced", font_size=16, width=200, height=30)
+        text["letterSpacing"] = {"value": 5, "unit": "PERCENT"}
+        root = make_frame_node(width=300, height=100, children=[text])
+        result = renderer.render(json.dumps(root), tmp_path / "out.png", RenderOptions())
+        assert result.png_path.exists()
+        assert result.png_path.stat().st_size > 0
+
+    def test_render_text_italic(self, tmp_path):
+        """Should render italic text and produce a PNG."""
+        renderer = DslRenderer()
+        text = make_text_node(characters="Italic text", font_size=16, width=120, height=20)
+        text["derivedTextData"]["fontMetaData"][0]["fontStyle"] = "Italic"
+        root = make_frame_node(width=200, height=100, children=[text])
+        result = renderer.render(json.dumps(root), tmp_path / "out.png", RenderOptions())
+        assert result.png_path.exists()
+        assert result.png_path.stat().st_size > 0
+
+
+class TestRendererRotation:
+    """Test rotation rendering."""
+
+    def test_render_rotated_rectangle(self, tmp_path):
+        """Should render a rotated rectangle and produce output that differs from non-rotated."""
+        import math
+        renderer = DslRenderer()
+
+        # Non-rotated
+        node_normal = make_frame_node(
+            type="RECTANGLE",
+            width=80,
+            height=40,
+            fills=[{"type": "SOLID", "color": {"r": 1.0, "g": 0.0, "b": 0.0, "a": 1.0}}],
+        )
+        root_normal = make_frame_node(width=200, height=200, children=[node_normal])
+        result_normal = renderer.render(json.dumps(root_normal), tmp_path / "normal.png", RenderOptions())
+
+        # Rotated 45 degrees
+        angle = math.radians(45)
+        cos_a = math.cos(angle)
+        sin_a = math.sin(angle)
+        node_rotated = make_frame_node(
+            type="RECTANGLE",
+            width=80,
+            height=40,
+            fills=[{"type": "SOLID", "color": {"r": 1.0, "g": 0.0, "b": 0.0, "a": 1.0}}],
+            transform=[[cos_a, -sin_a, 60], [sin_a, cos_a, 60], [0, 0, 1]],
+            guid=[0, 1],
+        )
+        root_rotated = make_frame_node(width=200, height=200, children=[node_rotated])
+        result_rotated = renderer.render(json.dumps(root_rotated), tmp_path / "rotated.png", RenderOptions())
+
+        assert result_normal.png_path.exists()
+        assert result_rotated.png_path.exists()
+        # Files should differ because of rotation
+        normal_bytes = result_normal.png_path.read_bytes()
+        rotated_bytes = result_rotated.png_path.read_bytes()
+        assert normal_bytes != rotated_bytes
+
 
 class TestRendererGradient:
     """Test gradient rendering."""

@@ -82,6 +82,7 @@ class VirtualTextNode extends VirtualBaseNode implements DslTextNode {
   lineHeight: DslLineHeight = { unit: 'AUTO' };
   letterSpacing: DslLetterSpacing = { value: 0, unit: 'PERCENT' };
   textAlignHorizontal: 'LEFT' | 'CENTER' | 'RIGHT' = 'LEFT';
+  fontStyle: 'Normal' | 'Italic' = 'Normal';
 }
 
 class VirtualRectangleNode extends VirtualBaseNode implements DslRectangleNode {
