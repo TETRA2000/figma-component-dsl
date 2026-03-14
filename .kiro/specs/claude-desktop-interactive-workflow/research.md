@@ -233,16 +233,33 @@
 - **Trade-offs**: Additional submodule dependency. Eval infrastructure is optional but valuable. Python scripts for `run_loop.py` and `generate_review.py` require Python 3.
 - **Follow-up**: Run description optimization for each skill after functional completion. Create 2-3 eval test cases per skill.
 
-### Decision: Reference Components via Vite Alias
-- **Context**: Skills need access to the 16 reference components
-- **Selected Approach**: Vite `resolve.alias` — `@/components` resolves to reference app's `src/components/`
-- **Rationale**: Avoids duplication, reference stays canonical
+### Decision: Reference Components via Copy Script (Not Direct Import)
+- **Context**: Skills need access to the 16 reference components. `references/` is read-only research material per project structure conventions and must not be imported at runtime.
+- **Alternatives Considered**:
+  1. Vite `resolve.alias` — `@/components` points to `references/figma_design_playground/src/components/` — violates read-only reference convention, creates fragile cross-boundary dependency, requires submodule to be initialized for dev server to work
+  2. Copy script — one-time copy into `preview/src/components/`, preview app is self-contained
+  3. npm workspace symlink — reference app as workspace dependency
+- **Selected Approach**: `preview/scripts/sync-reference-components.sh` copies components from reference app into `preview/src/components/` during setup. The preview app is fully self-contained at runtime.
+- **Rationale**: Respects the project convention that `references/` is read-only. Eliminates fragile runtime dependency on submodule state. `tsconfig.json` paths align trivially with Vite aliases since everything is under `src/`.
+- **Trade-offs**: Components are duplicated (copied, not linked). Sync script must be re-run if reference app changes. But this is intentional — the preview app is a consumer, not a mirror.
+
+### Decision: Phased Validator Implementation (Regex-First, AST-Second)
+- **Context**: The validator's 10 rules span two complexity levels — simple file/regex checks vs. TypeScript AST traversal. AST-based rules (classname-prop, variant-union, html-attrs, dsl-compatible-layout) add significant implementation complexity and risk of false positives.
+- **Selected Approach**: Two-phase implementation. Phase 1: file-structure rules (`three-file`, `barrel-export`) and regex rules (`css-modules`, `no-inline-style`, `design-tokens`, `token-exists`). Phase 2: AST rules (`classname-prop`, `variant-union`, `html-attrs`, `dsl-compatible-layout`) using TypeScript compiler API, with fallback to source-text pattern matching if AST heuristics prove unreliable.
+- **Rationale**: Phase 1 rules deliver high value with low risk. Phase 2 rules can be validated against real skill workflows before committing to full AST analysis. Avoids upfront investment in fragile heuristics.
+- **Trade-offs**: Phase 2 rules delayed. But Phase 1 catches the majority of DSL compatibility issues.
 
 ### Decision: Component Registry as Shared Markdown Reference
 - **Context**: Requirement 6 needs a component catalog accessible to all skills
 - **Selected Approach**: Markdown reference document under `.claude/skills/shared/references/component-registry.md`
 - **Rationale**: Skills read markdown references naturally. No build step. Human-readable.
 - **Trade-offs**: Manual maintenance (Component Creation Skill updates it per 6.5)
+
+### Decision: Optional Post-Publish Verification for Approach A (MCP)
+- **Context**: Approach A (MCP Auto-Publish) had no visual verification step, creating a gap where broken designs could be published without feedback.
+- **Selected Approach**: Add optional post-publish verification to Approach A. After `generate_figma_design`, the skill offers to run `capture-figma` + `compare` to verify the published design. If the user declines, the workflow completes without verification.
+- **Rationale**: Approach A's strength is speed. Making verification optional preserves this while giving users a path to verify when visual fidelity matters. Users who see bad results in Approach A can escalate to Approach C.
+- **Trade-offs**: Slightly more complex skill instructions. But the optional nature means no speed penalty for users who trust the MCP output.
 
 ## Risks & Mitigations
 - **Risk**: Figma MCP server is remote-only and may not be configured in all Claude Desktop environments → Mitigation: Plugin JSON import as fallback; skill documents both paths

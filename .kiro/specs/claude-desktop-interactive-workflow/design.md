@@ -76,6 +76,10 @@ graph TB
         TypesTS[types.ts]
     end
 
+    subgraph Setup
+        SyncScript[sync-reference-components.sh]
+    end
+
     subgraph FigmaCloud
         FigmaFile[Figma Design File]
         CodeConnect[Code Connect]
@@ -104,8 +108,8 @@ graph TB
     FigmaMCP --> FigmaFile
     FigmaMCP --> CodeConnect
 
-    SrcPages --> RefComponents
-    SrcComponents --> TokensCSS
+    SyncScript -.->|one-time copy| SrcComponents
+    RefComponents -.->|source of truth| SyncScript
     Registry --> LandingSkill
     Registry --> ComponentSkill
     TokenRef --> FigmaSkill
@@ -114,10 +118,10 @@ graph TB
 ```
 
 **Architecture Integration**:
-- Selected pattern: Skills (authored via skill-creator methodology) + Vite scaffold + validator package + Figma MCP
-- Domain boundaries: Each skill owns one workflow; `@figma-dsl/validator` owns DSL compatibility rules; Figma MCP handles external publishing; skill-creator provides authoring methodology and eval infrastructure
+- Selected pattern: Skills (authored via skill-creator methodology) + self-contained Vite scaffold + validator package + Figma MCP
+- Domain boundaries: Each skill owns one workflow; `@figma-dsl/validator` owns DSL compatibility rules; Figma MCP handles external publishing; skill-creator provides authoring methodology and eval infrastructure; `references/` is read-only research material (never imported at runtime)
 - Existing patterns preserved: CLI commands unchanged, reference app unchanged, monorepo structure extended
-- New components: `preview/` app, `packages/validator`, 4 skill directories (each with `evals/`, `scripts/`, `references/`), shared references, `.claude/launch.json`, Figma MCP integration, skill-creator reference submodule
+- New components: `preview/` app (self-contained with copied reference components), `packages/validator`, 4 skill directories (each with `evals/`, `scripts/`, `references/`), shared references, `.claude/launch.json`, Figma MCP integration, skill-creator reference submodule
 - Steering compliance: TypeScript strict, CSS Modules, design tokens as CSS custom properties, single-responsibility packages
 
 ### Technology Stack
@@ -206,8 +210,12 @@ flowchart TB
     Verify -->|No| Fix[Adjust DSL definition]
     Fix --> Pipeline
 
-    PipelineImport --> PostVerify[capture-figma + batch-compare]
+    MCPDone --> PostVerifyMCP{Verify? optional}
+    PostVerifyMCP -->|Yes| PostVerify[capture-figma + batch-compare]
+    PostVerifyMCP -->|No| Done[Done]
+    PipelineImport --> PostVerify
     PluginDone --> PostVerify
+    PostVerify --> Done
 ```
 
 ### Approach A — MCP Auto-Publish Flow
@@ -229,6 +237,12 @@ sequenceDiagram
     C->>MCP: add_code_connect_map for component
     MCP->>F: Establish Code Connect mapping
     C->>U: Published to Figma with Code Connect
+    Note over C,F: Optional post-publish verification
+    C->>CLI: figma-dsl capture-figma (screenshot published design)
+    CLI->>C: Captured Figma screenshot
+    C->>CLI: figma-dsl compare (DSL render vs Figma capture)
+    CLI->>C: Similarity report
+    C->>U: Visual fidelity report (if verification requested)
 ```
 
 ### Approach C — Visual Fidelity Pipeline Flow
@@ -329,7 +343,7 @@ sequenceDiagram
 | 8.2 | Pipeline similarity reporting | Figma Export Skill | CLI pipeline interface | Pipeline flow |
 | 8.3 | Iterate DSL until threshold met | Figma Export Skill | CLI pipeline + compare | Pipeline flow |
 | 8.4 | Diff image generation | Figma Export Skill | CLI compare -d | Pipeline flow |
-| 8.5 | Post-import verification | Figma Export Skill | CLI capture-figma + batch-compare | All Figma flows |
+| 8.5 | Post-import verification | Figma Export Skill | CLI capture-figma + batch-compare | All Figma flows (optional for Approach A, recommended for B/C) |
 | 8.6 | Approach trade-offs documentation | Figma Export Skill references | — | — |
 | 8.7 | Batch visual fidelity | Figma Export Skill | CLI batch + batch-compare | Pipeline flow |
 
@@ -338,7 +352,7 @@ sequenceDiagram
 | Component | Domain | Intent | Req Coverage | Key Dependencies | Contracts |
 |-----------|--------|--------|--------------|-----------------|-----------|
 | `.claude/launch.json` | Infrastructure | Preview server config | 1.3, 1.4 | Vite (P0) | Config |
-| `preview/` app | Infrastructure | Vite+React scaffold for rendering | 1.3, 2.3, 3.4, 5.1, 5.6 | Vite (P0), React (P0), reference app (P1) | — |
+| `preview/` app | Infrastructure | Vite+React scaffold for rendering (self-contained) | 1.3, 2.3, 3.4, 5.1, 5.6 | Vite (P0), React (P0), sync script (setup-time) | — |
 | skill-creator submodule | Infrastructure | Eval infrastructure and description optimization | 1.1, 1.2 | Python 3 (P1) | — |
 | `@figma-dsl/validator` | Package | DSL compatibility validation | 3.2, 4.6, 7.2 | dsl-core (P0), compiler (P1) | Service |
 | Landing Page Skill | Skill | Guide Claude to compose landing pages | 2.1–2.7 | Registry (P0), preview app (P0) | — |
@@ -399,15 +413,23 @@ sequenceDiagram
 
 **Responsibilities & Constraints**
 - Provide a Vite dev server with hot-reload for React components
-- Alias `@/components` to reference app's `src/components/` via Vite config
-- Import `tokens.css` and `types.ts` from reference app
+- Maintain its own copy of reference components, design tokens, and shared types — `references/` is read-only research material and must NOT be imported directly
 - Support `vite-plugin-singlefile` for HTML export builds
 
 **Dependencies**
-- Outbound: `references/figma_design_playground/src/` — component source (P0)
 - External: Vite 8 — dev server and build (P0)
 - External: React 19, react-dom 19 — rendering (P0)
 - External: `vite-plugin-singlefile` — HTML export (P1)
+- Build-time: Reference app (`references/figma_design_playground/src/`) — source of truth for initial component copy (P0)
+
+**Reference Component Provisioning**
+
+The preview app does NOT import from `references/` at runtime. Instead, reference components are copied into the preview app's own source tree during initial setup:
+
+1. A setup script (`scripts/sync-reference-components.sh`) copies the 16 reference components, `tokens.css`, `types.ts`, and `index.ts` from `references/figma_design_playground/src/components/` into `preview/src/components/`
+2. After copying, the preview app is self-contained — no Vite aliases or path references to `references/`
+3. The script is idempotent and can be re-run to sync updates from the reference app
+4. Skills read the component registry reference document (not reference source files) to discover available components
 
 **Vite Config Interface**
 
@@ -422,10 +444,29 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': './src',
-      '@/components': '../references/figma_design_playground/src/components',
     },
   },
 });
+```
+
+**TypeScript Config**
+
+```json
+// preview/tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": "."
+  },
+  "include": ["src"]
+}
 ```
 
 **File Structure**
@@ -436,18 +477,28 @@ preview/
 ├── package.json
 ├── vite.config.ts
 ├── tsconfig.json
+├── scripts/
+│   └── sync-reference-components.sh  # Copies reference components into src/
 └── src/
     ├── App.tsx              # Entry point — skills swap this to render target page
     ├── main.tsx             # React DOM root
     ├── pages/               # Landing pages written by skills
-    └── components/          # New components written by Component Creation Skill
+    └── components/          # Reference components (copied) + new components (created by skills)
+        ├── tokens.css       # Copied from reference app
+        ├── types.ts         # Copied from reference app
+        ├── index.ts         # Barrel exports (copied, extended by skills)
+        ├── Button/          # Copied reference component
+        ├── Hero/            # Copied reference component
+        └── ...              # All 16 reference components + user-created components
 ```
 
 **Implementation Notes**
-- `@/components` alias resolves to reference app, so `import { Button } from '@/components'` works
-- New user-created components go into `preview/src/components/` (separate from reference)
+- `@/components` alias resolves to `preview/src/components/` — the preview app's own copy
+- Reference components and user-created components coexist in the same `src/components/` directory
 - `preview/src/App.tsx` is the render target — skills update it to display the current page or component
 - `package.json` depends on `react`, `react-dom`, `vite`, `@vitejs/plugin-react`, `vite-plugin-singlefile`
+- The `sync-reference-components.sh` script is run once during setup and optionally re-run to pull reference app updates
+- This approach ensures `references/` remains read-only research material per the project structure conventions
 
 ### Packages
 
@@ -565,10 +616,16 @@ Output (JSON format):
 ```
 
 **Implementation Notes**
-- Uses TypeScript compiler API (`ts.createSourceFile`) for AST-based analysis of `.tsx` files — no runtime execution
 - CSS file analysis uses regex-based pattern matching (not a full CSS parser) for token reference validation
 - Follows existing monorepo package pattern: `packages/validator/src/`, vitest tests, `@figma-dsl/validator` scope
 - CLI integration: new `validate` command registered in `packages/cli/src/cli.ts` alongside existing commands
+
+**Phased Implementation**
+
+Rules are implemented in two phases to manage complexity and deliver value incrementally:
+
+- **Phase 1 — File-structure and regex rules** (high value, low risk): `three-file`, `barrel-export`, `css-modules`, `no-inline-style`, `design-tokens`, `token-exists`. These rules use file system checks and regex pattern matching — no AST analysis required.
+- **Phase 2 — AST-based rules** (higher complexity): `classname-prop`, `variant-union`, `html-attrs`, `dsl-compatible-layout`. These require TypeScript compiler API (`ts.createSourceFile`) for `.tsx` AST traversal. Implement after Phase 1 rules are validated in real skill workflows. If AST heuristics prove unreliable for specific rules, simplify to source-text pattern matching.
 
 ### Skills Layer
 
@@ -737,10 +794,10 @@ export function {{ComponentName}}({
 
 **Responsibilities & Constraints**
 - Present three approaches and guide user to select based on context (speed, fidelity, available tooling)
-- **Approach A (MCP)**: Auto-publish via `generate_figma_design` + auto-map Code Connect
+- **Approach A (MCP)**: Auto-publish via `generate_figma_design` + auto-map Code Connect + optional post-publish verification
 - **Approach B (Plugin)**: Compile → export JSON → import via Figma plugin UI
 - **Approach C (Pipeline)**: Compile → render → capture React → compare → iterate until pass → import
-- Run post-import verification via `capture-figma` + `batch-compare` for Approaches B and C
+- Run post-import verification via `capture-figma` + `batch-compare` for all approaches (optional for A, recommended for B and C)
 - Warn on unmapped design tokens (via validator token-exists rule)
 - Support batch operations via `figma-dsl batch` + `batch-compare`
 
@@ -982,7 +1039,7 @@ No persistent data storage. All artifacts are files on disk:
 
 **Skill → Validator**: Skills invoke `figma-dsl validate <path> --format json` and parse `ValidationResult` JSON from stdout.
 
-**Skill → Preview App**: Skills write `.tsx`, `.module.css`, and `.figma.tsx` files conforming to TypeScript strict mode and CSS Modules conventions.
+**Skill → Preview App**: Skills write `.tsx`, `.module.css`, and `.figma.tsx` files into `preview/src/components/` conforming to TypeScript strict mode and CSS Modules conventions. Components coexist with the copied reference components in the same directory.
 
 **Skill → CLI**: Skills invoke CLI commands via `Bash` with standard arguments:
 - `figma-dsl compile <file.dsl.ts> -o <output.json>`
