@@ -41,8 +41,7 @@ Present the user with available approaches:
 Regardless of approach, start by compiling the component DSL:
 
 ```bash
-cd /home/user/figma-component-dsl
-npx figma-dsl compile preview/src/components/{ComponentName}/{ComponentName}.tsx -o output/
+bin/figma-dsl compile preview/src/components/{ComponentName}/{ComponentName}.tsx -o output/
 ```
 
 This produces `output/{ComponentName}.json` — the intermediate DSL representation.
@@ -57,7 +56,7 @@ This produces `output/{ComponentName}.json` — the intermediate DSL representat
 
 1. **Export the DSL data**:
    ```bash
-   npx figma-dsl export output/{ComponentName}.json -o output/{ComponentName}.figma.json
+   bin/figma-dsl export output/{ComponentName}.json -o output/{ComponentName}.figma.json
    ```
 
 2. **Generate Figma design** via MCP:
@@ -81,7 +80,7 @@ This produces `output/{ComponentName}.json` — the intermediate DSL representat
 
 1. **Export JSON for plugin**:
    ```bash
-   npx figma-dsl export output/{ComponentName}.json -o output/{ComponentName}.figma.json --format plugin
+   bin/figma-dsl export output/{ComponentName}.json -o output/{ComponentName}.figma.json --format plugin
    ```
 
 2. **Provide the JSON file** to the user:
@@ -100,22 +99,22 @@ This produces `output/{ComponentName}.json` — the intermediate DSL representat
 
 1. **Compile**:
    ```bash
-   npx figma-dsl compile preview/src/components/{ComponentName}/{ComponentName}.tsx -o output/
+   bin/figma-dsl compile preview/src/components/{ComponentName}/{ComponentName}.tsx -o output/
    ```
 
 2. **Render** to PNG:
    ```bash
-   npx figma-dsl render output/{ComponentName}.json -o output/{ComponentName}.png
+   bin/figma-dsl render output/{ComponentName}.json -o output/{ComponentName}.png
    ```
 
 3. **Capture** the Figma component (if it already exists in Figma):
    ```bash
-   npx figma-dsl-capture-figma --node-url "{figma_node_url}" -o output/{ComponentName}-figma.png
+   bin/figma-dsl-capture-figma --node-url "{figma_node_url}" -o output/{ComponentName}-figma.png
    ```
 
 4. **Compare** rendered vs. Figma:
    ```bash
-   npx figma-dsl-compare output/{ComponentName}.png output/{ComponentName}-figma.png -o output/{ComponentName}-diff.png
+   bin/figma-dsl-compare output/{ComponentName}.png output/{ComponentName}-figma.png -o output/{ComponentName}-diff.png
    ```
 
 5. **Iterate** — if visual differences are found:
@@ -133,12 +132,12 @@ After the component is in Figma (any approach):
 
 1. **Capture the Figma result**:
    ```bash
-   npx figma-dsl-capture-figma --node-url "{figma_node_url}" -o output/{ComponentName}-figma.png
+   bin/figma-dsl-capture-figma --node-url "{figma_node_url}" -o output/{ComponentName}-figma.png
    ```
 
 2. **Batch compare** all variants:
    ```bash
-   npx figma-dsl-batch-compare --source output/ --target output/figma-captures/ -o output/comparison-report/
+   bin/figma-dsl-batch-compare --source output/ --target output/figma-captures/ -o output/comparison-report/
    ```
 
 3. **Review the comparison report** and flag any visual discrepancies.
@@ -148,7 +147,7 @@ After the component is in Figma (any approach):
 Run the validator to check for token compatibility issues:
 
 ```bash
-npx figma-dsl validate preview/src/components/{ComponentName}/{ComponentName}.tsx --check-tokens
+bin/figma-dsl validate preview/src/components/{ComponentName}/{ComponentName}.tsx --check-tokens
 ```
 
 Warn the user about:

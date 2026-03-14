@@ -20,17 +20,17 @@ mkdir -p "$OUTPUT_DIR"
 
 echo "=== Step 1: Compile DSL ==="
 cd "$PROJECT_ROOT"
-npx figma-dsl compile "$COMPONENT_PATH" -o "$OUTPUT_DIR/"
+"$PROJECT_ROOT/bin/figma-dsl" compile "$COMPONENT_PATH" -o "$OUTPUT_DIR/"
 echo "Compiled: $OUTPUT_DIR/$COMPONENT_NAME.json"
 
 echo ""
 echo "=== Step 2: Export for Figma ==="
-npx figma-dsl export "$OUTPUT_DIR/$COMPONENT_NAME.json" -o "$OUTPUT_DIR/$COMPONENT_NAME.figma.json" $FORMAT
+"$PROJECT_ROOT/bin/figma-dsl" export "$OUTPUT_DIR/$COMPONENT_NAME.json" -o "$OUTPUT_DIR/$COMPONENT_NAME.figma.json" $FORMAT
 echo "Exported: $OUTPUT_DIR/$COMPONENT_NAME.figma.json"
 
 echo ""
 echo "=== Step 3: Render preview PNG ==="
-npx figma-dsl render "$OUTPUT_DIR/$COMPONENT_NAME.json" -o "$OUTPUT_DIR/$COMPONENT_NAME.png"
+"$PROJECT_ROOT/bin/figma-dsl" render "$OUTPUT_DIR/$COMPONENT_NAME.json" -o "$OUTPUT_DIR/$COMPONENT_NAME.png"
 echo "Rendered: $OUTPUT_DIR/$COMPONENT_NAME.png"
 
 echo ""

@@ -39,7 +39,7 @@ export default App
 Before building, launch the dev server so the user can verify the page looks correct:
 
 ```bash
-cd /home/user/figma-component-dsl/preview && npm run dev
+cd preview && npm run dev
 ```
 
 Ask the user to confirm the page is ready for export, or proceed if they already confirmed.
@@ -49,7 +49,7 @@ Ask the user to confirm the page is ready for export, or proceed if they already
 Run the production build:
 
 ```bash
-cd /home/user/figma-component-dsl/preview && npx vite build
+cd preview && npx vite build
 ```
 
 This generates optimized output in `preview/dist/`:

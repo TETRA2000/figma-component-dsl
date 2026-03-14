@@ -19,7 +19,7 @@ mkdir -p "$OUTPUT_DIR"
 
 echo "=== Step 1: Validate DSL compatibility ==="
 cd "$PROJECT_ROOT"
-if npx figma-dsl validate "$COMPONENT_PATH"; then
+if "$PROJECT_ROOT/bin/figma-dsl" validate "$COMPONENT_PATH"; then
   echo "Validation passed."
 else
   echo "Validation failed. Fix errors and re-run."
@@ -28,12 +28,12 @@ fi
 
 echo ""
 echo "=== Step 2: Compile DSL ==="
-npx figma-dsl compile "$COMPONENT_PATH" -o "$OUTPUT_DIR/"
+"$PROJECT_ROOT/bin/figma-dsl" compile "$COMPONENT_PATH" -o "$OUTPUT_DIR/"
 echo "Compiled to $OUTPUT_DIR/$COMPONENT_NAME.json"
 
 echo ""
 echo "=== Step 3: Render DSL to PNG ==="
-npx figma-dsl render "$OUTPUT_DIR/$COMPONENT_NAME.json" -o "$OUTPUT_DIR/$COMPONENT_NAME.png"
+"$PROJECT_ROOT/bin/figma-dsl" render "$OUTPUT_DIR/$COMPONENT_NAME.json" -o "$OUTPUT_DIR/$COMPONENT_NAME.png"
 echo "Rendered to $OUTPUT_DIR/$COMPONENT_NAME.png"
 
 echo ""

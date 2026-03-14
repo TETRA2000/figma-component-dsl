@@ -165,7 +165,7 @@ Key rules:
 Run the figma-dsl validator:
 
 ```bash
-cd /home/user/figma-component-dsl && npx figma-dsl validate preview/src/components/{ComponentName}/{ComponentName}.tsx
+bin/figma-dsl validate preview/src/components/{ComponentName}/{ComponentName}.tsx
 ```
 
 If validation fails:
@@ -194,8 +194,8 @@ Create a quick preview page or update `App.tsx` to render the new component with
 For DSL-rendered PNG comparison:
 
 ```bash
-cd /home/user/figma-component-dsl && npx figma-dsl compile preview/src/components/{ComponentName}/{ComponentName}.tsx -o output/
-cd /home/user/figma-component-dsl && npx figma-dsl render output/{ComponentName}.json -o output/{ComponentName}.png
+bin/figma-dsl compile preview/src/components/{ComponentName}/{ComponentName}.tsx -o output/
+bin/figma-dsl render output/{ComponentName}.json -o output/{ComponentName}.png
 ```
 
 This produces a PNG rendering of how the component will look in Figma.
