@@ -19,6 +19,25 @@ Dogfooding validates the entire DSL rendering pipeline by creating real componen
 
 The core insight: if a React component renders correctly in the browser but looks different when expressed as DSL and rendered via the pipeline, there's a bug in the pipeline — not the component. This skill systematically finds those bugs.
 
+## Pipeline-First Investigation Mindset
+
+The entire purpose of dogfooding is to **find and fix bugs in `packages/`** — the compiler, renderer, layout resolver, and type definitions. When you find a difference between browser and DSL renders, your default assumption should be that the pipeline has a gap, not that the DSL was written wrong.
+
+**A "DSL fix" that restructures the DSL to avoid a feature is not a fix — it's hiding a bug.** Every time you consider patching the `.dsl.ts` file, first ask: "Am I working around a missing or broken pipeline feature?" If the answer is yes, the fix belongs in `packages/`, not in the DSL.
+
+Here's why this matters: if you "fix" a centering issue by adding a wrapper frame to the DSL, the pipeline still can't center things. The next person who writes DSL will hit the same problem. But if you fix the layout resolver to handle centering, every DSL file benefits forever.
+
+**Red flags that a "DSL fix" is masking a pipeline bug:**
+- Adding wrapper frames for centering or alignment → layout resolver may not handle centering within a parent
+- Switching from opacity on fills to pre-baked colors → renderer may not support independent fill opacity vs. node opacity
+- Avoiding `layoutSizingHorizontal: 'FILL'` → layout resolver may not compute FILL correctly
+- Using fixed pixel sizes instead of HUG → HUG content sizing may be broken in the layout resolver
+- Restructuring nesting to get correct spacing → nested auto-layout calculation may be off
+
+**The only legitimate "DSL fix"** is when the DSL genuinely had a typo or used the wrong API for the author's intent — e.g., writing `align: 'MIN'` when `SPACE_BETWEEN` was clearly what was meant. If the DSL correctly expressed the design but the pipeline doesn't support it, that's a pipeline bug, period.
+
+**Pipeline investigation is mandatory.** For every visual difference found, you must trace through the pipeline layers (see Step 6) before classifying it. Even if you end up concluding it's a genuine DSL error, the investigation itself may reveal pipeline gaps worth logging for future work.
+
 ## Prerequisites check
 
 Before starting, verify that the necessary tools are available. Run these checks and report any missing dependencies:
@@ -114,39 +133,48 @@ bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfo
 
 ### Step 5: Compare renders
 
-Visually inspect both renders side by side by reading both PNG files. Create a comparison report:
+Visually inspect both renders side by side by reading both PNG files. Create a comparison report. For each mismatch, note whether the DSL **attempted** the correct feature — this is critical for determining whether the issue is a DSL error or a pipeline gap:
 
-| Area | Browser | DSL | Match? | Issue |
-|---|---|---|---|---|
-| Header layout | correct | correct | yes | — |
-| Card corners | rounded | square | NO | cornerRadii not supported |
-| Text wrapping | wraps at 200px | overflows | NO | textAutoResize lost |
+| Area | Browser | DSL attempted? | DSL result | Match? | Likely cause |
+|---|---|---|---|---|---|
+| Header layout | correct | correct API | correct | YES | — |
+| Card corners | rounded | used cornerRadii | square | NO | Pipeline: cornerRadii not compiled |
+| Text wrapping | wraps at 200px | used textAutoResize | overflows | NO | Pipeline: textAutoResize lost |
+| Button gradient | gradient | used gradient() | solid color | NO | Pipeline: gradient rendering bug |
+
+The "DSL attempted?" column is key — if the DSL correctly used the right API and the output is still wrong, that's a pipeline bug, not a DSL error.
 
 Also run the CLI comparison if both images are the same dimensions:
 ```bash
 bin/figma-dsl compare dogfooding/<timestamp>/iteration-<N>/browser.png dogfooding/<timestamp>/iteration-<N>/dsl.png -t 85
 ```
 
-### Step 6: Fix root causes
+### Step 6: Investigate and fix root causes (pipeline first!)
 
-For each difference found, follow the calibrate skill's **root cause triage** process (see `.claude/skills/calibrate/SKILL.md`, Step 3.5):
+For every visual difference, follow this investigation sequence. Do not skip steps or jump to "DSL fix" without completing the investigation.
 
-1. **Check the DSL source** — Is the DSL correctly expressing the design?
-2. **Check the compiled JSON** — Did the property make it through compilation?
-3. **Check the rendered PNG** — Is the renderer handling it?
-4. **Check type definitions** — Is `FigmaNodeDict` missing a field?
+**Step 6.1 — Write the DSL as-intended first.** Express the design using the DSL features that most naturally match the CSS/React pattern. Don't preemptively avoid features you think might not work — use them and let the pipeline fail visibly. For example:
+- If the browser uses `opacity: 0.4`, use `opacity: 0.4` on the fill (not pre-baked colors)
+- If the browser centers children, use `counterAlign: 'CENTER'` (not wrapper frames)
+- If children stretch to fill, use `layoutSizingHorizontal: 'FILL'` (not fixed widths)
 
-Tag each issue as **DSL fix** (fix the `.dsl.ts` file) or **pipeline fix** (fix packages code).
+**Step 6.2 — Compile and inspect the JSON.** Read the compiled JSON output. Is the property present and correct? If it's missing or wrong, the bug is in the compiler or DSL-core types.
 
-For pipeline fixes, trace the property through each layer:
-1. `packages/dsl-core/src/types.ts` — DslNode type
+**Step 6.3 — Check the rendered PNG.** If the JSON looks correct but the PNG doesn't match, the bug is in the renderer or layout resolver.
+
+**Step 6.4 — Trace through the pipeline layers.** For any property that's missing or wrong, read the actual source code at each layer to find where it drops:
+1. `packages/dsl-core/src/types.ts` — DslNode type definition
 2. `packages/dsl-core/src/nodes.ts` — Factory functions
 3. `packages/compiler/src/types.ts` — FigmaNodeDict type
 4. `packages/compiler/src/compiler.ts` — Compilation passthrough
 5. `packages/compiler/src/layout-resolver.ts` — Layout resolution
 6. `packages/renderer/src/renderer.ts` — Canvas rendering
 
-Fix the first layer where the property disappears. Then rebuild and re-render to verify.
+**Step 6.5 — Fix the pipeline.** Fix the first layer where the property disappears or is mishandled. Then `npm run build`, re-compile, re-render, and verify the fix.
+
+**Step 6.6 — Only then consider DSL fixes.** After pipeline investigation is complete, if a difference is genuinely caused by incorrect DSL authoring (wrong API choice, typo, logical error), fix the DSL file. But log any pipeline limitations you discovered during investigation — even if you can't fix them now, they should appear in the history log as "known pipeline gaps."
+
+See `references/workflow.md` for detailed examples of the investigation process.
 
 ### Step 7: Update docs and tests
 
@@ -208,6 +236,9 @@ DSL features stressed: <comma-separated list>
 ## Pipeline fixes
 - **<fix title>**: <root cause> → <what was changed> (files: <list>)
 - ...
+
+## Known pipeline gaps (not fixed)
+- **<gap title>**: <description>. Workaround: <what DSL did instead>. Fix needed in: <pipeline layer>.
 
 ## Commits
 - `<hash>` — <commit message summary>
