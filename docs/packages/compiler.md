@@ -161,6 +161,7 @@ CompileResult { root: FigmaNodeDict (with geometry), nodeCount, errors[] }
 ### Fill Conversion (`convertFill`)
 - **SOLID**: Copies color (r,g,b,a normalized 0–1), opacity, visible
 - **GRADIENT_LINEAR**: Deep-copies gradientStops, gradientTransform matrix, opacity, visible
+- **GRADIENT_RADIAL**: Copies gradientStops, center, radius, opacity, visible
 - Fill array order is preserved
 
 ### Stroke Conversion (`convertStroke`)
@@ -345,6 +346,7 @@ Root node always has identity (no parent). Translation is additive through the t
 ### FigmaPaint
 - **SOLID**: `{type, color: {r,g,b,a}, opacity, visible}`
 - **GRADIENT_LINEAR**: `{type, gradientStops[], gradientTransform, opacity, visible}`
+- **GRADIENT_RADIAL**: `{type, gradientStops[], center?, radius?, opacity, visible}`
 
 ### LayoutResult
 ```typescript
@@ -356,11 +358,25 @@ Root node always has identity (no parent). Translation is additive through the t
 ---
 
 ## Error Handling
-**Confidence**: 0.70 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
+**Confidence**: 0.95 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-Error collection infrastructure exists (`CompileError` type with `message`, `nodePath`, `nodeType`; errors array threaded through recursive calls) but **no error conditions are currently detected or populated**. All compilations return an empty `errors[]` array. The `nodePath` parameter is threaded through recursive calls as a diagnostic aid for future error reporting.
+The compiler includes a `validateNode()` function that populates the `CompileError[]` array with validation warnings and errors during compilation:
 
-**Evidence**: `src/compiler.ts:230-238`, `src/types.ts:79-83`
+### Validation Rules (`validateNode`)
+
+| Check | Severity | Condition |
+|-------|----------|-----------|
+| Negative corner radius | Error | `cornerRadius < 0` |
+| RGBA out of range | Warning | Any r/g/b/a value outside 0–1 |
+| Non-positive stroke weight | Warning | `strokeWeight <= 0` |
+| Non-positive font size | Error | `fontSize <= 0` |
+
+Errors are returned in `CompileResult.errors[]` and logged to stderr by the CLI with `[nodeType] nodePath: message` format.
+
+### Text Decoration Passthrough
+The compiler preserves `textDecoration` from `TextStyle` into the compiled node, making it available for the renderer to draw underline/strikethrough lines.
+
+**Evidence**: `src/compiler.ts`
 
 ---
 
@@ -440,12 +456,12 @@ npm run test     # vitest run
 ## Known Limitations
 **Confidence**: 0.88 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-1. **Error collection unused**: `CompileError` infrastructure exists but errors array is always empty.
-2. **Font family hardcoded**: `textMeasurer` registers all fonts as `'Inter'` regardless of file name.
+1. ~~**Error collection unused**~~: **Resolved** — `validateNode()` now populates errors for invalid cornerRadius, RGBA bounds, strokeWeight, and fontSize.
+2. **Font family hardcoded**: `textMeasurer` registers all fonts as `'Inter'` regardless of file name. CJK text measurement uses the same font metrics.
 3. **Letter spacing not measured**: `letterSpacing` parameter accepted but not applied to canvas `measureText()`.
 4. **GUID scope**: Counter resets per `compile()` call — deterministic within a call, but concurrent compilations could conflict.
 5. **No baseline font metrics**: Baselines computed from `fontSize × 1.2` default, not actual font metrics.
-6. **No input validation**: Missing properties, invalid fills, or circular references are not detected.
+6. **Limited input validation**: `validateNode()` checks some properties (cornerRadius, RGBA, strokeWeight, fontSize) but does not detect missing properties, invalid fills, or circular references.
 7. **Single-threaded**: All operations synchronous within the event loop.
 
 ---
