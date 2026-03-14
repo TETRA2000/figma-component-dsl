@@ -18,8 +18,8 @@ export const variantUnionRule: ValidationRule = {
     const bareStringPattern = /\b(variant|size)\??:\s*string\b/;
 
     for (let i = 0; i < lines.length; i++) {
-      if (bareStringPattern.test(lines[i])) {
-        const match = lines[i].match(bareStringPattern);
+      if (bareStringPattern.test(lines[i]!)) {
+        const match = lines[i]!.match(bareStringPattern);
         const propName = match ? match[1] : 'variant/size';
         errors.push({
           rule: 'variant-union',

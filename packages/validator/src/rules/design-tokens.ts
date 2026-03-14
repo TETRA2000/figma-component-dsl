@@ -1,7 +1,6 @@
 import type { ValidationRule, ValidationContext, ValidationError } from '../types.js';
 
 const HARDCODED_COLOR_PATTERN = /(?<!var\()#[0-9a-fA-F]{3,8}\b/;
-const HARDCODED_PX_PATTERN = /:\s*\d+px\b/;
 
 export const designTokensRule: ValidationRule = {
   id: 'design-tokens',
@@ -28,7 +27,7 @@ export const designTokensRule: ValidationRule = {
 
     const lines = cssContent.split('\n');
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
+      const line = lines[i]!;
       // Skip comments
       if (line.trim().startsWith('/*') || line.trim().startsWith('*') || line.trim().startsWith('//')) {
         continue;

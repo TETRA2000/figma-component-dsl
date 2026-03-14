@@ -14,7 +14,7 @@ export const noInlineStyleRule: ValidationRule = {
 
     const lines = tsxContent.split('\n');
     for (let i = 0; i < lines.length; i++) {
-      if (/style=\{\{/.test(lines[i])) {
+      if (/style=\{\{/.test(lines[i]!)) {
         errors.push({
           rule: 'no-inline-style',
           message: 'Inline style attribute detected. Use CSS Modules instead.',

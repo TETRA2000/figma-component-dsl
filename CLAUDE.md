@@ -42,6 +42,7 @@ Kiro-style Spec Driven Development implementation on AI-DLC (AI Development Life
 - Keep steering current and verify alignment with `/kiro:spec-status`
 - Follow the user's instructions precisely, and within that scope act autonomously: gather the necessary context and complete the requested work end-to-end in this run, asking questions only when essential information is missing or the instructions are critically ambiguous.
 - When changing code, add or update tests to cover the change. Run `npx vitest run` from the project root to verify all tests pass before considering the task complete.
+- Run `npx tsc --noEmit -p packages/<pkg>/` for each changed package to check for type errors before considering the task complete.
 
 ## Steering Configuration
 - Load entire `.kiro/steering/` as project memory

@@ -25,4 +25,12 @@ jobs:
 
       - run: npm run build
 
+      - name: Type check
+        run: |
+          for pkg in packages/*/; do
+            echo "::group::tsc $pkg"
+            npx tsc --noEmit -p "$pkg"
+            echo "::endgroup::"
+          done
+
       - run: npx vitest run

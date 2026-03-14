@@ -26,14 +26,13 @@ export const tokenExistsRule: ValidationRule = {
     }
 
     // Extract all var(--*) references from the CSS file
-    const varRefPattern = /var\((--[\w-]+)/g;
     const lines = cssContent.split('\n');
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
+      const line = lines[i]!;
       let refMatch;
       const linePattern = /var\((--[\w-]+)/g;
       while ((refMatch = linePattern.exec(line)) !== null) {
-        const tokenName = refMatch[1];
+        const tokenName = refMatch[1]!;
         if (!definedTokens.has(tokenName)) {
           errors.push({
             rule: 'token-exists',

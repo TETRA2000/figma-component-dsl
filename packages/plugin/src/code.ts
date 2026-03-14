@@ -362,7 +362,6 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
 
     // Grid layout: arrange in rows of GRID_COLUMNS
     let col = 0;
-    let row = 0;
     let rowX = 0;
     let rowY = 0;
     let rowMaxHeight = 0;
