@@ -2,74 +2,134 @@
 
 ## Summary
 
-Light discovery for an extension feature. The calibration workflow builds on the existing CLI, exporter, comparator, and Figma plugin. Key findings: (1) the plugin already supports multiple components in a single import, (2) Figma offers two paths for screenshot capture (REST API image export and plugin `exportAsync`), (3) the CLI command pattern is straightforward to extend.
+- **Feature**: calibration-workflow
+- **Discovery Scope**: Extension
+- **Key Findings**:
+  1. Plugin already supports multi-component import with horizontal layout; adding auto-export via `exportAsync` eliminates the manual Figma screenshot step
+  2. Plugin already emits `componentIdMap` (name → nodeId) after import; this can be persisted to enable REST API capture on subsequent runs
+  3. CLI command pattern is a simple switch dispatcher with `cmdXxx(args)` handlers; new commands follow the same pattern
 
 ## Research Log
 
-### Topic 1: Plugin Multi-Component Support
+### Topic 1: Plugin Multi-Component Support & Auto-Export
 
-**Investigation**: Does the Figma plugin already handle multiple components?
+**Context**: Can the plugin eliminate the manual Figma export step?
 
-**Findings**: Yes. `packages/plugin/src/code.ts` loops over `input.components` and lays them out horizontally with 50px spacing. No plugin changes needed for batch import — only the layout could be improved to a grid.
-
-**Source**: Direct code analysis of `packages/plugin/src/code.ts` lines 66-78.
-
-**Implication**: Requirement 3 (Figma Plugin Batch Import) is partially satisfied. Grid layout and progress reporting are the only additions needed.
-
-### Topic 2: Figma Image Export Options
-
-**Investigation**: How to capture screenshots of Figma-rendered components for comparison.
+**Sources Consulted**: Direct code analysis of `packages/plugin/src/code.ts` lines 294-356; Figma Plugin API `exportAsync` documentation.
 
 **Findings**:
-1. **REST API** — `GET /v1/images/:file_key?ids=nodeId1,nodeId2&format=png&scale=1` returns URLs to rendered PNGs. Requires a personal access token or OAuth token with `file_content:read` scope. Rate-limited.
-2. **Plugin API** — `node.exportAsync({ format: 'PNG', constraint: { type: 'SCALE', value: 1 } })` returns a `Uint8Array` from within the plugin. Can be sent to the UI iframe and downloaded.
-3. **Manual fallback** — User exports PNGs from Figma and drops them in a directory for comparison.
+- The plugin loops over `input.components`, creates nodes, and lays them out horizontally with 50px spacing
+- After creation, `componentIdMap` is already built mapping `compDef.name → node.id` (line 336)
+- Figma Plugin API provides `node.exportAsync({ format: 'PNG', constraint: { type: 'SCALE', value: 1 } })` returning `Uint8Array`
+- The plugin UI iframe can receive binary data via `postMessage` and offer downloads or bundle results
 
-**Source**: Figma Developer Docs — REST API endpoints, Plugin API `exportAsync`.
+**Implications**:
+- Adding `exportAsync` calls after all nodes are created provides automatic screenshot capture
+- The `componentIdMap` can be included in the plugin output for REST API use on subsequent runs
+- Grid layout replaces horizontal-only layout for better canvas organization
+- Progress reporting via `figma.ui.postMessage({ type: 'progress', ... })` during import loop
 
-**Implication**: Design should support all three paths. The REST API path enables full automation; the plugin path works without a token; the manual path works offline. The `calibrate` command can detect which path is available.
+### Topic 2: Figma REST API for Subsequent Captures
 
-### Topic 3: Existing CLI Extension Points
+**Context**: Can REST API fully automate screenshot capture after initial plugin import?
 
-**Investigation**: How to add batch commands to the CLI.
+**Sources Consulted**: Figma REST API v1 documentation — `GET /v1/images/:file_key`
 
-**Findings**: The CLI uses a `switch` dispatcher in `run()`. Each command is a standalone async function returning an exit code. Services (`textMeasurer`, renderer fonts) are initialized once per command via `initServices()`. DSL modules are loaded via dynamic `import()`.
+**Findings**:
+1. `GET /v1/images/:file_key?ids=nodeId1,nodeId2&format=png&scale=1` returns URLs to rendered PNGs
+2. Requires personal access token with `file_content:read` scope
+3. Rate-limited but supports batching multiple node IDs in one request
+4. Node IDs persist across sessions — once captured from plugin, reusable indefinitely
 
-**Pattern**: Add new case branches for `generate-test-suite`, `batch`, `batch-compare`, `capture-figma`, and `calibrate`. Each follows the existing `cmdXxx(args)` pattern.
+**Implications**:
+- First calibration run: plugin auto-export provides initial screenshots + node ID mapping
+- Subsequent runs: REST API uses persisted node IDs for faster, fully automated capture
+- Design should persist `componentIdMap` in the batch manifest
 
-**Source**: `packages/cli/src/cli.ts`
+### Topic 3: Combining Generate + Batch into Single Command
 
-### Topic 4: Test Component Generation Strategy
+**Context**: User requested merging `generate-test-suite` and `batch` into one command.
 
-**Investigation**: What property categories and edge cases should the test suite cover?
+**Findings**:
+- Both operations share the output directory context
+- Generated `.dsl.ts` files are immediately consumed by batch processing
+- Separating them forces the user to manage intermediate paths
+- A single `calibrate` command can: generate → compile → render → export → (optionally compare)
 
-**Findings**: Based on the corner-radius bug and the gap analysis (which identified 8 rendering gaps), the test suite should cover:
+**Implications**:
+- `calibrate` becomes the primary command orchestrating the full pipeline
+- `batch` remains as a standalone command for processing existing DSL files
+- `generate-test-suite` can be kept as a standalone for users who want to inspect/edit generated files before processing
+
+### Topic 4: Existing CLI Extension Points
+
+**Context**: How to add new commands to the CLI.
+
+**Sources Consulted**: `packages/cli/src/cli.ts`
+
+**Findings**:
+- Switch dispatcher in `run()` with `cmdXxx(args)` handlers
+- `initServices()` initializes fonts once per command
+- `loadDslModule()` does dynamic ESM import of `.dsl.ts` files
+- `parseArgs()` with options per command
+
+**Implications**: Add new case branches. Straightforward extension.
+
+### Topic 5: Test Component Generation Strategy
+
+**Context**: What property categories and edge cases to cover.
+
+**Findings**: Based on gap analysis (8 rendering gaps identified):
 - Corner radius: 0, 1, half-height, > dimension, 9999
 - Fills: solid single, solid multi, linear gradient (0°, 45°, 90°), gradient with alpha
-- Strokes: thin (1px), medium (2px), thick (4px), with different alignments
-- Auto-layout: horizontal, vertical, nested, with spacing, padding combinations
-- Typography: sizes (12, 16, 24, 48), weights (400, 600, 700), alignments (LEFT, CENTER, RIGHT), line height, letter spacing
+- Strokes: thin (1px), medium (2px), thick (4px)
+- Auto-layout: horizontal, vertical, nested, with spacing/padding
+- Typography: sizes (12, 16, 24, 48), weights (400, 600, 700), alignments (LEFT, CENTER, RIGHT), line height
 - Opacity: 0, 0.5, 1
 - Clip content: true/false with overflowing children
-- Combined: gradient + corner radius, stroke + auto-layout, etc.
+- Combined: gradient + corner radius, stroke + auto-layout
 
-**Implication**: Test components are simple DSL files using the existing `component()`, `frame()`, `text()`, `rectangle()` factories. They can be generated programmatically as TypeScript source strings.
+**Implications**: Test components use existing DSL factory functions (`component()`, `frame()`, `text()`, `rectangle()`). Generated as TypeScript source strings.
 
 ## Architecture Pattern Evaluation
 
-**Extension pattern chosen**: New CLI commands + new `calibration` package (or module within CLI) for test generation and batch orchestration. No changes to core DSL types, compiler, or renderer APIs. Exporter gets a thin `mergePluginInputs` utility. Plugin gets grid layout + progress reporting.
+| Option | Description | Strengths | Risks / Limitations | Notes |
+|--------|-------------|-----------|---------------------|-------|
+| Extension of CLI commands | New commands in existing switch dispatcher | Minimal architecture changes, follows established patterns | CLI module grows larger | Selected approach |
+| Separate calibration package | New `@figma-dsl/calibration` package | Better separation, independent testing | Over-engineering for CLI-only functionality | Considered but rejected — unnecessary boundary |
 
 ## Design Decisions
 
-1. **Separate PNGs per component** (not composite grid) — enables per-component comparison and diff images.
-2. **Test components as generated `.dsl.ts` files** (not runtime objects) — ensures they go through the full pipeline and can be inspected/modified by the user.
-3. **Timestamped output directories** — enables tracking improvement across calibration iterations.
-4. **JSON report format** — machine-readable for Claude Code, with Markdown summary for human review.
+### Decision: Single `calibrate` Command for Full Pipeline
+- **Context**: User requested combining `generate-test-suite` and `batch`
+- **Alternatives**: (1) Keep separate commands (2) Single combined command
+- **Selected Approach**: `calibrate` command orchestrates generate → batch → compare with optional flags to run partial pipeline
+- **Rationale**: Reduces friction in calibration sessions; partial flags allow advanced usage
+- **Trade-offs**: Less granular control vs. simpler primary workflow
+- **Follow-up**: Keep `batch` and `batch-compare` as standalone for advanced use
+
+### Decision: Plugin Auto-Export Eliminates Manual Step
+- **Context**: Manual Figma export was identified as workflow bottleneck in design review
+- **Alternatives**: (1) Keep manual export (2) Plugin auto-export via `exportAsync` (3) REST API only
+- **Selected Approach**: Plugin calls `exportAsync` on each created component after import, sends PNGs + node ID mapping back to UI
+- **Rationale**: Eliminates manual step entirely on first run; node IDs enable REST API for subsequent runs
+- **Trade-offs**: Slightly longer plugin execution (export adds time); user still must run plugin to import
+- **Follow-up**: Plugin UI should show export progress
+
+### Decision: Separate PNGs per Component
+- **Context**: Grid vs. individual exports
+- **Selected Approach**: Individual PNGs per component for per-component comparison and diff
+- **Rationale**: Enables granular comparison reporting and targeted fixes
 
 ## Risks & Mitigations
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Figma API rate limiting | Medium | Support manual fallback; batch REST API calls to minimize requests |
-| Test suite size grows large | Low | Property filter flag; keep defaults focused on known gap areas |
-| GUID collisions in merged exports | Medium | Use unified GUID counter across batch compilation |
+- Figma API rate limiting — Support plugin auto-export as primary path; batch REST API calls to minimize requests
+- Test suite size grows large — Property filter flag; keep defaults focused on known gap areas
+- GUID collisions in merged exports — Use unified GUID counter across batch compilation
+- Plugin `exportAsync` timing — Sequential export with progress reporting to avoid memory pressure
+
+## References
+
+- Figma REST API Image Export: `GET /v1/images/:file_key` — PNG export of specific nodes
+- Figma Plugin API `exportAsync` — In-plugin rasterization returning `Uint8Array`
+- Existing CLI patterns: `packages/cli/src/cli.ts` — switch dispatcher, `parseArgs`, `cmdXxx` handlers

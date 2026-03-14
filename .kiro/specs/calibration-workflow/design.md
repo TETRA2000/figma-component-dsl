@@ -2,31 +2,32 @@
 
 ## Overview
 
-**Purpose**: This feature delivers a systematic calibration workflow for developers to identify and fix rendering discrepancies between the DSL renderer and Figma. It enables bulk test component generation, batch processing through the full pipeline (compile → render → export → import → capture → compare), and structured reporting that Claude Code can parse and act upon.
+**Purpose**: This feature delivers a systematic calibration workflow for developers to identify and fix rendering discrepancies between the DSL renderer and Figma. It enables bulk test component generation, batch processing through the full pipeline (compile → render → export → plugin auto-export → compare), and structured reporting that Claude Code can parse and act upon.
 
-**Users**: Developers using Claude Code during calibration sessions will use this to iterate on rendering fidelity — generate test components, batch-process them, import to Figma, capture Figma screenshots, compare results, and fix discrepancies in a tight feedback loop.
+**Users**: Developers using Claude Code during calibration sessions use this to iterate on rendering fidelity — generate test components, batch-process them, import to Figma (with automatic screenshot capture), compare results, and fix discrepancies in a tight feedback loop.
 
-**Impact**: Extends the existing CLI with new commands (`generate-test-suite`, `batch`, `batch-compare`, `capture-figma`, `calibrate`) and adds grid layout + progress reporting to the Figma plugin.
+**Impact**: Extends the existing CLI with new commands (`calibrate`, `batch`, `batch-compare`, `capture-figma`) and enhances the Figma plugin with grid layout, progress reporting, and automatic PNG export via `exportAsync`.
 
 ### Goals
 
 - Enable systematic detection of rendering differences across all DSL property categories
 - Process dozens of test components in a single CLI invocation
+- Eliminate manual Figma export by having the plugin auto-export screenshots after import
 - Produce machine-readable reports that Claude Code can parse to identify and fix rendering bugs
 - Track improvement across calibration iterations via timestamped output directories
 
 ### Non-Goals
 
-- Fully automated Figma interaction without human involvement (Figma plugin requires manual trigger)
 - Real-time watch mode or incremental compilation
 - Visual regression testing for React components (existing `pipeline` command covers this)
 - Figma REST API OAuth flow management (user provides token manually)
+- Automated plugin invocation (user triggers plugin import manually; the plugin handles export automatically)
 
 ## Architecture
 
 ### Existing Architecture Analysis
 
-The existing CLI has a single-file command pattern: each command loads one `.dsl.ts` file, compiles it, and produces output. The Figma plugin already supports multiple components in a single `PluginInput.components` array with horizontal layout. The comparator operates on image pairs. The calibration workflow extends all of these without changing core APIs.
+The existing CLI has a single-file command pattern: each command loads one `.dsl.ts` file, compiles it, and produces output. The Figma plugin already supports multiple components in a single `PluginInput.components` array with horizontal layout and emits a `componentIdMap` after import. The comparator operates on image pairs. The calibration workflow extends all of these without changing core APIs.
 
 Key existing patterns preserved:
 - Command dispatcher in `cli.ts` with `cmdXxx(args)` handlers
@@ -40,14 +41,13 @@ Key existing patterns preserved:
 ```mermaid
 graph TB
     subgraph CLI
-        GenSuite[generate-test-suite]
+        Calibrate[calibrate]
         Batch[batch]
         BatchCompare[batch-compare]
         CaptureFigma[capture-figma]
-        Calibrate[calibrate]
     end
 
-    subgraph Existing Packages
+    subgraph Existing_Packages
         Compiler[compiler]
         Renderer[renderer]
         Exporter[exporter]
@@ -55,7 +55,7 @@ graph TB
     end
 
     subgraph Figma
-        Plugin[plugin]
+        Plugin[plugin - auto-export]
         FigmaAPI[Figma REST API]
     end
 
@@ -63,23 +63,21 @@ graph TB
         TestDSL[test .dsl.ts files]
         PNGs[DSL-rendered PNGs]
         PluginJSON[merged plugin-input.json]
-        FigmaPNGs[Figma-rendered PNGs]
+        FigmaPNGs[Figma-exported PNGs]
         Report[calibration report]
     end
 
-    GenSuite --> TestDSL
+    Calibrate --> TestDSL
+    Calibrate --> Batch
     Batch --> Compiler --> Renderer --> PNGs
     Batch --> Compiler --> Exporter --> PluginJSON
     PluginJSON --> Plugin
     Plugin --> FigmaPNGs
-    FigmaAPI --> FigmaPNGs
-    CaptureFigma --> FigmaAPI
+    CaptureFigma --> FigmaAPI --> FigmaPNGs
     BatchCompare --> Comparator
     PNGs --> BatchCompare
     FigmaPNGs --> BatchCompare
     BatchCompare --> Report
-    Calibrate --> Batch
-    Calibrate --> CaptureFigma
     Calibrate --> BatchCompare
 ```
 
@@ -97,7 +95,7 @@ graph TB
 | Rendering | @napi-rs/canvas (existing) | Per-component PNG rendering | No changes |
 | Comparison | pixelmatch (existing) | Per-component image diff | No changes |
 | Figma Capture | Figma REST API v1 | Automated PNG export from Figma | Optional; requires personal access token |
-| Plugin | Figma Plugin API (existing) | Batch import + `exportAsync` for screenshots | Grid layout addition |
+| Plugin | Figma Plugin API (existing) | Batch import + `exportAsync` for auto-export | Grid layout + auto-export additions |
 | Report | JSON + Markdown | Machine-readable + human-readable output | New |
 
 ## System Flows
@@ -109,33 +107,25 @@ sequenceDiagram
     participant Dev as Developer / Claude Code
     participant CLI as figma-dsl CLI
     participant Figma as Figma Plugin
-    participant API as Figma REST API
 
-    Dev->>CLI: generate-test-suite --output test-suite/
+    Dev->>CLI: calibrate --output calibration/run-001/
     CLI-->>Dev: Generated N test .dsl.ts files
-
-    Dev->>CLI: batch test-suite/ -o calibration/run-001/
     CLI-->>Dev: Compiled, rendered PNGs, merged plugin-input.json
 
     Dev->>Figma: Import plugin-input.json via plugin UI
-    Figma-->>Dev: Components created on canvas
-
-    alt REST API available
-        Dev->>CLI: capture-figma --file-key KEY --token TOKEN -o calibration/run-001/figma/
-        CLI->>API: GET /v1/images/:key?ids=...
-        API-->>CLI: PNG URLs
-        CLI-->>Dev: Figma PNGs saved
-    else Manual export
-        Dev->>Dev: Export PNGs from Figma to calibration/run-001/figma/
-    end
+    Figma-->>Figma: Create components in grid layout
+    Figma-->>Figma: Auto-export each component via exportAsync
+    Figma-->>Dev: Download ZIP with PNGs + node-id-map.json
 
     Dev->>CLI: batch-compare calibration/run-001/dsl/ calibration/run-001/figma/ -o calibration/run-001/report.json
     CLI-->>Dev: JSON report + Markdown summary
 
     Dev->>Dev: Claude Code reads report, identifies fixes
     Dev->>Dev: Apply fixes to renderer/exporter/compiler
-    Dev->>CLI: batch test-suite/ -o calibration/run-002/
-    Note over Dev,CLI: Iterate until all components pass
+
+    Note over Dev,CLI: Subsequent runs use REST API
+    Dev->>CLI: calibrate --output calibration/run-002/ --capture-mode api --file-key KEY --token TOKEN
+    CLI-->>Dev: Full automated loop with REST API capture
 ```
 
 ### Batch Processing Flow
@@ -159,8 +149,8 @@ graph LR
 |-------------|---------|------------|------------|-------|
 | 1.1–1.5 | Test suite generation | TestSuiteGenerator | `generateTestSuite()` | — |
 | 2.1–2.6 | Batch compile/render/export | BatchProcessor | `processBatch()` | Batch Processing |
-| 3.1–3.4 | Plugin multi-component import | Plugin (grid layout) | `PluginInput` (existing) | — |
-| 4.1–4.4 | Figma screenshot capture | FigmaCapturer | `captureFigmaImages()` | Calibration Loop |
+| 3.1–3.4 | Plugin multi-component import | Plugin (grid layout + auto-export) | `PluginInput` (existing) | Calibration Loop |
+| 4.1–4.4 | Figma screenshot capture | FigmaCapturer, Plugin auto-export | `captureFigmaImages()` | Calibration Loop |
 | 5.1–5.6 | Batch comparison + report | CalibrationReporter | `generateReport()` | Calibration Loop |
 | 6.1–6.5 | Calibration feedback loop | CalibrateOrchestrator | `runCalibration()` | Calibration Loop |
 | 7.1–7.3 | Custom test extensibility | BatchProcessor | `--include` flag | Batch Processing |
@@ -171,10 +161,10 @@ graph LR
 |-----------|-------------|--------|--------------|------------------|-----------|
 | TestSuiteGenerator | CLI / Generation | Generate parameterized test .dsl.ts files | 1.1–1.5 | @figma-dsl/core (P0) | Service |
 | BatchProcessor | CLI / Orchestration | Multi-file compile, render, export | 2.1–2.6, 7.1–7.3 | compiler, renderer, exporter (P0) | Service, Batch |
-| FigmaCapturer | CLI / Integration | Fetch Figma-rendered PNGs | 4.1–4.4 | Figma REST API (P1) | Service |
+| FigmaCapturer | CLI / Integration | Fetch Figma-rendered PNGs via REST API | 4.1–4.4 | Figma REST API (P1) | Service |
 | CalibrationReporter | CLI / Reporting | Generate comparison reports | 5.1–5.6, 6.1, 6.4 | comparator (P0) | Service |
 | CalibrateOrchestrator | CLI / Orchestration | Run full calibration loop | 6.2–6.5 | BatchProcessor, FigmaCapturer, CalibrationReporter (P0) | Service |
-| Plugin Grid Layout | Plugin / UI | Arrange components in grid | 3.1–3.4 | Figma Plugin API (P0) | — |
+| Plugin Grid Layout + Auto-Export | Plugin / UI | Arrange components in grid; export PNGs automatically | 3.1–3.4, 4.1 | Figma Plugin API (P0) | — |
 
 ### CLI / Generation
 
@@ -199,7 +189,7 @@ graph LR
 ##### Service Interface
 
 ```typescript
-interface PropertyCategory =
+type PropertyCategory =
   | 'corner-radius'
   | 'fills-solid'
   | 'fills-gradient'
@@ -244,7 +234,7 @@ function generateTestSuite(options: GenerateTestSuiteOptions): GenerateTestSuite
 - Compile, render, and export each file independently
 - Merge all exported `PluginNodeDef` arrays into a single `PluginInput`
 - Continue processing on individual file failures
-- Generate batch manifest
+- Generate batch manifest including component name → node ID mapping placeholder
 
 **Dependencies**
 - Inbound: CLI command handler — invocation (P0)
@@ -312,11 +302,12 @@ interface BatchManifest {
 
 | Field | Detail |
 |-------|--------|
-| Intent | Retrieve Figma-rendered PNGs of imported components |
+| Intent | Retrieve Figma-rendered PNGs via REST API using persisted node IDs |
 | Requirements | 4.1, 4.2, 4.3, 4.4 |
 
 **Responsibilities & Constraints**
-- Support three capture modes: REST API, plugin `exportAsync`, and manual file drop
+- Use Figma REST API to export PNGs for specific node IDs
+- Read node ID mapping from `node-id-map.json` (emitted by plugin) or accept via CLI flag
 - Match Figma-exported images to DSL component names
 - Save images with component-name-matching filenames
 
@@ -330,15 +321,11 @@ interface BatchManifest {
 
 ```typescript
 interface FigmaCaptureOptions {
-  mode: 'api' | 'manual';
   outputDir: string;
-  // API mode
-  fileKey?: string;
-  token?: string;
-  nodeIds?: Record<string, string>;  // componentName → nodeId
+  fileKey: string;
+  token: string;
+  nodeIdMap: Record<string, string>;  // componentName → nodeId
   scale?: number;
-  // Manual mode
-  sourceDir?: string;
 }
 
 interface FigmaCaptureResult {
@@ -353,7 +340,7 @@ interface FigmaCaptureResult {
 function captureFigmaImages(options: FigmaCaptureOptions): Promise<FigmaCaptureResult>;
 ```
 
-- Preconditions: For API mode, `fileKey` and `token` are provided and valid; for manual mode, `sourceDir` exists with PNG files
+- Preconditions: `fileKey` and `token` are valid; `nodeIdMap` is non-empty
 - Postconditions: Each captured image is saved as `{componentName}.png` in `outputDir`
 
 ### CLI / Reporting
@@ -443,16 +430,19 @@ function formatReportMarkdown(report: BatchCompareReport): string;
 
 **Responsibilities & Constraints**
 - Create timestamped run directory (e.g., `calibration/2026-03-14T120000/`)
+- Generate test suite into the run directory (unless `--skip-generate` flag)
 - Invoke BatchProcessor for DSL rendering + export
-- Invoke FigmaCapturer (or prompt for manual step)
-- Invoke CalibrationReporter for comparison
+- If `--capture-mode api`: invoke FigmaCapturer with REST API
+- If no capture mode: print instructions for plugin import and stop (user runs `batch-compare` separately after plugin export)
+- Invoke CalibrationReporter for comparison (when Figma PNGs are available)
 - Print structured summary to stdout
 - Preserve all run artifacts for cross-iteration tracking
 
 **Dependencies**
 - Inbound: CLI command handler — invocation (P0)
+- Outbound: TestSuiteGenerator — test generation (P0)
 - Outbound: BatchProcessor — rendering + export (P0)
-- Outbound: FigmaCapturer — Figma screenshots (P1)
+- Outbound: FigmaCapturer — REST API capture (P1)
 - Outbound: CalibrationReporter — comparison + report (P0)
 
 **Contracts**: Service [x]
@@ -461,41 +451,47 @@ function formatReportMarkdown(report: BatchCompareReport): string;
 
 ```typescript
 interface CalibrateOptions {
-  testSuiteDir: string;
   outputDir: string;          // base dir; timestamped subdirs created
+  properties?: PropertyCategory[];
   include?: string[];
-  figmaMode: 'api' | 'manual';
+  skipGenerate?: boolean;     // skip test suite generation
+  captureMode?: 'api';       // omit for plugin-based workflow
   fileKey?: string;
   token?: string;
+  nodeIdMapPath?: string;     // path to node-id-map.json from plugin
   threshold?: number;
 }
 
 interface CalibrateResult {
   runDir: string;             // timestamped directory path
   batch: BatchResult;
-  capture: FigmaCaptureResult;
-  report: BatchCompareReport;
+  report?: BatchCompareReport;  // present only when comparison was performed
 }
 
 function runCalibration(options: CalibrateOptions): Promise<CalibrateResult>;
 ```
 
-- Preconditions: Test suite directory exists with `.dsl.ts` files
-- Postconditions: All artifacts (PNGs, plugin JSON, report) saved in timestamped run directory
+- Preconditions: `outputDir` is writable
+- Postconditions: All artifacts (PNGs, plugin JSON, report if applicable) saved in timestamped run directory
 
 ### Plugin / UI
 
-#### Plugin Grid Layout
+#### Plugin Grid Layout + Auto-Export
 
 | Field | Detail |
 |-------|--------|
-| Intent | Arrange batch-imported components in a grid with progress reporting |
-| Requirements | 3.1, 3.2, 3.3, 3.4 |
+| Intent | Arrange batch-imported components in a grid and automatically export PNGs |
+| Requirements | 3.1, 3.2, 3.3, 3.4, 4.1 |
 
 **Implementation Notes**
 - Replace current horizontal-only layout (`xOffset += size.x + 50`) with a grid: fixed number of columns (e.g., 5), row height = max component height in row + spacing
 - Add `figma.ui.postMessage({ type: 'progress', current, total, name })` during the import loop
-- Wrap individual `createNode` calls in try/catch; log errors and continue
+- After all components are created, iterate over created nodes and call `node.exportAsync({ format: 'PNG', constraint: { type: 'SCALE', value: 1 } })` on each
+- Collect exported PNGs as `{ name: string, data: Uint8Array }[]` and a `nodeIdMap: Record<string, string>`
+- Send results to plugin UI via `postMessage`; UI bundles them into a downloadable ZIP (or individual files) containing:
+  - `figma/{componentName}.png` — one PNG per component
+  - `node-id-map.json` — `Record<string, string>` mapping component name to Figma node ID
+- Wrap individual `createNode` and `exportAsync` calls in try/catch; log errors and continue
 
 ## Data Models
 
@@ -507,6 +503,7 @@ The calibration workflow introduces no persistent storage. All data is file-base
 - **Batch Manifest** — JSON file tracking all processed components and their outputs
 - **Calibration Report** — JSON file with per-component comparison results
 - **Run Directory** — timestamped directory containing all artifacts from a single calibration run
+- **Node ID Map** — JSON file mapping component names to Figma node IDs (emitted by plugin)
 
 ### Data Contracts
 
@@ -515,6 +512,13 @@ The calibration workflow introduces no persistent storage. All data is file-base
 **Calibration Report** — `report.json` (schema defined in CalibrationReporter above)
 
 **Merged Plugin Input** — `plugin-input.json` (existing `PluginInput` schema, unchanged)
+
+**Node ID Map** — `node-id-map.json`:
+```typescript
+// Record<componentName, figmaNodeId>
+// Example: { "corner-radius-zero": "123:456", "fills-solid-red": "123:457" }
+type NodeIdMap = Record<string, string>;
+```
 
 **Property Category Convention**: Test component filenames follow `{category}-{variant}.dsl.ts` pattern. The category is extracted from the filename for report grouping. Categories: `corner-radius`, `fills-solid`, `fills-gradient`, `strokes`, `auto-layout-horizontal`, `auto-layout-vertical`, `auto-layout-nested`, `typography`, `opacity`, `clip-content`, `combined`.
 
@@ -532,6 +536,8 @@ Fail-soft with comprehensive reporting. Individual component failures do not hal
 
 **Figma API Errors**: Rate limiting (429) → exponential backoff with 3 retries; auth errors (403) → abort with clear message; network errors → retry up to 3 times.
 
+**Plugin Export Errors**: Individual `exportAsync` failures → logged, component skipped in export ZIP, continue with remaining components.
+
 **Comparison Errors**: Dimension mismatch → comparison still runs (resized); missing pair → reported as "unpaired".
 
 ## Testing Strategy
@@ -544,10 +550,10 @@ Fail-soft with comprehensive reporting. Individual component failures do not hal
 
 ### Integration Tests
 
-- End-to-end batch: `generate-test-suite` → `batch` → verify PNGs and merged JSON are produced
+- End-to-end batch: `calibrate` → verify PNGs and merged JSON are produced
 - Batch compare with known-good and known-bad image pairs → verify report accuracy
 - CLI command parsing: verify all new commands accept documented flags and produce correct exit codes
 
 ### E2E Tests
 
-- Full calibration loop with manual Figma mode (using pre-captured Figma PNGs as fixtures)
+- Full calibration loop with pre-captured Figma PNGs as fixtures (simulating plugin auto-export output)
