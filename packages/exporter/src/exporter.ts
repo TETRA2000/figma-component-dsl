@@ -6,7 +6,8 @@ import { dirname } from 'path';
 export type { PluginNodeDef, PluginInput } from '@figma-dsl/core';
 
 function convertToPluginNode(node: FigmaNodeDict): PluginNodeDef {
-  const result: PluginNodeDef = {
+  // Build a mutable record then return as readonly PluginNodeDef
+  const result: Record<string, unknown> = {
     type: node.type,
     name: node.name,
     size: node.size,
@@ -83,7 +84,7 @@ function convertToPluginNode(node: FigmaNodeDict): PluginNodeDef {
     result.overriddenProperties = node.overriddenProperties;
   }
 
-  return result;
+  return result as unknown as PluginNodeDef;
 }
 
 export function generatePluginInput(
