@@ -119,7 +119,9 @@ function toFigmaPaints(fills: PluginNodeDef['fills']): Paint[] {
   });
 }
 
-function setAutoLayout(node: FrameNode | ComponentNode, def: PluginNodeDef): void {
+// Sets the node's OWN auto-layout configuration (makes it a layout container).
+// Must be called BEFORE children are created so they can use FILL sizing.
+function setAutoLayoutConfig(node: FrameNode | ComponentNode, def: PluginNodeDef): void {
   if (!def.stackMode) return;
 
   node.layoutMode = def.stackMode === 'HORIZONTAL' ? 'HORIZONTAL' : 'VERTICAL';
@@ -135,12 +137,17 @@ function setAutoLayout(node: FrameNode | ComponentNode, def: PluginNodeDef): voi
   if (def.counterAxisAlignItems) {
     node.counterAxisAlignItems = def.counterAxisAlignItems as 'MIN' | 'CENTER' | 'MAX';
   }
+}
 
-  if (def.layoutSizingHorizontal) {
-    node.layoutSizingHorizontal = def.layoutSizingHorizontal as 'FIXED' | 'HUG' | 'FILL';
+// Sets the node's sizing within its parent (FILL/HUG).
+// Must be called AFTER parent.appendChild() because Figma requires the node
+// to be a child of an auto-layout frame before FILL can be set.
+function setLayoutSizing(node: SceneNode, def: PluginNodeDef): void {
+  if (def.layoutSizingHorizontal && 'layoutSizingHorizontal' in node) {
+    (node as FrameNode).layoutSizingHorizontal = def.layoutSizingHorizontal as 'FIXED' | 'HUG' | 'FILL';
   }
-  if (def.layoutSizingVertical) {
-    node.layoutSizingVertical = def.layoutSizingVertical as 'FIXED' | 'HUG' | 'FILL';
+  if (def.layoutSizingVertical && 'layoutSizingVertical' in node) {
+    (node as FrameNode).layoutSizingVertical = def.layoutSizingVertical as 'FIXED' | 'HUG' | 'FILL';
   }
 }
 
@@ -159,8 +166,9 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         if (def.clipContent !== undefined) frame.clipsContent = def.clipContent;
         frame.opacity = def.opacity;
         frame.visible = def.visible;
-        setAutoLayout(frame, def);
+        setAutoLayoutConfig(frame, def);
         parent.appendChild(frame);
+        setLayoutSizing(frame, def);
         for (const child of def.children) {
           await createNode(child, frame);
         }
@@ -177,6 +185,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         rect.opacity = def.opacity;
         rect.visible = def.visible;
         parent.appendChild(rect);
+        setLayoutSizing(rect, def);
         node = rect;
         break;
       }
@@ -217,6 +226,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         text.opacity = def.opacity;
         text.visible = def.visible;
         parent.appendChild(text);
+        setLayoutSizing(text, def);
         node = text;
         break;
       }
@@ -245,7 +255,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         if (def.clipContent !== undefined) comp.clipsContent = def.clipContent;
         comp.opacity = def.opacity;
         comp.visible = def.visible;
-        setAutoLayout(comp, def);
+        setAutoLayoutConfig(comp, def);
 
         // Register component properties
         if (def.componentPropertyDefinitions) {
@@ -255,6 +265,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         }
 
         parent.appendChild(comp);
+        setLayoutSizing(comp, def);
         for (const child of def.children) {
           await createNode(child, comp);
         }
@@ -274,8 +285,9 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
             if (child.cornerRadius) comp.cornerRadius = child.cornerRadius;
             comp.opacity = child.opacity;
             comp.visible = child.visible;
-            setAutoLayout(comp, child);
+            setAutoLayoutConfig(comp, child);
             parent.appendChild(comp);
+            setLayoutSizing(comp, child);
             for (const grandchild of child.children) {
               await createNode(grandchild, comp);
             }

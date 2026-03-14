@@ -41,7 +41,7 @@ The plugin is a **monolithic single-file** (`src/code.ts`, ~650 lines) organized
 | Global state | `componentMap`, `errors`, `trackedNodeIds`, `editLog`, `isTracking` |
 | Edit Tracker | `storeBaseline()`, `storeIdentity()`, `findTrackedAncestor()`, `startTracking()` |
 | Paint conversion | `toFigmaPaints()` |
-| Layout helper | `setAutoLayout()` |
+| Layout helpers | `setAutoLayoutConfig()`, `setLayoutSizing()` |
 | Node factory | `createNode()` — async recursive factory |
 | Node serializer | `serializeNode()`, `serializeFills()`, `serializeStrokes()` — reverse of createNode |
 | Diff & export | `computeChangeset()`, `computeCompleteExport()`, `getTrackedNodeIdsOnPage()` — uses `diffNodes` from `@figma-dsl/core` |
@@ -95,7 +95,7 @@ The `createNode()` async function dispatches by node type:
 | INSTANCE | `refComp.createInstance()` | Looks up `componentMap`; applies property overrides |
 | default | — | Logs error, returns null |
 
-Each node follows: create → set name/size → apply fills/strokes/opacity → set layout → append to parent → recurse children.
+Each node follows: create → set name/size → apply fills/strokes/opacity → set auto-layout config → append to parent → set layout sizing (FILL/HUG) → recurse children. The two-phase layout setup ensures `layoutSizingHorizontal: 'FILL'` is set after the node is appended to its auto-layout parent.
 
 **Evidence**: `src/code.ts:107-292`
 
@@ -117,13 +117,23 @@ Each node follows: create → set name/size → apply fills/strokes/opacity → 
 ## Auto-Layout Configuration
 **Confidence**: 0.93 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-`setAutoLayout()` applies flex-like layout to FRAME and COMPONENT nodes when `stackMode` is defined:
+Auto-layout is applied in two phases to work around Figma's API requirement that `FILL` sizing can only be set on children of auto-layout frames:
 
+**Phase 1 — `setAutoLayoutConfig()`** (called before `appendChild`):
+Sets the node's own layout container properties:
 - Layout mode: HORIZONTAL or VERTICAL
 - Padding: `paddingTop/Right/Bottom/Left` (defaults to 0)
 - Spacing: `itemSpacing` (defaults to 0)
-- Alignment: `primaryAxisAlignItems` and `counterAxisAlignItems` — cast to Figma enums without validation
-- Sizing: `layoutSizingHorizontal/Vertical` — cast to `'FIXED' | 'HUG' | 'FILL'`
+- Alignment: `primaryAxisAlignItems` and `counterAxisAlignItems`
+
+**Phase 2 — `setLayoutSizing()`** (called after `appendChild`):
+Sets the node's sizing within its parent:
+- `layoutSizingHorizontal`: `'FIXED' | 'HUG' | 'FILL'`
+- `layoutSizingVertical`: `'FIXED' | 'HUG' | 'FILL'`
+
+This split is critical: `FILL` requires the node to already be a child of an auto-layout parent. The previous single-function approach (`setAutoLayout()`) set sizing before `appendChild()`, causing `"FILL can only be set on children of auto-layout frames"` errors.
+
+`setLayoutSizing()` is also called for RECTANGLE and TEXT nodes (after `appendChild`), enabling dividers and text to use `FILL`.
 
 **Note**: The compiler now infers `FIXED` when a node has auto-layout and an explicit size but no `widthSizing`/`heightSizing`. This ensures frames with explicit dimensions (e.g., `size: { x: 1440, y: 64 }`) are imported at their specified size rather than defaulting to HUG.
 
@@ -322,7 +332,7 @@ Textarea for pasting PluginInput JSON, auto-export PNGs checkbox, Import button.
 
 1. **No cross-import references**: Instances only link to components created in the same import batch.
 2. **No schema validation**: `schemaVersion` is never checked; malformed input may cause runtime errors.
-3. **FILL on standalone components**: `layoutSizingHorizontal: FILL` not supported on standalone components (Figma API limitation).
+3. ~~**FILL on standalone components**~~: Fixed — `layoutSizingHorizontal: FILL` now works correctly via two-phase layout setup.
 4. **Silent fill fallback**: Unrecognized fill types become black SOLID with no warning.
 5. **Opacity inconsistency**: SOLID fills compound opacity (`fill.opacity * color.a`); gradients apply opacity directly.
 6. **No enum validation**: Alignment and sizing values are cast without checks; invalid strings cause Figma API errors.
