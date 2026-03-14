@@ -19,7 +19,8 @@ The project follows a **specification-driven, research-first** approach. Referen
 ### AI Skills
 **Location**: `.claude/skills/{skill-name}/`
 **Purpose**: Claude AI Skills with SKILL.md entrypoint and supporting files
-**Convention**: SKILL.md with YAML frontmatter (`name`, `description`), markdown instructions, optional `references/` subdirectory
+**Convention**: SKILL.md with YAML frontmatter (`name`, `description`), markdown instructions, optional `references/` subdirectory, optional `evals/`, `scripts/`
+**Active Skills**: calibrate, create-landing-page, create-react-component, export-to-figma, export-to-html, magi-docs-writer (plus `shared/` for common references like component-registry and design-tokens)
 
 ### Specifications
 **Location**: `.kiro/specs/{feature-name}/`
@@ -30,6 +31,21 @@ The project follows a **specification-driven, research-first** approach. Referen
 **Location**: `.kiro/steering/`
 **Purpose**: Project-wide context and conventions loaded as AI memory
 **Convention**: One topic per file (product.md, tech.md, structure.md, custom files)
+
+### DSL Examples
+**Location**: `examples/`
+**Purpose**: DSL usage examples demonstrating component definitions
+**Convention**: `{component-name}.dsl.ts` files. Batch-processable via `bin/figma-dsl-batch examples/ -o output/`.
+
+### Preview App
+**Location**: `preview/`
+**Purpose**: Vite + React app for live previewing components and landing pages
+**Convention**: Components in `src/components/{ComponentName}/` following the 3-file pattern (tsx, module.css, figma.tsx). Pages in `src/pages/`. Shared design tokens in `src/components/tokens.css`.
+
+### Calibration Output
+**Location**: `calibration/`
+**Purpose**: Timestamped test suite results measuring rendering fidelity (DSL PNG vs Figma reference)
+**Convention**: Timestamped subdirectories containing `dsl/`, `figma/`, `test-suite/`, `report.json`. Generated via `bin/figma-dsl-calibrate`.
 
 ### Reference Implementations
 **Location**: `references/{project-name}/`
