@@ -66,6 +66,25 @@ describe('compile() — node type mapping', () => {
     expect(result.root.children[0]!.type).toBe('ROUNDED_RECTANGLE');
   });
 
+  it('maps RECTANGLE with cornerRadii to ROUNDED_RECTANGLE', () => {
+    const node = frame('Root', {
+      children: [rectangle('R', {
+        size: { x: 10, y: 10 },
+        cornerRadii: { topLeft: 4, topRight: 0, bottomLeft: 0, bottomRight: 8 },
+      })],
+    });
+    const result = compile(node);
+    expect(result.root.children[0]!.type).toBe('ROUNDED_RECTANGLE');
+  });
+
+  it('passes cornerRadii through to compiled output', () => {
+    const node = frame('Root', {
+      cornerRadii: { topLeft: 4, topRight: 8, bottomLeft: 0, bottomRight: 12 },
+    });
+    const result = compile(node);
+    expect(result.root.cornerRadii).toEqual({ topLeft: 4, topRight: 8, bottomLeft: 0, bottomRight: 12 });
+  });
+
   it('maps RECTANGLE without cornerRadius to RECTANGLE', () => {
     const node = frame('Root', {
       children: [rectangle('R', { size: { x: 10, y: 10 } })],

@@ -336,7 +336,7 @@ Root node always has identity (no parent). Translation is additive through the t
 ### FigmaNodeDict (key fields)
 - **Identity**: `guid: [number, number]`, `name: string`, `type: FigmaNodeType`
 - **Geometry**: `size: {x, y}`, `transform: number[3][3]`
-- **Visual**: `fillPaints: FigmaPaint[]`, `strokes: FigmaStroke[]`, `opacity`, `visible`, `cornerRadius`, `clipContent`
+- **Visual**: `fillPaints: FigmaPaint[]`, `strokes: FigmaStroke[]`, `opacity`, `visible`, `cornerRadius`, `cornerRadii`, `clipContent`
 - **Layout**: `stackMode`, `itemSpacing`, `padding*`, `primaryAxisAlignItems`, `counterAxisAlignItems`, `layoutSizingHorizontal/Vertical`
 - **Text**: `textData`, `derivedTextData`, `fontSize`, `fontFamily`, `textAlignHorizontal`, `textAutoResize`
 - **Component**: `componentPropertyDefinitions`, `componentId`, `overriddenProperties`
@@ -417,7 +417,8 @@ npm run test     # vitest run
 
 **compiler.test.ts** (~297 lines, 23 test suites):
 - GUID assignment and determinism
-- Type mapping (RECTANGLE → ROUNDED_RECTANGLE)
+- Type mapping (RECTANGLE → ROUNDED_RECTANGLE, including per-corner cornerRadii)
+- Corner radii passthrough (uniform and per-corner)
 - Fill conversion (solid, gradient, multi-fill ordering)
 - Stroke conversion
 - Text data expansion and baselines

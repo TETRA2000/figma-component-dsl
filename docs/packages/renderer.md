@@ -66,10 +66,11 @@ packages/renderer/
 | Color utility | 54–56 | `rgbaToString()` |
 | Font weight utility | 58–60 | `fontWeightToCss()` |
 | Fill rendering | 62–98 | `applyFills()` — solid + gradient |
-| Shape utility | 100–111 | `drawRoundedRect()` |
-| Node rendering | 113–205 | `renderNode()` — recursive tree traversal |
-| Text rendering | 207–247 | `renderText()` |
-| Public API | 249–293 | `render()`, `renderToFile()` |
+| Corner radius resolution | 100–126 | `resolveCornerRadius()`, `hasCornerRadius()` |
+| Shape utility | 128–139 | `drawRoundedRect()` |
+| Node rendering | 141–234 | `renderNode()` — recursive tree traversal |
+| Text rendering | 236–318 | `renderText()` with word-wrap support |
+| Public API | 320–365 | `render()`, `renderToFile()` |
 
 **Evidence**: `src/index.ts:1`, `src/renderer.ts`, `package.json`
 
@@ -197,7 +198,9 @@ FigmaNodeDict (compiled tree)
 | GROUP | Transparent container — children rendered, no shape |
 
 ### Rounded Rectangles
-- Uses `ctx.roundRect()` when `cornerRadius > 0`
+- Uses `ctx.roundRect()` when corner radius is present
+- Supports both uniform `cornerRadius` (single number) and per-corner `cornerRadii` (array `[topLeft, topRight, bottomRight, bottomLeft]`)
+- `resolveCornerRadius()` helper normalizes both formats for the canvas API
 - Falls back to `ctx.rect()` for zero or undefined corner radius
 - Same logic used for fill shapes, stroke shapes, and clipping regions
 
@@ -461,7 +464,7 @@ npm run test     # vitest run
 
 | Suite | Tests | Coverage |
 |-------|-------|----------|
-| Basic shapes | 4 | Solid fills, corner radius, ellipses, groups |
+| Basic shapes | 6 | Solid fills, uniform corner radius, per-corner radii, ellipses, groups |
 | Text | 3 | Simple text, multiline, center-aligned |
 | Gradients | 2 | Linear gradient, gradient with angle |
 | Strokes | 1 | Bordered rectangle |
@@ -488,7 +491,7 @@ npm run test     # vitest run
 2. **Linear gradients only**: GRADIENT_LINEAR supported; no radial, conic, or diamond gradients.
 3. **Inter font only**: All fonts registered under 'Inter' family; custom fonts not supported.
 4. **No shadow/blur effects**: Not in FigmaNodeDict type or rendering implementation.
-5. **Uniform corner radius**: Single `cornerRadius` value, not per-corner.
+5. ~~**Uniform corner radius**~~: **Resolved** — both uniform `cornerRadius` and per-corner `cornerRadii` (`{ topLeft, topRight, bottomLeft, bottomRight }`) are now supported.
 6. **Stroke alignment ignored**: Always renders as CENTER regardless of `INSIDE`/`CENTER`/`OUTSIDE`.
 7. **Unused `assetDir` option**: Declared in `RenderOptions` but never used in implementation.
 8. **Silent text failure**: Text nodes without `textData`/`derivedTextData` render as blank without error.

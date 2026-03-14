@@ -42,6 +42,7 @@ export interface FigmaNodeDict {
   strokes?: FigmaStroke[];
   strokeWeight?: number;
   cornerRadius?: number;
+  cornerRadii?: { topLeft: number; topRight: number; bottomLeft: number; bottomRight: number };
   opacity: number;
   visible: boolean;
   clipContent?: boolean;

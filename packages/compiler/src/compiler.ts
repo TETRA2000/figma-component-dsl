@@ -121,6 +121,7 @@ function compileNode(
     strokes,
     strokeWeight,
     cornerRadius: node.cornerRadius,
+    cornerRadii: node.cornerRadii,
     opacity: node.opacity ?? 1,
     visible: node.visible ?? true,
     clipContent: node.clipContent,

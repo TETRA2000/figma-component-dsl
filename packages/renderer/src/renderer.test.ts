@@ -39,6 +39,31 @@ describe('render() — basic shapes', () => {
     expect(result.pngBuffer.length).toBeGreaterThan(0);
   });
 
+  it('renders a frame with per-corner radii', () => {
+    const node = frame('Root', {
+      size: { x: 100, y: 100 },
+      fills: [solid('#0000ff')],
+      cornerRadii: { topLeft: 0, topRight: 12, bottomLeft: 0, bottomRight: 12 },
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders a rectangle with per-corner radii', () => {
+    const node = frame('Root', {
+      size: { x: 100, y: 100 },
+      children: [rectangle('R', {
+        size: { x: 80, y: 40 },
+        fills: [solid('#00ff00')],
+        cornerRadii: { topLeft: 4, topRight: 8, bottomLeft: 0, bottomRight: 16 },
+      })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
   it('renders an ellipse', () => {
     const node = frame('Root', {
       size: { x: 100, y: 100 },
