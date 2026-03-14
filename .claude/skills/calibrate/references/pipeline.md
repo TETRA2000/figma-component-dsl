@@ -57,6 +57,21 @@ FigmaNodeDict (intermediate representation)
 | Text wrong font weight | fontWeightToStyle mapping | compiler.ts |
 | Component properties ignored | componentPropertyDefinitions not set | compiler.ts, exporter.ts |
 | layoutSizing FILL not working | widthSizing/heightSizing not mapped | compiler.ts (auto-layout section) |
+| Per-corner radius ignored | cornerRadii not in FigmaNodeDict type or not passed through | types.ts, compiler.ts, renderer.ts |
+| Property works in DSL but not in render | FigmaNodeDict missing the field — compiler silently drops it | types.ts (add field), compiler.ts (add passthrough) |
+| Renderer draws wrong shape | drawShape / renderNode doesn't check all property variants | renderer.ts (resolveCornerRadius, drawShape) |
+
+## Pipeline diagnosis checklist
+
+When a rendered PNG doesn't match expectations, trace the property through each layer:
+
+1. **DslNode** (dsl-core/src/types.ts) — Is the property defined in the type?
+2. **Factory function** (dsl-core/src/nodes.ts) — Does the constructor accept and store it?
+3. **FigmaNodeDict** (compiler/src/types.ts) — Does the intermediate type have a field for it?
+4. **compileNode** (compiler/src/compiler.ts) — Does the compiler copy it to the result object?
+5. **renderNode** (renderer/src/renderer.ts) — Does the renderer read and act on it?
+
+The first layer where the property is absent or mishandled is where the fix belongs. A common pattern: dsl-core defines a property (e.g., `cornerRadii`), but `FigmaNodeDict` doesn't include it, so the compiler silently drops it even though there are no TypeScript errors.
 
 ## Build commands
 

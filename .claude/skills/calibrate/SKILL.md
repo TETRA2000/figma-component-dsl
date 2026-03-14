@@ -3,19 +3,22 @@ name: calibrate
 description: >
   Run DSL rendering calibration: generate test suite components, batch compile
   and render to PNGs, visually inspect results, and fix rendering issues in an
-  iterative loop. Use this skill whenever the user wants to calibrate, run the
-  test suite, check rendering accuracy, add new test components, batch render,
+  iterative loop. When issues are found, performs root cause analysis to determine
+  whether the problem is in the DSL file or in the pipeline packages code
+  (compiler, renderer, layout-resolver, types). Use this skill whenever the user
+  wants to calibrate, run the test suite, check rendering accuracy, diagnose
+  rendering bugs, fix pipeline code, add new test components, batch render,
   or verify that code changes haven't regressed the renderer or compiler output.
   Also trigger when the user says things like "run calibration", "check the
-  renders", "add these to the test suite", "batch render", "generate test cases",
-  "how do the PNGs look", or mentions calibration in the context of the DSL
-  pipeline.
+  renders", "fix the pipeline", "why does this render wrong", "add these to the
+  test suite", "batch render", "generate test cases", "how do the PNGs look",
+  "fix packages codes", or mentions calibration in the context of the DSL pipeline.
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 
 # DSL Rendering Calibration
 
-Calibration validates that the DSL pipeline (dsl-core -> compiler -> renderer -> exporter -> plugin) produces correct visual output. The workflow generates test components, batch-renders them to PNGs, inspects the results, and iteratively fixes issues.
+Calibration validates that the DSL pipeline (dsl-core -> compiler -> renderer -> exporter -> plugin) produces correct visual output. The workflow generates test components, batch-renders them to PNGs, inspects the results, and iteratively fixes issues — including diagnosing and fixing bugs in the pipeline packages themselves when the root cause isn't in the DSL.
 
 ## When to use each mode
 
@@ -25,6 +28,8 @@ Calibration validates that the DSL pipeline (dsl-core -> compiler -> renderer ->
 | "Add X to calibration" / "new test theme" | **Add components** -- create category + batch |
 | "Re-run just the hamburger theme" | **Partial run** -- batch specific category |
 | "The gradient renders look wrong, fix them" | **Fix loop** -- inspect + fix + re-render |
+| "Fix the pipeline" / "why does X render wrong" | **Pipeline diagnosis** -- triage + fix packages + test |
+| "Can you fix by analyzing the render?" | **Full run + pipeline diagnosis** -- render, inspect, triage, fix |
 
 ## Quick reference: CLI commands
 
@@ -81,44 +86,137 @@ Read the rendered PNG files to visually verify correctness. Focus on:
 - **Text** -- Does text wrap properly? Are font sizes/weights correct?
 - **Fills** -- Are colors and gradients rendering accurately?
 - **Strokes** -- Are borders visible with correct weight?
-- **Corner radius** -- Are rounded corners smooth and correct?
+- **Corner radius** -- Are rounded corners smooth and correct? (both uniform and per-corner)
 - **Sizing** -- Do HUG/FIXED/FILL modes produce expected dimensions?
+- **Clipping** -- Does clipContent work as expected?
 
 Report findings as a table: component name, status (pass/issue), and description of any problems.
 
+### Step 3.5: Root cause triage
+
+Before jumping to fixes, determine whether each issue is a **DSL authoring problem** or a **pipeline code bug**. This distinction is critical — fixing the wrong layer wastes time and can mask real bugs.
+
+#### How to triage
+
+For each issue found in Step 3, run through this checklist:
+
+1. **Check the DSL source** -- Read the `.dsl.ts` file. Does the DSL correctly express the intended design? If the DSL is wrong (missing property, wrong value), fix the DSL file.
+
+2. **Check the compiled output** -- Compile the DSL to JSON and inspect the intermediate `FigmaNodeDict`:
+   ```bash
+   bin/figma-dsl compile <file.dsl.ts> -o /tmp/debug.json
+   ```
+   Read the JSON and check whether the property in question made it through compilation. If the DSL sets `cornerRadii` but the JSON only has `cornerRadius`, the compiler is dropping the property.
+
+3. **Check the rendered output** -- If the JSON looks correct but the PNG is wrong, the renderer isn't handling that property. Read the renderer source to confirm.
+
+4. **Check the type definitions** -- A common pattern is that `dsl-core` defines a property, but the intermediate `FigmaNodeDict` type doesn't include it, so the compiler silently drops it. Check `packages/compiler/src/types.ts` to see if the field exists on `FigmaNodeDict`.
+
+#### Triage decision tree
+
+```
+Issue found in rendered PNG
+  │
+  ├─ DSL source is wrong (missing prop, wrong value, bad structure)
+  │   └─► Fix the DSL file (Step 4a)
+  │
+  ├─ DSL source is correct, but compiled JSON is wrong
+  │   ├─ Property missing from FigmaNodeDict type
+  │   │   └─► Fix types.ts + compiler.ts (Step 4b)
+  │   ├─ Property exists in type but compiler doesn't pass it through
+  │   │   └─► Fix compiler.ts (Step 4b)
+  │   └─ Layout/sizing is computed incorrectly
+  │       └─► Fix layout-resolver.ts (Step 4b)
+  │
+  └─ DSL correct, JSON correct, but PNG is wrong
+      ├─ Renderer doesn't handle the property/value
+      │   └─► Fix renderer.ts (Step 4b)
+      └─ Canvas API usage issue (wrong draw calls, transform bugs)
+          └─► Fix renderer.ts (Step 4b)
+```
+
+Tag each issue as **DSL fix** or **pipeline fix** before proceeding.
+
 ### Step 4: Fix loop (configurable, default 3 iterations)
 
-When issues are found:
+When issues are found, apply fixes based on the triage from Step 3.5:
 
-1. **Diagnose** -- Read the relevant source files to understand the root cause. The rendering pipeline is:
-   - `packages/dsl-core/src/` -- DSL node constructors and types
-   - `packages/compiler/src/compiler.ts` -- Compiles DslNode to FigmaNodeDict
-   - `packages/compiler/src/layout-resolver.ts` -- Resolves sizes and positions
-   - `packages/compiler/src/text-measurer.ts` -- Measures text for layout
-   - `packages/renderer/src/renderer.ts` -- Renders FigmaNodeDict to PNG via Canvas
-   - `packages/exporter/src/exporter.ts` -- Converts to plugin-consumable JSON
+#### Step 4a: DSL file fixes
 
-2. **Fix** -- Edit the source files. Common fix locations:
-   - Text wrapping issues -> `text-measurer.ts` or `renderer.ts` (renderText)
-   - Layout/sizing issues -> `layout-resolver.ts` or `compiler.ts` (auto-layout section)
-   - Fill/stroke issues -> `compiler.ts` (convertFill/convertStroke) or `renderer.ts`
-   - Missing properties -> Check the full pipeline from types.ts through to renderer
+For issues tagged as DSL problems:
+- Edit the `.dsl.ts` file directly
+- No rebuild needed — just re-run the batch
 
-3. **Rebuild** -- After editing source:
+#### Step 4b: Pipeline code fixes
+
+For issues tagged as pipeline bugs, follow this systematic process. The key insight is that properties flow through multiple layers, and a fix often requires changes at every layer the property touches.
+
+**The pipeline layers (in order):**
+
+| Layer | File | Role |
+|---|---|---|
+| 1. DSL types | `packages/dsl-core/src/types.ts` | DslNode type definition |
+| 2. DSL constructors | `packages/dsl-core/src/nodes.ts` | Factory functions that create DslNode |
+| 3. Intermediate types | `packages/compiler/src/types.ts` | FigmaNodeDict type definition |
+| 4. Compiler | `packages/compiler/src/compiler.ts` | Transforms DslNode → FigmaNodeDict |
+| 5. Layout resolver | `packages/compiler/src/layout-resolver.ts` | Computes sizes and positions |
+| 6. Text measurer | `packages/compiler/src/text-measurer.ts` | Measures text for layout |
+| 7. Renderer | `packages/renderer/src/renderer.ts` | Renders FigmaNodeDict → PNG via Canvas |
+| 8. Exporter | `packages/exporter/src/exporter.ts` | Converts to plugin JSON |
+
+**Diagnosis procedure for a missing/broken property:**
+
+1. **Trace the property top-down.** Start at layer 1 and follow it through each layer. The first layer where the property disappears or gets mangled is where the bug is.
+
+2. **Check the type at each boundary.** A property defined in `DslNode` (layer 1) but absent from `FigmaNodeDict` (layer 3) will be silently dropped by the compiler — TypeScript won't complain because the compiler function just doesn't reference it.
+
+3. **Read the compiler passthrough section.** In `compiler.ts`, look at the `compileNode` function where it builds the `result` object. Properties must be explicitly copied from the DslNode to the FigmaNodeDict. If a property isn't in the assignment, it's dropped.
+
+4. **Read the renderer switch/case.** In `renderer.ts`, look at `renderNode`'s switch statement and the helper functions it calls. If a property exists in the FigmaNodeDict but the renderer never reads it, it won't affect the output.
+
+**Common pipeline bug patterns:**
+
+| Pattern | Symptom | Root cause | Fix |
+|---|---|---|---|
+| Missing type field | Property silently dropped | `FigmaNodeDict` in types.ts doesn't have the field | Add field to types.ts, add passthrough in compiler.ts |
+| No compiler passthrough | Property in DSL but not in compiled JSON | `compileNode` doesn't copy the property | Add assignment in compiler.ts |
+| Renderer ignores property | JSON correct but PNG wrong | `renderNode` or helpers don't read the field | Update renderer.ts drawing logic |
+| Partial support | Works for some values, not others | Renderer handles simple case but not variants | Extend renderer logic (e.g., uniform radius works but per-corner doesn't) |
+| Transform accumulation | Children positioned wrong | `compileNodeWithLayout` transform math incorrect | Fix transform composition in compiler.ts |
+| Text measurement drift | Text overflows or has wrong height | `text-measurer.ts` metrics don't match renderer's canvas metrics | Align measurement with canvas font rendering |
+
+**After fixing pipeline code:**
+
+1. **Add tests** -- For every pipeline fix, add tests to the relevant `*.test.ts`:
+   - Compiler fixes → `packages/compiler/src/compiler.test.ts`
+   - Renderer fixes → `packages/renderer/src/renderer.test.ts`
+   - Layout fixes → `packages/compiler/src/layout-resolver.test.ts`
+
+2. **Run tests:**
    ```bash
-   npm run build  # rebuilds all packages
+   npx vitest run
    ```
 
-4. **Re-render** -- Re-run the batch for affected components:
+3. **Type-check changed packages:**
+   ```bash
+   npx tsc --noEmit -p packages/<changed-pkg>/
+   ```
+
+4. **Rebuild:**
+   ```bash
+   npm run build
+   ```
+
+5. **Re-render** -- Re-run the batch for affected components:
    ```bash
    bin/figma-dsl batch calibration/<timestamp>/test-suite/<category> -o calibration/<timestamp>-fix<N>
    ```
 
-5. **Re-inspect** -- Read the new PNGs and compare with previous iteration.
+6. **Re-inspect** -- Read the new PNGs and compare with previous iteration.
 
-6. **Repeat** until all issues are resolved or max iterations reached.
+7. **Repeat** until all issues are resolved or max iterations reached.
 
-Ask the user before starting the fix loop: "Found N issues. Want me to attempt fixes? (default: up to 3 iterations)"
+Ask the user before starting the fix loop: "Found N issues (M in DSL files, K in pipeline code). Want me to attempt fixes? (default: up to 3 iterations)"
 
 ## Adding new test components
 
