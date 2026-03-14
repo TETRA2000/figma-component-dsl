@@ -162,6 +162,41 @@ Warn the user about:
 - `references/code-connect-pattern.md` — Code Connect binding patterns
 - `references/mcp-setup-guide.md` — MCP server configuration guide
 
+## Variant Components (componentSet)
+
+If the React component has `variant` or `size` props (or similar visual variants), the DSL file **must** use `componentSet()` instead of `component()`. Figma only supports variant properties on component sets.
+
+### How to structure the DSL file
+
+1. Create a helper function that builds one variant combination:
+   ```ts
+   function cardVariant(variant: string, size: string) {
+     return component(`Variant=${variant}, Size=${size}`, {
+       componentProperties: [
+         { name: 'Title', type: 'TEXT', defaultValue: 'Card' },
+       ],
+       children: [...],
+     });
+   }
+   ```
+
+2. Generate all combinations and wrap in `componentSet()`:
+   ```ts
+   const variants = ['Default', 'Popular'];
+   const sizes = ['Small', 'Medium', 'Large'];
+   const children = variants.flatMap(v => sizes.map(s => cardVariant(v, s)));
+
+   export default componentSet('MyCard', { children });
+   ```
+
+3. Each child component name **must** use Figma's `Property=Value, Property=Value` naming convention.
+
+### Common mistakes
+
+- Using `type: 'VARIANT'` in `componentProperties` on a standalone `component()` — rejected by compiler, filtered by exporter
+- Forgetting to vary the visual design between variants (different sizes, borders, colors)
+- Not using the exact `Property=Value` naming format in child component names
+
 ## Tips
 
 - Always compile before export — the DSL JSON is the source of truth
@@ -170,3 +205,4 @@ Warn the user about:
 - Pipeline approach gives the most control and visual verification
 - Keep Code Connect files updated with real Figma URLs after import
 - Run batch-compare after bulk imports to catch drift
+- If the component has variants, use `componentSet()` — not `component()` with VARIANT properties

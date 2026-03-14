@@ -444,15 +444,59 @@ componentProperties: [
 ]
 ```
 
-**Supported types:**
+**Supported types on standalone `component()`:**
 
 | Type | Description | `defaultValue` |
 |------|-------------|----------------|
 | `'TEXT'` | Editable text content | `string` |
 | `'BOOLEAN'` | Toggle visibility/state | `boolean` |
-| `'VARIANT'` | Variant selector | `string` with `options: string[]` |
 
-> **Warning:** `type: 'VARIANT'` only works on **component sets** (groups of variants), NOT on standalone components. See [Figma Plugin Constraints](#figma-plugin-constraints).
+> **Note:** `type: 'VARIANT'` is NOT valid on standalone components. The compiler will report an error and skip VARIANT properties. Use `componentSet()` instead (see below).
+
+### Component Sets (Variants)
+
+To create a component with Figma variants (e.g., size, style), use `componentSet()` with child `component()` nodes. Each child's name encodes its variant values using Figma's `Property=Value` naming convention.
+
+```ts
+import { component, componentSet, text } from '@figma-dsl/core';
+
+function myVariant(style: string, size: string) {
+  return component(`Style=${style}, Size=${size}`, {
+    // Each child is a full component definition
+    componentProperties: [
+      { name: 'Label', type: 'TEXT', defaultValue: 'Click me' },
+    ],
+    children: [text('Click me', { fontSize: size === 'Large' ? 18 : 14 })],
+  });
+}
+
+export default componentSet('Button', {
+  children: [
+    myVariant('Primary', 'Small'),
+    myVariant('Primary', 'Large'),
+    myVariant('Secondary', 'Small'),
+    myVariant('Secondary', 'Large'),
+  ],
+});
+```
+
+Figma automatically creates variant properties (`Style`, `Size`) from the child component names. Use a helper function to generate all combinations:
+
+```ts
+const styles = ['Primary', 'Secondary'];
+const sizes = ['Small', 'Medium', 'Large'];
+const children = styles.flatMap(s => sizes.map(sz => myVariant(s, sz)));
+
+export default componentSet('Button', { children });
+```
+
+**When to use `component()` vs `componentSet()`:**
+
+| Scenario | Use |
+|----------|-----|
+| Single visual design, no variants | `component()` |
+| Multiple visual variants (size, style, state) | `componentSet()` with child `component()` nodes |
+| Configurable text/boolean props only | `component()` with `componentProperties` |
 
 ---
 
