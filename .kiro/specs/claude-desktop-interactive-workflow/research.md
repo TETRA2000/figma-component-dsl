@@ -261,6 +261,24 @@
 - **Rationale**: Approach A's strength is speed. Making verification optional preserves this while giving users a path to verify when visual fidelity matters. Users who see bad results in Approach A can escalate to Approach C.
 - **Trade-offs**: Slightly more complex skill instructions. But the optional nature means no speed penalty for users who trust the MCP output.
 
+### Decision: Marker-Based Merge for Barrel Exports in Sync Script
+- **Context**: The `sync-reference-components.sh` script copies reference components including `index.ts` into `preview/src/components/`. However, the Component Creation Skill auto-registers new components by appending exports to `index.ts` (Req 3.7). A naive overwrite during re-sync would destroy user-added exports.
+- **Selected Approach**: The sync script uses a marker-based merge pattern for `index.ts`. Reference exports are placed between `// --- BEGIN REFERENCE EXPORTS ---` and `// --- END REFERENCE EXPORTS ---` markers. On re-sync, only the reference section is replaced; custom exports below the end marker are preserved.
+- **Rationale**: Protects user-created component registrations while allowing reference exports to stay in sync. Simple text-based approach avoids complex merge logic.
+- **Trade-offs**: Component Creation Skill must add new exports below the end marker. Minor convention overhead, but straightforward to enforce via skill instructions.
+
+### Decision: MCP Availability Pre-Check Before Approach Presentation
+- **Context**: The Figma Export Skill presents Approach A (MCP Auto-Publish) as "preferred", but MCP server configuration is external to the project. Users selecting Approach A without MCP configured encounter errors mid-workflow.
+- **Selected Approach**: Before presenting approach options, the skill instructs Claude to call `get_code_connect_suggestions` as a lightweight read probe. If this fails (MCP not configured, auth expired), Approach A is excluded from the presented options. Claude explains how to configure MCP for future use.
+- **Rationale**: Fail-fast at approach selection prevents wasted effort. `get_code_connect_suggestions` is a read-only operation that tests MCP connectivity without side effects.
+- **Trade-offs**: Adds a probe step before approach selection. But the latency is minimal and the UX improvement is significant.
+
+### Decision: Committed Reference Components (Git Strategy)
+- **Context**: Copied reference components in `preview/src/components/` need a clear version control strategy. If gitignored, every developer must run the sync script before the preview app works. If committed, the app works immediately after clone.
+- **Selected Approach**: Commit copied reference components to version control. The `sync-reference-components.sh` is an intentional update operation, not routine setup.
+- **Rationale**: The preview app should work immediately after `git clone` without requiring submodule initialization or script execution. Committed components are visible in diffs, making updates reviewable. Aligns with the self-contained preview app philosophy.
+- **Trade-offs**: 16 component directories appear as project-owned code when they're copies. But they *are* project-owned at that point — they're the preview app's components, not the reference app's.
+
 ## Risks & Mitigations
 - **Risk**: Figma MCP server is remote-only and may not be configured in all Claude Desktop environments → Mitigation: Plugin JSON import as fallback; skill documents both paths
 - **Risk**: `generate_figma_design` input format may not map 1:1 to existing exporter JSON → Mitigation: Skill instructs Claude to use preview app's rendered output for MCP publishing (not raw JSON)

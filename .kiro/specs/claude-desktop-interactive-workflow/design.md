@@ -194,14 +194,21 @@ sequenceDiagram
 flowchart TB
     User[User: Export to Figma]
     Skill[Figma Export Skill]
+    MCPCheck{MCP available?}
     Choice{User selects approach}
 
     User --> Skill
-    Skill --> Choice
+    Skill --> MCPCheck
+
+    MCPCheck -->|Yes| Choice
+    MCPCheck -->|No| ChoiceNoMCP{User selects approach}
 
     Choice -->|A: Speed priority| MCP[MCP Auto-Publish]
     Choice -->|B: Offline/Simple| Plugin[Plugin JSON Import]
     Choice -->|C: Fidelity priority| Pipeline[Visual Fidelity Pipeline]
+
+    ChoiceNoMCP -->|B: Offline/Simple| Plugin
+    ChoiceNoMCP -->|C: Fidelity priority| Pipeline
 
     MCP --> MCPDone[Design in Figma]
     Plugin --> PluginDone[Import via Plugin UI]
@@ -229,6 +236,9 @@ sequenceDiagram
     participant F as Figma Cloud
 
     U->>C: Publish this component to Figma
+    Note over C,MCP: MCP availability pre-check
+    C->>MCP: get_code_connect_suggestions (probe)
+    MCP->>C: Success — MCP available
     C->>CLI: figma-dsl compile + export
     CLI->>C: Compiled DSL and export JSON
     C->>MCP: generate_figma_design with component
@@ -426,10 +436,11 @@ sequenceDiagram
 
 The preview app does NOT import from `references/` at runtime. Instead, reference components are copied into the preview app's own source tree during initial setup:
 
-1. A setup script (`scripts/sync-reference-components.sh`) copies the 16 reference components, `tokens.css`, `types.ts`, and `index.ts` from `references/figma_design_playground/src/components/` into `preview/src/components/`
-2. After copying, the preview app is self-contained — no Vite aliases or path references to `references/`
-3. The script is idempotent and can be re-run to sync updates from the reference app
-4. Skills read the component registry reference document (not reference source files) to discover available components
+1. A setup script (`scripts/sync-reference-components.sh`) copies the 16 reference components, `tokens.css`, and `types.ts` from `references/figma_design_playground/src/components/` into `preview/src/components/`
+2. The script uses a **marker-based merge** for `index.ts`: reference exports are placed between `// --- BEGIN REFERENCE EXPORTS ---` and `// --- END REFERENCE EXPORTS ---` markers, preserving any user-added exports below the end marker. On re-sync, only the reference section is replaced.
+3. After copying, the preview app is self-contained — no Vite aliases or path references to `references/`
+4. The script is idempotent and safe to re-run — component directories are overwritten (reference components are not user-modified), but `index.ts` custom exports are preserved via the marker pattern
+5. Skills read the component registry reference document (not reference source files) to discover available components
 
 **Vite Config Interface**
 
@@ -486,7 +497,7 @@ preview/
     └── components/          # Reference components (copied) + new components (created by skills)
         ├── tokens.css       # Copied from reference app
         ├── types.ts         # Copied from reference app
-        ├── index.ts         # Barrel exports (copied, extended by skills)
+        ├── index.ts         # Barrel exports (marker-merged: reference exports + custom exports)
         ├── Button/          # Copied reference component
         ├── Hero/            # Copied reference component
         └── ...              # All 16 reference components + user-created components
@@ -499,6 +510,13 @@ preview/
 - `package.json` depends on `react`, `react-dom`, `vite`, `@vitejs/plugin-react`, `vite-plugin-singlefile`
 - The `sync-reference-components.sh` script is run once during setup and optionally re-run to pull reference app updates
 - This approach ensures `references/` remains read-only research material per the project structure conventions
+
+**Git Strategy**
+- Copied reference components in `preview/src/components/` are **committed to version control** — they become project-owned source at copy time
+- This ensures the preview app works immediately after `git clone` without requiring `sync-reference-components.sh` or initialized submodules
+- Re-running the sync script is an intentional update operation (not routine setup), creating a visible diff that can be reviewed
+- User-created components (added by skills) are also committed alongside reference components
+- The `sync-reference-components.sh` script itself is committed in `preview/scripts/`
 
 ### Packages
 
@@ -793,8 +811,9 @@ export function {{ComponentName}}({
 | Requirements | 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7 |
 
 **Responsibilities & Constraints**
-- Present three approaches and guide user to select based on context (speed, fidelity, available tooling)
-- **Approach A (MCP)**: Auto-publish via `generate_figma_design` + auto-map Code Connect + optional post-publish verification
+- **Pre-check MCP availability** before presenting approaches: probe with `get_code_connect_suggestions` (lightweight read operation). If MCP is unavailable, present only Approaches B and C with a note about configuring MCP for future use.
+- Present available approaches and guide user to select based on context (speed, fidelity, available tooling)
+- **Approach A (MCP)**: Auto-publish via `generate_figma_design` + auto-map Code Connect + optional post-publish verification (only offered when MCP is available)
 - **Approach B (Plugin)**: Compile → export JSON → import via Figma plugin UI
 - **Approach C (Pipeline)**: Compile → render → capture React → compare → iterate until pass → import
 - Run post-import verification via `capture-figma` + `batch-compare` for all approaches (optional for A, recommended for B and C)
@@ -862,6 +881,7 @@ Path 2 — Plugin JSON Import (fallback):
 
 **MCP Integration Notes**
 - `generate_figma_design` is remote-only — requires Figma MCP server configured in Claude Desktop's MCP settings
+- **MCP availability pre-check**: Before presenting approach options, the skill instructs Claude to call `get_code_connect_suggestions` as a lightweight probe. If this fails (MCP not configured, auth expired), Approach A is excluded from the presented options and Claude explains how to configure MCP for future use.
 - New files are created in team/organization drafts; existing files require edit permissions
 - Exempt from standard rate limits
 - Skill SKILL.md includes MCP setup instructions referencing `references/mcp-setup-guide.md`
@@ -1069,7 +1089,7 @@ Two error surfaces: (1) programmatic validation via `@figma-dsl/validator` retur
 
 **Preview Errors**: If the dev server fails to start, the skill instructs Claude to check port availability, run `npm install`, and restart.
 
-**MCP Errors**: If `generate_figma_design` fails (MCP not configured, auth expired, no edit permission), the skill falls back to plugin JSON export path. Claude reports the MCP error and provides plugin import instructions.
+**MCP Errors**: The skill pre-checks MCP availability via `get_code_connect_suggestions` before presenting approaches. If MCP is unavailable, Approach A is not offered. If MCP becomes unavailable mid-workflow (e.g., auth expires during `generate_figma_design`), the skill falls back to plugin JSON export path. Claude reports the MCP error and provides plugin import instructions.
 
 **Token Errors**: Validator's `token-exists` rule catches CSS custom property references that don't exist in `tokens.css`. Figma Export Skill additionally warns on tokens that cannot map to Figma styles.
 
