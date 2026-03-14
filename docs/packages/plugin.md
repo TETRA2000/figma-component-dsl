@@ -124,6 +124,8 @@ Each node follows: create → set name/size → apply fills/strokes/opacity → 
 - Alignment: `primaryAxisAlignItems` and `counterAxisAlignItems` — cast to Figma enums without validation
 - Sizing: `layoutSizingHorizontal/Vertical` — cast to `'FIXED' | 'HUG' | 'FILL'`
 
+**Note**: The compiler now infers `FIXED` when a node has auto-layout and an explicit size but no `widthSizing`/`heightSizing`. This ensures frames with explicit dimensions (e.g., `size: { x: 1440, y: 64 }`) are imported at their specified size rather than defaulting to HUG.
+
 Invalid enum values pass through TypeScript casts and cause Figma API errors (caught by `createNode`'s try-catch).
 
 **Evidence**: `src/code.ts:82-105`

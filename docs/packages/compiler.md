@@ -193,7 +193,15 @@ Auto-layout properties from `DslNode.autoLayout` are passed through to `FigmaNod
 | `primaryAxisAlignItems` | `al.align ?? 'MIN'` |
 | `counterAxisAlignItems` | `al.counterAlign ?? 'MIN'` |
 | `paddingTop/Right/Bottom/Left` | `resolveAutoLayoutPadding()` |
-| `layoutSizingHorizontal/Vertical` | `al.widthSizing/heightSizing` |
+| `layoutSizingHorizontal/Vertical` | `al.widthSizing/heightSizing`, or inferred from `node.size` |
+
+### layoutSizing Inference
+
+When a node has auto-layout and an explicit `size` but no `widthSizing`/`heightSizing`, the compiler infers `FIXED`:
+- If `node.size.x > 0` and `al.widthSizing` is not set → `layoutSizingHorizontal: 'FIXED'`
+- If `node.size.y > 0` and `al.heightSizing` is not set → `layoutSizingVertical: 'FIXED'`
+
+This ensures that frames like headers/footers with explicit dimensions (e.g., `size: { x: 1440, y: 64 }`) are imported into Figma at their specified size rather than collapsing to HUG mode.
 
 ### Padding Resolution (`resolveAutoLayoutPadding`)
 Cascade order: per-side values (`padTop`, `padRight`, etc.) override shorthand values (`padX`, `padY`), which override default `0`.

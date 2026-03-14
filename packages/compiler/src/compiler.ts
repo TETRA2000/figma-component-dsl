@@ -144,11 +144,17 @@ function compileNode(
     result.counterAxisAlignItems = al.counterAlign ?? 'MIN';
 
     // Map widthSizing/heightSizing to layoutSizingHorizontal/Vertical
+    // When an explicit size is given with auto-layout but no sizing mode,
+    // infer FIXED so the plugin respects the specified dimensions
     if (al.widthSizing) {
       result.layoutSizingHorizontal = al.widthSizing;
+    } else if (node.size && node.size.x > 0) {
+      result.layoutSizingHorizontal = 'FIXED';
     }
     if (al.heightSizing) {
       result.layoutSizingVertical = al.heightSizing;
+    } else if (node.size && node.size.y && node.size.y > 0) {
+      result.layoutSizingVertical = 'FIXED';
     }
   }
 

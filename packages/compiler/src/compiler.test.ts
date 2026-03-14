@@ -187,6 +187,83 @@ describe('compile() — auto-layout passthrough', () => {
   });
 });
 
+describe('compile() — layoutSizing inference', () => {
+  it('infers FIXED when auto-layout frame has explicit size but no widthSizing', () => {
+    const node = frame('Header', {
+      size: { x: 1440, y: 64 },
+      autoLayout: horizontal({ padX: 32, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
+    });
+    const result = compile(node);
+    expect(result.root.layoutSizingHorizontal).toBe('FIXED');
+    expect(result.root.layoutSizingVertical).toBe('FIXED');
+  });
+
+  it('respects explicit widthSizing/heightSizing over inference', () => {
+    const node = frame('Card', {
+      size: { x: 260, y: 100 },
+      autoLayout: vertical({ spacing: 8, widthSizing: 'FIXED', heightSizing: 'HUG' }),
+    });
+    const result = compile(node);
+    expect(result.root.layoutSizingHorizontal).toBe('FIXED');
+    expect(result.root.layoutSizingVertical).toBe('HUG');
+  });
+
+  it('does not infer FIXED when size is zero or undefined', () => {
+    const node = frame('HugFrame', {
+      autoLayout: horizontal({ spacing: 8 }),
+    });
+    const result = compile(node);
+    // No explicit size, so no inference
+    expect(result.root.layoutSizingHorizontal).toBeUndefined();
+    expect(result.root.layoutSizingVertical).toBeUndefined();
+  });
+
+  it('infers FIXED for width only when only x is set', () => {
+    const node = frame('WidthOnly', {
+      size: { x: 300, y: 0 },
+      autoLayout: vertical({ spacing: 0 }),
+    });
+    const result = compile(node);
+    expect(result.root.layoutSizingHorizontal).toBe('FIXED');
+    // y=0 should not infer FIXED
+    expect(result.root.layoutSizingVertical).toBeUndefined();
+  });
+
+  it('preserves HUG when explicitly set even with size', () => {
+    const node = frame('Badge', {
+      size: { x: 80, y: 22 },
+      autoLayout: horizontal({ padX: 12, padY: 4, widthSizing: 'HUG', heightSizing: 'HUG' }),
+    });
+    const result = compile(node);
+    expect(result.root.layoutSizingHorizontal).toBe('HUG');
+    expect(result.root.layoutSizingVertical).toBe('HUG');
+  });
+});
+
+describe('compile() — textAutoResize passthrough', () => {
+  it('passes through textAutoResize from node', () => {
+    const node = frame('Root', {
+      children: [text('Wrapping text', {
+        fontSize: 13,
+        size: { x: 228 },
+        textAutoResize: 'HEIGHT',
+      })],
+    });
+    const result = compile(node);
+    const textNode = result.root.children[0]!;
+    expect(textNode.textAutoResize).toBe('HEIGHT');
+  });
+
+  it('does not set textAutoResize when not specified', () => {
+    const node = frame('Root', {
+      children: [text('Auto text', { fontSize: 14 })],
+    });
+    const result = compile(node);
+    const textNode = result.root.children[0]!;
+    expect(textNode.textAutoResize).toBeUndefined();
+  });
+});
+
 describe('compile() — component compilation', () => {
   it('maps component properties to definitions', () => {
     const node = component('Button', {
