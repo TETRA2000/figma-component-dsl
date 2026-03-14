@@ -1,0 +1,390 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #e8e8e8;
+  background: #0f1623;
+}
+
+/* ─── NavBar ─── */
+.nav {
+  background: rgba(26, 39, 68, 0.97);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(196, 163, 90, 0.15);
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brand {
+  font-size: 16px;
+  font-weight: 700;
+  color: #c4a35a;
+  letter-spacing: 2px;
+}
+.navLinks {
+  display: flex;
+  gap: 36px;
+}
+.navLink {
+  font-size: 14px;
+  color: #8a99b4;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #c4a35a;
+}
+.navCta {
+  background: #c4a35a;
+  color: #1a2744;
+  border: none;
+  padding: 10px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+/* ─── Hero ─── */
+.hero {
+  position: relative;
+  min-height: 700px;
+  background: linear-gradient(170deg, #1a2744 0%, #13203d 50%, #0f1a33 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(196, 163, 90, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+.heroLabel {
+  display: inline-block;
+  font-size: 12px;
+  color: #c4a35a;
+  letter-spacing: 8px;
+  font-weight: 600;
+  margin-bottom: 32px;
+}
+.heroTitle {
+  font-size: 64px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.3;
+  margin: 0 0 20px;
+  letter-spacing: 6px;
+}
+.heroSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 2;
+  margin: 0 0 48px;
+}
+.heroBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.heroBtnPrimary {
+  background: #c4a35a;
+  color: #1a2744;
+  border: none;
+  padding: 18px 56px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.heroBtnSecondary {
+  background: transparent;
+  color: #c4a35a;
+  border: 1px solid rgba(196, 163, 90, 0.4);
+  padding: 18px 40px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ─── Section Headers ─── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.sectionLabel {
+  font-size: 11px;
+  color: #c4a35a;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionLabelLight {
+  font-size: 11px;
+  color: #c4a35a;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 3px;
+}
+.sectionTitleLight {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 3px;
+}
+.sectionDesc {
+  font-size: 15px;
+  color: #8a99b4;
+  margin: 16px 0 0;
+  line-height: 1.8;
+}
+
+/* ─── Practice Areas ─── */
+.practice {
+  padding: 100px 24px;
+  background: #0f1623;
+}
+.practiceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.practiceCard {
+  background: rgba(26, 39, 68, 0.6);
+  border: 1px solid rgba(196, 163, 90, 0.1);
+  padding: 40px 32px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.practiceCard:hover {
+  border-color: rgba(196, 163, 90, 0.3);
+}
+.practiceIconWrapper {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.practiceIcon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #c4a35a, #a88a3e);
+  border-radius: 8px;
+  opacity: 0.9;
+}
+.practiceTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 12px;
+  letter-spacing: 1px;
+}
+.practiceDesc {
+  font-size: 14px;
+  color: #8a99b4;
+  line-height: 1.9;
+  margin: 0;
+}
+
+/* ─── Lawyers ─── */
+.lawyers {
+  padding: 100px 24px;
+  background: #131d33;
+}
+.lawyerGrid {
+  display: flex;
+  gap: 36px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.lawyerCard {
+  flex: 1;
+  text-align: center;
+}
+.lawyerPhoto {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2a3a5c, #1a2744);
+  border: 2px solid rgba(196, 163, 90, 0.2);
+  margin: 0 auto 24px;
+}
+.lawyerName {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+.lawyerTitle {
+  font-size: 13px;
+  color: #c4a35a;
+  font-weight: 600;
+  margin: 0 0 16px;
+  letter-spacing: 1px;
+}
+.lawyerDivider {
+  width: 40px;
+  height: 1px;
+  background: rgba(196, 163, 90, 0.3);
+  margin: 0 auto 16px;
+}
+.lawyerBio {
+  font-size: 14px;
+  color: #8a99b4;
+  line-height: 1.9;
+  margin: 0;
+}
+
+/* ─── Stats ─── */
+.stats {
+  padding: 100px 24px;
+  background: #1a2744;
+}
+.statsGrid {
+  display: flex;
+  gap: 48px;
+  max-width: 1000px;
+  margin: 0 auto;
+  justify-content: center;
+}
+.statItem {
+  text-align: center;
+  flex: 1;
+}
+.statNumber {
+  display: block;
+  font-size: 48px;
+  font-weight: 900;
+  color: #c4a35a;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+.statLabel {
+  font-size: 14px;
+  color: #8a99b4;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+/* ─── Contact CTA ─── */
+.contactCta {
+  padding: 100px 24px;
+  background: linear-gradient(160deg, #1a2744 0%, #0f1a33 100%);
+  text-align: center;
+}
+.contactCtaContent {
+  max-width: 700px;
+  margin: 0 auto;
+}
+.contactCtaTitle {
+  font-size: 36px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 16px;
+  letter-spacing: 3px;
+}
+.contactCtaSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0 0 48px;
+  line-height: 2;
+}
+.contactBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.contactBtnPrimary {
+  background: #c4a35a;
+  color: #1a2744;
+  border: none;
+  padding: 18px 56px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.contactBtnSecondary {
+  background: transparent;
+  color: #c4a35a;
+  border: 1px solid rgba(196, 163, 90, 0.4);
+  padding: 18px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.contactNote {
+  font-size: 12px;
+  color: #5a6a84;
+  margin: 0;
+}
+
+/* ─── Footer ─── */
+.footer {
+  background: #0a1020;
+  padding: 48px 24px;
+  border-top: 1px solid rgba(196, 163, 90, 0.1);
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footerBrand {
+  font-size: 16px;
+  font-weight: 700;
+  color: #c4a35a;
+  letter-spacing: 3px;
+}
+.footerLinks {
+  display: flex;
+  gap: 32px;
+}
+.footerLink {
+  font-size: 13px;
+  color: #5a6a84;
+  text-decoration: none;
+}
+.footerDivider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background: rgba(196, 163, 90, 0.1);
+}
+.footerCopy {
+  font-size: 12px;
+  color: #3a4a64;
+  margin: 0;
+}

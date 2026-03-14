@@ -1,0 +1,399 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #333333;
+  background: #faf8f5;
+}
+
+/* ─── NavBar ─── */
+.nav {
+  background: rgba(250, 248, 245, 0.97);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.08);
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brand {
+  font-size: 20px;
+  font-weight: 900;
+  color: #7c3aed;
+  letter-spacing: 1px;
+}
+.navLinks {
+  display: flex;
+  gap: 36px;
+}
+.navLink {
+  font-size: 14px;
+  color: #888888;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #7c3aed;
+}
+.navCta {
+  background: #7c3aed;
+  color: #ffffff;
+  border: none;
+  padding: 10px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 24px;
+}
+
+/* ─── Hero ─── */
+.hero {
+  position: relative;
+  min-height: 700px;
+  background: linear-gradient(160deg, #f3eeff 0%, #faf8f5 50%, #f8f4ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroDecor {
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+.heroLabel {
+  display: inline-block;
+  font-size: 13px;
+  color: #7c3aed;
+  letter-spacing: 6px;
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+.heroTitle {
+  font-size: 64px;
+  font-weight: 900;
+  color: #2d1b69;
+  line-height: 1.3;
+  margin: 0 0 20px;
+  letter-spacing: 4px;
+}
+.heroSubtitle {
+  font-size: 17px;
+  color: #8b7da0;
+  line-height: 1.9;
+  margin: 0 0 48px;
+}
+.heroBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.heroBtnPrimary {
+  background: #7c3aed;
+  color: #ffffff;
+  border: none;
+  padding: 18px 48px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  border-radius: 32px;
+}
+.heroBtnSecondary {
+  background: transparent;
+  color: #7c3aed;
+  border: 2px solid #7c3aed;
+  padding: 18px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 32px;
+}
+
+/* ─── Section Headers ─── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.sectionLabel {
+  font-size: 12px;
+  color: #7c3aed;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 34px;
+  font-weight: 800;
+  color: #2d1b69;
+  margin: 0;
+  letter-spacing: 2px;
+}
+.sectionSubtitle {
+  font-size: 15px;
+  color: #8b7da0;
+  margin: 16px 0 0;
+  line-height: 1.8;
+}
+
+/* ─── Courses ─── */
+.courses {
+  padding: 100px 24px;
+  background: #ffffff;
+}
+.coursesGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.courseCard {
+  flex: 1;
+  background: #faf8f5;
+  border: 1px solid rgba(124, 58, 237, 0.08);
+  border-radius: 16px;
+  padding: 40px 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.courseIconArea {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  border-radius: 50%;
+  margin-bottom: 24px;
+}
+.courseTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2d1b69;
+  margin: 0 0 8px;
+}
+.courseLevel {
+  font-size: 12px;
+  color: #7c3aed;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+.courseDesc {
+  font-size: 14px;
+  color: #777777;
+  line-height: 1.8;
+  margin: 0 0 24px;
+}
+.courseBtn {
+  margin-top: auto;
+  background: transparent;
+  color: #7c3aed;
+  border: 2px solid #7c3aed;
+  padding: 10px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* ─── Instructors ─── */
+.instructors {
+  padding: 100px 24px;
+  background: #f8f4ff;
+}
+.instructorsGrid {
+  display: flex;
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.instructorCard {
+  flex: 1;
+  text-align: center;
+}
+.instructorPhoto {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  margin: 0 auto 24px;
+}
+.instructorName {
+  font-size: 20px;
+  font-weight: 800;
+  color: #2d1b69;
+  margin: 0 0 4px;
+}
+.instructorInstrument {
+  font-size: 13px;
+  color: #7c3aed;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+.instructorBio {
+  font-size: 14px;
+  color: #777777;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ─── Recital Gallery ─── */
+.recital {
+  padding: 100px 24px;
+  background: #ffffff;
+}
+.recitalGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.recitalItem {
+  border-radius: 12px;
+  overflow: hidden;
+}
+.recitalImage {
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(135deg, #e9e0ff, #c4b5fd);
+}
+
+/* ─── Trial CTA ─── */
+.trialCta {
+  padding: 120px 24px;
+  background: linear-gradient(160deg, #f3eeff 0%, #ede5ff 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.trialCtaGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.trialCtaContent {
+  position: relative;
+  z-index: 1;
+}
+.trialCtaTitle {
+  font-size: 38px;
+  font-weight: 900;
+  color: #2d1b69;
+  margin: 0 0 16px;
+  letter-spacing: 2px;
+}
+.trialCtaSubtitle {
+  font-size: 16px;
+  color: #8b7da0;
+  margin: 0 0 48px;
+  line-height: 1.8;
+}
+.trialCtaBtn {
+  background: #7c3aed;
+  color: #ffffff;
+  border: none;
+  padding: 20px 64px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  border-radius: 32px;
+}
+.trialCtaNote {
+  font-size: 12px;
+  color: #999999;
+  margin: 16px 0 0;
+}
+
+/* ─── FAQ ─── */
+.faq {
+  padding: 100px 24px;
+  background: #faf8f5;
+}
+.faqList {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.faqItem {
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.08);
+}
+.faqQuestion {
+  font-size: 17px;
+  font-weight: 700;
+  color: #2d1b69;
+  margin: 0 0 12px;
+}
+.faqAnswer {
+  font-size: 15px;
+  color: #777777;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ─── Footer ─── */
+.footer {
+  background: #2d1b69;
+  padding: 48px 24px;
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footerBrand {
+  font-size: 20px;
+  font-weight: 900;
+  color: #c4b5fd;
+  letter-spacing: 1px;
+}
+.footerLinks {
+  display: flex;
+  gap: 32px;
+}
+.footerLink {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+}
+.footerDivider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.footerCopy {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}

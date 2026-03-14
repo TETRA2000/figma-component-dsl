@@ -1,0 +1,71 @@
+.page { font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif; color: #3a2e28; background: #fffaf7; }
+
+.nav { background: #ffffff; border-bottom: 1px solid #f0e0d4; padding: 0 24px; }
+.navInner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { font-size: 20px; font-weight: 800; color: #f4845f; }
+.navLinks { display: flex; gap: 28px; }
+.navLink { font-size: 14px; color: #6b5b50; text-decoration: none; font-weight: 500; }
+.bookBtn { background: #f4845f; color: #fff; border: none; padding: 10px 24px; border-radius: 24px; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+.hero { display: flex; align-items: center; justify-content: center; gap: 60px; padding: 80px 24px; background: linear-gradient(135deg, #fffaf7, #fef0e8); }
+.heroContent { max-width: 500px; }
+.heroTitle { font-size: 44px; font-weight: 800; line-height: 1.3; color: #3a2e28; margin: 0 0 20px; }
+.heroSubtitle { font-size: 16px; color: #7a6b60; line-height: 1.8; margin: 0 0 32px; }
+.heroActions { display: flex; gap: 16px; }
+.primaryBtn { background: #f4845f; color: #fff; border: none; padding: 14px 36px; border-radius: 28px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.secondaryBtn { background: transparent; color: #f4845f; border: 2px solid #f4845f; padding: 12px 28px; border-radius: 28px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.heroImagePlaceholder { width: 400px; height: 400px; background: linear-gradient(135deg, #fde2d4, #f4845f33); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.heroImageText { font-size: 80px; }
+
+.sectionTitle { font-size: 30px; font-weight: 800; color: #3a2e28; margin: 0 0 12px; text-align: center; }
+.sectionSubtitle { font-size: 15px; color: #9a8a7e; margin: 0 0 48px; text-align: center; }
+
+.services { padding: 96px 24px; background: #ffffff; }
+.serviceGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
+.serviceCard { background: #fffaf7; padding: 32px 24px; border-radius: 20px; border: 1px solid #f0e0d4; text-align: center; }
+.serviceIcon { font-size: 40px; margin-bottom: 16px; }
+.serviceTitle { font-size: 18px; font-weight: 700; color: #3a2e28; margin: 0 0 8px; }
+.serviceDesc { font-size: 14px; color: #7a6b60; line-height: 1.7; margin: 0; }
+
+.priceSection { padding: 96px 24px; background: #fef6f0; }
+.priceTable { max-width: 700px; margin: 0 auto; background: #ffffff; border-radius: 20px; overflow: hidden; border: 1px solid #f0e0d4; }
+.priceRow { display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; border-bottom: 1px solid #f5ebe3; }
+.priceRow:last-child { border-bottom: none; }
+.priceLabel { font-size: 15px; font-weight: 600; color: #3a2e28; }
+.priceValue { font-size: 18px; font-weight: 800; color: #f4845f; }
+
+.gallery { padding: 96px 24px; background: #ffffff; }
+.galleryGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1000px; margin: 0 auto; }
+.galleryItem { text-align: center; }
+.galleryImage { width: 100%; aspect-ratio: 1; background: linear-gradient(135deg, #fde2d4, #fef0e8); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 60px; margin-bottom: 8px; }
+.galleryLabel { font-size: 13px; font-weight: 600; color: #7a6b60; }
+
+.testimonials { padding: 96px 24px; background: #fef6f0; }
+.testimonialGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
+.testimonialCard { background: #ffffff; padding: 28px 24px; border-radius: 16px; border: 1px solid #f0e0d4; }
+.testimonialComment { font-size: 14px; color: #5a4e44; line-height: 1.8; margin: 0 0 20px; }
+.testimonialAuthor { display: flex; align-items: center; gap: 12px; }
+.testimonialAvatar { width: 40px; height: 40px; background: #fde2d4; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.testimonialName { display: block; font-size: 14px; font-weight: 700; color: #3a2e28; }
+.testimonialPet { display: block; font-size: 12px; color: #9a8a7e; }
+
+.bookingCta { padding: 80px 24px; background: linear-gradient(135deg, #f4845f, #f6a583); text-align: center; }
+.ctaTitle { font-size: 30px; font-weight: 800; color: #ffffff; margin: 0 0 12px; }
+.ctaSubtitle { font-size: 16px; color: rgba(255,255,255,0.9); margin: 0 0 32px; }
+.ctaActions { display: flex; gap: 16px; justify-content: center; margin-bottom: 20px; }
+.ctaPrimaryBtn { background: #ffffff; color: #f4845f; border: none; padding: 16px 48px; border-radius: 28px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.ctaPhoneBtn { background: transparent; color: #ffffff; border: 2px solid #ffffff; padding: 14px 32px; border-radius: 28px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.ctaNote { font-size: 13px; color: rgba(255,255,255,0.8); margin: 0; }
+
+.footer { background: #3a2e28; color: #fff; padding: 64px 24px 0; }
+.footerInner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; padding-bottom: 48px; border-bottom: 1px solid #4d403a; }
+.footerBrand { flex-shrink: 0; }
+.footerLogo { font-size: 18px; font-weight: 800; color: #f4845f; }
+.footerTagline { font-size: 13px; color: #a0907e; margin: 8px 0 4px; }
+.footerAddress { font-size: 12px; color: #7a6b60; margin: 0; }
+.footerLinks { display: flex; gap: 64px; }
+.footerCol { display: flex; flex-direction: column; gap: 10px; }
+.footerColTitle { font-size: 14px; font-weight: 700; color: #fff; margin: 0 0 4px; }
+.footerLink { font-size: 13px; color: #a0907e; text-decoration: none; }
+.footerBottom { max-width: 1200px; margin: 0 auto; padding: 24px 0; text-align: center; }
+.footerBottom p { font-size: 12px; color: #6b5b50; margin: 0; }

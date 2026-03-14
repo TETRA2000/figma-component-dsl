@@ -1,0 +1,62 @@
+.page { font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif; color: #1a2a3a; background: #ffffff; }
+
+.nav { background: #1e3a5f; padding: 0 24px; }
+.navInner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { font-size: 20px; font-weight: 800; color: #ffffff; }
+.navLinks { display: flex; gap: 32px; }
+.navLink { font-size: 14px; color: rgba(255,255,255,0.8); text-decoration: none; font-weight: 500; }
+.contactBtn { background: #2d8c5a; color: #fff; border: none; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+.hero { padding: 100px 24px; background: linear-gradient(135deg, #1e3a5f, #152d4a); text-align: center; }
+.heroContent { max-width: 700px; margin: 0 auto; }
+.heroBadge { display: inline-block; background: rgba(45,140,90,0.2); color: #5ecc8e; padding: 8px 20px; border-radius: 6px; font-size: 13px; font-weight: 600; margin-bottom: 24px; border: 1px solid rgba(45,140,90,0.3); }
+.heroTitle { font-size: 48px; font-weight: 800; line-height: 1.2; color: #ffffff; margin: 0 0 20px; }
+.heroSubtitle { font-size: 17px; color: rgba(255,255,255,0.75); line-height: 1.8; margin: 0 0 36px; }
+.heroActions { display: flex; gap: 16px; justify-content: center; }
+.primaryBtn { background: #2d8c5a; color: #fff; border: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.secondaryBtn { background: transparent; color: #ffffff; border: 2px solid rgba(255,255,255,0.4); padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; }
+
+.sectionTitle { font-size: 30px; font-weight: 800; color: #1e3a5f; margin: 0 0 12px; text-align: center; }
+.sectionSubtitle { font-size: 15px; color: #6b7b8d; margin: 0 0 48px; text-align: center; }
+
+.services { padding: 96px 24px; background: #f8fafb; }
+.serviceGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
+.serviceCard { background: #ffffff; padding: 32px 24px; border-radius: 12px; border: 1px solid #e8edf2; }
+.serviceIconWrapper { width: 48px; height: 48px; background: #edf5f0; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+.serviceIcon { font-size: 24px; }
+.serviceTitle { font-size: 18px; font-weight: 700; color: #1e3a5f; margin: 0 0 8px; }
+.serviceDesc { font-size: 14px; color: #5a6b7d; line-height: 1.7; margin: 0; }
+
+.caseStudies { padding: 96px 24px; background: #ffffff; }
+.caseGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
+.caseCard { background: #f8fafb; padding: 32px 24px; border-radius: 12px; border: 1px solid #e8edf2; border-top: 4px solid #2d8c5a; }
+.caseBadge { display: inline-block; background: #edf5f0; color: #2d8c5a; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+.caseTitle { font-size: 18px; font-weight: 700; color: #1e3a5f; margin: 0 0 12px; line-height: 1.5; }
+.caseResult { font-size: 14px; color: #5a6b7d; line-height: 1.7; margin: 0; }
+
+.stats { padding: 80px 24px; background: #1e3a5f; }
+.statsGrid { display: flex; gap: 48px; justify-content: center; max-width: 1000px; margin: 0 auto; }
+.statItem { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.statValue { font-size: 48px; font-weight: 800; color: #2d8c5a; }
+.statUnit { font-size: 18px; font-weight: 700; color: #2d8c5a; margin-top: -8px; }
+.statLabel { font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+.consultation { padding: 80px 24px; background: linear-gradient(135deg, #2d8c5a, #247a4e); text-align: center; }
+.consultTitle { font-size: 30px; font-weight: 800; color: #ffffff; margin: 0 0 12px; }
+.consultSubtitle { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.8; margin: 0 0 32px; }
+.consultActions { display: flex; gap: 16px; justify-content: center; }
+.consultPrimaryBtn { background: #ffffff; color: #2d8c5a; border: none; padding: 16px 48px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.consultPhoneBtn { background: transparent; color: #ffffff; border: 2px solid #ffffff; padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; }
+
+.footer { background: #0f1f30; color: #fff; padding: 64px 24px 0; }
+.footerInner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; padding-bottom: 48px; border-bottom: 1px solid #1e3a5f; }
+.footerBrand { flex-shrink: 0; }
+.footerLogo { font-size: 18px; font-weight: 800; color: #ffffff; }
+.footerTagline { font-size: 13px; color: #6b7b8d; margin: 8px 0 4px; }
+.footerAddress { font-size: 12px; color: #4a5a6d; margin: 0; }
+.footerLinks { display: flex; gap: 64px; }
+.footerCol { display: flex; flex-direction: column; gap: 10px; }
+.footerColTitle { font-size: 14px; font-weight: 700; color: #fff; margin: 0 0 4px; }
+.footerLink { font-size: 13px; color: #6b7b8d; text-decoration: none; }
+.footerBottom { max-width: 1200px; margin: 0 auto; padding: 24px 0; text-align: center; }
+.footerBottom p { font-size: 12px; color: #4a5a6d; margin: 0; }

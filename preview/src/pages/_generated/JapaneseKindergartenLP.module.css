@@ -1,0 +1,434 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #333333;
+  background: #fffef8;
+}
+
+/* --- NavBar --- */
+.nav {
+  background: rgba(255, 254, 248, 0.97);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brand {
+  font-size: 22px;
+  font-weight: 900;
+  color: #f59e0b;
+  letter-spacing: 2px;
+}
+.navLinks {
+  display: flex;
+  gap: 36px;
+}
+.navLink {
+  font-size: 14px;
+  color: #888888;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #f59e0b;
+}
+.navCta {
+  background: #f59e0b;
+  color: #ffffff;
+  border: none;
+  padding: 10px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 24px;
+}
+
+/* --- Hero --- */
+.hero {
+  position: relative;
+  min-height: 700px;
+  background: linear-gradient(160deg, #fef9c3 0%, #fffef8 40%, #ecfdf5 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroDecor1 {
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.heroDecor2 {
+  position: absolute;
+  bottom: -60px;
+  left: -60px;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+.heroLabel {
+  display: inline-block;
+  font-size: 13px;
+  color: #f59e0b;
+  letter-spacing: 6px;
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+.heroTitle {
+  font-size: 60px;
+  font-weight: 900;
+  color: #78350f;
+  line-height: 1.3;
+  margin: 0 0 20px;
+  letter-spacing: 4px;
+}
+.heroSubtitle {
+  font-size: 17px;
+  color: #92400e;
+  line-height: 1.9;
+  margin: 0 0 48px;
+  opacity: 0.7;
+}
+.heroBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.heroBtnPrimary {
+  background: #f59e0b;
+  color: #ffffff;
+  border: none;
+  padding: 18px 48px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  border-radius: 32px;
+}
+.heroBtnSecondary {
+  background: transparent;
+  color: #f59e0b;
+  border: 2px solid #f59e0b;
+  padding: 18px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 32px;
+}
+
+/* --- Section Headers --- */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.sectionLabel {
+  font-size: 12px;
+  color: #f59e0b;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 34px;
+  font-weight: 800;
+  color: #78350f;
+  margin: 0;
+  letter-spacing: 2px;
+}
+.sectionSubtitle {
+  font-size: 15px;
+  color: #92400e;
+  margin: 16px 0 0;
+  line-height: 1.8;
+  opacity: 0.7;
+}
+
+/* --- Philosophy --- */
+.philosophy {
+  padding: 100px 24px;
+  background: #ffffff;
+}
+.philosophyGrid {
+  display: flex;
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.philosophyCard {
+  flex: 1;
+  background: #fffef8;
+  border: 1px solid rgba(245, 158, 11, 0.1);
+  border-radius: 20px;
+  padding: 40px 28px;
+  text-align: center;
+}
+.philosophyNumber {
+  display: inline-block;
+  font-size: 36px;
+  font-weight: 900;
+  color: #f59e0b;
+  opacity: 0.3;
+  margin-bottom: 12px;
+}
+.philosophyTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #78350f;
+  margin: 0 0 12px;
+}
+.philosophyDesc {
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.9;
+  margin: 0;
+  opacity: 0.7;
+}
+
+/* --- Schedule --- */
+.schedule {
+  padding: 100px 24px;
+  background: #fefce8;
+}
+.scheduleList {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.scheduleItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+}
+.scheduleTime {
+  font-size: 18px;
+  font-weight: 800;
+  color: #f59e0b;
+  min-width: 60px;
+  padding-top: 2px;
+}
+.scheduleDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.scheduleContent {
+  flex: 1;
+}
+.scheduleActivity {
+  font-size: 17px;
+  font-weight: 700;
+  color: #78350f;
+  margin: 0 0 4px;
+}
+.scheduleDesc {
+  font-size: 14px;
+  color: #92400e;
+  margin: 0;
+  opacity: 0.7;
+  line-height: 1.6;
+}
+
+/* --- Facilities --- */
+.facilities {
+  padding: 100px 24px;
+  background: #ffffff;
+}
+.facilitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.facilityCard {
+  background: #fffef8;
+  border: 1px solid rgba(245, 158, 11, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.facilityImage {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, #fef3c7, #d9f99d);
+}
+.facilityInfo {
+  padding: 24px;
+}
+.facilityName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #78350f;
+  margin: 0 0 8px;
+}
+.facilityDesc {
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.8;
+  margin: 0;
+  opacity: 0.7;
+}
+
+/* --- Events --- */
+.events {
+  padding: 100px 24px;
+  background: #ecfdf5;
+}
+.eventsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.eventCard {
+  background: #ffffff;
+  border: 1px solid rgba(34, 197, 94, 0.1);
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: center;
+}
+.eventMonth {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 800;
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  padding: 4px 16px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+.eventTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #78350f;
+  margin: 0 0 8px;
+}
+.eventDesc {
+  font-size: 13px;
+  color: #92400e;
+  line-height: 1.6;
+  margin: 0;
+  opacity: 0.7;
+}
+
+/* --- Enrollment CTA --- */
+.enrollmentCta {
+  padding: 120px 24px;
+  background: linear-gradient(160deg, #fef9c3 0%, #fef3c7 50%, #fde68a 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.enrollmentCtaDecor {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.enrollmentCtaContent {
+  position: relative;
+  z-index: 1;
+}
+.enrollmentCtaTitle {
+  font-size: 40px;
+  font-weight: 900;
+  color: #78350f;
+  margin: 0 0 16px;
+  letter-spacing: 3px;
+}
+.enrollmentCtaSubtitle {
+  font-size: 16px;
+  color: #92400e;
+  margin: 0 0 48px;
+  line-height: 1.9;
+  opacity: 0.7;
+}
+.enrollmentCtaBtn {
+  background: #f59e0b;
+  color: #ffffff;
+  border: none;
+  padding: 20px 64px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  border-radius: 32px;
+}
+.enrollmentCtaNote {
+  font-size: 12px;
+  color: #92400e;
+  margin: 16px 0 0;
+  opacity: 0.5;
+}
+
+/* --- Footer --- */
+.footer {
+  background: #78350f;
+  padding: 48px 24px;
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footerBrand {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fbbf24;
+  letter-spacing: 2px;
+}
+.footerLinks {
+  display: flex;
+  gap: 32px;
+}
+.footerLink {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+}
+.footerDivider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.footerCopy {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}

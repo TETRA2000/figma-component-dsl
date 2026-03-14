@@ -1,0 +1,67 @@
+.page { font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif; color: #1a1a1a; background: #ffffff; }
+
+.nav { background: #ffffff; border-bottom: 1px solid #e5e5e5; padding: 0 24px; }
+.navInner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { font-size: 18px; font-weight: 300; color: #1a1a1a; letter-spacing: 4px; text-transform: uppercase; }
+.navLinks { display: flex; gap: 32px; }
+.navLink { font-size: 13px; color: #666; text-decoration: none; font-weight: 400; letter-spacing: 1px; }
+.contactBtn { background: #1a1a1a; color: #fff; border: none; padding: 10px 24px; font-size: 13px; font-weight: 500; cursor: pointer; letter-spacing: 1px; }
+
+.hero { width: 100%; height: 80vh; min-height: 600px; background: linear-gradient(135deg, #2a2a2a, #1a1a1a); position: relative; display: flex; align-items: center; justify-content: center; }
+.heroOverlay { text-align: center; }
+.heroTitle { font-size: 56px; font-weight: 200; color: #ffffff; margin: 0 0 16px; letter-spacing: 8px; }
+.heroSubtitle { font-size: 16px; color: rgba(255,255,255,0.6); font-weight: 300; letter-spacing: 4px; margin: 0; }
+
+.sectionTitle { font-size: 24px; font-weight: 300; color: #1a1a1a; margin: 0 0 48px; text-align: center; letter-spacing: 4px; }
+.sectionTitleLight { font-size: 24px; font-weight: 300; color: #ffffff; margin: 0 0 48px; text-align: center; letter-spacing: 4px; }
+
+.portfolio { padding: 96px 24px; background: #ffffff; }
+.portfolioGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 1100px; margin: 0 auto; }
+.portfolioItem { position: relative; overflow: hidden; }
+.portfolioImage { width: 100%; aspect-ratio: 1; background: #f0f0f0; display: flex; align-items: center; justify-content: center; }
+.tall .portfolioImage { aspect-ratio: 3/4; }
+.wide .portfolioImage { aspect-ratio: 4/3; }
+.square .portfolioImage { aspect-ratio: 1; }
+.portfolioIcon { font-size: 40px; opacity: 0.3; }
+.portfolioLabel { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.7)); padding: 20px 16px 12px; }
+.portfolioLabel span { font-size: 13px; color: #ffffff; font-weight: 400; letter-spacing: 2px; }
+
+.photographer { padding: 96px 24px; background: #f8f8f8; }
+.photographerInner { max-width: 1000px; margin: 0 auto; display: flex; gap: 64px; align-items: center; }
+.photographerImage { width: 320px; height: 400px; background: linear-gradient(135deg, #e0e0e0, #c0c0c0); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.photographerIcon { font-size: 60px; opacity: 0.3; }
+.photographerContent { flex: 1; }
+.photographerLabel { font-size: 12px; color: #999; letter-spacing: 3px; text-transform: uppercase; display: block; margin-bottom: 12px; }
+.photographerName { font-size: 28px; font-weight: 300; color: #1a1a1a; margin: 0 0 20px; letter-spacing: 2px; }
+.photographerBio { font-size: 15px; color: #555; line-height: 2; margin: 0 0 24px; }
+.photographerAwards { display: flex; gap: 16px; flex-wrap: wrap; }
+.award { font-size: 12px; color: #1a1a1a; border: 1px solid #ccc; padding: 6px 14px; letter-spacing: 1px; }
+
+.pricing { padding: 96px 24px; background: #1a1a1a; }
+.pricingGrid { display: flex; gap: 24px; max-width: 1000px; margin: 0 auto; }
+.pricingCard { flex: 1; background: #222; padding: 40px 28px; border: 1px solid #333; position: relative; }
+.pricingFeatured { border-color: #ffffff; }
+.pricingBadge { position: absolute; top: -1px; right: 24px; background: #ffffff; color: #1a1a1a; padding: 4px 16px; font-size: 11px; font-weight: 700; letter-spacing: 2px; }
+.pricingName { font-size: 16px; font-weight: 300; color: #ffffff; margin: 0 0 20px; letter-spacing: 2px; }
+.pricingPrice { margin-bottom: 28px; }
+.pricingAmount { font-size: 32px; font-weight: 200; color: #ffffff; }
+.pricingTax { font-size: 13px; color: #888; }
+.pricingFeatures { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+.pricingFeatures li { font-size: 13px; color: #aaa; padding-left: 16px; position: relative; }
+.pricingFeatures li::before { content: '—'; position: absolute; left: 0; color: #555; }
+
+.contact { padding: 96px 24px; background: #ffffff; text-align: center; }
+.contactSubtitle { font-size: 15px; color: #666; line-height: 2; margin: -24px 0 40px; }
+.contactActions { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.contactPrimaryBtn { background: #1a1a1a; color: #fff; border: none; padding: 16px 48px; font-size: 14px; font-weight: 500; cursor: pointer; letter-spacing: 2px; }
+.contactEmail { font-size: 14px; color: #999; letter-spacing: 1px; }
+
+.footer { background: #1a1a1a; color: #fff; padding: 48px 24px 0; }
+.footerInner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding-bottom: 48px; border-bottom: 1px solid #333; }
+.footerBrand { flex-shrink: 0; }
+.footerLogo { font-size: 16px; font-weight: 300; color: #ffffff; letter-spacing: 4px; }
+.footerTagline { font-size: 12px; color: #666; margin: 8px 0 0; letter-spacing: 2px; }
+.footerLinks { display: flex; gap: 28px; }
+.footerLink { font-size: 12px; color: #888; text-decoration: none; letter-spacing: 1px; }
+.footerBottom { max-width: 1200px; margin: 0 auto; padding: 24px 0; text-align: center; }
+.footerBottom p { font-size: 11px; color: #555; margin: 0; letter-spacing: 1px; }
