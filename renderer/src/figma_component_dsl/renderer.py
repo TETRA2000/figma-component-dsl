@@ -74,9 +74,19 @@ class DslRenderer:
         # Apply transform
         transform = node.get("transform")
         if transform:
+            a = transform[0][0]
+            b = transform[0][1]
             tx = transform[0][2]
+            c = transform[1][0]
+            d = transform[1][1]
             ty = transform[1][2]
-            ctx.translate(tx, ty)
+            # Check if transform has rotation/scale (non-identity 2x2 part)
+            if a != 1 or b != 0 or c != 0 or d != 1:
+                # Apply full affine transform: cairo.Matrix(xx, yx, xy, yy, x0, y0)
+                mtx = cairo.Matrix(a, c, b, d, tx, ty)
+                ctx.transform(mtx)
+            else:
+                ctx.translate(tx, ty)
 
         opacity = node.get("opacity", 1.0)
 
@@ -139,7 +149,7 @@ class DslRenderer:
             elif paint.get("type") == "GRADIENT_LINEAR":
                 self._apply_gradient_fill(ctx, paint, w, h, corner_radius, opacity, per_corner)
             elif paint.get("type") == "IMAGE":
-                self._apply_image_fill(ctx, paint, w, h, corner_radius, opacity, options)
+                self._apply_image_fill(ctx, paint, w, h, corner_radius, opacity, options, per_corner)
 
         # Strokes
         stroke_weight = node.get("strokeWeight", 0)
