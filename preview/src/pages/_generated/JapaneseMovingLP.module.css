@@ -1,0 +1,534 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #1a1a1a;
+  background: #ffffff;
+}
+
+/* ─── NavBar ─── */
+.nav {
+  background: #ffffff;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brand {
+  font-size: 20px;
+  font-weight: 900;
+  color: #16a34a;
+  letter-spacing: 1px;
+}
+.navLinks {
+  display: flex;
+  gap: 32px;
+}
+.navLink {
+  font-size: 14px;
+  color: #555555;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #16a34a;
+}
+.navCta {
+  background: #16a34a;
+  color: #ffffff;
+  border: none;
+  padding: 10px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ─── Hero ─── */
+.hero {
+  position: relative;
+  min-height: 640px;
+  background: linear-gradient(160deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroAccent {
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(22, 163, 74, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+.heroLabel {
+  display: inline-block;
+  font-size: 13px;
+  color: #16a34a;
+  letter-spacing: 6px;
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+.heroTitle {
+  font-size: 64px;
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.3;
+  margin: 0 0 16px;
+  letter-spacing: 4px;
+}
+.heroSubtitle {
+  font-size: 18px;
+  color: #555555;
+  line-height: 1.8;
+  margin: 0 0 48px;
+}
+.heroBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.heroBtnPrimary {
+  background: #16a34a;
+  color: #ffffff;
+  border: none;
+  padding: 18px 56px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.heroBtnSecondary {
+  background: transparent;
+  color: #16a34a;
+  border: 2px solid #16a34a;
+  padding: 18px 40px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ─── Section Headers ─── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.sectionLabel {
+  font-size: 12px;
+  color: #16a34a;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 36px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 2px;
+}
+.sectionTitleDark {
+  font-size: 36px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+/* ─── Plans ─── */
+.plans {
+  padding: 100px 24px;
+  background: #15803d;
+}
+.plansGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.planCard {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 48px 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+.planCardPopular {
+  flex: 1;
+  background: #ffffff;
+  border: 3px solid #f59e0b;
+  border-radius: 12px;
+  padding: 48px 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+}
+.popularBadge {
+  background: #f59e0b;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 20px;
+  letter-spacing: 2px;
+  border-radius: 20px;
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.planName {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 20px;
+}
+.planPrice {
+  font-size: 44px;
+  font-weight: 900;
+  color: #16a34a;
+  margin: 0;
+  line-height: 1;
+}
+.planPriceUnit {
+  font-size: 16px;
+  font-weight: 500;
+  color: #888888;
+}
+.planDivider {
+  width: 100%;
+  height: 1px;
+  background: #e5e7eb;
+  margin: 28px 0;
+}
+.planFeatures {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  width: 100%;
+}
+.planFeature {
+  font-size: 14px;
+  color: #555555;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+.planBtn {
+  width: 100%;
+  padding: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: auto;
+}
+.planBtnPrimary {
+  composes: planBtn;
+  background: #16a34a;
+  color: #ffffff;
+}
+.planBtnSecondary {
+  composes: planBtn;
+  background: transparent;
+  color: #16a34a;
+  border: 2px solid #16a34a;
+}
+
+/* ─── Process ─── */
+.process {
+  padding: 100px 24px;
+  background: #f0fdf4;
+}
+.processGrid {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.processStep {
+  flex: 1;
+  text-align: center;
+  padding: 0 16px;
+}
+.stepNumber {
+  width: 64px;
+  height: 64px;
+  background: #16a34a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 auto 20px;
+}
+.stepTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+}
+.stepDesc {
+  font-size: 14px;
+  color: #666666;
+  line-height: 1.8;
+  margin: 0;
+}
+.processArrow {
+  width: 40px;
+  height: 2px;
+  background: #16a34a;
+  margin-top: 32px;
+  flex-shrink: 0;
+}
+
+/* ─── Price Calculator ─── */
+.calculator {
+  padding: 100px 24px;
+  background: #ffffff;
+}
+.calcCard {
+  max-width: 640px;
+  margin: 0 auto;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 48px;
+}
+.calcRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+.calcLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.calcSelect {
+  font-size: 14px;
+  color: #555555;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 16px;
+  min-width: 200px;
+  text-align: center;
+}
+.calcDivider {
+  width: 100%;
+  height: 2px;
+  background: #16a34a;
+  margin: 24px 0;
+}
+.calcResult {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.calcResultLabel {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.calcResultPrice {
+  font-size: 28px;
+  font-weight: 900;
+  color: #16a34a;
+}
+.calcNote {
+  font-size: 12px;
+  color: #888888;
+  margin: 0 0 24px;
+  text-align: right;
+}
+.calcBtn {
+  width: 100%;
+  background: #16a34a;
+  color: #ffffff;
+  border: none;
+  padding: 18px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ─── Reviews ─── */
+.reviews {
+  padding: 100px 24px;
+  background: #15803d;
+}
+.reviewsGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.reviewCard {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 36px;
+}
+.reviewStars {
+  font-size: 20px;
+  color: #f59e0b;
+  margin-bottom: 16px;
+}
+.reviewText {
+  font-size: 14px;
+  color: #444444;
+  line-height: 1.9;
+  margin: 0 0 20px;
+}
+.reviewMeta {
+  font-size: 13px;
+  color: #888888;
+  margin: 0;
+}
+
+/* ─── CTA ─── */
+.cta {
+  padding: 120px 24px;
+  background: linear-gradient(160deg, #052e16 0%, #14532d 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.ctaGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(22, 163, 74, 0.2) 0%, transparent 60%);
+  pointer-events: none;
+}
+.ctaContent {
+  position: relative;
+  z-index: 1;
+}
+.ctaTitle {
+  font-size: 40px;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 16px;
+  letter-spacing: 3px;
+}
+.ctaSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 48px;
+  line-height: 1.8;
+}
+.ctaBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.ctaBtn {
+  background: #f59e0b;
+  color: #ffffff;
+  border: none;
+  padding: 20px 56px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.ctaBtnPhone {
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  padding: 20px 40px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.ctaNote {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 16px 0 0;
+}
+
+/* ─── Footer ─── */
+.footer {
+  background: #052e16;
+  padding: 48px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footerBrand {
+  font-size: 18px;
+  font-weight: 900;
+  color: #4ade80;
+  letter-spacing: 1px;
+}
+.footerLinks {
+  display: flex;
+  gap: 32px;
+}
+.footerLink {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+}
+.footerDivider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.footerCopy {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0;
+}

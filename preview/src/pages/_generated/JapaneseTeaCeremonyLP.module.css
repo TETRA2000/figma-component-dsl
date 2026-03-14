@@ -1,0 +1,454 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #1a1a1a;
+  background: #f5f0e8;
+}
+
+/* ─── NavBar ─── */
+.nav {
+  background: rgba(245, 240, 232, 0.95);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid #d4cbb8;
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brand {
+  font-size: 22px;
+  font-weight: 900;
+  color: #3f6212;
+  letter-spacing: 2px;
+}
+.navLinks {
+  display: flex;
+  gap: 36px;
+}
+.navLink {
+  font-size: 14px;
+  color: #5c5647;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #3f6212;
+}
+.navCta {
+  background: #3f6212;
+  color: #ffffff;
+  border: none;
+  padding: 10px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+/* ─── Hero ─── */
+.hero {
+  position: relative;
+  min-height: 700px;
+  background: linear-gradient(160deg, #e8e0d0 0%, #f5f0e8 50%, #ede8df 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroAccent {
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(63, 98, 18, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+.heroLabel {
+  display: inline-block;
+  font-size: 13px;
+  color: #3f6212;
+  letter-spacing: 6px;
+  font-weight: 600;
+  margin-bottom: 28px;
+  text-transform: uppercase;
+}
+.heroTitle {
+  font-size: 72px;
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  letter-spacing: 4px;
+}
+.heroSubtitle {
+  font-size: 18px;
+  color: #5c5647;
+  line-height: 1.8;
+  margin: 0 0 48px;
+}
+.heroBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.heroBtnPrimary {
+  background: #3f6212;
+  color: #ffffff;
+  border: none;
+  padding: 18px 56px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.heroBtnSecondary {
+  background: transparent;
+  color: #3f6212;
+  border: 1px solid #3f6212;
+  padding: 18px 40px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ─── Section Headers ─── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.sectionLabel {
+  font-size: 12px;
+  color: #3f6212;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 36px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+/* ─── Courses ─── */
+.courses {
+  padding: 100px 24px;
+  background: #f5f0e8;
+}
+.coursesGrid {
+  display: flex;
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.courseCard {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #d4cbb8;
+  padding: 48px 36px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.courseBadge {
+  background: #3f6212;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 16px;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+.courseTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 16px;
+}
+.courseDivider {
+  width: 40px;
+  height: 2px;
+  background: #3f6212;
+  margin: 0 auto 16px;
+}
+.courseDesc {
+  font-size: 14px;
+  color: #5c5647;
+  line-height: 1.9;
+  margin: 0 0 24px;
+}
+.coursePrice {
+  font-size: 20px;
+  font-weight: 800;
+  color: #3f6212;
+  margin: 0;
+}
+.coursePriceUnit {
+  font-size: 13px;
+  font-weight: 400;
+  color: #7a7567;
+}
+
+/* ─── Philosophy ─── */
+.philosophy {
+  padding: 100px 24px;
+  background: #ebe5d9;
+}
+.philosophyInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  gap: 80px;
+  align-items: center;
+}
+.philosophyText {
+  flex: 1;
+}
+.philosophyLabel {
+  font-size: 12px;
+  color: #3f6212;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.philosophyTitle {
+  font-size: 36px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 20px;
+  letter-spacing: 2px;
+}
+.philosophyDivider {
+  width: 60px;
+  height: 2px;
+  background: #3f6212;
+  margin: 0 0 20px;
+}
+.philosophyBody {
+  font-size: 16px;
+  color: #5c5647;
+  line-height: 2;
+  margin: 0 0 16px;
+}
+.philosophyNote {
+  font-size: 15px;
+  color: #7a7567;
+  line-height: 1.9;
+  margin: 0;
+}
+.philosophyImage {
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, #3f6212, #2d5016);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* ─── Tea Room ─── */
+.tearoom {
+  padding: 100px 24px;
+  background: #f5f0e8;
+}
+.tearoomContent {
+  display: flex;
+  gap: 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.tearoomPhoto {
+  width: 360px;
+  height: 280px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.tearoomPhoto1 {
+  composes: tearoomPhoto;
+  background: linear-gradient(120deg, #5a7d2a, #3f6212);
+}
+.tearoomPhoto2 {
+  composes: tearoomPhoto;
+  background: linear-gradient(135deg, #3f6212, #2d5016);
+}
+.tearoomDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+}
+.tearoomTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+}
+.tearoomDivider {
+  width: 40px;
+  height: 2px;
+  background: #3f6212;
+}
+.tearoomDesc {
+  font-size: 14px;
+  color: #5c5647;
+  line-height: 1.9;
+  margin: 0;
+}
+.tearoomNote {
+  font-size: 13px;
+  color: #3f6212;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ─── Seasonal Events ─── */
+.events {
+  padding: 100px 24px;
+  background: #ebe5d9;
+}
+.eventsGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.eventCard {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #d4cbb8;
+  padding: 32px;
+  text-align: center;
+}
+.eventSeason {
+  font-size: 11px;
+  color: #3f6212;
+  letter-spacing: 3px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+.eventTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+}
+.eventDivider {
+  width: 30px;
+  height: 2px;
+  background: #3f6212;
+  margin: 0 auto 12px;
+}
+.eventDesc {
+  font-size: 13px;
+  color: #5c5647;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ─── CTA Section ─── */
+.cta {
+  padding: 120px 24px;
+  background: linear-gradient(160deg, #354a17 0%, #3f6212 50%, #2d5016 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.ctaGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.ctaContent {
+  position: relative;
+  z-index: 1;
+}
+.ctaTitle {
+  font-size: 40px;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 16px;
+  letter-spacing: 3px;
+}
+.ctaSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 48px;
+  line-height: 1.8;
+}
+.ctaBtn {
+  background: #ffffff;
+  color: #3f6212;
+  border: none;
+  padding: 20px 72px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  cursor: pointer;
+}
+.ctaNote {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 16px 0 0;
+}
+
+/* ─── Footer ─── */
+.footer {
+  background: #2d2a24;
+  padding: 48px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footerBrand {
+  font-size: 20px;
+  font-weight: 900;
+  color: #4d7c0f;
+  letter-spacing: 2px;
+}
+.footerLinks {
+  display: flex;
+  gap: 32px;
+}
+.footerLink {
+  font-size: 13px;
+  color: #999999;
+  text-decoration: none;
+}
+.footerDivider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.footerCopy {
+  font-size: 12px;
+  color: #666666;
+  margin: 0;
+}

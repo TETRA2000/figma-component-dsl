@@ -1,0 +1,406 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #1a1a1a;
+  background: #0f0a05;
+}
+
+/* ─── NavBar ─── */
+.nav {
+  background: rgba(15, 10, 5, 0.95);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brand {
+  font-size: 22px;
+  font-weight: 900;
+  color: #f59e0b;
+  letter-spacing: 2px;
+}
+.navLinks {
+  display: flex;
+  gap: 36px;
+}
+.navLink {
+  font-size: 14px;
+  color: #999999;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #f59e0b;
+}
+
+/* ─── Hero ─── */
+.hero {
+  position: relative;
+  min-height: 680px;
+  background: linear-gradient(160deg, #78350f 0%, #451a03 50%, #1c0a00 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(101, 163, 13, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+.heroLabel {
+  display: inline-block;
+  font-size: 13px;
+  color: #65a30d;
+  letter-spacing: 6px;
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+.heroTitle {
+  font-size: 72px;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.2;
+  margin: 0 0 16px;
+  letter-spacing: 8px;
+}
+.heroSubtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.8;
+  margin: 0 0 48px;
+}
+.heroCta {
+  background: #65a30d;
+  color: #ffffff;
+  border: none;
+  padding: 18px 56px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+/* ─── Section Headers ─── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.sectionLabel {
+  font-size: 12px;
+  color: #65a30d;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionLabelLight {
+  font-size: 12px;
+  color: #78350f;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 36px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 2px;
+}
+.sectionTitleDark {
+  font-size: 36px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+/* ─── Tap List ─── */
+.tapList {
+  padding: 100px 24px;
+  background: #1a0f05;
+}
+.tapGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.beerCard {
+  background: #261a0a;
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  padding: 28px;
+  display: flex;
+  gap: 20px;
+}
+.beerGlass {
+  width: 48px;
+  height: 80px;
+  background: linear-gradient(180deg, #f59e0b 0%, #78350f 100%);
+  border-radius: 4px 4px 8px 8px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.beerInfo {
+  flex: 1;
+}
+.beerName {
+  font-size: 17px;
+  font-weight: 800;
+  color: #f59e0b;
+  margin: 0 0 4px;
+}
+.beerBrewery {
+  font-size: 12px;
+  color: #888888;
+  margin: 0 0 4px;
+}
+.beerStyle {
+  font-size: 12px;
+  color: #65a30d;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin: 0 0 10px;
+}
+.beerStats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.beerStat {
+  font-size: 12px;
+  color: #cccccc;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+.beerDesc {
+  font-size: 13px;
+  color: #888888;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ─── Food Menu ─── */
+.food {
+  padding: 100px 24px;
+  background: #faf7f2;
+}
+.foodGrid {
+  display: flex;
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.foodItem {
+  flex: 1;
+  text-align: center;
+}
+.foodImg {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, #78350f, #451a03);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+.foodName {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 8px;
+}
+.foodDesc {
+  font-size: 13px;
+  color: #666666;
+  line-height: 1.7;
+  margin: 0 0 12px;
+}
+.foodPrice {
+  font-size: 20px;
+  font-weight: 800;
+  color: #78350f;
+  margin: 0;
+}
+
+/* ─── Brewery Story ─── */
+.brewery {
+  padding: 100px 24px;
+  background: #78350f;
+}
+.breweryContent {
+  display: flex;
+  gap: 64px;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: center;
+}
+.breweryImg {
+  width: 400px;
+  height: 480px;
+  background: linear-gradient(135deg, #451a03, #1c0a00);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.breweryText {
+  flex: 1;
+}
+.breweryDesc {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 2;
+  margin: 0 0 20px;
+}
+
+/* ─── Events ─── */
+.events {
+  padding: 100px 24px;
+  background: #faf7f2;
+}
+.eventsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.eventCard {
+  display: flex;
+  gap: 28px;
+  background: #ffffff;
+  border: 1px solid #e5e0d8;
+  border-radius: 8px;
+  padding: 28px;
+  align-items: flex-start;
+}
+.eventDate {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  background: #65a30d;
+  padding: 8px 16px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.eventInfo {
+  flex: 1;
+}
+.eventTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 8px;
+}
+.eventDesc {
+  font-size: 14px;
+  color: #666666;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ─── Access ─── */
+.access {
+  padding: 100px 24px;
+  background: #1a0f05;
+}
+.accessContent {
+  display: flex;
+  gap: 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.mapPlaceholder {
+  flex: 1;
+  min-height: 300px;
+  background: #261a0a;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #555555;
+  letter-spacing: 4px;
+}
+.accessInfo {
+  flex: 1;
+}
+.accessRow {
+  display: flex;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.accessLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f59e0b;
+  width: 100px;
+  flex-shrink: 0;
+}
+.accessValue {
+  font-size: 14px;
+  color: #cccccc;
+}
+
+/* ─── Footer ─── */
+.footer {
+  background: #0a0500;
+  padding: 48px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footerBrand {
+  font-size: 20px;
+  font-weight: 900;
+  color: #f59e0b;
+  letter-spacing: 2px;
+}
+.footerLinks {
+  display: flex;
+  gap: 32px;
+}
+.footerLink {
+  font-size: 13px;
+  color: #666666;
+  text-decoration: none;
+}
+.footerDivider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.footerCopy {
+  font-size: 12px;
+  color: #444444;
+  margin: 0;
+}

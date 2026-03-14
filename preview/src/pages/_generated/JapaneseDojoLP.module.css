@@ -1,0 +1,435 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #ffffff;
+  background: #0a0a0a;
+}
+
+/* ─── NavBar ─── */
+.nav {
+  background: rgba(10, 10, 10, 0.95);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brand {
+  font-size: 22px;
+  font-weight: 900;
+  color: #dc2626;
+  letter-spacing: 2px;
+}
+.navLinks {
+  display: flex;
+  gap: 36px;
+}
+.navLink {
+  font-size: 14px;
+  color: #aaaaaa;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navLink:hover {
+  color: #ffffff;
+}
+.navCta {
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 10px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+/* ─── Hero ─── */
+.hero {
+  position: relative;
+  min-height: 700px;
+  background: linear-gradient(160deg, #1a0505 0%, #0a0a0a 50%, #0d0d0d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroAccent {
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+.heroLabel {
+  display: inline-block;
+  font-size: 13px;
+  color: #dc2626;
+  letter-spacing: 6px;
+  font-weight: 600;
+  margin-bottom: 28px;
+  text-transform: uppercase;
+}
+.heroTitle {
+  font-size: 72px;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  letter-spacing: 4px;
+}
+.heroSubtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.8;
+  margin: 0 0 48px;
+}
+.heroBtnGroup {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.heroBtnPrimary {
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 18px 56px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.heroBtnSecondary {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 18px 40px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ─── Section Headers ─── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.sectionLabel {
+  font-size: 12px;
+  color: #dc2626;
+  letter-spacing: 6px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+.sectionTitle {
+  font-size: 36px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+/* ─── Disciplines ─── */
+.disciplines {
+  padding: 100px 24px;
+  background: #0a0a0a;
+}
+.disciplinesGrid {
+  display: flex;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.disciplineCard {
+  flex: 1;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 48px 32px;
+  text-align: center;
+}
+.disciplineIcon {
+  width: 56px;
+  height: 56px;
+  background: #dc2626;
+  border-radius: 4px;
+  margin: 0 auto 16px;
+}
+.disciplineName {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+.disciplineNameEn {
+  font-size: 12px;
+  color: #dc2626;
+  letter-spacing: 3px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+.disciplineDivider {
+  width: 40px;
+  height: 2px;
+  background: #dc2626;
+  margin: 0 auto 16px;
+}
+.disciplineDesc {
+  font-size: 14px;
+  color: #888888;
+  line-height: 1.9;
+  margin: 0;
+}
+
+/* ─── Schedule ─── */
+.schedule {
+  padding: 100px 24px;
+  background: #111111;
+}
+.scheduleTable {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  border-collapse: collapse;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.scheduleTable th {
+  background: #dc2626;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 16px 8px;
+  text-align: center;
+}
+.scheduleTable td {
+  font-size: 13px;
+  color: #aaaaaa;
+  padding: 14px 8px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.scheduleTimeCell {
+  font-weight: 600;
+  color: #ffffff;
+  width: 120px;
+}
+
+/* ─── Instructors ─── */
+.instructors {
+  padding: 100px 24px;
+  background: #0a0a0a;
+}
+.instructorsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.instructorCard {
+  display: flex;
+  gap: 40px;
+  background: #141414;
+  padding: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.instructorPhoto {
+  width: 200px;
+  height: 240px;
+  background: linear-gradient(135deg, #dc2626, #991b1b);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.instructorInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.instructorTitle {
+  font-size: 13px;
+  color: #dc2626;
+  letter-spacing: 2px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.instructorName {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 12px;
+}
+.instructorDivider {
+  width: 40px;
+  height: 2px;
+  background: #dc2626;
+  margin: 0 0 16px;
+}
+.instructorBio {
+  font-size: 15px;
+  color: #cccccc;
+  line-height: 1.9;
+  margin: 0;
+}
+
+/* ─── CTA Section ─── */
+.cta {
+  padding: 120px 24px;
+  background: linear-gradient(160deg, #1a0505 0%, #0a0a0a 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.ctaGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+.ctaContent {
+  position: relative;
+  z-index: 1;
+}
+.ctaTitle {
+  font-size: 40px;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 16px;
+  letter-spacing: 3px;
+}
+.ctaSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 48px;
+  line-height: 1.8;
+}
+.ctaBtn {
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 20px 72px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  cursor: pointer;
+}
+.ctaNote {
+  font-size: 12px;
+  color: #555555;
+  margin: 16px 0 0;
+}
+
+/* ─── Access ─── */
+.access {
+  padding: 100px 24px;
+  background: #111111;
+}
+.accessInner {
+  display: flex;
+  gap: 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.mapPlaceholder {
+  width: 540px;
+  height: 320px;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.accessDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+}
+.accessName {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+.accessDivider {
+  width: 40px;
+  height: 2px;
+  background: #dc2626;
+}
+.accessAddress {
+  font-size: 15px;
+  color: #cccccc;
+  line-height: 1.8;
+  margin: 0;
+}
+.accessStation {
+  font-size: 14px;
+  color: #888888;
+  line-height: 1.8;
+  margin: 0;
+}
+.accessContact {
+  font-size: 14px;
+  color: #666666;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ─── Footer ─── */
+.footer {
+  background: #050505;
+  padding: 48px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.footerBrand {
+  font-size: 20px;
+  font-weight: 900;
+  color: #dc2626;
+  letter-spacing: 2px;
+}
+.footerLinks {
+  display: flex;
+  gap: 32px;
+}
+.footerLink {
+  font-size: 13px;
+  color: #666666;
+  text-decoration: none;
+}
+.footerDivider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.footerCopy {
+  font-size: 12px;
+  color: #444444;
+  margin: 0;
+}

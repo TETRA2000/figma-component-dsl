@@ -1,0 +1,338 @@
+.page {
+  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  color: #e2e8f0;
+  background: #0f172a;
+}
+
+/* Nav */
+.nav {
+  background: #0f172a;
+  padding: 0 24px;
+  border-bottom: 1px solid rgba(196, 163, 90, 0.15);
+}
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.brand {
+  font-size: 28px;
+  font-weight: 900;
+  color: #c4a35a;
+  letter-spacing: 6px;
+}
+.navLinks { display: flex; gap: 36px; }
+.navLink {
+  font-size: 14px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  height: 650px;
+  background: linear-gradient(135deg, #0f172a, #020617);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(196, 163, 90, 0.08) 0%, transparent 60%);
+}
+.heroContent { position: relative; z-index: 1; }
+.heroLabel {
+  display: inline-block;
+  font-size: 13px;
+  color: #c4a35a;
+  letter-spacing: 6px;
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+.heroTitle {
+  font-size: 72px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.2;
+  margin: 0 0 24px;
+  letter-spacing: 8px;
+}
+.heroDivider {
+  width: 60px;
+  height: 1px;
+  background: #c4a35a;
+  margin: 0 auto 24px;
+}
+.heroSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 2;
+  margin: 0 0 40px;
+  letter-spacing: 1px;
+}
+.heroBtn {
+  background: transparent;
+  color: #c4a35a;
+  border: 1px solid #c4a35a;
+  padding: 14px 48px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  cursor: pointer;
+}
+
+/* Section Headers */
+.sectionHeader { text-align: center; margin-bottom: 48px; }
+.sectionLabel {
+  font-size: 12px;
+  color: #c4a35a;
+  letter-spacing: 5px;
+  font-weight: 500;
+}
+.sectionLabelLight {
+  font-size: 12px;
+  color: #c4a35a;
+  letter-spacing: 5px;
+  font-weight: 500;
+}
+.sectionTitle {
+  font-size: 30px;
+  font-weight: 800;
+  color: #e2e8f0;
+  margin: 12px 0 0;
+  letter-spacing: 3px;
+}
+
+/* Omakase */
+.omakase {
+  padding: 96px 24px;
+  background: #0f172a;
+}
+.courseGrid {
+  display: flex;
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.courseCard {
+  flex: 1;
+  background: #1e293b;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(196, 163, 90, 0.12);
+}
+.courseImgArea {
+  height: 180px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+}
+.courseInfo {
+  padding: 28px;
+}
+.courseName {
+  font-size: 22px;
+  font-weight: 800;
+  color: #c4a35a;
+  margin: 0 0 8px;
+  letter-spacing: 2px;
+}
+.coursePieces {
+  font-size: 13px;
+  color: #94a3b8;
+  display: block;
+  margin-bottom: 16px;
+}
+.courseDesc {
+  font-size: 14px;
+  color: #94a3b8;
+  line-height: 1.8;
+  margin: 0 0 20px;
+}
+.coursePrice {
+  font-size: 24px;
+  font-weight: 900;
+  color: #c4a35a;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Chef */
+.chef {
+  padding: 96px 24px;
+  background: #1e293b;
+}
+.chefContent {
+  display: flex;
+  gap: 64px;
+  max-width: 1000px;
+  margin: 0 auto;
+  align-items: center;
+}
+.chefImgArea {
+  width: 360px;
+  height: 440px;
+  background: linear-gradient(135deg, #334155, #1e293b);
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+.chefInfo { flex: 1; }
+.chefTitle {
+  font-size: 30px;
+  font-weight: 800;
+  color: #e2e8f0;
+  margin: 12px 0 24px;
+  letter-spacing: 3px;
+}
+.chefDivider {
+  width: 40px;
+  height: 1px;
+  background: #c4a35a;
+  margin-bottom: 24px;
+}
+.chefName {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+}
+.chefRole {
+  font-size: 14px;
+  color: #c4a35a;
+  display: block;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+.chefDesc {
+  font-size: 15px;
+  color: #94a3b8;
+  line-height: 2;
+  margin: 0;
+}
+
+/* Seasonal */
+.seasonal {
+  padding: 96px 24px;
+  background: #0f172a;
+}
+.seasonalGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.seasonalItem {
+  text-align: center;
+}
+.seasonalImgArea {
+  height: 200px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(196, 163, 90, 0.1);
+}
+.seasonalName {
+  font-size: 20px;
+  font-weight: 700;
+  color: #c4a35a;
+  margin: 0 0 8px;
+  letter-spacing: 2px;
+}
+.seasonalDesc {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* Reservation */
+.reservation {
+  padding: 96px 24px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  text-align: center;
+}
+.reservationContent { max-width: 600px; margin: 0 auto; }
+.reservationLabel {
+  font-size: 12px;
+  color: #c4a35a;
+  letter-spacing: 5px;
+  font-weight: 500;
+}
+.reservationTitle {
+  font-size: 30px;
+  font-weight: 800;
+  color: #e2e8f0;
+  margin: 12px 0 24px;
+  letter-spacing: 3px;
+}
+.reservationDivider {
+  width: 40px;
+  height: 1px;
+  background: #c4a35a;
+  margin: 0 auto 24px;
+}
+.reservationDesc {
+  font-size: 16px;
+  color: #94a3b8;
+  line-height: 2;
+  margin: 0 0 32px;
+}
+.reservationPhone {
+  font-size: 32px;
+  font-weight: 900;
+  color: #c4a35a;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+  font-family: 'Inter', sans-serif;
+}
+.reservationNote {
+  font-size: 13px;
+  color: #64748b;
+  display: block;
+  margin-bottom: 32px;
+}
+.reservationBtn {
+  background: #c4a35a;
+  color: #0f172a;
+  border: none;
+  padding: 16px 48px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  cursor: pointer;
+}
+
+/* Footer */
+.footer {
+  background: #020617;
+  padding: 40px 24px;
+  border-top: 1px solid rgba(196, 163, 90, 0.1);
+}
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+.footerBrand {
+  font-size: 18px;
+  font-weight: 900;
+  color: #c4a35a;
+  letter-spacing: 4px;
+}
+.footerAddress {
+  font-size: 13px;
+  color: #64748b;
+  margin: 12px 0 0;
+}
+.footerCopy {
+  font-size: 12px;
+  color: #475569;
+  margin: 8px 0 0;
+}

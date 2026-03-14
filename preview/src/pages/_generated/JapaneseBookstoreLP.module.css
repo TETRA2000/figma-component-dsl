@@ -1,0 +1,73 @@
+.page { font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif; color: #451a03; background: #fff; }
+
+.nav { background: #fef7ed; border-bottom: 1px solid #fde68a; padding: 0 24px; }
+.navInner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { font-size: 22px; font-weight: 500; letter-spacing: 4px; color: #92400e; }
+.navLinks { display: flex; gap: 32px; }
+.navLink { font-size: 13px; color: #78350f; text-decoration: none; font-weight: 400; letter-spacing: 1px; }
+.navCta { background: #92400e; color: #fff; border: none; padding: 10px 28px; font-size: 13px; font-weight: 500; cursor: pointer; letter-spacing: 1px; border-radius: 4px; }
+
+.hero { background: linear-gradient(135deg, #fef7ed, #fef3c7); padding: 140px 24px; text-align: center; }
+.heroContent { max-width: 800px; margin: 0 auto; }
+.heroBadge { font-size: 12px; color: #a16207; letter-spacing: 6px; display: block; margin-bottom: 24px; }
+.heroTitle { font-size: 48px; font-weight: 300; line-height: 1.4; color: #451a03; margin: 0 0 24px; letter-spacing: 4px; }
+.heroSubtitle { font-size: 15px; color: #78350f; line-height: 1.8; margin: 0 0 40px; }
+.heroBtn { background: #92400e; color: #fff; border: none; padding: 16px 48px; font-size: 14px; font-weight: 500; cursor: pointer; letter-spacing: 2px; border-radius: 4px; }
+
+.sectionHeader { text-align: center; margin-bottom: 48px; }
+.sectionLabel { font-size: 12px; color: #a16207; letter-spacing: 4px; display: block; margin-bottom: 8px; }
+.sectionTitle { font-size: 28px; font-weight: 300; color: #451a03; margin: 0; letter-spacing: 2px; }
+
+.newArrivals { padding: 96px 24px; }
+.bookGrid { display: flex; gap: 32px; max-width: 1200px; margin: 0 auto; }
+.bookCard { flex: 1; }
+.bookCover { width: 100%; height: 300px; background: linear-gradient(135deg, #fde68a, #d97706); border-radius: 4px; margin-bottom: 16px; }
+.bookGenre { font-size: 11px; font-weight: 500; color: #a16207; letter-spacing: 2px; display: block; margin-bottom: 4px; }
+.bookTitle { font-size: 16px; font-weight: 600; color: #451a03; margin: 0 0 4px; }
+.bookAuthor { font-size: 13px; color: #78350f; margin: 0 0 8px; }
+.bookDesc { font-size: 12px; color: #92400e; line-height: 1.6; margin: 0; }
+
+.readingSpace { padding: 96px 24px; background: #fef7ed; }
+.readingSpaceInner { max-width: 1000px; margin: 0 auto; display: flex; gap: 64px; align-items: center; }
+.readingSpaceImage { width: 440px; height: 360px; background: linear-gradient(135deg, #fde68a, #fbbf24); border-radius: 8px; flex-shrink: 0; }
+.readingSpaceText { flex: 1; }
+.readingSpaceText .sectionLabel { text-align: left; }
+.readingSpaceText .sectionTitle { text-align: left; margin-bottom: 24px; }
+.readingSpaceDesc { font-size: 14px; color: #78350f; line-height: 2; margin: 0 0 24px; }
+.spaceFeatures { list-style: none; padding: 0; margin: 0; }
+.spaceFeatures li { font-size: 13px; color: #92400e; padding: 4px 0; }
+
+.events { padding: 96px 24px; }
+.eventGrid { display: flex; gap: 24px; max-width: 1000px; margin: 0 auto; }
+.eventCard { flex: 1; padding: 32px; border: 1px solid #fde68a; border-radius: 8px; background: #fff; }
+.eventDate { font-size: 12px; font-weight: 500; color: #a16207; letter-spacing: 1px; display: block; margin-bottom: 12px; }
+.eventTitle { font-size: 18px; font-weight: 600; color: #451a03; margin: 0 0 12px; }
+.eventDesc { font-size: 13px; color: #78350f; line-height: 1.7; margin: 0 0 20px; }
+.eventBtn { background: transparent; color: #92400e; border: 1px solid #92400e; padding: 10px 24px; font-size: 12px; font-weight: 500; cursor: pointer; border-radius: 4px; }
+
+.membership { padding: 96px 24px; background: #fef7ed; text-align: center; }
+.benefitsList { max-width: 900px; margin: 0 auto 40px; background: #fff; border-radius: 8px; padding: 32px 48px; }
+.benefitItem { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid #fde68a; }
+.benefitItem:last-child { border-bottom: none; }
+.benefitNum { font-size: 24px; font-weight: 300; color: #d97706; flex-shrink: 0; }
+.benefitText { text-align: left; flex: 1; }
+.benefitTitle { font-size: 16px; font-weight: 600; color: #451a03; margin: 0 0 4px; }
+.benefitDesc { font-size: 13px; color: #78350f; margin: 0; }
+.membershipCta { background: #92400e; color: #fff; border: none; padding: 16px 48px; font-size: 14px; font-weight: 500; cursor: pointer; letter-spacing: 1px; border-radius: 4px; }
+
+.storeInfo { padding: 96px 24px; }
+.storeInfoInner { max-width: 1000px; margin: 0 auto; display: flex; gap: 64px; align-items: center; }
+.storeText { flex: 1; }
+.storeText .sectionLabel { text-align: left; }
+.storeText .sectionTitle { text-align: left; margin-bottom: 24px; }
+.storeAddr { font-size: 14px; color: #78350f; line-height: 2; margin: 0 0 16px; }
+.storeRoute { font-size: 14px; color: #78350f; line-height: 2; margin: 0 0 16px; }
+.storeHours { font-size: 13px; color: #a16207; line-height: 2; margin: 0; }
+.storeMap { width: 400px; height: 300px; background: linear-gradient(135deg, #fde68a, #fbbf24); border-radius: 8px; flex-shrink: 0; }
+
+.footer { padding: 48px 24px; background: #451a03; text-align: center; }
+.footerInner { max-width: 1200px; margin: 0 auto; }
+.footerBrand { font-size: 16px; font-weight: 300; letter-spacing: 4px; color: #fff; }
+.footerInfo { margin: 16px 0; }
+.footerInfo p { font-size: 12px; color: #a16207; margin: 4px 0; }
+.footerCopy { font-size: 11px; color: #78350f; margin: 0; }

@@ -83,17 +83,28 @@ Stress-testing the DSL rendering pipeline by creating diverse Japanese landing p
 | 8 | Hair Salon | Beauty | Warm beige | Minimal typography, price menu, stylist cards | None |
 | 9 | Travel Agency | Travel | Amber (#d97706) | Destination cards, feature list, search box | None |
 | 10 | SaaS Product | Tech | Indigo (#6366f1) | Pricing comparison, feature grid, gradient CTA | Empty text error |
-| 11 | Yoga Studio | Wellness | Sage green (#7c9473) | TBD | TBD |
-| 12 | Bakery | Food | Brown (#8B4513) | TBD | TBD |
-| 13 | Law Firm | Legal | Navy (#1a2744) | TBD | TBD |
-| 14 | Pet Grooming | Pet Care | Orange (#f4845f) | TBD | TBD |
-| 15 | Accounting | Finance | Dark blue (#1e3a5f) | TBD | TBD |
-| 16 | Photography | Creative | Monochrome | TBD | TBD |
-| 17 | Organic Shop | E-commerce | Earth green (#4a7c59) | TBD | TBD |
-| 18 | Music School | Education | Purple (#7c3aed) | TBD | TBD |
-| 19 | Cleaning Service | Service | Sky blue (#0ea5e9) | TBD | TBD |
-| 20 | Kindergarten | Education | Yellow (#f59e0b) | TBD | TBD |
+| 11 | Yoga Studio | Wellness | Sage green (#7c9473) | Rounded cards, muted palette, letterSpacing | None |
+| 12 | Bakery | Food | Brown (#8B4513) | Warm tones, product grid, price display | None |
+| 13 | Law Firm | Legal | Navy (#1a2744) | Professional dark theme, service cards, process flow | None |
+| 14 | Pet Grooming | Pet Care | Orange (#f4845f) | Playful design, service tiers, testimonials | None |
+| 15 | Accounting | Finance | Dark blue (#1e3a5f) | Corporate design, trust badges, feature grid | None |
+| 16 | Photography | Creative | Monochrome (#1a1a1a) | High contrast, portfolio grid, minimal UI | None |
+| 17 | Organic Shop | E-commerce | Earth green (#4a7c59) | Product cards, category badges, natural palette | None |
+| 18 | Music School | Education | Purple (#7c3aed) | Course cards, instrument icons, schedule table | None |
+| 19 | Cleaning Service | Service | Sky blue (#0ea5e9) | Service plans, process steps, trust indicators | None |
+| 20 | Kindergarten | Education | Yellow (#f59e0b) | Playful gradient, schedule timeline, event cards, ellipse dots | None |
+| 21 | Car Dealership | Automotive | Deep red (#b91c1c) | TBD | TBD |
+| 22 | Sushi Restaurant | Food | Navy/Gold (#0f172a/#c4a35a) | TBD | TBD |
+| 23 | Interior Design | Design | Warm taupe (#8b7355) | TBD | TBD |
+| 24 | Flower Shop | Retail | Soft pink (#e8a0bf) | TBD | TBD |
+| 25 | Moving Company | Service | Bright green (#16a34a) | TBD | TBD |
+| 26 | Craft Beer Bar | Food/Drink | Dark amber (#78350f) | TBD | TBD |
+| 27 | Spa/Onsen | Wellness | Slate blue (#64748b) | TBD | TBD |
+| 28 | Bookstore | Retail | Warm brown (#92400e) | TBD | TBD |
+| 29 | Martial Arts Dojo | Sports | Black/Crimson (#0a0a0a) | TBD | TBD |
+| 30 | Tea Ceremony | Culture | Matcha green (#3f6212) | TBD | TBD |
 
 ## Commits
 - `102bc5c` — feat: add Japanese landing pages - iterations 1-3
 - `e5dfcbe` — feat: add Japanese landing pages - iterations 4-10
+- `46583be` — feat: add Japanese landing pages - iterations 11-20
