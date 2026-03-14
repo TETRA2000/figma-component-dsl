@@ -1,7 +1,7 @@
 import { createCanvas, GlobalFonts, type SKRSContext2D } from '@napi-rs/canvas';
 import { join } from 'path';
 import { readdirSync, writeFileSync } from 'fs';
-import type { FigmaNodeDict, FigmaPaint } from '@figma-dsl/compiler';
+import type { FigmaNodeDict } from '@figma-dsl/compiler';
 
 export interface RgbaColor {
   r: number;

@@ -1,4 +1,4 @@
-import type { DslNode, Fill, StrokePaint, TextStyle, AutoLayoutConfig } from '@figma-dsl/core';
+import type { DslNode, Fill, StrokePaint, AutoLayoutConfig } from '@figma-dsl/core';
 import type {
   FigmaNodeDict, FigmaNodeType, FigmaPaint, FigmaStroke,
   CompileResult, CompileError, Baseline, FontMeta, TextMeasurer,

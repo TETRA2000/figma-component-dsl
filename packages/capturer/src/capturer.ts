@@ -1,4 +1,4 @@
-import { chromium, type Browser, type BrowserContext, type Page } from 'playwright';
+import { chromium, type Browser } from 'playwright';
 import { writeFileSync, mkdirSync } from 'fs';
 import { dirname } from 'path';
 

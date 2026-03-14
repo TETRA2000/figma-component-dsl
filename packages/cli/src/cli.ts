@@ -2,12 +2,13 @@ import { parseArgs } from 'util';
 import { resolve, dirname, join } from 'path';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { pathToFileURL } from 'url';
-import { compile, compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
-import type { DslNode, FigmaNodeDict, CompileResult } from '@figma-dsl/compiler';
-import { render, renderToFile, initializeRenderer } from '@figma-dsl/renderer';
-import { compare, compareFiles } from '@figma-dsl/comparator';
+import { compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
+import type { CompileResult } from '@figma-dsl/compiler';
+import type { DslNode } from '@figma-dsl/core';
+import { renderToFile, initializeRenderer } from '@figma-dsl/renderer';
+import { compareFiles } from '@figma-dsl/comparator';
 import { captureUrl } from '@figma-dsl/capturer';
-import { exportToFile, generatePluginInput } from '@figma-dsl/exporter';
+import { exportToFile } from '@figma-dsl/exporter';
 
 // Find font directory relative to packages
 function findFontDir(): string {
