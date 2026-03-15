@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+import { createSyncServer } from '../packages/mcp-server/dist/server.js';
+
+const port = Number(process.env['FIGMA_SYNC_PORT']) || 9800;
+const server = createSyncServer({ wsPort: port });
+await server.start();
