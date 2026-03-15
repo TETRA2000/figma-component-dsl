@@ -146,6 +146,42 @@ describe('render() — gradients', () => {
     const result = render(compiled.root);
     expect(result.pngBuffer.length).toBeGreaterThan(0);
   });
+
+  it('preserves alpha from gradient stop colors (8-digit hex)', async () => {
+    // Solid red background + semi-transparent black gradient overlay
+    const node = frame('AlphaGrad', {
+      size: { x: 100, y: 100 },
+      fills: [
+        solid('#ff0000'),
+        gradient([
+          { hex: '#00000033', position: 0 },  // 20% opacity at start
+          { hex: '#000000cc', position: 1 },  // 80% opacity at end
+        ]),
+      ],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+
+    // Verify output has non-zero red channel (image should show through gradient)
+    const { loadImage } = await import('@napi-rs/canvas');
+    const img = await loadImage(result.pngBuffer);
+    const c = createCanvas(img.width, img.height);
+    const ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    // Sample pixel at left side (start of gradient, 20% black over red)
+    // Expected: ~80% of red visible → R ≈ 204
+    const pLeft = ctx.getImageData(5, 50, 1, 1).data;
+    expect(pLeft[0]).toBeGreaterThan(150); // red channel should be significant
+    expect(pLeft[1]).toBeLessThan(20); // green should be near 0
+    expect(pLeft[2]).toBeLessThan(20); // blue should be near 0
+
+    // Sample pixel at right side (end of gradient, 80% black over red)
+    // Expected: ~20% of red visible → R ≈ 51
+    const pRight = ctx.getImageData(95, 50, 1, 1).data;
+    expect(pRight[0]).toBeGreaterThan(30); // still some red visible
+    expect(pRight[0]).toBeLessThan(100); // but much dimmer
+  });
 });
 
 describe('render() — strokes', () => {

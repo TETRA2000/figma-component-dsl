@@ -397,7 +397,15 @@ fills: [
 ]
 ```
 
-Gradient stops support 8-digit hex with alpha (e.g., `#FF000080` for 50% red).
+**Angle convention (differs from CSS!):** Angles follow Figma's coordinate system:
+- `0°` = left → right
+- `90°` = bottom → top
+- `180°` = right → left
+- `270°` = top → bottom
+
+> **Tip:** CSS `linear-gradient(180deg, ...)` (top→bottom) maps to DSL `gradient(stops, 270)`.
+
+Gradient stops support 8-digit hex with alpha (e.g., `#FF000080` for 50% red). This is useful for semi-transparent overlays on top of other fills.
 
 #### `radialGradient(stops, opts?)`
 
@@ -442,6 +450,23 @@ frame('Hero', {
 rectangle('Pattern', {
   size: { x: 200, y: 200 },
   fills: [imageFill('./assets/texture.png', { scaleMode: 'TILE' })],
+})
+
+// Multi-fill stacking: background image + gradient overlay
+// (Use this instead of a separate overlay rectangle)
+frame('Hero', {
+  size: { x: 800, y: 300 },
+  fills: [
+    imageFill('./assets/hero-bg.jpg'),
+    gradient([
+      { hex: '#00000033', position: 0 },  // 20% black at top
+      { hex: '#000000cc', position: 1 },  // 80% black at bottom
+    ], 270),
+  ],
+  autoLayout: vertical({ widthSizing: 'FIXED', heightSizing: 'FIXED', align: 'MAX', padX: 32, padBottom: 32 }),
+  children: [
+    text('Heading', { fontSize: 36, fontWeight: 700, color: '#ffffff' }),
+  ],
 })
 ```
 
@@ -1059,7 +1084,7 @@ These are limitations of the DSL pipeline itself (compiler/renderer), distinct f
 | Limitation | Description | Workaround |
 |------------|-------------|------------|
 | No absolute positioning in auto-layout | DSL auto-layout does not support overlapping children like CSS `position: absolute`. | Use invisible spacers (`opacity: 0` rectangles) to push content, or use separate stacked frames. |
-| Gradient angle approximation | Gradient angles are mapped to Figma's gradient handle positions, which may differ slightly from CSS `linear-gradient()` angles. | Test visually and adjust angle if needed. |
+| Gradient angle differs from CSS | DSL gradient angles follow Figma convention (0°=L→R, 90°=B→T, 270°=T→B), not CSS convention (180deg=T→B). | See gradient angle convention table in Fill & Stroke Builders section. |
 | No shadow/blur effects | Drop shadows, inner shadows, and blur effects are not supported. | Use layered frames with gradient fills to approximate shadow effects. |
 | No dashed/dotted strokes | Stroke dash patterns are not supported. | Use rectangles as visual separators. |
 | CJK font coverage | CJK text uses Noto Sans JP; other CJK scripts (Chinese, Korean) may render with fallback glyphs. | Stick to Japanese text for best results. |
@@ -1070,7 +1095,7 @@ These limitations from earlier versions have been fixed:
 
 | Previously | Resolution |
 |------------|------------|
-| ~~No per-stop gradient alpha~~ | 8-digit hex (`#rrggbbaa`) is now supported in gradient stops. |
+| ~~No per-stop gradient alpha~~ | 8-digit hex (`#rrggbbaa`) is supported in gradient stops. Renderer now correctly applies per-stop alpha (fixed `rgbaToString` defaulting to alpha=1). |
 | ~~Single stroke only~~ | Multiple strokes are now rendered (layered in order). |
 | ~~Stroke alignment ignored~~ | `INSIDE`, `CENTER`, and `OUTSIDE` alignment are now implemented. |
 | ~~No radial gradients~~ | `radialGradient()` is now supported. |

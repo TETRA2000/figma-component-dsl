@@ -106,8 +106,8 @@ function chooseFontFamily(text: string, requested: string): string {
   return containsCJK(text) ? CJK_FONT_FAMILY : 'Inter';
 }
 
-function rgbaToString(color: { r: number; g: number; b: number; a: number }, alpha = 1): string {
-  return `rgba(${Math.round(color.r * 255)}, ${Math.round(color.g * 255)}, ${Math.round(color.b * 255)}, ${alpha})`;
+function rgbaToString(color: { r: number; g: number; b: number; a: number }, alpha?: number): string {
+  return `rgba(${Math.round(color.r * 255)}, ${Math.round(color.g * 255)}, ${Math.round(color.b * 255)}, ${alpha ?? color.a})`;
 }
 
 function fontWeightToCss(weight: number): string {
