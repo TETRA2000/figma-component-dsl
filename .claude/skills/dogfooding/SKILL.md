@@ -15,11 +15,24 @@ description: >
 
 # Dogfooding: End-to-End Pipeline Stress Test
 
-Dogfooding validates the entire DSL rendering pipeline by creating real components, rendering them two ways (browser and DSL), and fixing any differences found. Each iteration uses a different visual theme to surface bugs that only appear with specific property combinations.
+Dogfooding validates the entire DSL rendering pipeline by creating real React components first, rendering them in the browser, then recreating them as DSL and comparing the results. Each iteration uses a different visual theme to surface bugs that only appear with specific property combinations.
 
-The core insight: if a React component renders correctly in the browser but looks different when expressed as DSL and rendered via the pipeline, there's a bug in the pipeline — not the component. This skill systematically finds those bugs.
+## CRITICAL: Execution Order — React Pages First, DSL Second
+
+**You MUST create React components and pages BEFORE writing any DSL.** The workflow is strictly sequential:
+
+1. **First:** Create React components (`.tsx`, `.module.css`, `.figma.tsx`)
+2. **Second:** Create a showcase page that renders the components
+3. **Third:** Capture a browser screenshot of the React page
+4. **Fourth (only after React is done and screenshot captured):** Write the DSL equivalent
+
+The React components are the **source of truth**. The DSL file is a translation of the already-working React page. You cannot write DSL without first having a concrete React page to translate from.
+
+**Do NOT skip ahead to DSL creation.** Even if the user's request mentions DSL, pages, or Figma — always start by building the React components and pages first.
 
 ## Pipeline-First Investigation Mindset
+
+The core insight: if a React component renders correctly in the browser but looks different when expressed as DSL and rendered via the pipeline, there's a bug in the pipeline — not the component. This skill systematically finds those bugs.
 
 The entire purpose of dogfooding is to **find and fix bugs in `packages/`** — the compiler, renderer, layout resolver, and type definitions. When you find a difference between browser and DSL renders, your default assumption should be that the pipeline has a gap, not that the DSL was written wrong.
 
@@ -78,6 +91,8 @@ Before starting, ask the user: **"I'll run N iterations, each with a different t
 
 Each iteration follows these 8 steps. See `references/workflow.md` for detailed instructions on each step.
 
+**Reminder: Steps 2-3 (React components + browser screenshot) MUST be completed before Step 4 (DSL). Never jump ahead to DSL creation.**
+
 ### Step 1: Pick a theme
 
 Before selecting a theme, read `docs/history/README.md` to see which themes have been used in past sessions. Then check `references/themes.md` for the full catalog.
@@ -93,7 +108,7 @@ The goal is variety — each iteration should stress a different combination of 
 - Iteration 2 might stress nested auto-layout and text wrapping
 - Iteration 3 might test opacity, strokes, and clip content
 
-### Step 2: Create React components
+### Step 2: Create React components ⬅ START HERE (before any DSL)
 
 Use the `/create-react-component` skill pattern to generate 2-4 components matching the theme. Create them at `preview/src/components/_generated/{ComponentName}/` with the standard 3-file structure (`.tsx`, `.module.css`, `.figma.tsx`).
 
@@ -121,7 +136,9 @@ navigate_page to http://localhost:5173
 take_screenshot → save to dogfooding/<timestamp>/iteration-<N>/browser.png
 ```
 
-### Step 4: Create DSL equivalent, render, and export Figma Plugin JSON
+### Step 4: Create DSL equivalent, render, and export Figma Plugin JSON (AFTER Steps 2-3 are complete)
+
+**Prerequisite:** Steps 2 and 3 must be fully complete — React components created, showcase page rendering in browser, and browser screenshot captured. Only then write the DSL.
 
 Write a `.dsl.ts` file that recreates the same page layout using DSL primitives (`frame`, `text`, `rectangle`, `solid`, `gradient`, `horizontal`, `vertical`, etc.). Place it at `workspace/dsl/{theme-name}-page.dsl.ts`.
 
