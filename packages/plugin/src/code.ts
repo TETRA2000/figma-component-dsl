@@ -19,6 +19,7 @@ import {
   COMPONENT_SET_PAD,
 } from './serializer.js';
 import type { SerializableNode } from './serializer.js';
+import uiHtml from './ui.html';
 
 const componentMap = new Map<string, ComponentNode>();
 const errors: string[] = [];
@@ -70,6 +71,23 @@ function findTrackedAncestor(node: BaseNode | null): { node: SceneNode; identity
   return null;
 }
 
+// Debounce timer for batching change notifications
+let notificationDebounce: ReturnType<typeof setTimeout> | null = null;
+const pendingNotifications = new Map<string, EditLogEntry[]>();
+
+function flushNotifications(): void {
+  for (const [componentName, entries] of pendingNotifications) {
+    const categories = categorizeChanges(entries);
+    wsSend({
+      type: 'change-notification',
+      componentName,
+      changedCategories: categories,
+      timestamp: new Date().toISOString(),
+    });
+  }
+  pendingNotifications.clear();
+}
+
 function startTracking(): void {
   if (isTracking) return;
   isTracking = true;
@@ -78,6 +96,21 @@ function startTracking(): void {
     for (const change of event.documentChanges) {
       if (change.type !== 'PROPERTY_CHANGE' && change.type !== 'CREATE' && change.type !== 'DELETE') {
         continue;
+      }
+
+      // Handle deletion of tracked top-level component nodes
+      if (change.type === 'DELETE' && 'id' in change) {
+        const deletedId = (change as { id: string }).id;
+        if (trackedNodeIds.has(deletedId)) {
+          // Find the component name from the edit log or tracked data
+          trackedNodeIds.delete(deletedId);
+          wsSend({
+            type: 'component-deleted',
+            componentName: deletedId, // Best effort — identity data is gone
+            nodeId: deletedId,
+          });
+          continue;
+        }
       }
 
       const changedNode = change.type === 'DELETE' ? null : (change as { node?: BaseNode }).node ?? null;
@@ -97,7 +130,16 @@ function startTracking(): void {
         origin: 'LOCAL',
       };
       editLog.push(entry);
+
+      // Batch notifications by component name with debounce
+      const existing = pendingNotifications.get(entry.componentName) ?? [];
+      existing.push(entry);
+      pendingNotifications.set(entry.componentName, existing);
     }
+
+    // Debounce: send notifications 500ms after last change
+    if (notificationDebounce) clearTimeout(notificationDebounce);
+    notificationDebounce = setTimeout(flushNotifications, 500);
   });
 }
 
@@ -627,8 +669,127 @@ async function embedImageDataForChange(
   return change;
 }
 
+// Unsyncable property detection — properties that exist in Figma but have no DSL equivalent
+interface UnsyncableWarning {
+  readonly propertyPath: string;
+  readonly severity: 'info' | 'warning' | 'error';
+  readonly description: string;
+  readonly unsupportedValue?: unknown;
+}
+
+function detectUnsyncableProperties(node: SceneNode): UnsyncableWarning[] {
+  const warnings: UnsyncableWarning[] = [];
+
+  // Effects (drop shadow, inner shadow, blur, background blur)
+  if ('effects' in node) {
+    const effects = (node as FrameNode).effects;
+    if (effects && effects.length > 0) {
+      for (let i = 0; i < effects.length; i++) {
+        const effect = effects[i]!;
+        if (effect.visible !== false) {
+          warnings.push({
+            propertyPath: `effects.${i}`,
+            severity: 'warning',
+            description: `${effect.type} effect has no DSL equivalent`,
+            unsupportedValue: effect.type,
+          });
+        }
+      }
+    }
+  }
+
+  // Blend mode (non-default)
+  if ('blendMode' in node) {
+    const blendMode = (node as FrameNode).blendMode;
+    if (blendMode && blendMode !== 'PASS_THROUGH' && blendMode !== 'NORMAL') {
+      warnings.push({
+        propertyPath: 'blendMode',
+        severity: 'info',
+        description: `Blend mode ${blendMode} has no DSL equivalent`,
+        unsupportedValue: blendMode,
+      });
+    }
+  }
+
+  // Rotation
+  if ('rotation' in node) {
+    const rotation = (node as FrameNode).rotation;
+    if (rotation && rotation !== 0) {
+      warnings.push({
+        propertyPath: 'rotation',
+        severity: 'warning',
+        description: `Rotation of ${rotation} degrees has no DSL equivalent`,
+        unsupportedValue: rotation,
+      });
+    }
+  }
+
+  // Constraints
+  if ('constraints' in node) {
+    const constraints = (node as FrameNode).constraints;
+    if (constraints && (constraints.horizontal !== 'MIN' || constraints.vertical !== 'MIN')) {
+      warnings.push({
+        propertyPath: 'constraints',
+        severity: 'info',
+        description: `Constraints ${constraints.horizontal}/${constraints.vertical} may not be preserved`,
+        unsupportedValue: constraints,
+      });
+    }
+  }
+
+  // Boolean operations (on groups)
+  if (node.type === 'BOOLEAN_OPERATION') {
+    warnings.push({
+      propertyPath: 'booleanOperation',
+      severity: 'error',
+      description: `Boolean operation ${(node as BooleanOperationNode).booleanOperation} has no DSL equivalent`,
+      unsupportedValue: (node as BooleanOperationNode).booleanOperation,
+    });
+  }
+
+  // Masks
+  if ('isMask' in node && (node as FrameNode).isMask) {
+    warnings.push({
+      propertyPath: 'isMask',
+      severity: 'error',
+      description: 'Mask property has no DSL equivalent',
+    });
+  }
+
+  // FILL sizing on top-level frames (known DSL constraint)
+  if (node.type === 'FRAME' && (!node.parent || node.parent.type === 'PAGE')) {
+    if ('layoutSizingHorizontal' in node) {
+      const sizing = (node as FrameNode).layoutSizingHorizontal;
+      if (sizing === 'FILL') {
+        warnings.push({
+          propertyPath: 'layoutSizingHorizontal',
+          severity: 'error',
+          description: 'FILL sizing on top-level frames is not supported in the DSL pipeline',
+          unsupportedValue: 'FILL',
+        });
+      }
+    }
+  }
+
+  // Recursively check children
+  if ('children' in node) {
+    for (const child of (node as FrameNode).children) {
+      const childWarnings = detectUnsyncableProperties(child);
+      for (const w of childWarnings) {
+        warnings.push({
+          ...w,
+          propertyPath: `${node.name}.${w.propertyPath}`,
+        });
+      }
+    }
+  }
+
+  return warnings;
+}
+
 async function computeChangeset(nodeIds: ReadonlyArray<string>): Promise<ChangesetDocument> {
   const components: ComponentChangeEntry[] = [];
+  const allWarnings: UnsyncableWarning[] = [];
 
   for (const nodeId of nodeIds) {
     const node = figma.getNodeById(nodeId) as SceneNode | null;
@@ -644,6 +805,10 @@ async function computeChangeset(nodeIds: ReadonlyArray<string>): Promise<Changes
 
     const current = serializeNode(node);
     const changes = diffNodes(baseline, current);
+
+    // Detect unsyncable properties
+    const nodeWarnings = detectUnsyncableProperties(node);
+    allWarnings.push(...nodeWarnings);
 
     if (changes.length > 0) {
       // Embed image data for image-related changes
@@ -666,6 +831,7 @@ async function computeChangeset(nodeIds: ReadonlyArray<string>): Promise<Changes
       figmaFileName: figma.root.name,
     },
     components,
+    ...(allWarnings.length > 0 ? { warnings: allWarnings } : {}),
   };
 }
 
@@ -699,100 +865,233 @@ function getTrackedNodeIdsOnPage(): string[] {
 const GRID_COLUMNS = 5;
 const GRID_SPACING = 50;
 
-figma.showUI(`<div style="padding:16px;font-family:Inter,sans-serif">
-  <style>
-    .tab-bar { display:flex; border-bottom:1px solid #ccc; margin-bottom:12px; }
-    .tab-bar button { padding:8px 16px; border:none; background:none; cursor:pointer; font-size:14px; border-bottom:2px solid transparent; }
-    .tab-bar button.active { border-bottom-color:#18A0FB; font-weight:600; }
-    .tab-panel { display:none; }
-    .tab-panel.active { display:block; }
-    .export-btn { padding:8px 16px; cursor:pointer; margin-right:8px; }
-    .copy-btn { padding:4px 12px; cursor:pointer; font-size:12px; }
-  </style>
-  <div class="tab-bar">
-    <button class="active" onclick="switchTab('import')">Import</button>
-    <button onclick="switchTab('export')">Export</button>
-  </div>
+figma.showUI(uiHtml, { width: 500, height: 560 });
 
-  <div id="tab-import" class="tab-panel active">
-    <textarea id="input" style="width:100%;height:160px" placeholder="Paste plugin input JSON here..."></textarea>
-    <br><br>
-    <label><input type="checkbox" id="autoExport" checked> Auto-export PNGs after import</label>
-    <br><br>
-    <button id="import" style="padding:8px 16px;cursor:pointer">Import Components</button>
-  </div>
+// Helper to send a message via the WebSocket through the UI bridge
+function wsSend(payload: Record<string, unknown>): void {
+  figma.ui.postMessage({ type: 'ws-send', payload });
+}
 
-  <div id="tab-export" class="tab-panel">
-    <div style="margin-bottom:8px">
-      <label><strong>Mode:</strong></label>
-      <select id="exportMode" style="margin-left:8px">
-        <option value="changeset">Changeset (diff)</option>
-        <option value="complete">Complete DSL JSON</option>
-      </select>
-    </div>
-    <div style="margin-bottom:12px">
-      <label><strong>Scope:</strong></label>
-      <select id="exportScope" style="margin-left:8px">
-        <option value="selection">Selected Components</option>
-        <option value="page">All on Page</option>
-      </select>
-    </div>
-    <button class="export-btn" id="exportBtn">Export</button>
-    <br><br>
-    <textarea id="exportOutput" style="width:100%;height:200px" readonly placeholder="Export result will appear here..."></textarea>
-    <br>
-    <button class="copy-btn" id="copyBtn">Copy to Clipboard</button>
-  </div>
-
-  <div id="progress" style="font-size:12px;margin-top:8px;color:#666"></div>
-  <pre id="output" style="font-size:12px;margin-top:8px;max-height:200px;overflow:auto"></pre>
-  <script>
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      document.querySelector('.tab-bar button:nth-child(' + (tab === 'import' ? '1' : '2') + ')').classList.add('active');
-      document.getElementById('tab-' + tab).classList.add('active');
+// Categorize edit log entries into change categories
+function categorizeChanges(entries: EditLogEntry[]): string[] {
+  const categories = new Set<string>();
+  for (const entry of entries) {
+    for (const prop of entry.properties) {
+      if (prop.includes('fill') || prop.includes('color')) categories.add('fills');
+      else if (prop.includes('font') || prop.includes('text') || prop.includes('character')) categories.add('typography');
+      else if (prop.includes('layout') || prop.includes('spacing') || prop.includes('padding') || prop.includes('width') || prop.includes('height') || prop.includes('x') || prop.includes('y')) categories.add('layout');
+      else if (prop.includes('stroke')) categories.add('strokes');
+      else if (prop.includes('corner') || prop.includes('radius')) categories.add('geometry');
+      else if (prop.includes('opacity') || prop.includes('visible')) categories.add('appearance');
+      else categories.add('other');
     }
-    document.getElementById('import').onclick = () => {
-      const input = document.getElementById('input').value;
-      const autoExport = document.getElementById('autoExport').checked;
-      parent.postMessage({ pluginMessage: { type: 'import', data: input, autoExport } }, '*');
-    };
-    document.getElementById('exportBtn').onclick = () => {
-      const mode = document.getElementById('exportMode').value;
-      const scope = document.getElementById('exportScope').value;
-      parent.postMessage({ pluginMessage: { type: 'export-' + mode, scope: scope } }, '*');
-    };
-    document.getElementById('copyBtn').onclick = () => {
-      const ta = document.getElementById('exportOutput');
-      ta.select();
-      document.execCommand('copy');
-      document.getElementById('progress').textContent = 'Copied to clipboard!';
-      setTimeout(() => { document.getElementById('progress').textContent = ''; }, 2000);
-    };
-    onmessage = (e) => {
-      const msg = e.data.pluginMessage;
-      if (msg.type === 'progress') {
-        document.getElementById('progress').textContent = msg.text;
-      } else if (msg.type === 'export-data') {
-        const output = document.getElementById('output');
-        output.textContent = msg.summary;
-        if (msg.nodeIdMap) {
-          output.textContent += '\\n\\nnode-id-map.json:\\n' + JSON.stringify(msg.nodeIdMap, null, 2);
-        }
-        document.getElementById('progress').textContent = 'Export complete!';
-      } else if (msg.type === 'export-result') {
-        document.getElementById('exportOutput').value = msg.json;
-        document.getElementById('progress').textContent = msg.summary;
-      } else if (msg.result) {
-        document.getElementById('output').textContent = msg.result;
-        document.getElementById('progress').textContent = '';
-      }
-    };
-  </script>
-</div>`, { width: 500, height: 560 });
+    if (entry.changeType === 'CREATE') categories.add('structure');
+    if (entry.changeType === 'DELETE') categories.add('structure');
+  }
+  return [...categories];
+}
 
-figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean; scope?: string }) => {
+// Handle WebSocket messages relayed from the UI iframe
+async function handleWsMessage(payload: { type: string; requestId?: string; pluginInput?: PluginInput; componentNames?: string[]; pageName?: string }): Promise<void> {
+  switch (payload.type) {
+    case 'push-components': {
+      try {
+        const input = payload.pluginInput!;
+        errors.length = 0;
+        componentMap.clear();
+
+        let page = figma.root.children.find(p => p.name === input.targetPage);
+        if (!page) {
+          page = figma.createPage();
+          page.name = input.targetPage;
+        }
+        await figma.setCurrentPageAsync(page);
+
+        const nodeIds: Record<string, string> = {};
+        const total = input.components.length;
+        let col = 0;
+        let rowX = 0;
+        let rowY = 0;
+        let rowMaxHeight = 0;
+
+        for (let i = 0; i < total; i++) {
+          const compDef = input.components[i]!;
+          try {
+            // Check if we already have this component tracked (update in-place)
+            let existingNode: SceneNode | null = null;
+            for (const trackedId of trackedNodeIds) {
+              const n = figma.getNodeById(trackedId);
+              if (n && 'getPluginData' in n) {
+                const identityData = (n as SceneNode).getPluginData(PLUGIN_DATA_IDENTITY);
+                if (identityData) {
+                  const identity = JSON.parse(identityData) as ComponentIdentity;
+                  if (identity.componentName === compDef.name) {
+                    existingNode = n as SceneNode;
+                    break;
+                  }
+                }
+              }
+            }
+
+            if (existingNode) {
+              // Remove existing node and recreate (simpler than in-place update)
+              trackedNodeIds.delete(existingNode.id);
+              existingNode.remove();
+            }
+
+            const node = await createNode(compDef, page);
+            if (node) {
+              node.x = rowX;
+              node.y = rowY;
+              rowX += compDef.size.x + GRID_SPACING;
+              rowMaxHeight = Math.max(rowMaxHeight, compDef.size.y);
+              col++;
+              if (col >= GRID_COLUMNS) {
+                col = 0;
+                rowX = 0;
+                rowY += rowMaxHeight + GRID_SPACING;
+                rowMaxHeight = 0;
+              }
+
+              nodeIds[compDef.name] = node.id;
+              storeBaseline(node, serializeNode(node));
+              storeIdentity(node, compDef.name, `${compDef.name}.dsl.ts`);
+              trackedNodeIds.add(node.id);
+            }
+          } catch (err) {
+            const errMsg = err instanceof Error ? err.message : String(err);
+            errors.push(`Error creating "${compDef.name}": ${errMsg}`);
+          }
+        }
+
+        if (Object.keys(nodeIds).length > 0) {
+          startTracking();
+        }
+
+        const summary = errors.length > 0
+          ? `Created ${Object.keys(nodeIds).length} components with ${errors.length} errors`
+          : `Created ${Object.keys(nodeIds).length} components`;
+
+        wsSend({
+          type: 'push-result',
+          requestId: payload.requestId,
+          nodeIds,
+          summary,
+        });
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        wsSend({
+          type: 'push-result',
+          requestId: payload.requestId,
+          nodeIds: {},
+          summary: `Push failed: ${errMsg}`,
+        });
+      }
+      break;
+    }
+
+    case 'request-changeset': {
+      try {
+        let nodeIds: string[];
+        if (payload.componentNames && payload.componentNames.length > 0) {
+          nodeIds = filterTrackedByNames(payload.componentNames);
+        } else {
+          nodeIds = getTrackedNodeIdsOnPage();
+        }
+
+        const changeset = await computeChangeset(nodeIds);
+        wsSend({
+          type: 'changeset-result',
+          requestId: payload.requestId,
+          changeset,
+        });
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        wsSend({
+          type: 'changeset-result',
+          requestId: payload.requestId,
+          changeset: {
+            schemaVersion: '1.0',
+            timestamp: new Date().toISOString(),
+            source: { pluginVersion: '0.1.0', figmaFileName: figma.root.name },
+            components: [],
+            warnings: [{ propertyPath: '', severity: 'error', description: `Error: ${errMsg}` }],
+          },
+        });
+      }
+      break;
+    }
+
+    case 'request-export': {
+      try {
+        let nodeIds: string[];
+        if (payload.componentNames && payload.componentNames.length > 0) {
+          nodeIds = filterTrackedByNames(payload.componentNames);
+        } else {
+          nodeIds = getTrackedNodeIdsOnPage();
+        }
+
+        const pageName = payload.pageName ?? figma.currentPage.name;
+        const pluginInput = computeCompleteExport(nodeIds, pageName);
+        wsSend({
+          type: 'export-result',
+          requestId: payload.requestId,
+          pluginInput,
+        });
+      } catch (_err) {
+        wsSend({
+          type: 'export-result',
+          requestId: payload.requestId,
+          pluginInput: { targetPage: '', components: [] },
+        });
+      }
+      break;
+    }
+  }
+}
+
+// Filter tracked node IDs by component names
+function filterTrackedByNames(names: string[]): string[] {
+  const nameSet = new Set(names);
+  const result: string[] = [];
+  for (const id of trackedNodeIds) {
+    const node = figma.getNodeById(id);
+    if (node && 'getPluginData' in node) {
+      const identityData = (node as SceneNode).getPluginData(PLUGIN_DATA_IDENTITY);
+      if (identityData) {
+        const identity = JSON.parse(identityData) as ComponentIdentity;
+        if (nameSet.has(identity.componentName)) {
+          result.push(id);
+        }
+      }
+    }
+  }
+  return result;
+}
+
+figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean; scope?: string; payload?: Record<string, unknown> }) => {
+  // Handle WebSocket messages relayed from UI
+  if (msg.type === 'ws-connected') {
+    // Send handshake with file key
+    wsSend({
+      type: 'handshake',
+      figmaFileKey: figma.root.name,
+      pluginVersion: '0.1.0',
+      userId: figma.currentUser?.name ?? 'unknown',
+    });
+    return;
+  }
+
+  if (msg.type === 'ws-message' && msg.payload) {
+    await handleWsMessage(msg.payload as Parameters<typeof handleWsMessage>[0]);
+    return;
+  }
+
+  if (msg.type === 'ws-disconnected') {
+    // Connection lost — UI handles reconnection
+    return;
+  }
+
   // Handle export requests
   if (msg.type === 'export-changeset' || msg.type === 'export-complete') {
     try {

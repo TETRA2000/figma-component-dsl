@@ -23,9 +23,21 @@ export interface ChangesetSource {
   readonly figmaFileName: string;
 }
 
+// --- Changeset Warning Types ---
+
+export type WarningSeverity = 'info' | 'warning' | 'error';
+
+export interface ChangesetWarning {
+  readonly propertyPath: string;
+  readonly severity: WarningSeverity;
+  readonly description: string;
+  readonly unsupportedValue?: unknown;
+}
+
 export interface ChangesetDocument {
   readonly schemaVersion: string;
   readonly timestamp: string;
   readonly source: ChangesetSource;
   readonly components: ReadonlyArray<ComponentChangeEntry>;
+  readonly warnings?: ReadonlyArray<ChangesetWarning>;
 }

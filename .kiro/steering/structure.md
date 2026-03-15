@@ -14,13 +14,18 @@ The project follows a **specification-driven, research-first** approach. Referen
 ### CLI Bin Stubs
 **Location**: `bin/`
 **Purpose**: Per-command entry points for the CLI (`figma-dsl`, `figma-dsl-compile`, etc.)
-**Convention**: Each stub imports from `packages/cli/dist/cli.js` and injects its command name. Also registered in root `package.json` `"bin"` field.
+**Convention**: Each stub imports from `packages/cli/dist/cli.js` and injects its command name. Also registered in root `package.json` `"bin"` field. Exception: `figma-dsl-sync` imports directly from `packages/mcp-server/dist/server.js` (standalone MCP server entry point).
+
+### MCP Server Config
+**Location**: `.mcp.json` (project root)
+**Purpose**: Claude Code MCP server configuration for the figma-sync server
+**Convention**: Enabled via `enabledMcpjsonServers` in `.claude/settings.json`. Server runs stdio transport for MCP + WebSocket on localhost:9800 for Figma plugin.
 
 ### AI Skills
 **Location**: `.claude/skills/{skill-name}/`
 **Purpose**: Claude AI Skills with SKILL.md entrypoint and supporting files
 **Convention**: SKILL.md with YAML frontmatter (`name`, `description`), markdown instructions, optional `references/` subdirectory, optional `evals/`, `scripts/`
-**Active Skills**: calibrate, create-landing-page, create-react-component, dogfooding, export-to-figma, export-to-html, magi-docs-writer, playwright-cli (plus `shared/` for common references like component-registry and design-tokens)
+**Active Skills**: apply-changeset, calibrate, create-landing-page, create-react-component, dogfooding, export-to-figma, export-to-html, magi-docs-writer, playwright-cli, verify-changeset (plus `shared/` for common references like component-registry and design-tokens)
 
 ### Specifications
 **Location**: `.kiro/specs/{feature-name}/`
