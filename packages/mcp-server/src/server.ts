@@ -77,7 +77,7 @@ export function createSyncServer(options?: SyncServerOptions): SyncServer {
       await mcpServer.connect(transport);
 
       // Start WebSocket server on localhost only
-      wss = new WebSocketServer({ port: wsPort, host: '127.0.0.1' });
+      wss = new WebSocketServer({ port: wsPort, host: 'localhost' });
 
       wss.on('error', (err: NodeJS.ErrnoException) => {
         if (err.code === 'EADDRINUSE') {

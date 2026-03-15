@@ -130,7 +130,7 @@
       updateWsStatus('connecting', 'Connecting...');
 
       try {
-        ws = new WebSocket('ws://127.0.0.1:' + WS_PORT);
+        ws = new WebSocket('ws://localhost:' + WS_PORT);
       } catch (err) {
         updateWsStatus('disconnected', 'Connection failed');
         scheduleReconnect();

@@ -56,7 +56,7 @@ describe('createSyncServer', () => {
     const server = createSyncServer({ wsPort: 9800 });
     await server.start();
     expect(WebSocketServer).toHaveBeenCalledWith(
-      expect.objectContaining({ port: 9800, host: '127.0.0.1' })
+      expect.objectContaining({ port: 9800, host: 'localhost' })
     );
     await server.stop();
   });
