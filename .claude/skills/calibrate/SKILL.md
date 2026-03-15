@@ -57,9 +57,27 @@ bin/figma-dsl calibrate -o <output-dir> [--property <category>...] [-t <threshol
 
 ## Available test categories
 
-`corner-radius`, `fills-solid`, `fills-gradient`, `strokes`, `auto-layout-horizontal`, `auto-layout-vertical`, `auto-layout-nested`, `typography`, `opacity`, `clip-content`, `combined`, `hamburger-theme`
+### Layout & styling
+`corner-radius`, `fills-solid`, `fills-gradient`, `strokes`, `auto-layout-horizontal`, `auto-layout-vertical`, `auto-layout-nested`, `typography`, `opacity`, `clip-content`, `combined`
+
+### Shape & geometry
+`line-shapes`, `polygon-star-shapes`, `boolean-operations`, `section-layout`
+
+### Themed suites
+`hamburger-theme`
 
 Categories are defined in `packages/cli/src/test-suite-generator.ts`. Each category contains multiple test variants as `.dsl.ts` files.
+
+### Shape category details
+
+| Category | DSL factories used | What it tests |
+|---|---|---|
+| `line-shapes` | `line()` | Basic lines, thick strokes with round caps, rotated lines |
+| `polygon-star-shapes` | `polygon()`, `star()` | Triangles, hexagons with corner radius, 5-point stars, custom inner radius, star-as-polygon (innerRadius=1.0) |
+| `boolean-operations` | `subtract()`, `union()`, `intersect()`, `exclude()` | All 4 boolean operations with rectangle/ellipse children |
+| `section-layout` | `section()` | Basic sections, hidden contents, multiple children |
+
+When running shape categories, note that **boolean operations may show lower similarity scores** (around 85%) due to anti-aliasing artifacts at compositing edges — this is expected and not a bug.
 
 ## Full calibration run
 
@@ -184,6 +202,10 @@ Read the rendered PNG files to visually verify correctness. Compare against the 
 - **Corner radius** -- Are rounded corners smooth and correct? (both uniform and per-corner)
 - **Sizing** -- Do HUG/FIXED/FILL modes produce expected dimensions?
 - **Clipping** -- Does clipContent work as expected?
+- **Shapes** -- Are polygon vertices correctly positioned? Do star inner radii look right?
+- **Boolean operations** -- Are compositing results clean? (Some edge artifacts are acceptable)
+- **Lines** -- Are stroke caps rendering correctly? Is rotation applied properly?
+- **Sections** -- Is the section label rendered? Are children positioned correctly?
 
 Report findings as a table: component name, status (pass/issue), and description of any problems.
 
