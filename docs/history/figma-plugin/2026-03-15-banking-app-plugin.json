@@ -1,0 +1,3298 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "banking-app Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "BankingAppPage",
+      "size": {
+        "x": 1440,
+        "y": 1098.4
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "TopNav",
+          "size": {
+            "x": 1440,
+            "y": 68
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "BankBrand",
+              "size": {
+                "x": 141.93000030517578,
+                "y": 28
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ROUNDED_RECTANGLE",
+                  "name": "Logo",
+                  "size": {
+                    "x": 28,
+                    "y": 28
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.13725490196078433,
+                        "b": 0.49411764705882355,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 6
+                },
+                {
+                  "type": "TEXT",
+                  "name": "SecureBank",
+                  "size": {
+                    "x": 105.93000030517578,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.13725490196078433,
+                        "b": 0.49411764705882355,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "SecureBank",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "NavItems",
+              "size": {
+                "x": 347.5799980163574,
+                "y": 16.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Accounts",
+                  "size": {
+                    "x": 64.45999908447266,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.13725490196078433,
+                        "b": 0.49411764705882355,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Accounts",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Payments",
+                  "size": {
+                    "x": 65.97000122070312,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.47058823529411764,
+                        "g": 0.5647058823529412,
+                        "b": 0.611764705882353,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Payments",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Cards",
+                  "size": {
+                    "x": 39.560001373291016,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.47058823529411764,
+                        "g": 0.5647058823529412,
+                        "b": 0.611764705882353,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Cards",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Investments",
+                  "size": {
+                    "x": 81.58999633789062,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.47058823529411764,
+                        "g": 0.5647058823529412,
+                        "b": 0.611764705882353,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Investments",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 32,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "ELLIPSE",
+              "name": "UserAvatar",
+              "size": {
+                "x": 36,
+                "y": 36
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.8901960784313725,
+                    "g": 0.9490196078431372,
+                    "b": 0.9921568627450981,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ]
+            }
+          ],
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "opacity": 1
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 0.93,
+                "g": 0.93,
+                "b": 0.93,
+                "a": 1
+              },
+              "weight": 1,
+              "align": "INSIDE"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 16,
+          "paddingRight": 32,
+          "paddingBottom": 16,
+          "paddingLeft": 32,
+          "primaryAxisAlignItems": "SPACE_BETWEEN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "MainContent",
+          "size": {
+            "x": 1440,
+            "y": 1030.4
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Greeting",
+              "size": {
+                "x": 231.5,
+                "y": 49.599999999999994
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Good morning, Alex",
+                  "size": {
+                    "x": 231.5,
+                    "y": 28.799999999999997
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.12941176470588237,
+                        "g": 0.12941176470588237,
+                        "b": 0.12941176470588237,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Good morning, Alex",
+                  "fontSize": 24,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Here's your financial overview",
+                  "size": {
+                    "x": 200.11000061035156,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.47058823529411764,
+                        "g": 0.5647058823529412,
+                        "b": 0.611764705882353,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Here's your financial overview",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 4,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "FRAME",
+              "name": "BalanceRow",
+              "size": {
+                "x": 1376,
+                "y": 250.39999999999998
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Balance: Primary Checking",
+                  "size": {
+                    "x": 640,
+                    "y": 250.39999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "AccountInfo",
+                      "size": {
+                        "x": 576,
+                        "y": 40
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "AccNameType",
+                          "size": {
+                            "x": 119.27999877929688,
+                            "y": 35.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Primary Checking",
+                              "size": {
+                                "x": 119.27999877929688,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.5647058823529412,
+                                    "g": 0.792156862745098,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Primary Checking",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Checking ••4521",
+                              "size": {
+                                "x": 97.5999984741211,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.7098039215686275,
+                                    "b": 0.9647058823529412,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Checking ••4521",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 4,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        },
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "BankLogo",
+                          "size": {
+                            "x": 40,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.15
+                            }
+                          ],
+                          "cornerRadius": 8
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "BalanceSection",
+                      "size": {
+                        "x": 205.97999572753906,
+                        "y": 61.599999999999994
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Available Balance",
+                          "size": {
+                            "x": 100.61000061035156,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5647058823529412,
+                                "g": 0.792156862745098,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Available Balance",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "$24,563.82",
+                          "size": {
+                            "x": 205.97999572753906,
+                            "y": 43.199999999999996
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$24,563.82",
+                          "fontSize": 36,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Actions",
+                      "size": {
+                        "x": 291.2299995422363,
+                        "y": 36.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "SendBtn",
+                          "size": {
+                            "x": 82.68999862670898,
+                            "y": 36.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Send",
+                              "size": {
+                                "x": 34.689998626708984,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.10196078431372549,
+                                    "g": 0.13725490196078433,
+                                    "b": 0.49411764705882355,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Send",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 8,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 10,
+                          "paddingRight": 24,
+                          "paddingBottom": 10,
+                          "paddingLeft": 24,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "ReceiveBtn",
+                          "size": {
+                            "x": 101.56999969482422,
+                            "y": 36.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Receive",
+                              "size": {
+                                "x": 53.56999969482422,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Receive",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.3
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 8,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 10,
+                          "paddingRight": 24,
+                          "paddingBottom": 10,
+                          "paddingLeft": 24,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MoreBtn",
+                          "size": {
+                            "x": 82.97000122070312,
+                            "y": 36.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "More",
+                              "size": {
+                                "x": 34.970001220703125,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "More",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.3
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 8,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 10,
+                          "paddingRight": 24,
+                          "paddingBottom": 10,
+                          "paddingLeft": 24,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 12,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.13725490196078433,
+                            "b": 0.49411764705882355,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 0.1568627450980392,
+                            "g": 0.20784313725490197,
+                            "b": 0.5764705882352941,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ],
+                  "cornerRadius": 16,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 24,
+                  "paddingTop": 32,
+                  "paddingRight": 32,
+                  "paddingBottom": 32,
+                  "paddingLeft": 32,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Balance: Savings Goal",
+                  "size": {
+                    "x": 640,
+                    "y": 250.39999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "AccountInfo",
+                      "size": {
+                        "x": 576,
+                        "y": 40
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "AccNameType",
+                          "size": {
+                            "x": 90.77999877929688,
+                            "y": 35.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Savings Goal",
+                              "size": {
+                                "x": 87.25,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.5647058823529412,
+                                    "g": 0.792156862745098,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Savings Goal",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Savings ••7834",
+                              "size": {
+                                "x": 90.77999877929688,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.7098039215686275,
+                                    "b": 0.9647058823529412,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Savings ••7834",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 4,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        },
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "BankLogo",
+                          "size": {
+                            "x": 40,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.15
+                            }
+                          ],
+                          "cornerRadius": 8
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "BalanceSection",
+                      "size": {
+                        "x": 179.3699951171875,
+                        "y": 61.599999999999994
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Available Balance",
+                          "size": {
+                            "x": 100.61000061035156,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5647058823529412,
+                                "g": 0.792156862745098,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Available Balance",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "$8,291.00",
+                          "size": {
+                            "x": 179.3699951171875,
+                            "y": 43.199999999999996
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$8,291.00",
+                          "fontSize": 36,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Actions",
+                      "size": {
+                        "x": 291.2299995422363,
+                        "y": 36.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "SendBtn",
+                          "size": {
+                            "x": 82.68999862670898,
+                            "y": 36.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Send",
+                              "size": {
+                                "x": 34.689998626708984,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.10196078431372549,
+                                    "g": 0.13725490196078433,
+                                    "b": 0.49411764705882355,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Send",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 8,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 10,
+                          "paddingRight": 24,
+                          "paddingBottom": 10,
+                          "paddingLeft": 24,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "ReceiveBtn",
+                          "size": {
+                            "x": 101.56999969482422,
+                            "y": 36.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Receive",
+                              "size": {
+                                "x": 53.56999969482422,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Receive",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.3
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 8,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 10,
+                          "paddingRight": 24,
+                          "paddingBottom": 10,
+                          "paddingLeft": 24,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MoreBtn",
+                          "size": {
+                            "x": 82.97000122070312,
+                            "y": 36.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "More",
+                              "size": {
+                                "x": 34.970001220703125,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "More",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.3
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 8,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 10,
+                          "paddingRight": 24,
+                          "paddingBottom": 10,
+                          "paddingLeft": 24,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 12,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.13725490196078433,
+                            "b": 0.49411764705882355,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 0.1568627450980392,
+                            "g": 0.20784313725490197,
+                            "b": 0.5764705882352941,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ],
+                  "cornerRadius": 16,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 24,
+                  "paddingTop": 32,
+                  "paddingRight": 32,
+                  "paddingBottom": 32,
+                  "paddingLeft": 32,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 24,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "AccountSelectors",
+              "size": {
+                "x": 1088,
+                "y": 100.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Account: Checking",
+                  "size": {
+                    "x": 260,
+                    "y": 100.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Checking",
+                      "size": {
+                        "x": 64.27999877929688,
+                        "y": 16.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.13725490196078433,
+                            "b": 0.49411764705882355,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Checking",
+                      "fontSize": 14,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "••4521",
+                      "size": {
+                        "x": 40.56999969482422,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.47058823529411764,
+                            "g": 0.5647058823529412,
+                            "b": 0.611764705882353,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "••4521",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "$24,563.82",
+                      "size": {
+                        "x": 102.98999786376953,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.13725490196078433,
+                            "b": 0.49411764705882355,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "$24,563.82",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.8901960784313725,
+                        "g": 0.9490196078431372,
+                        "b": 0.9921568627450981,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.1,
+                        "g": 0.14,
+                        "b": 0.49,
+                        "a": 1
+                      },
+                      "weight": 2,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 16,
+                  "paddingRight": 20,
+                  "paddingBottom": 16,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Account: Savings",
+                  "size": {
+                    "x": 260,
+                    "y": 100.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Savings",
+                      "size": {
+                        "x": 53.810001373291016,
+                        "y": 16.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.13725490196078433,
+                            "b": 0.49411764705882355,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Savings",
+                      "fontSize": 14,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "••7834",
+                      "size": {
+                        "x": 42.709999084472656,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.47058823529411764,
+                            "g": 0.5647058823529412,
+                            "b": 0.611764705882353,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "••7834",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "$8,291.00",
+                      "size": {
+                        "x": 89.68000030517578,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.13725490196078433,
+                            "b": 0.49411764705882355,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "$8,291.00",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.9,
+                        "g": 0.9,
+                        "b": 0.9,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 16,
+                  "paddingRight": 20,
+                  "paddingBottom": 16,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Account: Credit Card",
+                  "size": {
+                    "x": 260,
+                    "y": 100.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Credit Card",
+                      "size": {
+                        "x": 77.05000305175781,
+                        "y": 16.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.13725490196078433,
+                            "b": 0.49411764705882355,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Credit Card",
+                      "fontSize": 14,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "••9012",
+                      "size": {
+                        "x": 40.709999084472656,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.47058823529411764,
+                            "g": 0.5647058823529412,
+                            "b": 0.611764705882353,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "••9012",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "-$1,234.56",
+                      "size": {
+                        "x": 97.29000091552734,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.13725490196078433,
+                            "b": 0.49411764705882355,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "-$1,234.56",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.9,
+                        "g": 0.9,
+                        "b": 0.9,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 16,
+                  "paddingRight": 20,
+                  "paddingBottom": 16,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Account: Investment",
+                  "size": {
+                    "x": 260,
+                    "y": 100.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Investment",
+                      "size": {
+                        "x": 75.47000122070312,
+                        "y": 16.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.13725490196078433,
+                            "b": 0.49411764705882355,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Investment",
+                      "fontSize": 14,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "••3456",
+                      "size": {
+                        "x": 43.220001220703125,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.47058823529411764,
+                            "g": 0.5647058823529412,
+                            "b": 0.611764705882353,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "••3456",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "$42,891.33",
+                      "size": {
+                        "x": 100.80000305175781,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.13725490196078433,
+                            "b": 0.49411764705882355,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "$42,891.33",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.9,
+                        "g": 0.9,
+                        "b": 0.9,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 16,
+                  "paddingRight": 20,
+                  "paddingBottom": 16,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 16,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "FRAME",
+              "name": "TransactionsSection",
+              "size": {
+                "x": 1376,
+                "y": 469.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "TxHeader",
+                  "size": {
+                    "x": 1376,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Recent Transactions",
+                      "size": {
+                        "x": 178.00999450683594,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.12941176470588237,
+                            "g": 0.12941176470588237,
+                            "b": 0.12941176470588237,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Recent Transactions",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "See all",
+                      "size": {
+                        "x": 44.22999954223633,
+                        "y": 16.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.13725490196078433,
+                            "b": 0.49411764705882355,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "See all",
+                      "fontSize": 14,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "SPACE_BETWEEN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "TransactionList",
+                  "size": {
+                    "x": 1376,
+                    "y": 432
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Tx: Apple Store",
+                      "size": {
+                        "x": 1376,
+                        "y": 72
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IconBg",
+                          "size": {
+                            "x": 40,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "🛍",
+                              "size": {
+                                "x": 10.5,
+                                "y": 19.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.47058823529411764,
+                                    "g": 0.5647058823529412,
+                                    "b": 0.611764705882353,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "🛍",
+                              "fontSize": 16,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.9607843137254902,
+                                "b": 0.9607843137254902,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 12,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MerchantInfo",
+                          "size": {
+                            "x": 1200.3600006103516,
+                            "y": 33.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Apple Store",
+                              "size": {
+                                "x": 79.08999633789062,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.12941176470588237,
+                                    "g": 0.12941176470588237,
+                                    "b": 0.12941176470588237,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Apple Store",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Mar 14, 2026",
+                              "size": {
+                                "x": 74.18000030517578,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.6196078431372549,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.6196078431372549,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Mar 14, 2026",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "-$99.00",
+                          "size": {
+                            "x": 63.63999938964844,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.12941176470588237,
+                                "g": 0.12941176470588237,
+                                "b": 0.12941176470588237,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "-$99.00",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.95,
+                            "g": 0.95,
+                            "b": 0.95,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 16,
+                      "paddingTop": 16,
+                      "paddingRight": 20,
+                      "paddingBottom": 16,
+                      "paddingLeft": 20,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Tx: Salary Deposit",
+                      "size": {
+                        "x": 1376,
+                        "y": 72
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IconBg",
+                          "size": {
+                            "x": 40,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "💰",
+                              "size": {
+                                "x": 10.5,
+                                "y": 19.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.47058823529411764,
+                                    "g": 0.5647058823529412,
+                                    "b": 0.611764705882353,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "💰",
+                              "fontSize": 16,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.9607843137254902,
+                                "b": 0.9607843137254902,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 12,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MerchantInfo",
+                          "size": {
+                            "x": 1171.2099990844727,
+                            "y": 33.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Salary Deposit",
+                              "size": {
+                                "x": 98.33000183105469,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.12941176470588237,
+                                    "g": 0.12941176470588237,
+                                    "b": 0.12941176470588237,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Salary Deposit",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Mar 13, 2026",
+                              "size": {
+                                "x": 73.97000122070312,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.6196078431372549,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.6196078431372549,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Mar 13, 2026",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "+$4,200.00",
+                          "size": {
+                            "x": 92.79000091552734,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.2980392156862745,
+                                "g": 0.6862745098039216,
+                                "b": 0.3137254901960784,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "+$4,200.00",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.95,
+                            "g": 0.95,
+                            "b": 0.95,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 16,
+                      "paddingTop": 16,
+                      "paddingRight": 20,
+                      "paddingBottom": 16,
+                      "paddingLeft": 20,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Tx: Netflix",
+                      "size": {
+                        "x": 1376,
+                        "y": 72
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IconBg",
+                          "size": {
+                            "x": 40,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "🎬",
+                              "size": {
+                                "x": 10.5,
+                                "y": 19.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.47058823529411764,
+                                    "g": 0.5647058823529412,
+                                    "b": 0.611764705882353,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "🎬",
+                              "fontSize": 16,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.9607843137254902,
+                                "b": 0.9607843137254902,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 12,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MerchantInfo",
+                          "size": {
+                            "x": 1204.5800018310547,
+                            "y": 33.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Netflix",
+                              "size": {
+                                "x": 44.16999816894531,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.12941176470588237,
+                                    "g": 0.12941176470588237,
+                                    "b": 0.12941176470588237,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Netflix",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Mar 12, 2026",
+                              "size": {
+                                "x": 74.1500015258789,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.6196078431372549,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.6196078431372549,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Mar 12, 2026",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "-$15.99",
+                          "size": {
+                            "x": 59.41999816894531,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.12941176470588237,
+                                "g": 0.12941176470588237,
+                                "b": 0.12941176470588237,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "-$15.99",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.95,
+                            "g": 0.95,
+                            "b": 0.95,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 16,
+                      "paddingTop": 16,
+                      "paddingRight": 20,
+                      "paddingBottom": 16,
+                      "paddingLeft": 20,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Tx: Uber Eats",
+                      "size": {
+                        "x": 1376,
+                        "y": 72
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IconBg",
+                          "size": {
+                            "x": 40,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "🍔",
+                              "size": {
+                                "x": 10.5,
+                                "y": 19.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.47058823529411764,
+                                    "g": 0.5647058823529412,
+                                    "b": 0.611764705882353,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "🍔",
+                              "fontSize": 16,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.9607843137254902,
+                                "b": 0.9607843137254902,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 12,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MerchantInfo",
+                          "size": {
+                            "x": 1200.7000007629395,
+                            "y": 33.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Uber Eats",
+                              "size": {
+                                "x": 65.43000030517578,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.12941176470588237,
+                                    "g": 0.12941176470588237,
+                                    "b": 0.12941176470588237,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Uber Eats",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Mar 11, 2026",
+                              "size": {
+                                "x": 71.70999908447266,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.6196078431372549,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.6196078431372549,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Mar 11, 2026",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "-$32.50",
+                          "size": {
+                            "x": 63.29999923706055,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.12941176470588237,
+                                "g": 0.12941176470588237,
+                                "b": 0.12941176470588237,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "-$32.50",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.95,
+                            "g": 0.95,
+                            "b": 0.95,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 16,
+                      "paddingTop": 16,
+                      "paddingRight": 20,
+                      "paddingBottom": 16,
+                      "paddingLeft": 20,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Tx: Transfer from Savings",
+                      "size": {
+                        "x": 1376,
+                        "y": 72
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IconBg",
+                          "size": {
+                            "x": 40,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "🔄",
+                              "size": {
+                                "x": 10.5,
+                                "y": 19.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.47058823529411764,
+                                    "g": 0.5647058823529412,
+                                    "b": 0.611764705882353,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "🔄",
+                              "fontSize": 16,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.9607843137254902,
+                                "b": 0.9607843137254902,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 12,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MerchantInfo",
+                          "size": {
+                            "x": 1186.599998474121,
+                            "y": 33.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Transfer from Savings",
+                              "size": {
+                                "x": 149.8000030517578,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.12941176470588237,
+                                    "g": 0.12941176470588237,
+                                    "b": 0.12941176470588237,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Transfer from Savings",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Mar 10, 2026",
+                              "size": {
+                                "x": 74.0999984741211,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.6196078431372549,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.6196078431372549,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Mar 10, 2026",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "+$500.00",
+                          "size": {
+                            "x": 77.4000015258789,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.2980392156862745,
+                                "g": 0.6862745098039216,
+                                "b": 0.3137254901960784,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "+$500.00",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.95,
+                            "g": 0.95,
+                            "b": 0.95,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 16,
+                      "paddingTop": 16,
+                      "paddingRight": 20,
+                      "paddingBottom": 16,
+                      "paddingLeft": 20,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Tx: Electric Bill",
+                      "size": {
+                        "x": 1376,
+                        "y": 72
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IconBg",
+                          "size": {
+                            "x": 40,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "⚡",
+                              "size": {
+                                "x": 10.5,
+                                "y": 19.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.47058823529411764,
+                                    "g": 0.5647058823529412,
+                                    "b": 0.611764705882353,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "⚡",
+                              "fontSize": 16,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.9607843137254902,
+                                "b": 0.9607843137254902,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 12,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MerchantInfo",
+                          "size": {
+                            "x": 1202.75,
+                            "y": 33.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Electric Bill",
+                              "size": {
+                                "x": 74.7300033569336,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.12941176470588237,
+                                    "g": 0.12941176470588237,
+                                    "b": 0.12941176470588237,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Electric Bill",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Mar 9, 2026",
+                              "size": {
+                                "x": 69.08999633789062,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.6196078431372549,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.6196078431372549,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Mar 9, 2026",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "-$87.43",
+                          "size": {
+                            "x": 61.25,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.12941176470588237,
+                                "g": 0.12941176470588237,
+                                "b": 0.12941176470588237,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "-$87.43",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.95,
+                            "g": 0.95,
+                            "b": 0.95,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 16,
+                      "paddingTop": 16,
+                      "paddingRight": 20,
+                      "paddingBottom": 16,
+                      "paddingLeft": 20,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.93,
+                        "g": 0.93,
+                        "b": 0.93,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 16,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 32,
+          "paddingTop": 32,
+          "paddingRight": 32,
+          "paddingBottom": 32,
+          "paddingLeft": 32,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

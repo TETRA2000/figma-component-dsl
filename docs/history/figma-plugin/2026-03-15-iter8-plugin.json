@@ -1,0 +1,3222 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "social-feed Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "SocialFeedPage",
+      "size": {
+        "x": 1440,
+        "y": 841
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "TopNav",
+          "size": {
+            "x": 1440,
+            "y": 60.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "chirp",
+              "size": {
+                "x": 55.59000015258789,
+                "y": 26.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11372549019607843,
+                    "g": 0.6078431372549019,
+                    "b": 0.9411764705882353,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "chirp",
+              "fontSize": 22,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 800,
+              "fontStyle": "Regular"
+            },
+            {
+              "type": "FRAME",
+              "name": "SearchInput",
+              "size": {
+                "x": 400,
+                "y": 36.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Search",
+                  "size": {
+                    "x": 46.459999084472656,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.3254901960784314,
+                        "g": 0.39215686274509803,
+                        "b": 0.44313725490196076,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Search",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9686274509803922,
+                    "g": 0.9764705882352941,
+                    "b": 0.9803921568627451,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 18.4,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            },
+            {
+              "type": "ELLIPSE",
+              "name": "NavAvatar",
+              "size": {
+                "x": 32,
+                "y": 32
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11372549019607843,
+                    "g": 0.6078431372549019,
+                    "b": 0.9411764705882353,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ]
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 0.94,
+                "g": 0.95,
+                "b": 0.96,
+                "a": 1
+              },
+              "weight": 1,
+              "align": "INSIDE"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 12,
+          "paddingRight": 32,
+          "paddingBottom": 12,
+          "paddingLeft": 32,
+          "primaryAxisAlignItems": "SPACE_BETWEEN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "MainLayout",
+          "size": {
+            "x": 1440,
+            "y": 780.2
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Sidebar",
+              "size": {
+                "x": 240,
+                "y": 376.79999999999995
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Nav: 🏠 Home",
+                  "size": {
+                    "x": 208,
+                    "y": 45.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "🏠 Home",
+                      "size": {
+                        "x": 67.70999908447266,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "🏠 Home",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    }
+                  ],
+                  "cornerRadius": 22.799999999999997,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Nav: 🔍 Explore",
+                  "size": {
+                    "x": 208,
+                    "y": 45.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "🔍 Explore",
+                      "size": {
+                        "x": 80.66999816894531,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "🔍 Explore",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "cornerRadius": 22.799999999999997,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Nav: 🔔 Notifications",
+                  "size": {
+                    "x": 208,
+                    "y": 45.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "🔔 Notifications",
+                      "size": {
+                        "x": 124.23999786376953,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "🔔 Notifications",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "cornerRadius": 22.799999999999997,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Nav: ✉️ Messages",
+                  "size": {
+                    "x": 208,
+                    "y": 45.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "✉️ Messages",
+                      "size": {
+                        "x": 103.7699966430664,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "✉️ Messages",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "cornerRadius": 22.799999999999997,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Nav: 👤 Profile",
+                  "size": {
+                    "x": 208,
+                    "y": 45.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "👤 Profile",
+                      "size": {
+                        "x": 71.5199966430664,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "👤 Profile",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "cornerRadius": 22.799999999999997,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Nav: ⚙️ Settings",
+                  "size": {
+                    "x": 208,
+                    "y": 45.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "⚙️ Settings",
+                      "size": {
+                        "x": 86.2300033569336,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "⚙️ Settings",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "cornerRadius": 22.799999999999997,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "ComposeBtn",
+                  "size": {
+                    "x": 208,
+                    "y": 47.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Compose",
+                      "size": {
+                        "x": 74.63999938964844,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Compose",
+                      "fontSize": 16,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11372549019607843,
+                        "g": 0.6078431372549019,
+                        "b": 0.9411764705882353,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 23.6,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 14,
+                  "paddingRight": 0,
+                  "paddingBottom": 14,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "CENTER",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.94,
+                    "g": 0.95,
+                    "b": 0.96,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 4,
+              "paddingTop": 16,
+              "paddingRight": 16,
+              "paddingBottom": 16,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            },
+            {
+              "type": "FRAME",
+              "name": "Feed",
+              "size": {
+                "x": 860,
+                "y": 780.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "FeedHeader",
+                  "size": {
+                    "x": 860,
+                    "y": 56
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Home",
+                      "size": {
+                        "x": 57.369998931884766,
+                        "y": 24
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Home",
+                      "fontSize": 20,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 16,
+                  "paddingRight": 16,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Post: @sarahc_dev",
+                  "size": {
+                    "x": 860,
+                    "y": 192.3
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "PostHeader",
+                      "size": {
+                        "x": 828,
+                        "y": 44
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "Avatar",
+                          "size": {
+                            "x": 44,
+                            "y": 44
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.11372549019607843,
+                                    "g": 0.6078431372549019,
+                                    "b": 0.9411764705882353,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.3764705882352941,
+                                    "g": 0.6470588235294118,
+                                    "b": 0.9803921568627451,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.7071067811865475,
+                                  0.7071067811865476,
+                                  0.49999999999999994
+                                ],
+                                [
+                                  -0.7071067811865476,
+                                  -0.7071067811865475,
+                                  1.2071067811865475
+                                ]
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "NameCol",
+                          "size": {
+                            "x": 748.3800001144409,
+                            "y": 33.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Sarah Chen",
+                              "size": {
+                                "x": 84.73999786376953,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.058823529411764705,
+                                    "g": 0.0784313725490196,
+                                    "b": 0.09803921568627451,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Sarah Chen",
+                              "fontSize": 15,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "@sarahc_dev",
+                              "size": {
+                                "x": 82.54000091552734,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "@sarahc_dev",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "2h",
+                          "size": {
+                            "x": 15.619999885559082,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "2h",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Just shipped a major update to our design system! 🎉 New component primitives, better accessibility defaults, and a revamped token architecture. Check it out!",
+                      "size": {
+                        "x": 550,
+                        "y": 67.5
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Just shipped a major update to our design system! 🎉 New component primitives, better accessibility defaults, and a revamped token architecture. Check it out!",
+                      "fontSize": 15,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "textAutoResize": "HEIGHT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "EngagementBar",
+                      "size": {
+                        "x": 202.9000005722046,
+                        "y": 24.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Replies",
+                          "size": {
+                            "x": 30.9399995803833,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "💬",
+                              "size": {
+                                "x": 9.1899995803833,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "💬",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "47",
+                              "size": {
+                                "x": 15.75,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "47",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Retweets",
+                          "size": {
+                            "x": 31.289999961853027,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "🔁",
+                              "size": {
+                                "x": 9.1899995803833,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "🔁",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "89",
+                              "size": {
+                                "x": 16.100000381469727,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "89",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Likes",
+                          "size": {
+                            "x": 44.67000102996826,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "❤️",
+                              "size": {
+                                "x": 14.3100004196167,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "❤️",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "342",
+                              "size": {
+                                "x": 24.360000610351562,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "342",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 48,
+                      "paddingTop": 4,
+                      "paddingRight": 0,
+                      "paddingBottom": 4,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.95,
+                        "b": 0.96,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 16,
+                  "paddingRight": 16,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Post: @alexr",
+                  "size": {
+                    "x": 860,
+                    "y": 169.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "PostHeader",
+                      "size": {
+                        "x": 828,
+                        "y": 44
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "Avatar",
+                          "size": {
+                            "x": 44,
+                            "y": 44
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.11372549019607843,
+                                    "g": 0.6078431372549019,
+                                    "b": 0.9411764705882353,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.3764705882352941,
+                                    "g": 0.6470588235294118,
+                                    "b": 0.9803921568627451,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.7071067811865475,
+                                  0.7071067811865476,
+                                  0.49999999999999994
+                                ],
+                                [
+                                  -0.7071067811865476,
+                                  -0.7071067811865475,
+                                  1.2071067811865475
+                                ]
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "NameCol",
+                          "size": {
+                            "x": 747.920000076294,
+                            "y": 33.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Alex Rivera",
+                              "size": {
+                                "x": 82.33999633789062,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.058823529411764705,
+                                    "g": 0.0784313725490196,
+                                    "b": 0.09803921568627451,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Alex Rivera",
+                              "fontSize": 15,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "@alexr",
+                              "size": {
+                                "x": 42.279998779296875,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "@alexr",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "4h",
+                          "size": {
+                            "x": 16.079999923706055,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "4h",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Hot take: The best code is the code you don't write. Every line of code is a liability. Keep it simple.",
+                      "size": {
+                        "x": 550,
+                        "y": 45
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Hot take: The best code is the code you don't write. Every line of code is a liability. Keep it simple.",
+                      "fontSize": 15,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "textAutoResize": "HEIGHT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "EngagementBar",
+                      "size": {
+                        "x": 216.21000003814697,
+                        "y": 24.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Replies",
+                          "size": {
+                            "x": 36.249999046325684,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "💬",
+                              "size": {
+                                "x": 9.1899995803833,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "💬",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "156",
+                              "size": {
+                                "x": 21.059999465942383,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "156",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Retweets",
+                          "size": {
+                            "x": 39.55000019073486,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "🔁",
+                              "size": {
+                                "x": 9.1899995803833,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "🔁",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "234",
+                              "size": {
+                                "x": 24.360000610351562,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "234",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Likes",
+                          "size": {
+                            "x": 44.410000801086426,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "❤️",
+                              "size": {
+                                "x": 14.3100004196167,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "❤️",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "1.2k",
+                              "size": {
+                                "x": 24.100000381469727,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "1.2k",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 48,
+                      "paddingTop": 4,
+                      "paddingRight": 0,
+                      "paddingBottom": 4,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.95,
+                        "b": 0.96,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 16,
+                  "paddingRight": 16,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Post: @mayaj_design",
+                  "size": {
+                    "x": 860,
+                    "y": 192.3
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "PostHeader",
+                      "size": {
+                        "x": 828,
+                        "y": 44
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "Avatar",
+                          "size": {
+                            "x": 44,
+                            "y": 44
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.11372549019607843,
+                                    "g": 0.6078431372549019,
+                                    "b": 0.9411764705882353,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.3764705882352941,
+                                    "g": 0.6470588235294118,
+                                    "b": 0.9803921568627451,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.7071067811865475,
+                                  0.7071067811865476,
+                                  0.49999999999999994
+                                ],
+                                [
+                                  -0.7071067811865476,
+                                  -0.7071067811865475,
+                                  1.2071067811865475
+                                ]
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "NameCol",
+                          "size": {
+                            "x": 748.25,
+                            "y": 33.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Maya Johnson",
+                              "size": {
+                                "x": 107.1500015258789,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.058823529411764705,
+                                    "g": 0.0784313725490196,
+                                    "b": 0.09803921568627451,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Maya Johnson",
+                              "fontSize": 15,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "@mayaj_design",
+                              "size": {
+                                "x": 95.87999725341797,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "@mayaj_design",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "6h",
+                          "size": {
+                            "x": 15.75,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "6h",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Spent the weekend redesigning our onboarding flow. Reduced steps from 7 to 3 and early data shows a 40% improvement in completion rates. Sometimes less really is more.",
+                      "size": {
+                        "x": 550,
+                        "y": 67.5
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Spent the weekend redesigning our onboarding flow. Reduced steps from 7 to 3 and early data shows a 40% improvement in completion rates. Sometimes less really is more.",
+                      "fontSize": 15,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "textAutoResize": "HEIGHT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "EngagementBar",
+                      "size": {
+                        "x": 207.16999912261963,
+                        "y": 24.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Replies",
+                          "size": {
+                            "x": 31.289999961853027,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "💬",
+                              "size": {
+                                "x": 9.1899995803833,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "💬",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "89",
+                              "size": {
+                                "x": 16.100000381469727,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "89",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Retweets",
+                          "size": {
+                            "x": 36.4399995803833,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "🔁",
+                              "size": {
+                                "x": 9.1899995803833,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "🔁",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "123",
+                              "size": {
+                                "x": 21.25,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "123",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Likes",
+                          "size": {
+                            "x": 43.4399995803833,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "❤️",
+                              "size": {
+                                "x": 14.3100004196167,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "❤️",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "567",
+                              "size": {
+                                "x": 23.1299991607666,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "567",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 48,
+                      "paddingTop": 4,
+                      "paddingRight": 0,
+                      "paddingBottom": 4,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.95,
+                        "b": 0.96,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 16,
+                  "paddingRight": 16,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Post: @devcom",
+                  "size": {
+                    "x": 860,
+                    "y": 169.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "PostHeader",
+                      "size": {
+                        "x": 828,
+                        "y": 44
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "Avatar",
+                          "size": {
+                            "x": 44,
+                            "y": 44
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.11372549019607843,
+                                    "g": 0.6078431372549019,
+                                    "b": 0.9411764705882353,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.3764705882352941,
+                                    "g": 0.6470588235294118,
+                                    "b": 0.9803921568627451,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.7071067811865475,
+                                  0.7071067811865476,
+                                  0.49999999999999994
+                                ],
+                                [
+                                  -0.7071067811865476,
+                                  -0.7071067811865475,
+                                  1.2071067811865475
+                                ]
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "NameCol",
+                          "size": {
+                            "x": 748.2700004577637,
+                            "y": 33.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Dev Community",
+                              "size": {
+                                "x": 117.30999755859375,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.058823529411764705,
+                                    "g": 0.0784313725490196,
+                                    "b": 0.09803921568627451,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Dev Community",
+                              "fontSize": 15,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "@devcom",
+                              "size": {
+                                "x": 61.5,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "@devcom",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "8h",
+                          "size": {
+                            "x": 15.729999542236328,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "8h",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "What's your go-to tool for debugging CSS layout issues? Drop your favorites below! 👇",
+                      "size": {
+                        "x": 550,
+                        "y": 45
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "What's your go-to tool for debugging CSS layout issues? Drop your favorites below! 👇",
+                      "fontSize": 15,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "textAutoResize": "HEIGHT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "EngagementBar",
+                      "size": {
+                        "x": 208.41000080108643,
+                        "y": 24.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Replies",
+                          "size": {
+                            "x": 36.4399995803833,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "💬",
+                              "size": {
+                                "x": 9.1899995803833,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "💬",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "312",
+                              "size": {
+                                "x": 21.25,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "312",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Retweets",
+                          "size": {
+                            "x": 31.300000190734863,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "🔁",
+                              "size": {
+                                "x": 9.1899995803833,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "🔁",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "45",
+                              "size": {
+                                "x": 16.110000610351562,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "45",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Likes",
+                          "size": {
+                            "x": 44.67000102996826,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "❤️",
+                              "size": {
+                                "x": 14.3100004196167,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "characters": "❤️",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "234",
+                              "size": {
+                                "x": 24.360000610351562,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.3254901960784314,
+                                    "g": 0.39215686274509803,
+                                    "b": 0.44313725490196076,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "234",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 48,
+                      "paddingTop": 4,
+                      "paddingRight": 0,
+                      "paddingBottom": 4,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.95,
+                        "b": 0.96,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 16,
+                  "paddingRight": 16,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.94,
+                    "g": 0.95,
+                    "b": 0.96,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 0,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "TrendsPanel",
+              "size": {
+                "x": 340,
+                "y": 454
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "TrendsHeader",
+                  "size": {
+                    "x": 340,
+                    "y": 48
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Trends for you",
+                      "size": {
+                        "x": 141.86000061035156,
+                        "y": 24
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.0784313725490196,
+                            "b": 0.09803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Trends for you",
+                      "fontSize": 20,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "TrendsList",
+                  "size": {
+                    "x": 340,
+                    "y": 374
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Trend: #DesignSystems",
+                      "size": {
+                        "x": 340,
+                        "y": 74.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Technology · Trending",
+                          "size": {
+                            "x": 126.62999725341797,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Technology · Trending",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "#DesignSystems",
+                          "size": {
+                            "x": 124.41000366210938,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.0784313725490196,
+                                "b": 0.09803921568627451,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "#DesignSystems",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "12.4k posts",
+                          "size": {
+                            "x": 64.38999938964844,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "12.4k posts",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Trend: React 20",
+                      "size": {
+                        "x": 340,
+                        "y": 74.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Development · Trending",
+                          "size": {
+                            "x": 135.27999877929688,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Development · Trending",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "React 20",
+                          "size": {
+                            "x": 64.88999938964844,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.0784313725490196,
+                                "b": 0.09803921568627451,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "React 20",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "8.7k posts",
+                          "size": {
+                            "x": 58.209999084472656,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "8.7k posts",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Trend: #FigmaPlugins",
+                      "size": {
+                        "x": 340,
+                        "y": 74.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Design · Trending",
+                          "size": {
+                            "x": 99.7300033569336,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Design · Trending",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "#FigmaPlugins",
+                          "size": {
+                            "x": 108.87999725341797,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.0784313725490196,
+                                "b": 0.09803921568627451,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "#FigmaPlugins",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "5.2k posts",
+                          "size": {
+                            "x": 58.54999923706055,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "5.2k posts",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Trend: TypeScript 6.0",
+                      "size": {
+                        "x": 340,
+                        "y": 74.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Tech · Trending",
+                          "size": {
+                            "x": 88.13999938964844,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Tech · Trending",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "TypeScript 6.0",
+                          "size": {
+                            "x": 107.86000061035156,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.0784313725490196,
+                                "b": 0.09803921568627451,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "TypeScript 6.0",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "3.9k posts",
+                          "size": {
+                            "x": 58.939998626708984,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "3.9k posts",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Trend: #Hacktoberfest",
+                      "size": {
+                        "x": 340,
+                        "y": 74.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Open Source · Trending",
+                          "size": {
+                            "x": 134.52999877929688,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Open Source · Trending",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "#Hacktoberfest",
+                          "size": {
+                            "x": 114.98999786376953,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.0784313725490196,
+                                "b": 0.09803921568627451,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "#Hacktoberfest",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "2.1k posts",
+                          "size": {
+                            "x": 55.599998474121094,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.3254901960784314,
+                                "g": 0.39215686274509803,
+                                "b": 0.44313725490196076,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "2.1k posts",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9686274509803922,
+                        "g": 0.9764705882352941,
+                        "b": 0.9803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 16,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 0,
+              "paddingTop": 16,
+              "paddingRight": 0,
+              "paddingBottom": 16,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

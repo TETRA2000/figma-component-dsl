@@ -1,0 +1,3087 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "analytics-dashboard Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "AnalyticsDashboard",
+      "size": {
+        "x": 1440,
+        "y": 830
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "Header",
+          "size": {
+            "x": 1440,
+            "y": 71.6
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "Analytics Dashboard",
+              "size": {
+                "x": 204.10000610351562,
+                "y": 24
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Analytics Dashboard",
+              "fontSize": 20,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "HeaderActions",
+              "size": {
+                "x": 186.9499969482422,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "DateRange",
+                  "size": {
+                    "x": 101.66999816894531,
+                    "y": 31.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Last 7 days",
+                      "size": {
+                        "x": 69.66999816894531,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.5803921568627451,
+                            "g": 0.6392156862745098,
+                            "b": 0.7215686274509804,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Last 7 days",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.3,
+                        "g": 0.35,
+                        "b": 0.45,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 8,
+                  "paddingRight": 16,
+                  "paddingBottom": 8,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "ExportBtn",
+                  "size": {
+                    "x": 73.27999877929688,
+                    "y": 31.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Export",
+                      "size": {
+                        "x": 41.279998779296875,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Export",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.23137254901960785,
+                        "g": 0.5098039215686274,
+                        "b": 0.9647058823529412,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 8,
+                  "paddingRight": 16,
+                  "paddingBottom": 8,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 12,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 0.2,
+                "g": 0.25,
+                "b": 0.35,
+                "a": 1
+              },
+              "weight": 1,
+              "align": "INSIDE"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 20,
+          "paddingRight": 32,
+          "paddingBottom": 20,
+          "paddingLeft": 32,
+          "primaryAxisAlignItems": "SPACE_BETWEEN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "StatsGrid",
+          "size": {
+            "x": 1440,
+            "y": 205.6
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Stat: Total Revenue",
+              "size": {
+                "x": 320,
+                "y": 141.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Total Revenue",
+                  "size": {
+                    "x": 87.70999908447266,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Total Revenue",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "$48,294",
+                  "size": {
+                    "x": 136.02000427246094,
+                    "y": 38.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "$48,294",
+                  "fontSize": 32,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Change",
+                  "size": {
+                    "x": 153.32000732421875,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "Indicator",
+                      "size": {
+                        "x": 8,
+                        "y": 8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "+12.5% from last week",
+                      "size": {
+                        "x": 141.32000732421875,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "+12.5% from last week",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11764705882352941,
+                    "g": 0.1607843137254902,
+                    "b": 0.23137254901960785,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.2,
+                    "g": 0.25,
+                    "b": 0.35,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 24,
+              "paddingRight": 24,
+              "paddingBottom": 24,
+              "paddingLeft": 24,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            },
+            {
+              "type": "FRAME",
+              "name": "Stat: Active Users",
+              "size": {
+                "x": 320,
+                "y": 141.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Active Users",
+                  "size": {
+                    "x": 78.93000030517578,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Active Users",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "2,847",
+                  "size": {
+                    "x": 91.0199966430664,
+                    "y": 38.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "2,847",
+                  "fontSize": 32,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Change",
+                  "size": {
+                    "x": 148.1300048828125,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "Indicator",
+                      "size": {
+                        "x": 8,
+                        "y": 8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "+8.2% from last week",
+                      "size": {
+                        "x": 136.1300048828125,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "+8.2% from last week",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11764705882352941,
+                    "g": 0.1607843137254902,
+                    "b": 0.23137254901960785,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.2,
+                    "g": 0.25,
+                    "b": 0.35,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 24,
+              "paddingRight": 24,
+              "paddingBottom": 24,
+              "paddingLeft": 24,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            },
+            {
+              "type": "FRAME",
+              "name": "Stat: Conversion Rate",
+              "size": {
+                "x": 320,
+                "y": 141.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Conversion Rate",
+                  "size": {
+                    "x": 101.9800033569336,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Conversion Rate",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "3.24%",
+                  "size": {
+                    "x": 104.47000122070312,
+                    "y": 38.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "3.24%",
+                  "fontSize": 32,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Change",
+                  "size": {
+                    "x": 146.1300048828125,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "Indicator",
+                      "size": {
+                        "x": 8,
+                        "y": 8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9372549019607843,
+                            "g": 0.26666666666666666,
+                            "b": 0.26666666666666666,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "-0.4% from last week",
+                      "size": {
+                        "x": 134.1300048828125,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9372549019607843,
+                            "g": 0.26666666666666666,
+                            "b": 0.26666666666666666,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "-0.4% from last week",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11764705882352941,
+                    "g": 0.1607843137254902,
+                    "b": 0.23137254901960785,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.2,
+                    "g": 0.25,
+                    "b": 0.35,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 24,
+              "paddingRight": 24,
+              "paddingBottom": 24,
+              "paddingLeft": 24,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            },
+            {
+              "type": "FRAME",
+              "name": "Stat: Avg. Session",
+              "size": {
+                "x": 320,
+                "y": 141.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Avg. Session",
+                  "size": {
+                    "x": 79.87000274658203,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Avg. Session",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "4m 32s",
+                  "size": {
+                    "x": 117.16000366210938,
+                    "y": 38.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "4m 32s",
+                  "fontSize": 32,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Change",
+                  "size": {
+                    "x": 141.8699951171875,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "Indicator",
+                      "size": {
+                        "x": 8,
+                        "y": 8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "+1.1% from last week",
+                      "size": {
+                        "x": 129.8699951171875,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "+1.1% from last week",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11764705882352941,
+                    "g": 0.1607843137254902,
+                    "b": 0.23137254901960785,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.2,
+                    "g": 0.25,
+                    "b": 0.35,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 24,
+              "paddingRight": 24,
+              "paddingBottom": 24,
+              "paddingLeft": 24,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 24,
+          "paddingTop": 32,
+          "paddingRight": 32,
+          "paddingBottom": 32,
+          "paddingLeft": 32,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "MainContent",
+          "size": {
+            "x": 1440,
+            "y": 520.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "LeftPanel",
+              "size": {
+                "x": 992,
+                "y": 520.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Weekly Overview",
+                  "size": {
+                    "x": 151.8699951171875,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Weekly Overview",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Chart",
+                  "size": {
+                    "x": 992,
+                    "y": 210.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Bar: Mon",
+                      "size": {
+                        "x": 114.28571428571429,
+                        "y": 102.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "BarFill",
+                          "size": {
+                            "x": 40,
+                            "y": 80
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.23137254901960785,
+                                "g": 0.5098039215686274,
+                                "b": 0.9647058823529412,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Mon",
+                          "size": {
+                            "x": 25.1299991607666,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Mon",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MAX",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Bar: Tue",
+                      "size": {
+                        "x": 114.28571428571429,
+                        "y": 142.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "BarFill",
+                          "size": {
+                            "x": 40,
+                            "y": 120
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.23137254901960785,
+                                "g": 0.5098039215686274,
+                                "b": 0.9647058823529412,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Tue",
+                          "size": {
+                            "x": 20.950000762939453,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Tue",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MAX",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Bar: Wed",
+                      "size": {
+                        "x": 114.28571428571429,
+                        "y": 82.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "BarFill",
+                          "size": {
+                            "x": 40,
+                            "y": 60
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.23137254901960785,
+                                "g": 0.5098039215686274,
+                                "b": 0.9647058823529412,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Wed",
+                          "size": {
+                            "x": 25.559999465942383,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Wed",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MAX",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Bar: Thu",
+                      "size": {
+                        "x": 114.28571428571429,
+                        "y": 162.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "BarFill",
+                          "size": {
+                            "x": 40,
+                            "y": 140
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.23137254901960785,
+                                "g": 0.5098039215686274,
+                                "b": 0.9647058823529412,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Thu",
+                          "size": {
+                            "x": 21.940000534057617,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Thu",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MAX",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Bar: Fri",
+                      "size": {
+                        "x": 114.28571428571429,
+                        "y": 122.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "BarFill",
+                          "size": {
+                            "x": 40,
+                            "y": 100
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06274509803921569,
+                                "g": 0.7254901960784313,
+                                "b": 0.5058823529411764,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Fri",
+                          "size": {
+                            "x": 14.270000457763672,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Fri",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MAX",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Bar: Sat",
+                      "size": {
+                        "x": 114.28571428571429,
+                        "y": 62.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "BarFill",
+                          "size": {
+                            "x": 40,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.6196078431372549,
+                                "b": 0.043137254901960784,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Sat",
+                          "size": {
+                            "x": 18.360000610351562,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Sat",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MAX",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Bar: Sun",
+                      "size": {
+                        "x": 114.28571428571429,
+                        "y": 52.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "BarFill",
+                          "size": {
+                            "x": 40,
+                            "y": 30
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.6196078431372549,
+                                "b": 0.043137254901960784,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Sun",
+                          "size": {
+                            "x": 21.8799991607666,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Sun",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MAX",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11764705882352941,
+                        "g": 0.1607843137254902,
+                        "b": 0.23137254901960785,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.2,
+                        "g": 0.25,
+                        "b": 0.35,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 24,
+                  "paddingTop": 24,
+                  "paddingRight": 24,
+                  "paddingBottom": 24,
+                  "paddingLeft": 24,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MAX",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Top Metrics",
+                  "size": {
+                    "x": 103.1500015258789,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Top Metrics",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Metrics",
+                  "size": {
+                    "x": 992,
+                    "y": 195.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Metric: Page Views",
+                      "size": {
+                        "x": 944,
+                        "y": 40.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Page Views",
+                          "size": {
+                            "x": 78.08999633789062,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8862745098039215,
+                                "g": 0.9098039215686274,
+                                "b": 0.9411764705882353,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Page Views",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Bar",
+                          "size": {
+                            "x": 400,
+                            "y": 8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "RECTANGLE",
+                              "name": "Fill",
+                              "size": {
+                                "x": 257,
+                                "y": 8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.23137254901960785,
+                                    "g": 0.5098039215686274,
+                                    "b": 0.9647058823529412,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ]
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.2,
+                                "g": 0.2549019607843137,
+                                "b": 0.3333333333333333,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 4,
+                          "clipContent": true,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "12847",
+                          "size": {
+                            "x": 41,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "12847",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "RIGHT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 16,
+                      "paddingTop": 12,
+                      "paddingRight": 0,
+                      "paddingBottom": 12,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Metric: Signups",
+                      "size": {
+                        "x": 944,
+                        "y": 40.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Signups",
+                          "size": {
+                            "x": 54.279998779296875,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8862745098039215,
+                                "g": 0.9098039215686274,
+                                "b": 0.9411764705882353,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Signups",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Bar",
+                          "size": {
+                            "x": 400,
+                            "y": 8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "RECTANGLE",
+                              "name": "Fill",
+                              "size": {
+                                "x": 17,
+                                "y": 8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.06274509803921569,
+                                    "g": 0.7254901960784313,
+                                    "b": 0.5058823529411764,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ]
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.2,
+                                "g": 0.2549019607843137,
+                                "b": 0.3333333333333333,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 4,
+                          "clipContent": true,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "847",
+                          "size": {
+                            "x": 26.350000381469727,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "847",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "RIGHT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 16,
+                      "paddingTop": 12,
+                      "paddingRight": 0,
+                      "paddingBottom": 12,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Metric: Bounce Rate",
+                      "size": {
+                        "x": 944,
+                        "y": 40.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Bounce Rate",
+                          "size": {
+                            "x": 84.33000183105469,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8862745098039215,
+                                "g": 0.9098039215686274,
+                                "b": 0.9411764705882353,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Bounce Rate",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Bar",
+                          "size": {
+                            "x": 400,
+                            "y": 8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "RECTANGLE",
+                              "name": "Fill",
+                              "size": {
+                                "x": 65,
+                                "y": 8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9607843137254902,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.043137254901960784,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ]
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.2,
+                                "g": 0.2549019607843137,
+                                "b": 0.3333333333333333,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 4,
+                          "clipContent": true,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "3240",
+                          "size": {
+                            "x": 35.970001220703125,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "3240",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "RIGHT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 16,
+                      "paddingTop": 12,
+                      "paddingRight": 0,
+                      "paddingBottom": 12,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Metric: Revenue",
+                      "size": {
+                        "x": 944,
+                        "y": 40.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Revenue",
+                          "size": {
+                            "x": 57.90999984741211,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8862745098039215,
+                                "g": 0.9098039215686274,
+                                "b": 0.9411764705882353,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Revenue",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Bar",
+                          "size": {
+                            "x": 400,
+                            "y": 8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "RECTANGLE",
+                              "name": "Fill",
+                              "size": {
+                                "x": 296,
+                                "y": 8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.5450980392156862,
+                                    "g": 0.3607843137254902,
+                                    "b": 0.9647058823529412,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ]
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.2,
+                                "g": 0.2549019607843137,
+                                "b": 0.3333333333333333,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 4,
+                          "clipContent": true,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "14820",
+                          "size": {
+                            "x": 42.15999984741211,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "14820",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "RIGHT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 16,
+                      "paddingTop": 12,
+                      "paddingRight": 0,
+                      "paddingBottom": 12,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11764705882352941,
+                        "g": 0.1607843137254902,
+                        "b": 0.23137254901960785,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.2,
+                        "g": 0.25,
+                        "b": 0.35,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 16,
+                  "paddingRight": 24,
+                  "paddingBottom": 16,
+                  "paddingLeft": 24,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 24,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "RightPanel",
+              "size": {
+                "x": 360,
+                "y": 387.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Recent Activity",
+                  "size": {
+                    "x": 117.4800033569336,
+                    "y": 19.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Recent Activity",
+                  "fontSize": 16,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Activity 0",
+                  "size": {
+                    "x": 312,
+                    "y": 48
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "Dot",
+                      "size": {
+                        "x": 8,
+                        "y": 8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.23137254901960785,
+                            "g": 0.5098039215686274,
+                            "b": 0.9647058823529412,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "ActivityInfo",
+                      "size": {
+                        "x": 241.04000091552734,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "New signup",
+                          "size": {
+                            "x": 73.51000213623047,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8862745098039215,
+                                "g": 0.9098039215686274,
+                                "b": 0.9411764705882353,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "New signup",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "john@example.com",
+                          "size": {
+                            "x": 111.66999816894531,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "john@example.com",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "2m ago",
+                      "size": {
+                        "x": 38.959999084472656,
+                        "y": 13.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "2m ago",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 8,
+                  "paddingRight": 0,
+                  "paddingBottom": 8,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Activity 1",
+                  "size": {
+                    "x": 312,
+                    "y": 48
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "Dot",
+                      "size": {
+                        "x": 8,
+                        "y": 8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.23137254901960785,
+                            "g": 0.5098039215686274,
+                            "b": 0.9647058823529412,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "ActivityInfo",
+                      "size": {
+                        "x": 241.22999954223633,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Purchase",
+                          "size": {
+                            "x": 58.279998779296875,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8862745098039215,
+                                "g": 0.9098039215686274,
+                                "b": 0.9411764705882353,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Purchase",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Pro Plan - $49/mo",
+                          "size": {
+                            "x": 104.13999938964844,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Pro Plan - $49/mo",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "5m ago",
+                      "size": {
+                        "x": 38.77000045776367,
+                        "y": 13.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "5m ago",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 8,
+                  "paddingRight": 0,
+                  "paddingBottom": 8,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Activity 2",
+                  "size": {
+                    "x": 312,
+                    "y": 48
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "Dot",
+                      "size": {
+                        "x": 8,
+                        "y": 8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.23137254901960785,
+                            "g": 0.5098039215686274,
+                            "b": 0.9647058823529412,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "ActivityInfo",
+                      "size": {
+                        "x": 236.56999969482422,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Feature used",
+                          "size": {
+                            "x": 80.95999908447266,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8862745098039215,
+                                "g": 0.9098039215686274,
+                                "b": 0.9411764705882353,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Feature used",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Dashboard export",
+                          "size": {
+                            "x": 101.72000122070312,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Dashboard export",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "12m ago",
+                      "size": {
+                        "x": 43.43000030517578,
+                        "y": 13.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "12m ago",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 8,
+                  "paddingRight": 0,
+                  "paddingBottom": 8,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Activity 3",
+                  "size": {
+                    "x": 312,
+                    "y": 48
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "Dot",
+                      "size": {
+                        "x": 8,
+                        "y": 8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.23137254901960785,
+                            "g": 0.5098039215686274,
+                            "b": 0.9647058823529412,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "ActivityInfo",
+                      "size": {
+                        "x": 236.47000122070312,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "New signup",
+                          "size": {
+                            "x": 73.51000213623047,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8862745098039215,
+                                "g": 0.9098039215686274,
+                                "b": 0.9411764705882353,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "New signup",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "sarah@company.co",
+                          "size": {
+                            "x": 112.41999816894531,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "sarah@company.co",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "18m ago",
+                      "size": {
+                        "x": 43.529998779296875,
+                        "y": 13.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "18m ago",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 8,
+                  "paddingRight": 0,
+                  "paddingBottom": 8,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Activity 4",
+                  "size": {
+                    "x": 312,
+                    "y": 48
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "Dot",
+                      "size": {
+                        "x": 8,
+                        "y": 8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9372549019607843,
+                            "g": 0.26666666666666666,
+                            "b": 0.26666666666666666,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "ActivityInfo",
+                      "size": {
+                        "x": 234.52000045776367,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Cancellation",
+                          "size": {
+                            "x": 77.18000030517578,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8862745098039215,
+                                "g": 0.9098039215686274,
+                                "b": 0.9411764705882353,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Cancellation",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Basic Plan",
+                          "size": {
+                            "x": 58.459999084472656,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Basic Plan",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "25m ago",
+                      "size": {
+                        "x": 45.47999954223633,
+                        "y": 13.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "25m ago",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 8,
+                  "paddingRight": 0,
+                  "paddingBottom": 8,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11764705882352941,
+                    "g": 0.1607843137254902,
+                    "b": 0.23137254901960785,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.2,
+                    "g": 0.25,
+                    "b": 0.35,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 16,
+              "paddingTop": 24,
+              "paddingRight": 24,
+              "paddingBottom": 24,
+              "paddingLeft": 24,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 24,
+          "paddingTop": 0,
+          "paddingRight": 32,
+          "paddingBottom": 0,
+          "paddingLeft": 32,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "RECTANGLE",
+          "name": "BottomSpacer",
+          "size": {
+            "x": 1,
+            "y": 32
+          },
+          "opacity": 0,
+          "visible": true,
+          "children": []
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.058823529411764705,
+            "g": 0.09019607843137255,
+            "b": 0.16470588235294117,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

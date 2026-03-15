@@ -26,4 +26,5 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-15 — 30x Marketing Pages Stress Test](2026-03-15-marketing-pages-30x.md) — 0 issues found, 0 pipeline fixes | 30 iterations covering: gradients, cornerRadius/cornerRadii, clipContent, strokes, textAutoResize, FILL sizing, SPACE_BETWEEN, CENTER alignment, ellipses, opacity, letterSpacing, lineHeight, nested auto-layout
 - [2026-03-14 — Travel Cards](2026-03-14-travel-cards.md) — 0 issues found, 0 pipeline fixes | Features: cornerRadius, clipContent, strokes, textAutoResize:HEIGHT, FILL sizing, SPACE_BETWEEN, nested auto-layout

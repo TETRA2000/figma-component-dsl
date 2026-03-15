@@ -1,0 +1,3089 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "recipe-cookbook Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "RecipeCookbookPage",
+      "size": {
+        "x": 1440,
+        "y": 1209
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "Header",
+          "size": {
+            "x": 1440,
+            "y": 71.6
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "🍳 Cookbook",
+              "size": {
+                "x": 129.27999877929688,
+                "y": 26.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.24313725490196078,
+                    "g": 0.15294117647058825,
+                    "b": 0.13725490196078433,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "🍳 Cookbook",
+              "fontSize": 22,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "HeaderNav",
+              "size": {
+                "x": 253.61999893188477,
+                "y": 16.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Recipes",
+                  "size": {
+                    "x": 53.7599983215332,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 0.596078431372549,
+                        "b": 0,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Recipes",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Collections",
+                  "size": {
+                    "x": 74.79000091552734,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5529411764705883,
+                        "g": 0.43137254901960786,
+                        "b": 0.38823529411764707,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Collections",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Community",
+                  "size": {
+                    "x": 77.06999969482422,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5529411764705883,
+                        "g": 0.43137254901960786,
+                        "b": 0.38823529411764707,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Community",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 24,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "FRAME",
+              "name": "SearchBar",
+              "size": {
+                "x": 240,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Search recipes...",
+                  "size": {
+                    "x": 103.26000213623047,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.7372549019607844,
+                        "g": 0.6666666666666666,
+                        "b": 0.6431372549019608,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Search recipes...",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.85,
+                    "g": 0.78,
+                    "b": 0.62,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            }
+          ],
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "opacity": 1
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 0.9,
+                "g": 0.85,
+                "b": 0.75,
+                "a": 1
+              },
+              "weight": 1,
+              "align": "INSIDE"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 20,
+          "paddingRight": 64,
+          "paddingBottom": 20,
+          "paddingLeft": 64,
+          "primaryAxisAlignItems": "SPACE_BETWEEN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "CategoryTabs",
+          "size": {
+            "x": 1440,
+            "y": 79.6
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Tab: All",
+              "size": {
+                "x": 56.260000228881836,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "All",
+                  "size": {
+                    "x": 16.260000228881836,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "All",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 0.596078431372549,
+                    "b": 0,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 20,
+              "paddingBottom": 8,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Tab: Breakfast",
+              "size": {
+                "x": 100.13999938964844,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Breakfast",
+                  "size": {
+                    "x": 60.13999938964844,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.36470588235294116,
+                        "g": 0.25098039215686274,
+                        "b": 0.21568627450980393,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Breakfast",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 0.9725490196078431,
+                    "b": 0.8823529411764706,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.85,
+                    "g": 0.78,
+                    "b": 0.62,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 20,
+              "paddingBottom": 8,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Tab: Lunch",
+              "size": {
+                "x": 78.79999923706055,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Lunch",
+                  "size": {
+                    "x": 38.79999923706055,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.36470588235294116,
+                        "g": 0.25098039215686274,
+                        "b": 0.21568627450980393,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Lunch",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 0.9725490196078431,
+                    "b": 0.8823529411764706,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.85,
+                    "g": 0.78,
+                    "b": 0.62,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 20,
+              "paddingBottom": 8,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Tab: Dinner",
+              "size": {
+                "x": 81.54999923706055,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Dinner",
+                  "size": {
+                    "x": 41.54999923706055,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.36470588235294116,
+                        "g": 0.25098039215686274,
+                        "b": 0.21568627450980393,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Dinner",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 0.9725490196078431,
+                    "b": 0.8823529411764706,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.85,
+                    "g": 0.78,
+                    "b": 0.62,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 20,
+              "paddingBottom": 8,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Tab: Desserts",
+              "size": {
+                "x": 96.06000137329102,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Desserts",
+                  "size": {
+                    "x": 56.060001373291016,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.36470588235294116,
+                        "g": 0.25098039215686274,
+                        "b": 0.21568627450980393,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Desserts",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 0.9725490196078431,
+                    "b": 0.8823529411764706,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.85,
+                    "g": 0.78,
+                    "b": 0.62,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 20,
+              "paddingBottom": 8,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Tab: Snacks",
+              "size": {
+                "x": 85.9900016784668,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Snacks",
+                  "size": {
+                    "x": 45.9900016784668,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.36470588235294116,
+                        "g": 0.25098039215686274,
+                        "b": 0.21568627450980393,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Snacks",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 0.9725490196078431,
+                    "b": 0.8823529411764706,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.85,
+                    "g": 0.78,
+                    "b": 0.62,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 20,
+              "paddingBottom": 8,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 12,
+          "paddingTop": 24,
+          "paddingRight": 64,
+          "paddingBottom": 24,
+          "paddingLeft": 64,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "RecipeGrid",
+          "size": {
+            "x": 1440,
+            "y": 443
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "Popular Recipes",
+              "size": {
+                "x": 220.83999633789062,
+                "y": 33.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.24313725490196078,
+                    "g": 0.15294117647058825,
+                    "b": 0.13725490196078433,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Popular Recipes",
+              "fontSize": 28,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "Grid",
+              "size": {
+                "x": 1188,
+                "y": 337.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Recipe: Tuscan Tomato Bruschetta",
+                  "size": {
+                    "x": 380,
+                    "y": 337.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Photo",
+                      "size": {
+                        "x": 380,
+                        "y": 220
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 0.8784313725490196,
+                            "b": 0.6980392156862745,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardBody",
+                      "size": {
+                        "x": 380,
+                        "y": 117.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Badges",
+                          "size": {
+                            "x": 112.86999988555908,
+                            "y": 22.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "TimeBadge",
+                              "size": {
+                                "x": 63.38000011444092,
+                                "y": 22.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "⏱",
+                                  "size": {
+                                    "x": 7.880000114440918,
+                                    "y": 14.399999999999999
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "characters": "⏱",
+                                  "fontSize": 12,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "25 min",
+                                  "size": {
+                                    "x": 35.5,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.36470588235294116,
+                                        "g": 0.25098039215686274,
+                                        "b": 0.21568627450980393,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "25 min",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 0.9725490196078431,
+                                    "b": 0.8823529411764706,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 4,
+                              "paddingTop": 4,
+                              "paddingRight": 8,
+                              "paddingBottom": 4,
+                              "paddingLeft": 8,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Difficulty",
+                              "size": {
+                                "x": 41.489999771118164,
+                                "y": 21.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "Easy",
+                                  "size": {
+                                    "x": 25.489999771118164,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.40784313725490196,
+                                        "g": 0.6235294117647059,
+                                        "b": 0.2196078431372549,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Easy",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 600,
+                                  "fontStyle": "Semi Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.40784313725490196,
+                                    "g": 0.6235294117647059,
+                                    "b": 0.2196078431372549,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.15
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 4,
+                              "paddingRight": 8,
+                              "paddingBottom": 4,
+                              "paddingLeft": 8,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Tuscan Tomato Bruschetta",
+                          "size": {
+                            "x": 340,
+                            "y": 23.400000000000002
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.24313725490196078,
+                                "g": 0.15294117647058825,
+                                "b": 0.13725490196078433,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Tuscan Tomato Bruschetta",
+                          "fontSize": 18,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "textAutoResize": "HEIGHT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Italian Appetizer",
+                          "size": {
+                            "x": 101.16000366210938,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5529411764705883,
+                                "g": 0.43137254901960786,
+                                "b": 0.38823529411764707,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Italian Appetizer",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 12,
+                      "paddingTop": 16,
+                      "paddingRight": 20,
+                      "paddingBottom": 16,
+                      "paddingLeft": 20,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.9,
+                        "g": 0.85,
+                        "b": 0.75,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Recipe: Spicy Thai Basil Chicken",
+                  "size": {
+                    "x": 380,
+                    "y": 337.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Photo",
+                      "size": {
+                        "x": 380,
+                        "y": 220
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 0.8784313725490196,
+                            "b": 0.6980392156862745,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardBody",
+                      "size": {
+                        "x": 380,
+                        "y": 117.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Badges",
+                          "size": {
+                            "x": 130.52999782562256,
+                            "y": 22.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "TimeBadge",
+                              "size": {
+                                "x": 63.499999046325684,
+                                "y": 22.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "⏱",
+                                  "size": {
+                                    "x": 7.880000114440918,
+                                    "y": 14.399999999999999
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "characters": "⏱",
+                                  "fontSize": 12,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "35 min",
+                                  "size": {
+                                    "x": 35.619998931884766,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.36470588235294116,
+                                        "g": 0.25098039215686274,
+                                        "b": 0.21568627450980393,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "35 min",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 0.9725490196078431,
+                                    "b": 0.8823529411764706,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 4,
+                              "paddingTop": 4,
+                              "paddingRight": 8,
+                              "paddingBottom": 4,
+                              "paddingLeft": 8,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Difficulty",
+                              "size": {
+                                "x": 59.029998779296875,
+                                "y": 21.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "Medium",
+                                  "size": {
+                                    "x": 43.029998779296875,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 0.596078431372549,
+                                        "b": 0,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Medium",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 600,
+                                  "fontStyle": "Semi Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 0.596078431372549,
+                                    "b": 0,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.15
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 4,
+                              "paddingRight": 8,
+                              "paddingBottom": 4,
+                              "paddingLeft": 8,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Spicy Thai Basil Chicken",
+                          "size": {
+                            "x": 340,
+                            "y": 23.400000000000002
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.24313725490196078,
+                                "g": 0.15294117647058825,
+                                "b": 0.13725490196078433,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Spicy Thai Basil Chicken",
+                          "fontSize": 18,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "textAutoResize": "HEIGHT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Thai Main Course",
+                          "size": {
+                            "x": 109.11000061035156,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5529411764705883,
+                                "g": 0.43137254901960786,
+                                "b": 0.38823529411764707,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Thai Main Course",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 12,
+                      "paddingTop": 16,
+                      "paddingRight": 20,
+                      "paddingBottom": 16,
+                      "paddingLeft": 20,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.9,
+                        "g": 0.85,
+                        "b": 0.75,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Recipe: Lemon Panna Cotta",
+                  "size": {
+                    "x": 380,
+                    "y": 337.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Photo",
+                      "size": {
+                        "x": 380,
+                        "y": 220
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 0.8784313725490196,
+                            "b": 0.6980392156862745,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardBody",
+                      "size": {
+                        "x": 380,
+                        "y": 117.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Badges",
+                          "size": {
+                            "x": 104.32000064849854,
+                            "y": 22.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "TimeBadge",
+                              "size": {
+                                "x": 54.83000087738037,
+                                "y": 22.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "⏱",
+                                  "size": {
+                                    "x": 7.880000114440918,
+                                    "y": 14.399999999999999
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "characters": "⏱",
+                                  "fontSize": 12,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "4 hrs",
+                                  "size": {
+                                    "x": 26.950000762939453,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.36470588235294116,
+                                        "g": 0.25098039215686274,
+                                        "b": 0.21568627450980393,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "4 hrs",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 0.9725490196078431,
+                                    "b": 0.8823529411764706,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 4,
+                              "paddingTop": 4,
+                              "paddingRight": 8,
+                              "paddingBottom": 4,
+                              "paddingLeft": 8,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Difficulty",
+                              "size": {
+                                "x": 41.489999771118164,
+                                "y": 21.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "Easy",
+                                  "size": {
+                                    "x": 25.489999771118164,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.40784313725490196,
+                                        "g": 0.6235294117647059,
+                                        "b": 0.2196078431372549,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Easy",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 600,
+                                  "fontStyle": "Semi Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.40784313725490196,
+                                    "g": 0.6235294117647059,
+                                    "b": 0.2196078431372549,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.15
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 4,
+                              "paddingRight": 8,
+                              "paddingBottom": 4,
+                              "paddingLeft": 8,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Lemon Panna Cotta",
+                          "size": {
+                            "x": 340,
+                            "y": 23.400000000000002
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.24313725490196078,
+                                "g": 0.15294117647058825,
+                                "b": 0.13725490196078433,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Lemon Panna Cotta",
+                          "fontSize": 18,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "textAutoResize": "HEIGHT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Italian Dessert",
+                          "size": {
+                            "x": 89.1500015258789,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5529411764705883,
+                                "g": 0.43137254901960786,
+                                "b": 0.38823529411764707,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Italian Dessert",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 12,
+                      "paddingTop": 16,
+                      "paddingRight": 20,
+                      "paddingBottom": 16,
+                      "paddingLeft": 20,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.9,
+                        "g": 0.85,
+                        "b": 0.75,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 24,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 24,
+          "paddingTop": 24,
+          "paddingRight": 64,
+          "paddingBottom": 24,
+          "paddingLeft": 64,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "FeaturedRecipe",
+          "size": {
+            "x": 1440,
+            "y": 566.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "ROUNDED_RECTANGLE",
+              "name": "FeaturedImage",
+              "size": {
+                "x": 560,
+                "y": 400
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 0.8784313725490196,
+                    "b": 0.6980392156862745,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 16
+            },
+            {
+              "type": "FRAME",
+              "name": "RecipeDetails",
+              "size": {
+                "x": 712,
+                "y": 470.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "RecipeTitle",
+                  "size": {
+                    "x": 500,
+                    "y": 118.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "FeaturedBadge",
+                      "size": {
+                        "x": 67.1500015258789,
+                        "y": 21.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Featured",
+                          "size": {
+                            "x": 47.150001525878906,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Featured",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.40784313725490196,
+                            "g": 0.6235294117647059,
+                            "b": 0.2196078431372549,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 4,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 4,
+                      "paddingRight": 10,
+                      "paddingBottom": 4,
+                      "paddingLeft": 10,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Classic Margherita Pizza",
+                      "size": {
+                        "x": 337.92999267578125,
+                        "y": 33.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.24313725490196078,
+                            "g": 0.15294117647058825,
+                            "b": 0.13725490196078433,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Classic Margherita Pizza",
+                      "fontSize": 28,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "A timeless Italian classic with fresh mozzarella, San Marzano tomatoes, and fragrant basil leaves on a thin, crispy crust.",
+                      "size": {
+                        "x": 500,
+                        "y": 48
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.5529411764705883,
+                            "g": 0.43137254901960786,
+                            "b": 0.38823529411764707,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "A timeless Italian classic with fresh mozzarella, San Marzano tomatoes, and fragrant basil leaves on a thin, crispy crust.",
+                      "fontSize": 15,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "textAutoResize": "HEIGHT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Ingredients",
+                  "size": {
+                    "x": 712,
+                    "y": 272
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Ingredients",
+                      "size": {
+                        "x": 87.41000366210938,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.24313725490196078,
+                            "g": 0.15294117647058825,
+                            "b": 0.13725490196078433,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Ingredients",
+                      "fontSize": 16,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ing: Pizza dough",
+                      "size": {
+                        "x": 672,
+                        "y": 32.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IngName",
+                          "size": {
+                            "x": 95.69999694824219,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "Bullet",
+                              "size": {
+                                "x": 6,
+                                "y": 6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 0.596078431372549,
+                                    "b": 0,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Pizza dough",
+                              "size": {
+                                "x": 81.69999694824219,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.36470588235294116,
+                                    "g": 0.25098039215686274,
+                                    "b": 0.21568627450980393,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Pizza dough",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "1 ball",
+                          "size": {
+                            "x": 33.34000015258789,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.24313725490196078,
+                                "g": 0.15294117647058825,
+                                "b": 0.13725490196078433,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "1 ball",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 8,
+                      "paddingRight": 0,
+                      "paddingBottom": 8,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ing: San Marzano tomatoes",
+                      "size": {
+                        "x": 672,
+                        "y": 32.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IngName",
+                          "size": {
+                            "x": 166.3800048828125,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "Bullet",
+                              "size": {
+                                "x": 6,
+                                "y": 6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 0.596078431372549,
+                                    "b": 0,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "San Marzano tomatoes",
+                              "size": {
+                                "x": 152.3800048828125,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.36470588235294116,
+                                    "g": 0.25098039215686274,
+                                    "b": 0.21568627450980393,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "San Marzano tomatoes",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "200g",
+                          "size": {
+                            "x": 35.380001068115234,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.24313725490196078,
+                                "g": 0.15294117647058825,
+                                "b": 0.13725490196078433,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "200g",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 8,
+                      "paddingRight": 0,
+                      "paddingBottom": 8,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ing: Fresh mozzarella",
+                      "size": {
+                        "x": 672,
+                        "y": 32.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IngName",
+                          "size": {
+                            "x": 126.27999877929688,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "Bullet",
+                              "size": {
+                                "x": 6,
+                                "y": 6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 0.596078431372549,
+                                    "b": 0,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Fresh mozzarella",
+                              "size": {
+                                "x": 112.27999877929688,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.36470588235294116,
+                                    "g": 0.25098039215686274,
+                                    "b": 0.21568627450980393,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Fresh mozzarella",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "125g",
+                          "size": {
+                            "x": 31.549999237060547,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.24313725490196078,
+                                "g": 0.15294117647058825,
+                                "b": 0.13725490196078433,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "125g",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 8,
+                      "paddingRight": 0,
+                      "paddingBottom": 8,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ing: Fresh basil",
+                      "size": {
+                        "x": 672,
+                        "y": 32.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IngName",
+                          "size": {
+                            "x": 85.4000015258789,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "Bullet",
+                              "size": {
+                                "x": 6,
+                                "y": 6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 0.596078431372549,
+                                    "b": 0,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Fresh basil",
+                              "size": {
+                                "x": 71.4000015258789,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.36470588235294116,
+                                    "g": 0.25098039215686274,
+                                    "b": 0.21568627450980393,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Fresh basil",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "8 leaves",
+                          "size": {
+                            "x": 55.709999084472656,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.24313725490196078,
+                                "g": 0.15294117647058825,
+                                "b": 0.13725490196078433,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "8 leaves",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 8,
+                      "paddingRight": 0,
+                      "paddingBottom": 8,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ing: Extra virgin olive oil",
+                      "size": {
+                        "x": 672,
+                        "y": 32.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IngName",
+                          "size": {
+                            "x": 142.50999450683594,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "Bullet",
+                              "size": {
+                                "x": 6,
+                                "y": 6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 0.596078431372549,
+                                    "b": 0,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Extra virgin olive oil",
+                              "size": {
+                                "x": 128.50999450683594,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.36470588235294116,
+                                    "g": 0.25098039215686274,
+                                    "b": 0.21568627450980393,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Extra virgin olive oil",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "2 tbsp",
+                          "size": {
+                            "x": 41.9900016784668,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.24313725490196078,
+                                "g": 0.15294117647058825,
+                                "b": 0.13725490196078433,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "2 tbsp",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 8,
+                      "paddingRight": 0,
+                      "paddingBottom": 8,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ing: Sea salt",
+                      "size": {
+                        "x": 672,
+                        "y": 32.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "IngName",
+                          "size": {
+                            "x": 66.5099983215332,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "Bullet",
+                              "size": {
+                                "x": 6,
+                                "y": 6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 0.596078431372549,
+                                    "b": 0,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Sea salt",
+                              "size": {
+                                "x": 52.5099983215332,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.36470588235294116,
+                                    "g": 0.25098039215686274,
+                                    "b": 0.21568627450980393,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Sea salt",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "to taste",
+                          "size": {
+                            "x": 49.9900016784668,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.24313725490196078,
+                                "g": 0.15294117647058825,
+                                "b": 0.13725490196078433,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "to taste",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 8,
+                      "paddingRight": 0,
+                      "paddingBottom": 8,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 16,
+                  "paddingRight": 20,
+                  "paddingBottom": 16,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Steps",
+                  "size": {
+                    "x": 224,
+                    "y": 32
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Step 1",
+                      "size": {
+                        "x": 32,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "1",
+                          "size": {
+                            "x": 6.039999961853027,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "1",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 0.596078431372549,
+                            "b": 0,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 16,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Step 2",
+                      "size": {
+                        "x": 32,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "2",
+                          "size": {
+                            "x": 8.819999694824219,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "2",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 0.596078431372549,
+                            "b": 0,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 16,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Step 3",
+                      "size": {
+                        "x": 32,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "3",
+                          "size": {
+                            "x": 9.039999961853027,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "3",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 0.596078431372549,
+                            "b": 0,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 16,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Step 4",
+                      "size": {
+                        "x": 32,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "4",
+                          "size": {
+                            "x": 9.470000267028809,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "4",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 0.596078431372549,
+                            "b": 0,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 16,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Step 5",
+                      "size": {
+                        "x": 32,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "5",
+                          "size": {
+                            "x": 8.710000038146973,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "5",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 0.596078431372549,
+                            "b": 0,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 16,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 16,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 24,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 40,
+          "paddingTop": 48,
+          "paddingRight": 64,
+          "paddingBottom": 48,
+          "paddingLeft": 64,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "RECTANGLE",
+          "name": "BottomSpacer",
+          "size": {
+            "x": 1,
+            "y": 48
+          },
+          "opacity": 0,
+          "visible": true,
+          "children": []
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 1,
+            "g": 0.9725490196078431,
+            "b": 0.8823529411764706,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}
