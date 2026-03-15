@@ -1,7 +1,7 @@
-import { DogfoodingGallery } from './pages/_generated/DogfoodingGallery';
+import { JapaneseCorporateShowcase } from './pages/_generated/JapaneseCorporateShowcase';
 
 function App() {
-  return <DogfoodingGallery />;
+  return <JapaneseCorporateShowcase />;
 }
 
 export default App;

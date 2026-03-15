@@ -26,4 +26,5 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-15 — Japanese Corporate](2026-03-15-japanese-corporate.md) — 0 issues found, 0 pipeline fixes | Features: imageFill, image(), gradient overlays, nested auto-layout, FILL sizing, textAutoResize:HEIGHT, strokes, cornerRadius, pill badges, opacity, ellipse, statBlock, SPACE_BETWEEN, defineTokens
 - [2026-03-14 — Travel Cards](2026-03-14-travel-cards.md) — 0 issues found, 0 pipeline fixes | Features: cornerRadius, clipContent, strokes, textAutoResize:HEIGHT, FILL sizing, SPACE_BETWEEN, nested auto-layout
