@@ -562,6 +562,190 @@ describe('getRegistrableProperties', () => {
 });
 
 // =================================================================
+// serializeNode — new node types (LINE, SECTION, POLYGON, STAR, BOOLEAN_OPERATION)
+// =================================================================
+
+describe('serializeNode — LINE', () => {
+  it('serializes LINE with strokeCap and rotation', () => {
+    const node = mockNode({
+      type: 'LINE',
+      name: 'Divider',
+      width: 200,
+      height: 0,
+      strokeCap: 'ROUND',
+      rotation: 45,
+      strokes: [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, opacity: 1, visible: true }],
+      strokeWeight: 2,
+    });
+
+    const result = serializeNode(node);
+    expect(result.type).toBe('LINE');
+    expect(result.strokeCap).toBe('ROUND');
+    expect(result.rotation).toBe(45);
+  });
+
+  it('serializes LINE without optional properties', () => {
+    const node = mockNode({
+      type: 'LINE',
+      name: 'SimpleLine',
+      width: 100,
+      height: 0,
+    });
+
+    const result = serializeNode(node);
+    expect(result.type).toBe('LINE');
+    expect((result as any).strokeCap).toBeUndefined();
+    expect((result as any).rotation).toBeUndefined();
+  });
+});
+
+describe('serializeNode — SECTION', () => {
+  it('serializes SECTION with sectionContentsHidden', () => {
+    const node = mockNode({
+      type: 'SECTION',
+      name: 'MySection',
+      width: 400,
+      height: 300,
+      sectionContentsHidden: true,
+      children: [mockNode({ type: 'FRAME', name: 'Child' })],
+    });
+
+    const result = serializeNode(node);
+    expect(result.type).toBe('SECTION');
+    expect((result as any).sectionContentsHidden).toBe(true);
+    expect(result.children).toHaveLength(1);
+  });
+
+  it('serializes SECTION with sectionContentsHidden=false', () => {
+    const node = mockNode({
+      type: 'SECTION',
+      name: 'VisibleSection',
+      sectionContentsHidden: false,
+    });
+
+    const result = serializeNode(node);
+    expect(result.type).toBe('SECTION');
+    expect((result as any).sectionContentsHidden).toBe(false);
+  });
+});
+
+describe('serializeNode — POLYGON', () => {
+  it('serializes POLYGON with pointCount', () => {
+    const node = mockNode({
+      type: 'POLYGON',
+      name: 'Hexagon',
+      width: 100,
+      height: 100,
+      pointCount: 6,
+      fills: [solidFill(1, 0, 0)],
+    });
+
+    const result = serializeNode(node);
+    expect(result.type).toBe('POLYGON');
+    expect((result as any).pointCount).toBe(6);
+  });
+
+  it('serializes POLYGON with rotation', () => {
+    const node = mockNode({
+      type: 'POLYGON',
+      name: 'RotatedTriangle',
+      pointCount: 3,
+      rotation: 60,
+    });
+
+    const result = serializeNode(node);
+    expect((result as any).pointCount).toBe(3);
+    expect((result as any).rotation).toBe(60);
+  });
+});
+
+describe('serializeNode — STAR', () => {
+  it('serializes STAR with pointCount and innerRadius', () => {
+    const node = mockNode({
+      type: 'STAR',
+      name: 'FiveStar',
+      width: 100,
+      height: 100,
+      pointCount: 5,
+      innerRadius: 0.5,
+    });
+
+    const result = serializeNode(node);
+    expect(result.type).toBe('STAR');
+    expect((result as any).pointCount).toBe(5);
+    expect((result as any).innerRadius).toBe(0.5);
+  });
+
+  it('serializes STAR without innerRadius', () => {
+    const node = mockNode({
+      type: 'STAR',
+      name: 'DefaultStar',
+      pointCount: 4,
+    });
+
+    const result = serializeNode(node);
+    expect((result as any).pointCount).toBe(4);
+    expect((result as any).innerRadius).toBeUndefined();
+  });
+});
+
+describe('serializeNode — BOOLEAN_OPERATION', () => {
+  it('serializes BOOLEAN_OPERATION with operation type and children', () => {
+    const node = mockNode({
+      type: 'BOOLEAN_OPERATION',
+      name: 'Cutout',
+      booleanOperation: 'SUBTRACT',
+      children: [
+        mockNode({ type: 'RECTANGLE', name: 'Base' }),
+        mockNode({ type: 'ELLIPSE', name: 'Hole' }),
+      ],
+    });
+
+    const result = serializeNode(node);
+    expect(result.type).toBe('BOOLEAN_OPERATION');
+    expect((result as any).booleanOperation).toBe('SUBTRACT');
+    expect(result.children).toHaveLength(2);
+  });
+
+  it('serializes BOOLEAN_OPERATION UNION', () => {
+    const node = mockNode({
+      type: 'BOOLEAN_OPERATION',
+      name: 'Combined',
+      booleanOperation: 'UNION',
+      children: [
+        mockNode({ type: 'RECTANGLE', name: 'A' }),
+        mockNode({ type: 'RECTANGLE', name: 'B' }),
+      ],
+    });
+
+    const result = serializeNode(node);
+    expect((result as any).booleanOperation).toBe('UNION');
+  });
+
+  it('serializes BOOLEAN_OPERATION INTERSECT', () => {
+    const node = mockNode({
+      type: 'BOOLEAN_OPERATION',
+      name: 'Overlap',
+      booleanOperation: 'INTERSECT',
+    });
+
+    const result = serializeNode(node);
+    expect((result as any).booleanOperation).toBe('INTERSECT');
+  });
+
+  it('serializes BOOLEAN_OPERATION EXCLUDE', () => {
+    const node = mockNode({
+      type: 'BOOLEAN_OPERATION',
+      name: 'Xor',
+      booleanOperation: 'EXCLUDE',
+    });
+
+    const result = serializeNode(node);
+    expect((result as any).booleanOperation).toBe('EXCLUDE');
+  });
+});
+
+// =================================================================
 // calculateGridColumns
 // =================================================================
 

@@ -41,6 +41,15 @@ export interface SerializableNode {
   readonly componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
   // Instance
   readonly mainComponent?: { name: string } | null;
+  // Shape-specific (LINE, POLYGON, STAR)
+  readonly pointCount?: number;
+  readonly innerRadius?: number;
+  readonly rotation?: number;
+  readonly strokeCap?: string;
+  // Boolean operation
+  readonly booleanOperation?: string;
+  // Section
+  readonly sectionContentsHidden?: boolean;
   // Children
   readonly children?: ReadonlyArray<SerializableNode>;
 }
@@ -184,6 +193,14 @@ export function serializeNode(node: SerializableNode): PluginNodeDef {
   if (node.type === 'INSTANCE' && node.mainComponent) {
     result.componentId = node.mainComponent.name;
   }
+
+  // New node type properties
+  if (node.pointCount !== undefined) result.pointCount = node.pointCount;
+  if (node.innerRadius !== undefined) result.innerRadius = node.innerRadius;
+  if (node.rotation !== undefined) result.rotation = node.rotation;
+  if (node.strokeCap) result.strokeCap = node.strokeCap;
+  if (node.booleanOperation) result.booleanOperation = node.booleanOperation;
+  if (node.sectionContentsHidden !== undefined) result.sectionContentsHidden = node.sectionContentsHidden;
 
   // Children
   if (node.children) {

@@ -6,7 +6,7 @@ export const dslCompatibleLayoutRule: ValidationRule = {
 
   async validate(context: ValidationContext): Promise<ValidationError[]> {
     const errors: ValidationError[] = [];
-    const { cssContent, cssPath, componentName } = context;
+    const { cssContent, cssPath, tsxContent, componentName } = context;
 
     if (!cssContent || !cssPath) {
       return errors;
@@ -16,7 +16,15 @@ export const dslCompatibleLayoutRule: ValidationRule = {
     const flexPattern = /display\s*:\s*flex/;
     const gridPattern = /display\s*:\s*grid/;
 
-    if (!flexPattern.test(cssContent) && !gridPattern.test(cssContent)) {
+    // Also accept SVG elements in TSX (polygon, star, line, boolean operation mappings)
+    const svgPattern = /<(?:svg|polygon|line|clipPath)\b/;
+    const hasSvgElements = tsxContent ? svgPattern.test(tsxContent) : false;
+
+    // Also accept CSS border-bottom (LINE node mapping)
+    const borderBottomPattern = /border-bottom\s*:/;
+    const hasBorderBottom = borderBottomPattern.test(cssContent);
+
+    if (!flexPattern.test(cssContent) && !gridPattern.test(cssContent) && !hasSvgElements && !hasBorderBottom) {
       errors.push({
         rule: 'dsl-compatible-layout',
         message: `Component "${componentName}" CSS does not use flexbox or grid layout. DSL auto-layout maps to flex/grid; consider using display: flex or display: grid.`,

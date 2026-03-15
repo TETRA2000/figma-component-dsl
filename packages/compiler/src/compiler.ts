@@ -15,7 +15,7 @@ function resetGuidCounter(): void {
   guidCounter = 0;
 }
 
-function mapNodeType(node: DslNode): FigmaNodeType {
+function mapNodeType(node: DslNode): FigmaNodeType | null {
   switch (node.type) {
     case 'RECTANGLE':
       return (node.cornerRadius !== undefined && node.cornerRadius > 0) ||
@@ -30,7 +30,14 @@ function mapNodeType(node: DslNode): FigmaNodeType {
     case 'COMPONENT':
     case 'COMPONENT_SET':
     case 'INSTANCE':
+    case 'LINE':
+    case 'SECTION':
+    case 'POLYGON':
+    case 'STAR':
+    case 'BOOLEAN_OPERATION':
       return node.type;
+    default:
+      return null;
   }
 }
 
@@ -174,6 +181,22 @@ function compileNode(
   validateNode(node, path, errors);
   const guid = nextGuid();
   const figmaType = mapNodeType(node);
+
+  if (figmaType === null) {
+    console.warn(`Unknown node type "${node.type}" at "${path}" — skipping.`);
+    // Return a minimal invisible node
+    return {
+      guid,
+      type: 'FRAME' as FigmaNodeType,
+      name: node.name,
+      size: { x: 0, y: 0 },
+      transform: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+      fillPaints: [],
+      opacity: 0,
+      visible: false,
+      children: [],
+    };
+  }
 
   const fillPaints: FigmaPaint[] = node.fills
     ? node.fills.map(convertFill)
@@ -338,6 +361,39 @@ function compileNode(
     if (node.propertyOverrides) {
       result.overriddenProperties = { ...node.propertyOverrides };
     }
+  }
+
+  // LINE-specific properties
+  if (node.type === 'LINE') {
+    result.rotation = node.rotation;
+    if (node.strokes?.length && node.strokes[0]!.strokeCap) {
+      result.strokeCap = node.strokes[0]!.strokeCap;
+    }
+  }
+
+  // SECTION-specific properties (skip auto-layout)
+  if (node.type === 'SECTION') {
+    result.sectionContentsHidden = node.contentsHidden;
+    // Sections don't support auto-layout — clear any that may have been set
+    result.stackMode = undefined;
+  }
+
+  // POLYGON-specific properties
+  if (node.type === 'POLYGON') {
+    result.pointCount = node.pointCount;
+    result.rotation = node.rotation;
+  }
+
+  // STAR-specific properties
+  if (node.type === 'STAR') {
+    result.pointCount = node.pointCount;
+    result.innerRadius = node.innerRadius ?? 0.382;
+    result.rotation = node.rotation;
+  }
+
+  // BOOLEAN_OPERATION-specific properties
+  if (node.type === 'BOOLEAN_OPERATION') {
+    result.booleanOperation = node.booleanOperation;
   }
 
   // Compile children

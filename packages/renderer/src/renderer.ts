@@ -264,6 +264,228 @@ function drawRoundedRect(
   ctx.fill();
 }
 
+export function calculatePolygonVertices(
+  pointCount: number,
+  cx: number,
+  cy: number,
+  rx: number,
+  ry: number,
+): Array<{ x: number; y: number }> {
+  const vertices: Array<{ x: number; y: number }> = [];
+  for (let i = 0; i < pointCount; i++) {
+    const angle = (2 * Math.PI * i) / pointCount - Math.PI / 2;
+    vertices.push({
+      x: cx + rx * Math.cos(angle),
+      y: cy + ry * Math.sin(angle),
+    });
+  }
+  return vertices;
+}
+
+export function calculateStarVertices(
+  pointCount: number,
+  innerRadius: number,
+  cx: number,
+  cy: number,
+  rx: number,
+  ry: number,
+): Array<{ x: number; y: number }> {
+  const vertices: Array<{ x: number; y: number }> = [];
+  const totalPoints = pointCount * 2;
+  for (let i = 0; i < totalPoints; i++) {
+    const angle = (2 * Math.PI * i) / totalPoints - Math.PI / 2;
+    const isOuter = i % 2 === 0;
+    const radiusX = isOuter ? rx : rx * innerRadius;
+    const radiusY = isOuter ? ry : ry * innerRadius;
+    vertices.push({
+      x: cx + radiusX * Math.cos(angle),
+      y: cy + radiusY * Math.sin(angle),
+    });
+  }
+  return vertices;
+}
+
+function drawPolygonPath(ctx: SKRSContext2D, vertices: Array<{ x: number; y: number }>): void {
+  if (vertices.length === 0) return;
+  ctx.beginPath();
+  ctx.moveTo(vertices[0]!.x, vertices[0]!.y);
+  for (let i = 1; i < vertices.length; i++) {
+    ctx.lineTo(vertices[i]!.x, vertices[i]!.y);
+  }
+  ctx.closePath();
+}
+
+function renderLine(ctx: SKRSContext2D, node: FigmaNodeDict): void {
+  const w = node.size.x;
+  ctx.save();
+
+  if (node.rotation) {
+    ctx.rotate((node.rotation * Math.PI) / 180);
+  }
+
+  if (node.strokes?.length) {
+    const stroke = node.strokes[0]!;
+    ctx.strokeStyle = rgbaToString(stroke.color);
+    ctx.lineWidth = node.strokeWeight ?? stroke.weight;
+    ctx.globalAlpha = node.opacity ?? 1;
+    if (node.strokeCap && node.strokeCap !== 'NONE') {
+      // Map DSL stroke cap to canvas lineCap
+      const capMap: Record<string, CanvasLineCap> = {
+        'ROUND': 'round',
+        'SQUARE': 'square',
+      };
+      ctx.lineCap = capMap[node.strokeCap] ?? 'butt';
+    }
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(w, 0);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function renderSection(ctx: SKRSContext2D, node: FigmaNodeDict): void {
+  const w = node.size.x;
+  const h = node.size.y;
+
+  // Draw section fills
+  if (node.fillPaints.length > 0) {
+    applyFills(ctx, node, (context) => {
+      context.fillRect(0, 0, w, h);
+    });
+  }
+
+  // Draw section name label above content
+  ctx.save();
+  ctx.font = '11px Inter';
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText(node.name, 4, -2);
+  ctx.restore();
+}
+
+function renderPolygon(ctx: SKRSContext2D, node: FigmaNodeDict): void {
+  const w = node.size.x;
+  const h = node.size.y;
+  const pointCount = node.pointCount ?? 3;
+  const cx = w / 2;
+  const cy = h / 2;
+
+  ctx.save();
+  if (node.rotation) {
+    ctx.translate(cx, cy);
+    ctx.rotate((node.rotation * Math.PI) / 180);
+    ctx.translate(-cx, -cy);
+  }
+
+  const vertices = calculatePolygonVertices(pointCount, cx, cy, w / 2, h / 2);
+
+  // Fill
+  if (node.fillPaints.length > 0) {
+    for (const paint of node.fillPaints) {
+      if (!paint.visible) continue;
+      ctx.globalAlpha = (node.opacity ?? 1) * paint.opacity;
+      if (paint.type === 'SOLID' && paint.color) {
+        ctx.fillStyle = rgbaToString(paint.color);
+      }
+      drawPolygonPath(ctx, vertices);
+      ctx.fill();
+    }
+  }
+
+  // Stroke
+  if (node.strokes?.length) {
+    const stroke = node.strokes[0]!;
+    ctx.strokeStyle = rgbaToString(stroke.color);
+    ctx.lineWidth = node.strokeWeight ?? stroke.weight;
+    ctx.globalAlpha = node.opacity ?? 1;
+    drawPolygonPath(ctx, vertices);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function renderStar(ctx: SKRSContext2D, node: FigmaNodeDict): void {
+  const w = node.size.x;
+  const h = node.size.y;
+  const pointCount = node.pointCount ?? 5;
+  const innerRadius = node.innerRadius ?? 0.382;
+  const cx = w / 2;
+  const cy = h / 2;
+
+  ctx.save();
+  if (node.rotation) {
+    ctx.translate(cx, cy);
+    ctx.rotate((node.rotation * Math.PI) / 180);
+    ctx.translate(-cx, -cy);
+  }
+
+  const vertices = calculateStarVertices(pointCount, innerRadius, cx, cy, w / 2, h / 2);
+
+  // Fill
+  if (node.fillPaints.length > 0) {
+    for (const paint of node.fillPaints) {
+      if (!paint.visible) continue;
+      ctx.globalAlpha = (node.opacity ?? 1) * paint.opacity;
+      if (paint.type === 'SOLID' && paint.color) {
+        ctx.fillStyle = rgbaToString(paint.color);
+      }
+      drawPolygonPath(ctx, vertices);
+      ctx.fill();
+    }
+  }
+
+  // Stroke
+  if (node.strokes?.length) {
+    const stroke = node.strokes[0]!;
+    ctx.strokeStyle = rgbaToString(stroke.color);
+    ctx.lineWidth = node.strokeWeight ?? stroke.weight;
+    ctx.globalAlpha = node.opacity ?? 1;
+    drawPolygonPath(ctx, vertices);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function renderBooleanOperation(ctx: SKRSContext2D, node: FigmaNodeDict, imageCache?: ImageCache): void {
+  const w = node.size.x;
+  const h = node.size.y;
+
+  if (w <= 0 || h <= 0 || node.children.length === 0) return;
+
+  // Create offscreen canvas for compositing
+  const offscreen = createCanvas(Math.ceil(w), Math.ceil(h));
+  const offCtx = offscreen.getContext('2d');
+
+  // Map boolean operation to composite operation
+  const compositeMap: Record<string, GlobalCompositeOperation> = {
+    'UNION': 'source-over',
+    'SUBTRACT': 'destination-out',
+    'INTERSECT': 'destination-in',
+    'EXCLUDE': 'xor',
+  };
+
+  const operation = node.booleanOperation ?? 'UNION';
+
+  // Render first child normally
+  if (node.children.length > 0) {
+    renderNode(offCtx as unknown as SKRSContext2D, node.children[0]!, '', imageCache);
+  }
+
+  // Render subsequent children with composite operation
+  for (let i = 1; i < node.children.length; i++) {
+    offCtx.globalCompositeOperation = compositeMap[operation] ?? 'source-over';
+    renderNode(offCtx as unknown as SKRSContext2D, node.children[i]!, '', imageCache);
+  }
+
+  // Composite result onto main canvas
+  ctx.globalAlpha = node.opacity ?? 1;
+  ctx.drawImage(offscreen, 0, 0);
+}
+
 function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, imageCache?: ImageCache): void {
   if (!node.visible) return;
 
@@ -347,6 +569,30 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, image
 
     case 'GROUP':
       // Groups don't render themselves, just children
+      break;
+
+    case 'LINE':
+      renderLine(ctx, node);
+      break;
+
+    case 'SECTION':
+      renderSection(ctx, node);
+      break;
+
+    case 'POLYGON':
+      renderPolygon(ctx, node);
+      break;
+
+    case 'STAR':
+      renderStar(ctx, node);
+      break;
+
+    case 'BOOLEAN_OPERATION':
+      renderBooleanOperation(ctx, node, imageCache);
+      break;
+
+    default:
+      // Unknown type — skip gracefully
       break;
   }
 

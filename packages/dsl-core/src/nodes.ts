@@ -2,6 +2,8 @@ import type {
   DslNode, FrameProps, RectangleProps, EllipseProps,
   ComponentProps, ComponentSetProps, TextStyle, ChildLayoutProps,
   ImageProps,
+  LineProps, SectionProps, PolygonProps, StarProps, BooleanOperationProps,
+  BooleanOperationType,
 } from './types.js';
 import { hex as parseHex } from './colors.js';
 
@@ -197,4 +199,117 @@ export function instance(
     visible: true,
     opacity: 1,
   };
+}
+
+export function line(name: string, props: LineProps = {}): DslNode {
+  validateName(name);
+  const defaultStroke = { color: { r: 0, g: 0, b: 0, a: 1 }, weight: 1 };
+  return {
+    type: 'LINE',
+    name,
+    visible: props.visible ?? true,
+    opacity: props.opacity ?? 1,
+    size: { x: props.size?.x ?? 0, y: 0 },
+    strokes: props.strokes ? [...props.strokes] : [defaultStroke],
+    rotation: props.rotation,
+    layoutGrow: props.layoutGrow,
+    layoutSizingHorizontal: props.layoutSizingHorizontal,
+    layoutSizingVertical: props.layoutSizingVertical,
+  };
+}
+
+export function section(name: string, props: SectionProps = {}): DslNode {
+  validateName(name);
+  return {
+    type: 'SECTION',
+    name,
+    visible: props.visible ?? true,
+    size: props.size,
+    fills: props.fills ? [...props.fills] : undefined,
+    children: props.children ? [...props.children] : undefined,
+    contentsHidden: props.contentsHidden,
+  };
+}
+
+function validatePointCount(pointCount: number): void {
+  if (!Number.isInteger(pointCount) || pointCount < 3) {
+    throw new Error('pointCount must be an integer >= 3.');
+  }
+}
+
+export function polygon(name: string, props: PolygonProps): DslNode {
+  validateName(name);
+  validatePointCount(props.pointCount);
+  return {
+    type: 'POLYGON',
+    name,
+    visible: props.visible ?? true,
+    opacity: props.opacity ?? 1,
+    size: props.size,
+    fills: props.fills ? [...props.fills] : undefined,
+    strokes: props.strokes ? [...props.strokes] : undefined,
+    cornerRadius: props.cornerRadius,
+    rotation: props.rotation,
+    pointCount: props.pointCount,
+    layoutGrow: props.layoutGrow,
+    layoutSizingHorizontal: props.layoutSizingHorizontal,
+    layoutSizingVertical: props.layoutSizingVertical,
+  };
+}
+
+export function star(name: string, props: StarProps): DslNode {
+  validateName(name);
+  validatePointCount(props.pointCount);
+  return {
+    type: 'STAR',
+    name,
+    visible: props.visible ?? true,
+    opacity: props.opacity ?? 1,
+    size: props.size,
+    fills: props.fills ? [...props.fills] : undefined,
+    strokes: props.strokes ? [...props.strokes] : undefined,
+    rotation: props.rotation,
+    pointCount: props.pointCount,
+    innerRadius: props.innerRadius ?? 0.382,
+    layoutGrow: props.layoutGrow,
+    layoutSizingHorizontal: props.layoutSizingHorizontal,
+    layoutSizingVertical: props.layoutSizingVertical,
+  };
+}
+
+function createBooleanOp(
+  name: string,
+  operation: BooleanOperationType,
+  props: BooleanOperationProps,
+): DslNode {
+  validateName(name);
+  if (!props.children || props.children.length < 2) {
+    throw new Error('Boolean operations require at least 2 children.');
+  }
+  return {
+    type: 'BOOLEAN_OPERATION',
+    name,
+    visible: props.visible ?? true,
+    opacity: props.opacity ?? 1,
+    fills: props.fills ? [...props.fills] : undefined,
+    strokes: props.strokes ? [...props.strokes] : undefined,
+    children: [...props.children],
+    booleanOperation: operation,
+  };
+}
+
+export function union(name: string, props: BooleanOperationProps): DslNode {
+  return createBooleanOp(name, 'UNION', props);
+}
+
+export function subtract(name: string, props: BooleanOperationProps): DslNode {
+  return createBooleanOp(name, 'SUBTRACT', props);
+}
+
+export function intersect(name: string, props: BooleanOperationProps): DslNode {
+  return createBooleanOp(name, 'INTERSECT', props);
+}
+
+export function exclude(name: string, props: BooleanOperationProps): DslNode {
+  return createBooleanOp(name, 'EXCLUDE', props);
 }

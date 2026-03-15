@@ -216,6 +216,44 @@ If the React component has `variant` or `size` props (or similar visual variants
 - Forgetting to vary the visual design between variants (different sizes, borders, colors)
 - Not using the exact `Property=Value` naming format in child component names
 
+## Supported Node Types
+
+The export pipeline supports all DSL node types, including geometric shapes and structural nodes. When building DSL files for Figma export, use the appropriate factory:
+
+| Node Type | DSL Factory | Figma Result |
+|-----------|-------------|--------------|
+| RECTANGLE | `rectangle()` | Rectangle node |
+| ELLIPSE | `ellipse()` | Ellipse node |
+| TEXT | `text()` | Text node |
+| FRAME | `frame()` | Frame with auto-layout |
+| LINE | `line()` | Line node with stroke, cap, rotation |
+| POLYGON | `polygon()` | Regular polygon (pointCount ≥ 3) |
+| STAR | `star()` | Star shape (pointCount, innerRadius) |
+| BOOLEAN_OPERATION | `union()` / `subtract()` / `intersect()` / `exclude()` | Boolean operation combining children |
+| SECTION | `section()` | Section container (no opacity, no auto-layout) |
+
+Import shape factories from `@figma-dsl/core`:
+```ts
+import { line, polygon, star, union, subtract, intersect, exclude, section } from '@figma-dsl/core';
+```
+
+### Shape-specific properties in the pipeline
+
+These properties are threaded through compile → export → plugin creation:
+
+| Property | Applies to | Description |
+|----------|-----------|-------------|
+| `pointCount` | POLYGON, STAR | Number of vertices (≥ 3) |
+| `innerRadius` | STAR | Inner radius ratio 0–1 (default 0.382) |
+| `rotation` | LINE, POLYGON, STAR | Rotation in degrees |
+| `strokeCap` | LINE | Stroke cap style (NONE, ROUND, SQUARE, etc.) |
+| `booleanOperation` | BOOLEAN_OPERATION | UNION, SUBTRACT, INTERSECT, or EXCLUDE |
+| `sectionContentsHidden` | SECTION | Whether section contents are hidden in Figma |
+
+### Round-trip fidelity
+
+All shape properties survive the full round-trip: DSL → compile → export → Figma plugin → serialize back. This means designs created in Figma with these node types can be serialized and compared against the original DSL for bidirectional sync.
+
 ## Tips
 
 - Always compile before export — the DSL JSON is the source of truth
@@ -225,3 +263,4 @@ If the React component has `variant` or `size` props (or similar visual variants
 - Keep Code Connect files updated with real Figma URLs after import
 - Run batch-compare after bulk imports to catch drift
 - If the component has variants, use `componentSet()` — not `component()` with VARIANT properties
+- Use shape primitives (`line`, `polygon`, `star`, boolean operations) for geometric elements instead of approximating with rectangles or images

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { compile, compileToJson } from './compiler.js';
-import { frame, text, rectangle, ellipse, group, component, componentSet, instance, image } from '@figma-dsl/core';
+import { frame, text, rectangle, ellipse, group, component, componentSet, instance, image, line, section, polygon, star, union, subtract, intersect, exclude } from '@figma-dsl/core';
 import { solid, gradient, radialGradient, imageFill, defineTokens, token } from '@figma-dsl/core';
 import { horizontal, vertical } from '@figma-dsl/core';
 
@@ -398,6 +398,95 @@ describe('compileToJson()', () => {
     const parsed = JSON.parse(json);
     expect(parsed.root.name).toBe('Root');
     expect(parsed.nodeCount).toBe(1);
+  });
+});
+
+describe('compile() — new node types', () => {
+  it('maps LINE to LINE', () => {
+    const node = line('Divider', { size: { x: 200 } });
+    const result = compile(node);
+    expect(result.root.type).toBe('LINE');
+    expect(result.root.size).toEqual({ x: 200, y: 0 });
+  });
+
+  it('maps LINE strokeCap', () => {
+    const node = line('Divider', {
+      size: { x: 100 },
+      strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 2, strokeCap: 'ROUND' }],
+    });
+    const result = compile(node);
+    expect(result.root.strokeCap).toBe('ROUND');
+  });
+
+  it('maps LINE rotation', () => {
+    const node = line('Divider', { size: { x: 100 }, rotation: 45 });
+    const result = compile(node);
+    expect(result.root.rotation).toBe(45);
+  });
+
+  it('maps SECTION to SECTION', () => {
+    const node = section('My Section', { size: { x: 200, y: 200 } });
+    const result = compile(node);
+    expect(result.root.type).toBe('SECTION');
+  });
+
+  it('maps SECTION contentsHidden to sectionContentsHidden', () => {
+    const node = section('S', { contentsHidden: true });
+    const result = compile(node);
+    expect(result.root.sectionContentsHidden).toBe(true);
+  });
+
+  it('skips auto-layout for SECTION', () => {
+    const node = section('S', { size: { x: 200, y: 200 } });
+    const result = compile(node);
+    expect(result.root.stackMode).toBeUndefined();
+  });
+
+  it('maps POLYGON to POLYGON with pointCount', () => {
+    const node = polygon('Hex', { pointCount: 6, size: { x: 100, y: 100 } });
+    const result = compile(node);
+    expect(result.root.type).toBe('POLYGON');
+    expect(result.root.pointCount).toBe(6);
+  });
+
+  it('maps POLYGON rotation', () => {
+    const node = polygon('Tri', { pointCount: 3, rotation: 30 });
+    const result = compile(node);
+    expect(result.root.rotation).toBe(30);
+  });
+
+  it('maps STAR to STAR with pointCount and default innerRadius', () => {
+    const node = star('Star', { pointCount: 5, size: { x: 100, y: 100 } });
+    const result = compile(node);
+    expect(result.root.type).toBe('STAR');
+    expect(result.root.pointCount).toBe(5);
+    expect(result.root.innerRadius).toBeCloseTo(0.382);
+  });
+
+  it('maps STAR with custom innerRadius', () => {
+    const node = star('Star', { pointCount: 5, innerRadius: 0.5 });
+    const result = compile(node);
+    expect(result.root.innerRadius).toBe(0.5);
+  });
+
+  it('maps BOOLEAN_OPERATION to BOOLEAN_OPERATION', () => {
+    const child1 = rectangle('R1', { size: { x: 50, y: 50 } });
+    const child2 = ellipse('E1', { size: { x: 50, y: 50 } });
+    const node = subtract('Cutout', { children: [child1, child2] });
+    const result = compile(node);
+    expect(result.root.type).toBe('BOOLEAN_OPERATION');
+    expect(result.root.booleanOperation).toBe('SUBTRACT');
+    expect(result.root.children).toHaveLength(2);
+  });
+
+  it('compiles all four boolean operation types', () => {
+    const c1 = rectangle('R', { size: { x: 10, y: 10 } });
+    const c2 = rectangle('R2', { size: { x: 10, y: 10 } });
+
+    expect(compile(union('U', { children: [c1, c2] })).root.booleanOperation).toBe('UNION');
+    expect(compile(subtract('S', { children: [c1, c2] })).root.booleanOperation).toBe('SUBTRACT');
+    expect(compile(intersect('I', { children: [c1, c2] })).root.booleanOperation).toBe('INTERSECT');
+    expect(compile(exclude('E', { children: [c1, c2] })).root.booleanOperation).toBe('EXCLUDE');
   });
 });
 

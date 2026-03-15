@@ -1,5 +1,6 @@
 export type FigmaNodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ROUNDED_RECTANGLE'
-  | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'VECTOR' | 'IMAGE';
+  | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'VECTOR' | 'IMAGE'
+  | 'LINE' | 'SECTION' | 'POLYGON' | 'STAR' | 'BOOLEAN_OPERATION';
 
 export interface FigmaPaint {
   type: 'SOLID' | 'GRADIENT_LINEAR' | 'GRADIENT_RADIAL' | 'IMAGE';
@@ -85,6 +86,20 @@ export interface FigmaNodeDict {
   // Instance
   componentId?: string;
   overriddenProperties?: Record<string, string | boolean>;
+
+  // Geometry (POLYGON, STAR)
+  pointCount?: number;
+  innerRadius?: number;
+  rotation?: number;
+
+  // Boolean operation
+  booleanOperation?: string;
+
+  // Stroke cap (LINE)
+  strokeCap?: string;
+
+  // Section
+  sectionContentsHidden?: boolean;
 }
 
 export interface CompileError {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { frame, text, rectangle, ellipse, group } from './nodes.js';
+import { frame, text, rectangle, ellipse, group, line, section, polygon, star, union, subtract, intersect, exclude } from './nodes.js';
 import type { DslNode } from './types.js';
 import { solid } from './colors.js';
 
@@ -172,6 +172,181 @@ describe('group()', () => {
 
   it('throws on empty name', () => {
     expect(() => group('', [])).toThrow();
+  });
+});
+
+describe('line()', () => {
+  it('creates a LINE node with defaults', () => {
+    const node = line('Divider');
+    expect(node.type).toBe('LINE');
+    expect(node.name).toBe('Divider');
+    expect(node.visible).toBe(true);
+    expect(node.opacity).toBe(1);
+    expect(node.size).toEqual({ x: 0, y: 0 });
+  });
+
+  it('defaults to 1px black stroke when no strokes provided', () => {
+    const node = line('Divider');
+    expect(node.strokes).toHaveLength(1);
+    expect(node.strokes![0]!.color).toEqual({ r: 0, g: 0, b: 0, a: 1 });
+    expect(node.strokes![0]!.weight).toBe(1);
+  });
+
+  it('uses provided strokes', () => {
+    const node = line('Divider', {
+      strokes: [{ color: { r: 1, g: 0, b: 0, a: 1 }, weight: 2 }],
+    });
+    expect(node.strokes).toHaveLength(1);
+    expect(node.strokes![0]!.color.r).toBe(1);
+    expect(node.strokes![0]!.weight).toBe(2);
+  });
+
+  it('sets height to 0', () => {
+    const node = line('Divider', { size: { x: 200 } });
+    expect(node.size).toEqual({ x: 200, y: 0 });
+  });
+
+  it('throws on empty name', () => {
+    expect(() => line('')).toThrow();
+  });
+});
+
+describe('section()', () => {
+  it('creates a SECTION node', () => {
+    const node = section('My Section');
+    expect(node.type).toBe('SECTION');
+    expect(node.name).toBe('My Section');
+    expect(node.visible).toBe(true);
+  });
+
+  it('does not include opacity, strokes, or autoLayout', () => {
+    const node = section('S', {
+      size: { x: 200, y: 200 },
+      fills: [solid('#eeeeee')],
+    });
+    expect(node.opacity).toBeUndefined();
+    expect(node.strokes).toBeUndefined();
+    expect(node.autoLayout).toBeUndefined();
+  });
+
+  it('supports contentsHidden', () => {
+    const node = section('S', { contentsHidden: true });
+    expect(node.contentsHidden).toBe(true);
+  });
+
+  it('supports children', () => {
+    const child = rectangle('R', { size: { x: 50, y: 50 } });
+    const node = section('S', { children: [child] });
+    expect(node.children).toHaveLength(1);
+  });
+
+  it('throws on empty name', () => {
+    expect(() => section('')).toThrow();
+  });
+});
+
+describe('polygon()', () => {
+  it('creates a POLYGON node', () => {
+    const node = polygon('Hex', { pointCount: 6, size: { x: 100, y: 100 } });
+    expect(node.type).toBe('POLYGON');
+    expect(node.pointCount).toBe(6);
+  });
+
+  it('throws when pointCount < 3', () => {
+    expect(() => polygon('Bad', { pointCount: 2 })).toThrow('pointCount must be an integer >= 3');
+  });
+
+  it('throws when pointCount is not integer', () => {
+    expect(() => polygon('Bad', { pointCount: 3.5 })).toThrow('pointCount must be an integer >= 3');
+  });
+
+  it('supports fills, strokes, cornerRadius, rotation', () => {
+    const node = polygon('Tri', {
+      pointCount: 3,
+      fills: [solid('#ff0000')],
+      strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 1 }],
+      cornerRadius: 4,
+      rotation: 45,
+    });
+    expect(node.fills).toHaveLength(1);
+    expect(node.strokes).toHaveLength(1);
+    expect(node.cornerRadius).toBe(4);
+    expect(node.rotation).toBe(45);
+  });
+
+  it('throws on empty name', () => {
+    expect(() => polygon('', { pointCount: 3 })).toThrow();
+  });
+});
+
+describe('star()', () => {
+  it('creates a STAR node with default innerRadius', () => {
+    const node = star('Star', { pointCount: 5, size: { x: 100, y: 100 } });
+    expect(node.type).toBe('STAR');
+    expect(node.pointCount).toBe(5);
+    expect(node.innerRadius).toBeCloseTo(0.382);
+  });
+
+  it('uses custom innerRadius', () => {
+    const node = star('Star', { pointCount: 5, innerRadius: 0.5 });
+    expect(node.innerRadius).toBe(0.5);
+  });
+
+  it('throws when pointCount < 3', () => {
+    expect(() => star('Bad', { pointCount: 1 })).toThrow('pointCount must be an integer >= 3');
+  });
+
+  it('throws on empty name', () => {
+    expect(() => star('', { pointCount: 5 })).toThrow();
+  });
+});
+
+describe('boolean operations', () => {
+  const child1 = rectangle('R1', { size: { x: 50, y: 50 } });
+  const child2 = ellipse('E1', { size: { x: 50, y: 50 } });
+
+  it('creates UNION', () => {
+    const node = union('U', { children: [child1, child2] });
+    expect(node.type).toBe('BOOLEAN_OPERATION');
+    expect(node.booleanOperation).toBe('UNION');
+    expect(node.children).toHaveLength(2);
+  });
+
+  it('creates SUBTRACT', () => {
+    const node = subtract('S', { children: [child1, child2] });
+    expect(node.booleanOperation).toBe('SUBTRACT');
+  });
+
+  it('creates INTERSECT', () => {
+    const node = intersect('I', { children: [child1, child2] });
+    expect(node.booleanOperation).toBe('INTERSECT');
+  });
+
+  it('creates EXCLUDE', () => {
+    const node = exclude('E', { children: [child1, child2] });
+    expect(node.booleanOperation).toBe('EXCLUDE');
+  });
+
+  it('throws when fewer than 2 children', () => {
+    expect(() => union('Bad', { children: [child1] })).toThrow('at least 2 children');
+  });
+
+  it('throws on empty children', () => {
+    expect(() => union('Bad', { children: [] })).toThrow('at least 2 children');
+  });
+
+  it('throws on empty name', () => {
+    expect(() => union('', { children: [child1, child2] })).toThrow();
+  });
+
+  it('supports optional fills and strokes', () => {
+    const node = union('U', {
+      children: [child1, child2],
+      fills: [solid('#ff0000')],
+      strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 2 }],
+    });
+    expect(node.fills).toHaveLength(1);
+    expect(node.strokes).toHaveLength(1);
   });
 });
 

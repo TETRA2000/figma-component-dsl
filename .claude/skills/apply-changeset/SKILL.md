@@ -125,6 +125,75 @@ Apply DSL property changes to React/CSS code using these mappings:
    e. For structural changes (children added/removed), generate a markdown description for manual review instead of automatic code modification
 3. **Produce summary report**
 
+### New Node Type Mappings
+
+#### LINE → CSS border or `<hr>`
+
+| DSL Property Path | Target | Notes |
+|---|---|---|
+| Node type `LINE` | CSS `border-bottom` or `<hr>` element | Prefer `<hr>` for semantic dividers, CSS border for decorative lines |
+| `strokes.N.color.{r,g,b,a}` | `border-bottom-color` or `<hr>` color | Convert 0-1 range to 0-255 |
+| `strokes.N.weight` | `border-bottom-width` (px) | |
+| `strokeCap` | Not mapped in CSS | Log in summary report |
+| `rotation` | `transform: rotate({N}deg)` | Only if non-zero |
+| `size.x` | `width` (px) | Line length |
+
+#### POLYGON → Inline SVG `<polygon>`
+
+| DSL Property Path | Target | Notes |
+|---|---|---|
+| Node type `POLYGON` | `<svg><polygon points="..." /></svg>` | Compute vertex coordinates from `pointCount` and `size` |
+| `pointCount` | Vertex count | Distribute N points evenly around the inscribed ellipse, first vertex at top (-90°). Vertices: `cx + rx*cos(2πk/N - π/2), cy + ry*sin(2πk/N - π/2)` for k=0..N-1 |
+| `fills.N.color` | SVG `fill` attribute | Convert to `rgb()` or `rgba()` |
+| `strokes.N.color` | SVG `stroke` attribute | |
+| `strokes.N.weight` | SVG `stroke-width` | |
+| `rotation` | SVG `transform="rotate(deg, cx, cy)"` | |
+| `cornerRadius` | Not directly mapped | Log as manual review item — SVG polygon vertices don't support corner rounding natively |
+
+#### STAR → Inline SVG `<polygon>`
+
+| DSL Property Path | Target | Notes |
+|---|---|---|
+| Node type `STAR` | `<svg><polygon points="..." /></svg>` | Compute star vertices: alternate outer and inner radius points, `pointCount * 2` total vertices |
+| `pointCount` | Outer vertex count | |
+| `innerRadius` | Inner vertex scaling factor (0-1) | Inner vertices at `innerRadius * outerRadius` from center |
+| `fills.N.color` | SVG `fill` attribute | |
+| `strokes.N.color` | SVG `stroke` attribute | |
+| `rotation` | SVG `transform="rotate(deg, cx, cy)"` | |
+
+Star vertex formula: For k=0..pointCount-1, outer vertex at angle `2πk/N - π/2`, inner vertex at angle `2π(k+0.5)/N - π/2` scaled by `innerRadius`.
+
+#### BOOLEAN_OPERATION → Inline SVG with compositing
+
+| DSL Property Path | Target | Notes |
+|---|---|---|
+| Node type `BOOLEAN_OPERATION` | `<svg>` with child paths | Complex — flag for **manual review** when possible |
+| `booleanOperation: UNION` | SVG paths combined (simple concatenation) | Simplest case |
+| `booleanOperation: SUBTRACT` | `<clipPath>` or `mask` with `fill-rule: evenodd` | May require manual adjustment |
+| `booleanOperation: INTERSECT` | `<clipPath>` with intersection | Complex — flag for manual review |
+| `booleanOperation: EXCLUDE` | `fill-rule: evenodd` on combined path | Complex — flag for manual review |
+
+**Important**: BOOLEAN_OPERATION SVG mappings are inherently complex. The compositing semantics (especially SUBTRACT, INTERSECT, EXCLUDE) don't map cleanly to static SVG. Always flag these for **manual review** in the summary report.
+
+#### SECTION → Skip (no React equivalent)
+
+| DSL Property Path | Target | Notes |
+|---|---|---|
+| Node type `SECTION` | **Skip** — no React equivalent | Sections are Figma organizational containers |
+| `sectionContentsHidden` | Not mapped | Log in summary report |
+
+When a SECTION appears in a changeset:
+- Log it in the summary report under "Skipped — Organizational Only"
+- Do NOT create React elements for sections
+- If a section's children have changes, apply those children's changes normally
+
+### Geometry Property Changes
+
+When `pointCount` or `innerRadius` change on an existing POLYGON or STAR node:
+- Recalculate all vertex coordinates using the formulas above
+- Update the SVG `points` attribute with the new coordinates
+- These are **full recalculations** — do not try to incrementally adjust vertices
+
 ## Structural Changes
 
 When `propertyPath` starts with `children.` and `changeType` is `added` or `removed`:

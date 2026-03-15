@@ -1,6 +1,14 @@
 // --- Node Types ---
 export type NodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ELLIPSE' | 'GROUP'
-  | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'IMAGE';
+  | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'IMAGE'
+  | 'LINE' | 'SECTION' | 'POLYGON' | 'STAR' | 'BOOLEAN_OPERATION';
+
+// --- Stroke Cap ---
+export type StrokeCap = 'NONE' | 'ROUND' | 'SQUARE' | 'LINE_ARROW' | 'TRIANGLE_ARROW'
+  | 'DIAMOND_FILLED' | 'CIRCLE_FILLED' | 'TRIANGLE_FILLED';
+
+// --- Boolean Operation ---
+export type BooleanOperationType = 'UNION' | 'SUBTRACT' | 'INTERSECT' | 'EXCLUDE';
 
 // --- Color & Fill ---
 export interface RgbaColor {
@@ -55,6 +63,7 @@ export interface StrokePaint {
   color: RgbaColor;
   weight: number;
   align?: 'INSIDE' | 'CENTER' | 'OUTSIDE';
+  strokeCap?: StrokeCap;
 }
 
 // --- Auto-Layout ---
@@ -144,6 +153,19 @@ export interface DslNode {
   // Instance (INSTANCE only)
   componentRef?: string;
   propertyOverrides?: Record<string, string | boolean>;
+
+  // Geometry (POLYGON, STAR)
+  pointCount?: number;
+  innerRadius?: number; // STAR only, 0–1, default 0.382
+
+  // Rotation (LINE, POLYGON, STAR)
+  rotation?: number;
+
+  // Boolean operation (BOOLEAN_OPERATION only)
+  booleanOperation?: BooleanOperationType;
+
+  // Section (SECTION only)
+  contentsHidden?: boolean;
 }
 
 // --- Factory Prop Types ---
@@ -211,6 +233,61 @@ export interface ImageProps {
   visible?: boolean;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+}
+
+export interface LineProps {
+  size?: { x: number };
+  strokes?: StrokePaint[];
+  rotation?: number;
+  opacity?: number;
+  visible?: boolean;
+  layoutGrow?: number;
+  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+}
+
+export interface SectionProps {
+  size?: { x: number; y: number };
+  fills?: Fill[];
+  children?: DslNode[];
+  contentsHidden?: boolean;
+  visible?: boolean;
+}
+
+export interface PolygonProps {
+  pointCount: number;
+  size?: { x: number; y: number };
+  fills?: Fill[];
+  strokes?: StrokePaint[];
+  cornerRadius?: number;
+  rotation?: number;
+  opacity?: number;
+  visible?: boolean;
+  layoutGrow?: number;
+  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+}
+
+export interface StarProps {
+  pointCount: number;
+  innerRadius?: number; // 0–1, default 0.382
+  size?: { x: number; y: number };
+  fills?: Fill[];
+  strokes?: StrokePaint[];
+  rotation?: number;
+  opacity?: number;
+  visible?: boolean;
+  layoutGrow?: number;
+  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+}
+
+export interface BooleanOperationProps {
+  children: DslNode[];
+  fills?: Fill[];
+  strokes?: StrokePaint[];
+  opacity?: number;
+  visible?: boolean;
 }
 
 export interface ColorTokenMap {

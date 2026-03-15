@@ -450,6 +450,118 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         break;
       }
 
+      case 'LINE': {
+        const lineNode = figma.createLine();
+        lineNode.name = def.name;
+        lineNode.resize(def.size.x, 0);
+        if (def.strokes?.length) {
+          const strokes = def.strokes.map(s => ({
+            type: 'SOLID' as const,
+            color: { r: s.color.r, g: s.color.g, b: s.color.b },
+            opacity: s.color.a,
+            visible: true,
+          }));
+          lineNode.strokes = strokes;
+          lineNode.strokeWeight = def.strokes[0]!.weight;
+        }
+        if (def.strokeCap) {
+          lineNode.strokeCap = def.strokeCap as StrokeCap;
+        }
+        if (def.rotation) {
+          lineNode.rotation = def.rotation;
+        }
+        lineNode.opacity = def.opacity;
+        lineNode.visible = def.visible;
+        parent.appendChild(lineNode);
+        node = lineNode;
+        break;
+      }
+
+      case 'SECTION': {
+        const sectionNode = figma.createSection();
+        sectionNode.name = def.name;
+        sectionNode.resizeWithoutConstraints(def.size.x, def.size.y);
+        if (def.fills?.length) {
+          const { paints } = toFigmaPaints(def.fills);
+          sectionNode.fills = paints;
+        }
+        if (def.sectionContentsHidden !== undefined) {
+          sectionNode.devStatus = def.sectionContentsHidden ? { type: 'READY_FOR_DEV' } : undefined as unknown as typeof sectionNode.devStatus;
+        }
+        parent.appendChild(sectionNode);
+        for (const child of def.children) {
+          await createNode(child, sectionNode);
+        }
+        node = sectionNode;
+        break;
+      }
+
+      case 'POLYGON': {
+        const polyNode = figma.createPolygon();
+        polyNode.name = def.name;
+        polyNode.resize(def.size.x, def.size.y);
+        if (def.pointCount) polyNode.pointCount = def.pointCount;
+        await applyFillsWithImages(polyNode, def.fills);
+        if (def.cornerRadius) polyNode.cornerRadius = def.cornerRadius;
+        if (def.rotation) polyNode.rotation = def.rotation;
+        polyNode.opacity = def.opacity;
+        polyNode.visible = def.visible;
+        parent.appendChild(polyNode);
+        setLayoutSizing(polyNode, def);
+        node = polyNode;
+        break;
+      }
+
+      case 'STAR': {
+        const starNode = figma.createStar();
+        starNode.name = def.name;
+        starNode.resize(def.size.x, def.size.y);
+        if (def.pointCount) starNode.pointCount = def.pointCount;
+        if (def.innerRadius !== undefined) starNode.innerRadius = def.innerRadius;
+        await applyFillsWithImages(starNode, def.fills);
+        if (def.rotation) starNode.rotation = def.rotation;
+        starNode.opacity = def.opacity;
+        starNode.visible = def.visible;
+        parent.appendChild(starNode);
+        setLayoutSizing(starNode, def);
+        node = starNode;
+        break;
+      }
+
+      case 'BOOLEAN_OPERATION': {
+        // Create children first in a temporary frame
+        const boolChildren: SceneNode[] = [];
+        const tempContainer = figma.createFrame();
+        parent.appendChild(tempContainer);
+        for (const child of def.children) {
+          const childNode = await createNode(child, tempContainer);
+          if (childNode) boolChildren.push(childNode);
+        }
+        if (boolChildren.length < 2) {
+          errors.push(`Boolean operation "${def.name}" requires at least 2 children`);
+          tempContainer.remove();
+          return null;
+        }
+        // Combine using the appropriate boolean method
+        const opMap: Record<string, 'union' | 'subtract' | 'intersect' | 'exclude'> = {
+          'UNION': 'union',
+          'SUBTRACT': 'subtract',
+          'INTERSECT': 'intersect',
+          'EXCLUDE': 'exclude',
+        };
+        const method = opMap[def.booleanOperation ?? 'UNION'] ?? 'union';
+        const boolNode = figma[method](boolChildren, parent);
+        boolNode.name = def.name;
+        if (def.fills?.length) {
+          await applyFillsWithImages(boolNode, def.fills);
+        }
+        boolNode.opacity = def.opacity;
+        boolNode.visible = def.visible;
+        tempContainer.remove();
+        node = boolNode;
+        break;
+      }
+
       default:
         errors.push(`Unsupported node type: ${def.type}`);
         return null;

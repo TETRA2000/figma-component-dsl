@@ -174,6 +174,14 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
     result.overriddenProperties = node.overriddenProperties;
   }
 
+  // New node type properties
+  if (node.pointCount !== undefined) result.pointCount = node.pointCount;
+  if (node.innerRadius !== undefined) result.innerRadius = node.innerRadius;
+  if (node.rotation !== undefined) result.rotation = node.rotation;
+  if (node.booleanOperation) result.booleanOperation = node.booleanOperation;
+  if (node.strokeCap) result.strokeCap = node.strokeCap;
+  if (node.sectionContentsHidden !== undefined) result.sectionContentsHidden = node.sectionContentsHidden;
+
   return result as unknown as PluginNodeDef;
 }
 

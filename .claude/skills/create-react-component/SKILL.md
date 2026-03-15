@@ -200,7 +200,26 @@ bin/figma-dsl render output/{ComponentName}.json -o output/{ComponentName}.png
 
 This produces a PNG rendering of how the component will look in Figma.
 
-### Step 6b: Create DSL File for Figma Export (if component has variants)
+### Step 6b: Using Shape Primitives in Components
+
+The DSL supports geometric shape primitives that can be used in component DSL files. When the component design includes geometric shapes, dividers, or composite icons, use the appropriate DSL factory instead of approximating with rectangles or images:
+
+| Visual element | DSL factory | Example |
+|---|---|---|
+| Horizontal divider / separator | `line()` | `line('Divider', { size: { x: 200 }, strokes: [{ color: { r: 0.8, g: 0.8, b: 0.8, a: 1 }, weight: 1 }] })` |
+| Badge / hex shape / triangle | `polygon()` | `polygon('Hex', { pointCount: 6, size: { x: 40, y: 40 }, fills: [solid('#3498DB')] })` |
+| Star rating / decorative star | `star()` | `star('Rating', { pointCount: 5, size: { x: 24, y: 24 }, fills: [solid('#F1C40F')] })` |
+| Icon with cutout / composite shape | `subtract()`, `union()`, `intersect()`, `exclude()` | `subtract('Icon', { children: [ellipse('Circle', { size: { x: 40, y: 40 } }), rectangle('Bar', { size: { x: 20, y: 4 } })] })` |
+| Organizational section (Figma only) | `section()` | `section('Group', { size: { x: 400, y: 300 }, children: [...] })` |
+
+Import these from `@figma-dsl/core`:
+```ts
+import { line, polygon, star, subtract, union, intersect, exclude, section } from '@figma-dsl/core';
+```
+
+**Validation note**: When components use inline `<svg>`, `<polygon>`, `<line>`, or `<clipPath>` elements, or CSS `border-bottom` for dividers, the DSL validator recognizes these as valid DSL-compatible patterns.
+
+### Step 6c: Create DSL File for Figma Export (if component has variants)
 
 If the component has `variant`, `size`, or similar visual variant props, create a DSL file at `output/{ComponentName}.dsl.ts` using `componentSet()` instead of `component()`. Figma requires a COMPONENT_SET to support variant properties.
 
