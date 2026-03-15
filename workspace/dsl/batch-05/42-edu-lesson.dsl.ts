@@ -20,7 +20,7 @@ function lessonItem(number: number, title: string, duration: string, active: boo
   return frame(`Lesson ${number}`, {
     autoLayout: horizontal({ spacing: 12, padX: 16, padY: 12, counterAlign: 'CENTER' }),
     layoutSizingHorizontal: 'FILL',
-    fills: [solid(active ? '#eff6ff' : 'transparent')],
+    fills: active ? [solid('#eff6ff')] : [],
     cornerRadius: 8,
     children: [
       frame('LessonNum', {
