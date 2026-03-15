@@ -8,6 +8,7 @@ import type {
   EditLogEntry,
   ChangesetDocument,
   ComponentChangeEntry,
+  PropertyChange,
 } from '@figma-dsl/core';
 import { diffNodes } from '@figma-dsl/core';
 import {
@@ -19,9 +20,18 @@ import {
   COMPONENT_SET_PAD,
 } from './serializer.js';
 import type { SerializableNode } from './serializer.js';
+import {
+  formatSlotName,
+  buildSlotPluginData,
+  buildComponentMap as buildComponentEntryMap,
+  formatDetachedCopyName,
+} from './slot-utils.js';
+import type { ComponentEntry } from './slot-utils.js';
 import uiHtml from './ui.html';
 
 const componentMap = new Map<string, ComponentNode>();
+const fileScannedComponents = new Map<string, ComponentNode>();
+const PLUGIN_DATA_SLOT = 'dsl-slot';
 const errors: string[] = [];
 
 // --- Edit Tracker State ---
@@ -260,6 +270,22 @@ function setLayoutSizing(node: SceneNode, def: PluginNodeDef): void {
   }
 }
 
+function scanFileForComponents(): void {
+  fileScannedComponents.clear();
+  const allComponents = figma.root.findAll(n => n.type === 'COMPONENT') as ComponentNode[];
+  const duplicateNames: string[] = [];
+  for (const comp of allComponents) {
+    if (fileScannedComponents.has(comp.name)) {
+      duplicateNames.push(comp.name);
+      continue; // First match wins
+    }
+    fileScannedComponents.set(comp.name, comp);
+  }
+  if (duplicateNames.length > 0) {
+    console.warn(`[DSL] Duplicate component names found during file scan: ${duplicateNames.join(', ')}. Using first match.`);
+  }
+}
+
 async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin): Promise<SceneNode | null> {
   try {
     let node: SceneNode;
@@ -268,7 +294,19 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
       case 'FRAME':
       case 'ROUNDED_RECTANGLE': {
         const frame = figma.createFrame();
-        frame.name = def.name;
+        // Slot frame naming convention: [Slot] {name}
+        if (def.isSlot && def.slotPropertyName) {
+          frame.name = formatSlotName(def.slotPropertyName);
+          // Store slot metadata in plugin data for changeset tracking
+          const slotData = buildSlotPluginData(
+            def.slotPropertyName,
+            def.slotProperties?.[def.slotPropertyName]?.preferredInstances as string[] | undefined,
+          );
+          frame.setPluginData(PLUGIN_DATA_SLOT, JSON.stringify(slotData));
+          console.log(`[DSL] Slot "${def.slotPropertyName}" created as frame. Manual conversion to slot property may be needed (Figma API lacks SLOT support).`);
+        } else {
+          frame.name = def.name;
+        }
         frame.resize(def.size.x, def.size.y);
         await applyFillsWithImages(frame, def.fills);
         if (def.cornerRadius) frame.cornerRadius = def.cornerRadius;
@@ -471,10 +509,78 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
       }
 
       case 'INSTANCE': {
-        const refComp = componentMap.get(def.componentId ?? def.name);
+        // If instance has slot overrides, create detached FRAME copy instead
+        if (def.slotOverrides && Object.keys(def.slotOverrides).length > 0) {
+          const refComp = componentMap.get(def.componentId ?? def.name);
+          if (refComp) {
+            // Create detached frame copy with slot overrides
+            const detachedFrame = figma.createFrame();
+            detachedFrame.name = formatDetachedCopyName(def.componentId ?? def.name);
+            detachedFrame.resize(refComp.width, refComp.height);
+            // Store original component reference for future re-import
+            detachedFrame.setPluginData('dsl-detached-ref', def.componentId ?? def.name);
+            parent.appendChild(detachedFrame);
+
+            // Copy component's auto-layout config
+            if (refComp.layoutMode && refComp.layoutMode !== 'NONE') {
+              detachedFrame.layoutMode = refComp.layoutMode as 'HORIZONTAL' | 'VERTICAL';
+              detachedFrame.itemSpacing = refComp.itemSpacing;
+              detachedFrame.paddingTop = refComp.paddingTop;
+              detachedFrame.paddingRight = refComp.paddingRight;
+              detachedFrame.paddingBottom = refComp.paddingBottom;
+              detachedFrame.paddingLeft = refComp.paddingLeft;
+            }
+
+            // Recreate children, replacing slot frames with override content
+            for (const child of refComp.children) {
+              const slotPluginData = child.getPluginData(PLUGIN_DATA_SLOT);
+              if (slotPluginData) {
+                try {
+                  const slotData = JSON.parse(slotPluginData);
+                  const overrideContent = def.slotOverrides[slotData.slotName];
+                  if (overrideContent) {
+                    // Create slot frame with override children
+                    const slotFrame = figma.createFrame();
+                    slotFrame.name = formatSlotName(slotData.slotName);
+                    slotFrame.resize(child.width, child.height);
+                    slotFrame.setPluginData(PLUGIN_DATA_SLOT, slotPluginData);
+                    detachedFrame.appendChild(slotFrame);
+                    for (const overrideChild of overrideContent) {
+                      await createNode(overrideChild, slotFrame);
+                    }
+                    continue;
+                  }
+                } catch { /* fall through to clone */ }
+              }
+              // Non-slot child or no override — clone from component
+              const cloned = child.clone();
+              detachedFrame.appendChild(cloned);
+            }
+
+            node = detachedFrame;
+          } else {
+            // Component not found — fall back to frame
+            const fallback = figma.createFrame();
+            fallback.name = `${def.name} (unresolved)`;
+            errors.push(`Component not found for detached instance: ${def.name}`);
+            parent.appendChild(fallback);
+            node = fallback;
+          }
+          break;
+        }
+
+        // Standard instance (no slot overrides)
+        const refComp = componentMap.get(def.componentId ?? def.name)
+          ?? fileScannedComponents.get(def.componentId ?? def.name);
         if (!refComp) {
-          errors.push(`Component not found for instance: ${def.name}`);
-          return null;
+          // Fall back to FRAME with warning
+          const fallback = figma.createFrame();
+          fallback.name = def.name;
+          fallback.resize(def.size.x, def.size.y);
+          errors.push(`Component "${def.name}" not found in local or file-scanned components — created as FRAME fallback`);
+          parent.appendChild(fallback);
+          node = fallback;
+          break;
         }
         const inst = refComp.createInstance();
         inst.name = def.name;
@@ -812,9 +918,27 @@ async function computeChangeset(nodeIds: ReadonlyArray<string>): Promise<Changes
 
     if (changes.length > 0) {
       // Embed image data for image-related changes
-      const enrichedChanges = await Promise.all(
+      let enrichedChanges = await Promise.all(
         changes.map(c => embedImageDataForChange(c, node)),
       );
+
+      // Enrich slot-related changes with serialized slot content
+      enrichedChanges = enrichedChanges.map(change => {
+        if (change.propertyPath.includes('children')) {
+          // Check if this change is within a slot frame
+          const slotInfo = findSlotContext(node, change.propertyPath);
+          if (slotInfo) {
+            return {
+              ...change,
+              slotName: slotInfo.slotName,
+              slotChangeType: inferSlotChangeType(change),
+              slotContent: slotInfo.currentChildren,
+            };
+          }
+        }
+        return change;
+      });
+
       components.push({
         componentName: identity.componentName,
         componentId: nodeId,
@@ -876,6 +1000,12 @@ function wsSend(payload: Record<string, unknown>): void {
 function categorizeChanges(entries: EditLogEntry[]): string[] {
   const categories = new Set<string>();
   for (const entry of entries) {
+    // Check if changes occurred within a slot frame
+    const isSlotChange = isChangeInSlotFrame(entry.nodeId);
+    if (isSlotChange) {
+      categories.add('slot-structure');
+    }
+
     for (const prop of entry.properties) {
       if (prop.includes('fill') || prop.includes('color')) categories.add('fills');
       else if (prop.includes('font') || prop.includes('text') || prop.includes('character')) categories.add('typography');
@@ -891,6 +1021,57 @@ function categorizeChanges(entries: EditLogEntry[]): string[] {
   return [...categories];
 }
 
+// Find slot context for a change path within a node
+function findSlotContext(
+  rootNode: SceneNode,
+  propertyPath: string,
+): { slotName: string; currentChildren: PluginNodeDef[] } | undefined {
+  // Walk through children to find a slot frame matching the property path
+  if (!('children' in rootNode)) return undefined;
+  const parent = rootNode as FrameNode;
+  for (const child of parent.children) {
+    const slotData = child.getPluginData(PLUGIN_DATA_SLOT);
+    if (slotData) {
+      try {
+        const parsed = JSON.parse(slotData) as { slotName: string };
+        // Serialize current slot children
+        const serializedChildren: PluginNodeDef[] = [];
+        if ('children' in child) {
+          for (const grandchild of (child as FrameNode).children) {
+            serializedChildren.push(serializeNode(grandchild));
+          }
+        }
+        return {
+          slotName: parsed.slotName,
+          currentChildren: serializedChildren,
+        };
+      } catch { /* skip malformed data */ }
+    }
+  }
+  return undefined;
+}
+
+function inferSlotChangeType(
+  change: PropertyChange,
+): 'child-added' | 'child-removed' | 'child-reordered' {
+  if (change.changeType === 'added') return 'child-added';
+  if (change.changeType === 'removed') return 'child-removed';
+  return 'child-reordered';
+}
+
+// Check if a node or any of its ancestors is a slot frame
+function isChangeInSlotFrame(nodeId: string): boolean {
+  let node = figma.getNodeById(nodeId);
+  while (node) {
+    if ('getPluginData' in node) {
+      const slotData = (node as SceneNode).getPluginData(PLUGIN_DATA_SLOT);
+      if (slotData) return true;
+    }
+    node = node.parent;
+  }
+  return false;
+}
+
 // Handle WebSocket messages relayed from the UI iframe
 async function handleWsMessage(payload: { type: string; requestId?: string; pluginInput?: PluginInput; componentNames?: string[]; pageName?: string }): Promise<void> {
   switch (payload.type) {
@@ -899,6 +1080,12 @@ async function handleWsMessage(payload: { type: string; requestId?: string; plug
         const input = payload.pluginInput!;
         errors.length = 0;
         componentMap.clear();
+        fileScannedComponents.clear();
+
+        // Scan file for existing components when resolveExisting is enabled
+        if (input.resolveExisting) {
+          scanFileForComponents();
+        }
 
         let page = figma.root.children.find(p => p.name === input.targetPage);
         if (!page) {
@@ -1146,6 +1333,12 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
     const input: PluginInput = JSON.parse(msg.data);
     errors.length = 0;
     componentMap.clear();
+    fileScannedComponents.clear();
+
+    // Scan file for existing components when resolveExisting is enabled
+    if (input.resolveExisting) {
+      scanFileForComponents();
+    }
 
     // Create or find target page
     let page = figma.root.children.find(p => p.name === input.targetPage);

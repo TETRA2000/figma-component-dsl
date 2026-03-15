@@ -100,6 +100,14 @@ export interface FigmaNodeDict {
 
   // Section
   sectionContentsHidden?: boolean;
+
+  // Slot
+  isSlot?: boolean;
+  slotName?: string;
+  preferredInstances?: string[];
+
+  // Instance slot overrides
+  slotOverrides?: Record<string, FigmaNodeDict[]>;
 }
 
 export interface CompileError {

@@ -168,10 +168,49 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
     }
   }
 
+  // Slot metadata
+  if (node.isSlot) {
+    result.isSlot = true;
+    result.slotPropertyName = node.slotName;
+  }
+
+  // Component-level slot properties map
+  if ((node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') && node.children.length > 0) {
+    const slotProperties: Record<string, { defaultContentNodeIndex?: number; preferredInstances?: string[] }> = {};
+    let hasSlots = false;
+    for (let i = 0; i < node.children.length; i++) {
+      const child = node.children[i]!;
+      if (child.isSlot && child.slotName) {
+        hasSlots = true;
+        const entry: { defaultContentNodeIndex?: number; preferredInstances?: string[] } = {
+          defaultContentNodeIndex: i,
+        };
+        if (child.preferredInstances?.length) {
+          entry.preferredInstances = [...child.preferredInstances];
+        }
+        slotProperties[child.slotName] = entry;
+      }
+    }
+    if (hasSlots) {
+      result.slotProperties = slotProperties;
+    }
+  }
+
   // Instance
   if (node.componentId) {
     result.componentId = node.componentId;
     result.overriddenProperties = node.overriddenProperties;
+  }
+
+  // Instance slot overrides
+  if (node.slotOverrides) {
+    const pluginOverrides: Record<string, unknown[]> = {};
+    for (const slotName of Object.keys(node.slotOverrides)) {
+      pluginOverrides[slotName] = node.slotOverrides[slotName]!.map(
+        (child: FigmaNodeDict) => convertToPluginNode(child, assetDir),
+      );
+    }
+    result.slotOverrides = pluginOverrides;
   }
 
   // New node type properties

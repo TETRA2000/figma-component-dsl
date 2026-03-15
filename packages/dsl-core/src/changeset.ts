@@ -10,6 +10,10 @@ export interface PropertyChange {
   readonly newValue?: unknown;
   readonly description: string;
   readonly imageData?: string;
+  // Slot-specific fields for bidirectional sync
+  readonly slotName?: string;
+  readonly slotChangeType?: 'child-added' | 'child-removed' | 'child-reordered';
+  readonly slotContent?: unknown; // Serialized PluginNodeDef[] of slot's current children
 }
 
 export interface ComponentChangeEntry {

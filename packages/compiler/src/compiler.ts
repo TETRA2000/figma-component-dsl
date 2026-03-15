@@ -177,6 +177,7 @@ function compileNode(
   childIndex: number,
   path: string,
   errors: CompileError[],
+  insideComponent: boolean = false,
 ): FigmaNodeDict {
   validateNode(node, path, errors);
   const guid = nextGuid();
@@ -233,6 +234,22 @@ function compileNode(
       ? { guid: parentGuid, position: String(childIndex) }
       : undefined,
   };
+
+  // Slot validation and passthrough
+  if (node.isSlot) {
+    if (!insideComponent) {
+      errors.push({
+        message: `A slot node "${node.name}" must be a descendant of a COMPONENT or COMPONENT_SET. Found at "${path}".`,
+        nodePath: path,
+        nodeType: node.type,
+      });
+    }
+    result.isSlot = true;
+    result.slotName = node.slotName ?? node.name;
+    if (node.preferredInstances?.length) {
+      result.preferredInstances = [...node.preferredInstances];
+    }
+  }
 
   // Image passthrough
   if (node.type === 'IMAGE') {
@@ -334,7 +351,7 @@ function compileNode(
 
   // Component property definitions
   if (node.type === 'COMPONENT' && node.componentProperties) {
-    const validTypes = new Set(['TEXT', 'BOOLEAN', 'INSTANCE_SWAP']);
+    const validTypes = new Set(['TEXT', 'BOOLEAN', 'INSTANCE_SWAP', 'SLOT']);
     const defs: Record<string, { type: string; defaultValue: string | boolean }> = {};
     for (const prop of node.componentProperties) {
       if (!validTypes.has(prop.type)) {
@@ -355,11 +372,39 @@ function compileNode(
     }
   }
 
+  // Inject SLOT property definitions from slot children
+  if (node.type === 'COMPONENT' && node.children) {
+    const slotChildren = node.children.filter(c => c.isSlot);
+    if (slotChildren.length > 0) {
+      if (!result.componentPropertyDefinitions) {
+        result.componentPropertyDefinitions = {};
+      }
+      for (const sc of slotChildren) {
+        const slotName = sc.slotName ?? sc.name;
+        result.componentPropertyDefinitions[slotName] = {
+          type: 'SLOT',
+          defaultValue: '',
+        };
+      }
+    }
+  }
+
   // Instance compilation
   if (node.type === 'INSTANCE' && node.componentRef) {
     result.componentId = node.componentRef;
     if (node.propertyOverrides) {
       result.overriddenProperties = { ...node.propertyOverrides };
+    }
+    // Compile slot overrides
+    if (node.slotOverrides) {
+      const compiledOverrides: Record<string, FigmaNodeDict[]> = {};
+      for (const slotName of Object.keys(node.slotOverrides)) {
+        const overrideNodes = node.slotOverrides[slotName]!;
+        compiledOverrides[slotName] = overrideNodes.map((child: DslNode, idx: number) =>
+          compileNode(child, guid, idx, `${path} > [slot:${slotName}] > ${child.name}`, errors, false)
+        );
+      }
+      result.slotOverrides = compiledOverrides;
     }
   }
 
@@ -398,8 +443,9 @@ function compileNode(
 
   // Compile children
   if (node.children) {
+    const childInsideComponent = insideComponent || node.type === 'COMPONENT' || node.type === 'COMPONENT_SET';
     result.children = node.children.map((child, idx) =>
-      compileNode(child, guid, idx, `${path} > ${child.name}`, errors)
+      compileNode(child, guid, idx, `${path} > ${child.name}`, errors, childInsideComponent)
     );
   }
 

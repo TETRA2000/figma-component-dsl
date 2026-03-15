@@ -8,7 +8,7 @@ import type { DslNode } from '@figma-dsl/core';
 import { renderToFile, initializeRenderer, collectImageSources, preloadImages } from '@figma-dsl/renderer';
 import { compareFiles } from '@figma-dsl/comparator';
 import { captureUrl } from '@figma-dsl/capturer';
-import { exportToFile } from '@figma-dsl/exporter';
+import { exportToFile, generatePluginInput, ComponentRegistry, deduplicateNodes } from '@figma-dsl/exporter';
 import { generateTestSuite } from './test-suite-generator.js';
 import type { PropertyCategory } from './test-suite-generator.js';
 import { processBatch } from './batch-processor.js';
@@ -374,6 +374,9 @@ async function cmdExport(args: string[]): Promise<number> {
       output: { type: 'string', short: 'o' },
       page: { type: 'string', short: 'p' },
       'asset-dir': { type: 'string' },
+      registry: { type: 'string' },
+      deduplicate: { type: 'boolean' },
+      'resolve-existing': { type: 'boolean' },
       help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
@@ -385,13 +388,16 @@ async function cmdExport(args: string[]): Promise<number> {
 Usage: figma-dsl export <file.dsl.ts> -o plugin-input.json [-p "Page Name"]
 
 Arguments:
-  file.dsl.ts          DSL source file to export
+  file.dsl.ts               DSL source file to export
 
 Options:
-  -o, --output <path>  Output JSON file path (required)
-  -p, --page <name>    Page name for Figma import
-  --asset-dir <path>   Base directory for resolving image paths (default: input file's directory)
-  -h, --help           Show this help message`);
+  -o, --output <path>       Output JSON file path (required)
+  -p, --page <name>         Page name for Figma import
+  --asset-dir <path>        Base directory for resolving image paths (default: input file's directory)
+  --registry <path>         Component registry JSON file for cross-file reuse
+  --deduplicate             Enable automatic page-level deduplication
+  --resolve-existing        Enable Figma file scanning for existing components on import
+  -h, --help                Show this help message`);
     return 0;
   }
 
@@ -406,7 +412,55 @@ Options:
     const dslNode = await loadDslModule(dslPath);
     const compiled = compileWithLayout(dslNode, textMeasurer);
     const assetDir = values['asset-dir'] ? resolve(values['asset-dir']) : dirname(resolve(dslPath));
-    exportToFile(compiled, resolve(values.output), values.page, { assetDir });
+
+    // Load registry if provided
+    let registry: ComponentRegistry | undefined;
+    if (values.registry) {
+      registry = ComponentRegistry.loadFromFile(resolve(values.registry));
+    }
+
+    // Generate plugin input
+    let pluginInput = generatePluginInput(compiled, values.page, { assetDir });
+
+    // Apply deduplication if enabled
+    if (values.deduplicate) {
+      const dedupResult = deduplicateNodes(pluginInput.components);
+      pluginInput = {
+        ...pluginInput,
+        components: dedupResult.components,
+      };
+      if (dedupResult.summary.extractedComponents.length > 0) {
+        console.log(`Deduplication: extracted ${dedupResult.summary.extractedComponents.length} component(s)`);
+        for (const comp of dedupResult.summary.extractedComponents) {
+          console.log(`  - ${comp.name}: ${comp.instanceCount} instances`);
+        }
+      }
+
+      // Register extracted components
+      if (registry) {
+        for (const comp of dedupResult.components) {
+          if (comp.type === 'COMPONENT') {
+            registry.register(comp);
+          }
+        }
+      }
+    }
+
+    // Set resolveExisting flag
+    if (values['resolve-existing']) {
+      pluginInput = { ...pluginInput, resolveExisting: true };
+    }
+
+    // Write output
+    const { mkdirSync: mkDir, writeFileSync: writeFile } = await import('fs');
+    mkDir(dirname(resolve(values.output)), { recursive: true });
+    writeFile(resolve(values.output), JSON.stringify(pluginInput, null, 2));
+
+    // Save registry if it was loaded or created
+    if (registry && values.registry) {
+      registry.saveToFile(resolve(values.registry));
+    }
+
     console.log(`Exported: ${values.output}`);
     return 0;
   } catch (err) {
