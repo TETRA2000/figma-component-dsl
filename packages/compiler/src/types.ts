@@ -102,10 +102,17 @@ export interface FigmaNodeDict {
   sectionContentsHidden?: boolean;
 }
 
+export type CompilerValidationLevel = 'strict' | 'normal' | 'loose';
+
 export interface CompileError {
   message: string;
   nodePath: string;
   nodeType: string;
+  severity?: 'error' | 'warning';
+}
+
+export interface CompilerOptions {
+  validationLevel?: CompilerValidationLevel;
 }
 
 export interface CompileResult {
