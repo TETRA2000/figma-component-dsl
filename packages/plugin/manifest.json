@@ -3,5 +3,9 @@
   "id": "figma-dsl-import-plugin",
   "api": "1.0.0",
   "main": "dist/code.js",
-  "editorType": ["figma"]
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["http://localhost", "http://127.0.0.1", "ws://localhost", "ws://127.0.0.1"],
+    "reasoning": "WebSocket connection to local MCP server for real-time sync"
+  }
 }

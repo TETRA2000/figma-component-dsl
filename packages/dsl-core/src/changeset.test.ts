@@ -5,6 +5,8 @@ import type {
   ComponentChangeEntry,
   ChangesetSource,
   ChangesetDocument,
+  WarningSeverity,
+  ChangesetWarning,
 } from './changeset.js';
 
 describe('Changeset Types', () => {
@@ -118,5 +120,66 @@ describe('Changeset Types', () => {
       components: [],
     };
     expect(doc.components).toHaveLength(0);
+  });
+
+  it('WarningSeverity accepts valid values', () => {
+    const severities: WarningSeverity[] = ['info', 'warning', 'error'];
+    expect(severities).toHaveLength(3);
+  });
+
+  it('ChangesetWarning has required fields', () => {
+    const warning: ChangesetWarning = {
+      propertyPath: 'effects.0',
+      severity: 'warning',
+      description: 'Drop shadow effect has no DSL equivalent',
+    };
+    expect(warning.propertyPath).toBe('effects.0');
+    expect(warning.severity).toBe('warning');
+    expect(warning.description).toBeTruthy();
+    expect(warning.unsupportedValue).toBeUndefined();
+  });
+
+  it('ChangesetWarning supports optional unsupportedValue', () => {
+    const warning: ChangesetWarning = {
+      propertyPath: 'blendMode',
+      severity: 'info',
+      description: 'Blend mode MULTIPLY has no DSL equivalent',
+      unsupportedValue: 'MULTIPLY',
+    };
+    expect(warning.unsupportedValue).toBe('MULTIPLY');
+  });
+
+  it('ChangesetDocument supports optional warnings array', () => {
+    const doc: ChangesetDocument = {
+      schemaVersion: '1.0',
+      timestamp: '2026-03-14T00:00:00.000Z',
+      source: {
+        pluginVersion: '1.0.0',
+        figmaFileName: 'test.fig',
+      },
+      components: [],
+      warnings: [
+        {
+          propertyPath: 'effects.0',
+          severity: 'warning',
+          description: 'Drop shadow not supported',
+        },
+      ],
+    };
+    expect(doc.warnings).toHaveLength(1);
+    expect(doc.warnings![0].severity).toBe('warning');
+  });
+
+  it('ChangesetDocument without warnings is backward compatible', () => {
+    const doc: ChangesetDocument = {
+      schemaVersion: '1.0',
+      timestamp: '2026-03-14T00:00:00.000Z',
+      source: {
+        pluginVersion: '1.0.0',
+        figmaFileName: 'test.fig',
+      },
+      components: [],
+    };
+    expect(doc.warnings).toBeUndefined();
   });
 });

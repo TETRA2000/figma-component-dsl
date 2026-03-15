@@ -4,7 +4,7 @@
   "type": "module",
   "main": "dist/code.js",
   "scripts": {
-    "build": "esbuild src/code.ts --bundle --outfile=dist/code.js --format=iife --target=es2015"
+    "build": "esbuild src/code.ts --bundle --outfile=dist/code.js --format=iife --target=es2015 --loader:.html=text"
   },
   "dependencies": {
     "@figma/plugin-typings": "^1.0.0",
