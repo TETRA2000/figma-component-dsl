@@ -56,6 +56,14 @@ export interface PluginNodeDef {
   // Component
   readonly componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
 
+  // Image (IMAGE node)
+  readonly imageSrc?: string;
+  readonly imageScaleMode?: string;
+  readonly imageData?: string;
+  readonly imageFormat?: string;
+  readonly imageDimensions?: { width: number; height: number };
+  readonly imageError?: string;
+
   // Instance
   readonly componentId?: string;
   readonly overriddenProperties?: Record<string, string | boolean>;

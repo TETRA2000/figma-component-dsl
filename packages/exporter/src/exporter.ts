@@ -65,6 +65,7 @@ function convertFillForPlugin(
   };
 
   if (p.type === 'IMAGE' && p.imageSrc) {
+    fill.imageSrc = p.imageSrc;
     fill.imageScaleMode = p.imageScaleMode;
     const embedded = embedImageData(p.imageSrc, assetDir);
     if (embedded.imageData) fill.imageData = embedded.imageData;
@@ -136,6 +137,17 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
       result.fontWeight = meta.fontWeight;
       result.fontStyle = meta.fontStyle;
     }
+  }
+
+  // Image node passthrough — embed image data just like IMAGE fills
+  if (node.type === 'IMAGE' && node.imageSrc) {
+    result.imageSrc = node.imageSrc;
+    result.imageScaleMode = node.imageScaleMode;
+    const embedded = embedImageData(node.imageSrc, assetDir);
+    if (embedded.imageData) result.imageData = embedded.imageData;
+    if (embedded.imageFormat) result.imageFormat = embedded.imageFormat;
+    if (embedded.imageDimensions) result.imageDimensions = embedded.imageDimensions;
+    if (embedded.imageError) result.imageError = embedded.imageError;
   }
 
   // Component properties
