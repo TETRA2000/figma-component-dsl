@@ -8,7 +8,7 @@ import type { DslNode } from '@figma-dsl/core';
 import { renderToFile, initializeRenderer, collectImageSources, preloadImages } from '@figma-dsl/renderer';
 import { compareFiles } from '@figma-dsl/comparator';
 import { captureUrl } from '@figma-dsl/capturer';
-import { exportToFile, generatePluginInput, ComponentRegistry, deduplicateNodes } from '@figma-dsl/exporter';
+import { generatePluginInput, ComponentRegistry, deduplicateNodes } from '@figma-dsl/exporter';
 import { generateTestSuite } from './test-suite-generator.js';
 import type { PropertyCategory } from './test-suite-generator.js';
 import { processBatch } from './batch-processor.js';
