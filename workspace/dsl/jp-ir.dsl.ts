@@ -109,7 +109,7 @@ export default frame('JpIR', {
       size: { x: 1440, y: 72 },
       fills: [solid('#1a365d')],
       children: [
-        image('Logo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+        image('Logo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
         frame('Nav', {
           autoLayout: horizontal({ spacing: 36, counterAlign: 'CENTER' }),
           children: [

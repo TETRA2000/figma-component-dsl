@@ -26,7 +26,7 @@ function navBar() {
       frame('NavLeft', {
         autoLayout: horizontal({ spacing: 32, counterAlign: 'CENTER' }),
         children: [
-          image('Logo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+          image('Logo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
           navLink('会社概要'),
           navLink('事業内容'),
           navLink('採用情報'),
@@ -63,7 +63,7 @@ function footer() {
           frame('FooterCol1', {
             autoLayout: vertical({ spacing: 12 }),
             children: [
-              image('FooterLogo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+              image('FooterLogo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
               text('〒100-0001\n東京都千代田区千代田1-1-1', {
                 fontSize: 13, color: '#94a3b8',
                 lineHeight: { value: 170, unit: 'PERCENT' },
@@ -231,7 +231,7 @@ export default frame('EventsPage', {
           clipContent: true,
           children: [
             image('FeaturedImage', {
-              src: './assets/event-seminar.png',
+              src: '../assets/event-seminar.png',
               size: { x: 600, y: 350 },
               fit: 'FILL',
             }),

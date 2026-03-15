@@ -48,7 +48,7 @@ export default frame('JpAbout', {
       size: { x: 1440, y: 72 },
       fills: [solid('#1a365d')],
       children: [
-        image('Logo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+        image('Logo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
         frame('Nav', {
           autoLayout: horizontal({ spacing: 36, counterAlign: 'CENTER' }),
           children: [
@@ -152,7 +152,7 @@ export default frame('JpAbout', {
               autoLayout: vertical({ spacing: 12, counterAlign: 'CENTER' }),
               children: [
                 image('OfficeTokyoImg', {
-                  src: './assets/office-tokyo.png',
+                  src: '../assets/office-tokyo.png',
                   size: { x: 380, y: 253 },
                   cornerRadius: 8,
                 }),
@@ -164,7 +164,7 @@ export default frame('JpAbout', {
               autoLayout: vertical({ spacing: 12, counterAlign: 'CENTER' }),
               children: [
                 image('OfficeOsakaImg', {
-                  src: './assets/office-osaka.png',
+                  src: '../assets/office-osaka.png',
                   size: { x: 380, y: 253 },
                   cornerRadius: 8,
                 }),
@@ -176,7 +176,7 @@ export default frame('JpAbout', {
               autoLayout: vertical({ spacing: 12, counterAlign: 'CENTER' }),
               children: [
                 image('OfficeNagoyaImg', {
-                  src: './assets/office-nagoya.png',
+                  src: '../assets/office-nagoya.png',
                   size: { x: 380, y: 253 },
                   cornerRadius: 8,
                 }),

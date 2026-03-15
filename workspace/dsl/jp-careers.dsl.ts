@@ -120,7 +120,7 @@ export default frame('JpCareers', {
       size: { x: 1440, y: 72 },
       fills: [solid('#1a365d')],
       children: [
-        image('Logo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+        image('Logo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
         frame('Nav', {
           autoLayout: horizontal({ spacing: 36, counterAlign: 'CENTER' }),
           children: [
@@ -138,7 +138,7 @@ export default frame('JpCareers', {
     frame('Hero', {
       size: { x: 1440, y: 450 },
       fills: [
-        imageFill('./assets/hero-careers.png'),
+        imageFill('../assets/hero-careers.png'),
         gradient([
           { hex: '#1a365d33', position: 0 },
           { hex: '#1a365ddd', position: 1 },
@@ -188,17 +188,17 @@ export default frame('JpCareers', {
           autoLayout: horizontal({ spacing: 30 }),
           children: [
             valueCard(
-              './assets/icon-innovation.png',
+              '../assets/icon-innovation.png',
               '成長できる環境',
               '最先端技術に触れ、グローバルプロジェクトに参画。社内外の研修プログラムも充実しています。',
             ),
             valueCard(
-              './assets/icon-support.png',
+              '../assets/icon-support.png',
               '働きやすい制度',
               'フレックスタイム制、リモートワーク、育児・介護支援など、多様な働き方を支援します。',
             ),
             valueCard(
-              './assets/icon-global.png',
+              '../assets/icon-global.png',
               'グローバルな舞台',
               '世界15カ国の拠点で、異文化チームと協働。海外駐在・出張の機会も豊富にあります。',
             ),
@@ -219,14 +219,14 @@ export default frame('JpCareers', {
           autoLayout: horizontal({ spacing: 24 }),
           children: [
             employeeVoice(
-              './assets/person-1.png',
+              '../assets/person-1.png',
               '佐藤 美咲',
               'AI開発部',
               '2020年',
               '入社3年目からプロジェクトリーダーを任されました。挑戦を後押ししてくれる文化があり、常に成長を実感できる環境です。',
             ),
             employeeVoice(
-              './assets/person-2.png',
+              '../assets/person-2.png',
               '田中 健一',
               'クラウド基盤部',
               '2018年',
@@ -238,14 +238,14 @@ export default frame('JpCareers', {
           autoLayout: horizontal({ spacing: 24 }),
           children: [
             employeeVoice(
-              './assets/person-3.png',
+              '../assets/person-3.png',
               '鈴木 大輔',
               'グローバル事業部',
               '2016年',
               'シンガポール駐在を経験し、現在はAPAC全体のプロジェクト管理を担当しています。グローバルな舞台で活躍できる環境です。',
             ),
             employeeVoice(
-              './assets/person-4.png',
+              '../assets/person-4.png',
               '山本 愛',
               'コンサルティング部',
               '2021年',

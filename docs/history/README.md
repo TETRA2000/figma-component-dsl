@@ -26,5 +26,6 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-15 — Awwwards Creative Agency](2026-03-15-awwwards-agency.md) — 0 pipeline issues, 0 pipeline fixes | Features: image(), imageFill(), gradient overlays on images, large typography (80-96px), clipContent, cornerRadius, opacity, FILL sizing, SPACE_BETWEEN, textAutoResize, letterSpacing
 - [2026-03-15 — Japanese Corporate Pages](2026-03-15-japanese-corporate.md) — 20 pages, 0 issues found, 0 pipeline fixes | Features: image(), imageFill(), CJK text, nested auto-layout, FILL sizing, SPACE_BETWEEN, cornerRadius, strokes, gradients, opacity, clipContent, textAutoResize, badges, stat blocks
 - [2026-03-14 — Travel Cards](2026-03-14-travel-cards.md) — 0 issues found, 0 pipeline fixes | Features: cornerRadius, clipContent, strokes, textAutoResize:HEIGHT, FILL sizing, SPACE_BETWEEN, nested auto-layout

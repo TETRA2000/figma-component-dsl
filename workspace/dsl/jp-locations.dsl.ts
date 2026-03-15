@@ -26,7 +26,7 @@ function navBar() {
       frame('NavLeft', {
         autoLayout: horizontal({ spacing: 32, counterAlign: 'CENTER' }),
         children: [
-          image('Logo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+          image('Logo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
           navLink('会社概要'),
           navLink('事業内容'),
           navLink('採用情報'),
@@ -63,7 +63,7 @@ function footer() {
           frame('FooterCol1', {
             autoLayout: vertical({ spacing: 12 }),
             children: [
-              image('FooterLogo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+              image('FooterLogo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
               text('〒100-0001\n東京都千代田区千代田1-1-1', {
                 fontSize: 13, color: '#94a3b8',
                 lineHeight: { value: 170, unit: 'PERCENT' },
@@ -206,7 +206,7 @@ export default frame('LocationsPage', {
           textAlignHorizontal: 'CENTER',
         }),
         image('MapJapan', {
-          src: './assets/map-japan.png',
+          src: '../assets/map-japan.png',
           size: { x: 800, y: 500 },
           cornerRadius: 8,
         }),
@@ -221,7 +221,7 @@ export default frame('LocationsPage', {
       children: [
         officeCard(
           'OfficeTokyo',
-          './assets/office-tokyo.png',
+          '../assets/office-tokyo.png',
           '東京本社',
           '東京都千代田区千代田1-1-1\nテクノフューチャービル 15F',
           '03-1234-5678',
@@ -229,7 +229,7 @@ export default frame('LocationsPage', {
         ),
         officeCard(
           'OfficeOsaka',
-          './assets/office-osaka.png',
+          '../assets/office-osaka.png',
           '大阪支社',
           '大阪府大阪市北区梅田2-2-2\n大阪スカイビル 8F',
           '06-2345-6789',
@@ -237,7 +237,7 @@ export default frame('LocationsPage', {
         ),
         officeCard(
           'OfficeNagoya',
-          './assets/office-nagoya.png',
+          '../assets/office-nagoya.png',
           '名古屋支社',
           '愛知県名古屋市中区栄3-3-3\n名古屋テックセンター 5F',
           '052-3456-7890',

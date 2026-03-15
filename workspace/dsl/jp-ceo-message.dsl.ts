@@ -26,7 +26,7 @@ function navBar() {
       frame('NavLeft', {
         autoLayout: horizontal({ spacing: 32, counterAlign: 'CENTER' }),
         children: [
-          image('Logo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+          image('Logo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
           navLink('会社概要'),
           navLink('事業内容'),
           navLink('採用情報'),
@@ -63,7 +63,7 @@ function footer() {
           frame('FooterCol1', {
             autoLayout: vertical({ spacing: 12 }),
             children: [
-              image('FooterLogo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+              image('FooterLogo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
               text('〒100-0001\n東京都千代田区千代田1-1-1', {
                 fontSize: 13, color: '#94a3b8',
                 lineHeight: { value: 170, unit: 'PERCENT' },
@@ -147,7 +147,7 @@ export default frame('CEOMessagePage', {
           autoLayout: vertical({ spacing: 16, counterAlign: 'CENTER' }),
           children: [
             image('CEOPortrait', {
-              src: './assets/ceo-portrait.png',
+              src: '../assets/ceo-portrait.png',
               size: { x: 300, y: 400 },
               cornerRadius: 8,
             }),
@@ -208,7 +208,7 @@ export default frame('CEOMessagePage', {
               cornerRadius: 8,
               strokes: [{ color: hex('#e2e8f0'), weight: 1, align: 'INSIDE' }],
               children: [
-                image('IconInnovation', { src: './assets/icon-innovation.png', size: { x: 60, y: 60 } }),
+                image('IconInnovation', { src: '../assets/icon-innovation.png', size: { x: 60, y: 60 } }),
                 text('イノベーション', { fontSize: 18, fontWeight: 700, color: '#1a365d', textAlignHorizontal: 'CENTER' }),
                 text('常に新しい技術と発想で、お客様のビジネスに革新をもたらします。', {
                   fontSize: 14, color: '#475569',
@@ -224,7 +224,7 @@ export default frame('CEOMessagePage', {
               cornerRadius: 8,
               strokes: [{ color: hex('#e2e8f0'), weight: 1, align: 'INSIDE' }],
               children: [
-                image('IconTrust', { src: './assets/icon-trust.png', size: { x: 60, y: 60 } }),
+                image('IconTrust', { src: '../assets/icon-trust.png', size: { x: 60, y: 60 } }),
                 text('信頼', { fontSize: 18, fontWeight: 700, color: '#1a365d', textAlignHorizontal: 'CENTER' }),
                 text('誠実な姿勢と確かな技術で、お客様との長期的な信頼関係を構築します。', {
                   fontSize: 14, color: '#475569',
@@ -240,7 +240,7 @@ export default frame('CEOMessagePage', {
               cornerRadius: 8,
               strokes: [{ color: hex('#e2e8f0'), weight: 1, align: 'INSIDE' }],
               children: [
-                image('IconGlobal', { src: './assets/icon-global.png', size: { x: 60, y: 60 } }),
+                image('IconGlobal', { src: '../assets/icon-global.png', size: { x: 60, y: 60 } }),
                 text('グローバル', { fontSize: 18, fontWeight: 700, color: '#1a365d', textAlignHorizontal: 'CENTER' }),
                 text('世界に通用する技術とサービスで、グローバル市場に挑戦し続けます。', {
                   fontSize: 14, color: '#475569',

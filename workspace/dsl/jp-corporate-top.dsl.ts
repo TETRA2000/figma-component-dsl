@@ -69,7 +69,7 @@ export default frame('JpCorporateTop', {
       size: { x: 1440, y: 72 },
       fills: [solid('#1a365d')],
       children: [
-        image('Logo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+        image('Logo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
         frame('Nav', {
           autoLayout: horizontal({ spacing: 36, counterAlign: 'CENTER' }),
           children: [
@@ -87,7 +87,7 @@ export default frame('JpCorporateTop', {
     frame('Hero', {
       size: { x: 1440, y: 500 },
       fills: [
-        imageFill('./assets/hero-corporate.png'),
+        imageFill('../assets/hero-corporate.png'),
         gradient([
           { hex: '#1a365d00', position: 0 },
           { hex: '#1a365dcc', position: 1 },
@@ -139,17 +139,17 @@ export default frame('JpCorporateTop', {
           autoLayout: horizontal({ spacing: 32, counterAlign: 'MIN' }),
           children: [
             highlightCard(
-              './assets/icon-innovation.png',
+              '../assets/icon-innovation.png',
               'イノベーション',
               '最先端のAI・IoT技術を活用し、お客様のデジタルトランスフォーメーションを推進します。',
             ),
             highlightCard(
-              './assets/icon-global.png',
+              '../assets/icon-global.png',
               'グローバル展開',
               '世界15カ国に拠点を構え、国境を越えたシームレスなサービスを提供しています。',
             ),
             highlightCard(
-              './assets/icon-trust.png',
+              '../assets/icon-trust.png',
               '信頼と実績',
               '創業50年以上の歴史と3,000社以上の導入実績が、私たちの品質の証です。',
             ),

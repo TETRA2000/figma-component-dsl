@@ -26,7 +26,7 @@ function navBar() {
       frame('NavLeft', {
         autoLayout: horizontal({ spacing: 32, counterAlign: 'CENTER' }),
         children: [
-          image('Logo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+          image('Logo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
           navLink('会社概要'),
           navLink('事業内容'),
           navLink('採用情報'),
@@ -63,7 +63,7 @@ function footer() {
           frame('FooterCol1', {
             autoLayout: vertical({ spacing: 12 }),
             children: [
-              image('FooterLogo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+              image('FooterLogo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
               text('〒100-0001\n東京都千代田区千代田1-1-1', {
                 fontSize: 13, color: '#94a3b8',
                 lineHeight: { value: 170, unit: 'PERCENT' },
@@ -198,18 +198,18 @@ export default frame('PartnersPage', {
         frame('LogoRow1', {
           autoLayout: horizontal({ spacing: 32, counterAlign: 'CENTER' }),
           children: [
-            partnerLogo('Partner1', './assets/logo-partner-1.png'),
-            partnerLogo('Partner2', './assets/logo-partner-2.png'),
-            partnerLogo('Partner3', './assets/logo-partner-3.png'),
+            partnerLogo('Partner1', '../assets/logo-partner-1.png'),
+            partnerLogo('Partner2', '../assets/logo-partner-2.png'),
+            partnerLogo('Partner3', '../assets/logo-partner-3.png'),
           ],
         }),
         // Row 2
         frame('LogoRow2', {
           autoLayout: horizontal({ spacing: 32, counterAlign: 'CENTER' }),
           children: [
-            partnerLogo('Partner4', './assets/logo-partner-4.png'),
-            partnerLogo('Partner5', './assets/logo-partner-5.png'),
-            partnerLogo('Partner6', './assets/logo-partner-6.png'),
+            partnerLogo('Partner4', '../assets/logo-partner-4.png'),
+            partnerLogo('Partner5', '../assets/logo-partner-5.png'),
+            partnerLogo('Partner6', '../assets/logo-partner-6.png'),
           ],
         }),
       ],
@@ -229,17 +229,17 @@ export default frame('PartnersPage', {
             benefitCard(
               '技術力の結集',
               '各パートナー企業の専門技術を組み合わせることで、単独では実現できない高度なソリューションを提供します。',
-              './assets/icon-innovation.png',
+              '../assets/icon-innovation.png',
             ),
             benefitCard(
               '品質保証',
               '厳格なパートナー審査基準と継続的な品質管理により、常に高い品質のサービスをお届けします。',
-              './assets/icon-quality.png',
+              '../assets/icon-quality.png',
             ),
             benefitCard(
               'サポート体制',
               '全国のパートナーネットワークを活用し、迅速かつきめ細やかなサポート体制を実現しています。',
-              './assets/icon-support.png',
+              '../assets/icon-support.png',
             ),
           ],
         }),

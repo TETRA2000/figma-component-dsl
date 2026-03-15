@@ -114,7 +114,7 @@ export default frame('JpServices', {
       size: { x: 1440, y: 72 },
       fills: [solid('#1a365d')],
       children: [
-        image('Logo', { src: './assets/company-logo.png', size: { x: 180, y: 50 } }),
+        image('Logo', { src: '../assets/company-logo.png', size: { x: 180, y: 50 } }),
         frame('Nav', {
           autoLayout: horizontal({ spacing: 36, counterAlign: 'CENTER' }),
           children: [
@@ -132,7 +132,7 @@ export default frame('JpServices', {
     frame('HeroBanner', {
       size: { x: 1440, y: 320 },
       fills: [
-        imageFill('./assets/hero-tech.png'),
+        imageFill('../assets/hero-tech.png'),
         gradient([
           { hex: '#1a365d99', position: 0 },
           { hex: '#1a365dee', position: 1 },
@@ -179,19 +179,19 @@ export default frame('JpServices', {
           autoLayout: horizontal({ spacing: 30 }),
           children: [
             serviceCard(
-              './assets/product-1.png',
+              '../assets/product-1.png',
               'クラウドソリューション',
               'エンタープライズ向けクラウド基盤の設計・構築・運用をワンストップで提供。マルチクラウド環境にも対応しています。',
               ['AWS', 'Azure', 'GCP'],
             ),
             serviceCard(
-              './assets/product-2.png',
+              '../assets/product-2.png',
               'AIプラットフォーム',
               '機械学習・深層学習を活用したデータ分析基盤の構築。業務効率化から意思決定支援まで幅広くサポートします。',
               ['機械学習', 'NLP', '画像認識'],
             ),
             serviceCard(
-              './assets/product-3.png',
+              '../assets/product-3.png',
               'DXコンサルティング',
               'デジタルトランスフォーメーション戦略の策定から実行まで伴走。組織変革と技術導入を一体的に推進します。',
               ['戦略策定', '業務改革', 'PMO'],
