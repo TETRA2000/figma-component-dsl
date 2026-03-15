@@ -21,6 +21,26 @@
 - Slot-based visual rendering in @napi-rs/canvas (slots render as regular frames in PNG output)
 - Variant-aware slot definitions (slots are uniform across variants in this phase)
 
+### Known Limitations
+
+#### Instance Slot Override — Detached Copy Strategy
+Figma instances lock their child hierarchy: you cannot programmatically add, remove, or reorder children of a nested frame inside an instance without detaching it. Since the Plugin API also lacks `SLOT` as a `ComponentPropertyType`, there is no API method to set slot content overrides on instances.
+
+**Workaround**: When the plugin encounters an INSTANCE node with `slotOverrides`, it creates a **detached copy** instead of a true Figma instance:
+1. The plugin reads the referenced component's full structure from `componentMap`.
+2. It creates a flat FRAME reproducing the component's layout and children.
+3. For each slot frame, it replaces the default children with the override content.
+4. The detached copy is named `{ComponentName} (detached — slot override)` so designers can identify it.
+
+**Trade-offs**: Detached copies do not receive global component updates. This is acceptable because:
+- Slot overrides inherently diverge from the base component's default content.
+- When Figma adds SLOT API support, the plugin can switch to `component.createInstance()` with proper slot property overrides.
+- The DSL pipeline still tracks the component reference, so re-import can recreate true instances when API support arrives.
+
+**Impact on Requirements 9 & 10**:
+- Req 9.4 (Plugin replaces slot children): Implemented via detached copy, not true instance override.
+- Req 10.1–10.4 (Bidirectional slot sync): Plugin-side detection of slot edits on detached copies uses the `[Slot]` naming convention and plugin data to identify slot frames. Structural changes are captured by comparing current children against the stored default structure.
+
 ## Architecture
 
 ### Existing Architecture Analysis
@@ -139,9 +159,13 @@ sequenceDiagram
   Compiler->>Compiler: Validate slot name exists on Card component
   Compiler-->>Exporter: INSTANCE node with slotOverrides
   Exporter-->>Plugin: PluginNodeDef with slotOverrides children
-  Plugin->>Plugin: Create instance, replace slot children
+  Note over Plugin: Cannot set slot overrides on true instances (API limitation)
+  Plugin->>Plugin: Read component structure from componentMap
+  Plugin->>Plugin: Create detached FRAME copy with component structure
+  Plugin->>Plugin: Replace [Slot] frame children with override content
+  Plugin->>Plugin: Name frame "{ComponentName} (detached — slot override)"
   Designer->>Plugin: Modify slot content in Figma
-  Plugin->>Plugin: Detect structural change in slot
+  Plugin->>Plugin: Detect structural change in [Slot] frame via plugin data
   Plugin-->>Designer: Changeset with slot content diff
 ```
 
@@ -202,8 +226,9 @@ sequenceDiagram
 | Component | Domain/Layer | Intent | Req Coverage | Key Dependencies | Contracts |
 |-----------|-------------|--------|--------------|------------------|-----------|
 | SlotBuilder | Core/DSL | Create slot DslNodes | 3.1–3.6 | DslNode types (P0) | — |
-| ComponentRegistry | Exporter/Data | Track known components for reuse | 1.1–1.5 | — | Service, State |
-| StructuralDeduplicator | Exporter/Logic | Detect and extract repeated subtrees | 8.1–8.5 | PluginNodeDef (P0) | Service |
+| StructuralHasher | Exporter/Utility | Compute structural hashes for node trees | 1.5, 8.2 | PluginNodeDef (P0) | Service |
+| ComponentRegistry | Exporter/Data | Track known components for reuse | 1.1–1.5 | StructuralHasher (P0) | Service, State |
+| StructuralDeduplicator | Exporter/Logic | Detect and extract repeated subtrees | 8.1–8.5 | StructuralHasher (P0), PluginNodeDef (P0) | Service |
 | SlotEncoder | Exporter/Logic | Encode slot metadata in PluginNodeDef | 5.1–5.3 | PluginNodeDef (P0) | — |
 | CodeConnectGenerator | Exporter/Output | Generate .figma.tsx Code Connect files | 7.1–7.4 | PluginInput (P0) | Service |
 | FileScanner | Plugin/Import | Scan Figma file for existing components | 2.1–2.5 | Figma Plugin API (P0) | Service |
@@ -255,6 +280,36 @@ function slot(name: string, props?: SlotProps): DslNode;
 
 ### Exporter Layer
 
+#### StructuralHasher (shared utility)
+
+| Field | Detail |
+|-------|--------|
+| Intent | Compute deterministic structural hashes for PluginNodeDef trees, shared by ComponentRegistry and StructuralDeduplicator |
+| Requirements | 1.5, 8.2 |
+
+**Responsibilities & Constraints**
+- Single source of truth for structural hashing logic
+- Hash includes: type, name (base pattern), stackMode, itemSpacing, padding, alignment, child count, child hashes (recursive)
+- Hash excludes: characters, fills, opacity, size (these become overrides)
+- Deterministic: identical structures always produce identical hashes
+- Located in `packages/exporter/src/structural-hash.ts`
+
+**Dependencies**
+- Inbound: ComponentRegistry and StructuralDeduplicator both import this utility (P0)
+- Outbound: PluginNodeDef type (P0)
+
+##### Service Interface
+```typescript
+function computeStructuralHash(node: PluginNodeDef): string;
+// Returns: Deterministic hash string for the node's structural shape
+// Hash algorithm: SHA-256 of JSON-serialized structural descriptor
+// Structural descriptor: { type, namePattern, stackMode, itemSpacing,
+//   paddingTop, paddingRight, paddingBottom, paddingLeft,
+//   primaryAxisAlignItems, counterAxisAlignItems,
+//   childHashes: string[] }
+// namePattern: name with trailing digits/content stripped (e.g., "Card 1" → "Card")
+```
+
 #### ComponentRegistry
 
 | Field | Detail |
@@ -292,7 +347,7 @@ interface ComponentRegistry {
 function loadRegistry(filePath: string): ComponentRegistry;
 function buildRegistryFromBatch(exportedComponents: PluginNodeDef[]): ComponentRegistry;
 function matchComponent(registry: ComponentRegistry, subtreeRoot: PluginNodeDef): ComponentRegistryEntry | null;
-function computeStructuralHash(node: PluginNodeDef): string;
+// Uses shared computeStructuralHash() from structural-hash.ts
 ```
 - Preconditions: Registry file exists and is valid JSON (for loadRegistry)
 - Postconditions: Returns immutable ComponentRegistry
@@ -344,16 +399,36 @@ interface DeduplicationSummary {
 }
 
 function deduplicate(root: PluginNodeDef): DeduplicationResult;
-function computeStructuralHash(node: PluginNodeDef): string;
 function extractPropertyOverrides(
   template: PluginNodeDef,
   instance: PluginNodeDef,
-): Record<string, string | boolean>;
+): ExtractedOverrides;
+function inferComponentProperties(
+  template: PluginNodeDef,
+  instances: PluginNodeDef[],
+): Record<string, { type: 'TEXT' | 'BOOLEAN'; defaultValue: string | boolean }>;
 ```
 - Preconditions: Root node is a valid PluginNodeDef tree
 - Postconditions: extractedComponents + modifiedTree produces identical visual output when imported
 - Structural hash excludes: characters, fills, opacity, size (these become overrides)
 - Structural hash includes: type, name (base pattern), stackMode, itemSpacing, padding, alignment, child count, child hashes (recursive)
+
+**Property Inference Logic**:
+`inferComponentProperties` walks the template and all instances in parallel, comparing leaf nodes:
+1. **TEXT nodes with differing `characters`**: Auto-generate a TEXT component property named after the node's `name` field (e.g., a TEXT node named "Title" with different content across instances → property `Title` of type `TEXT`).
+2. **Nodes with differing `visible` field**: Auto-generate a BOOLEAN component property named `Show {nodeName}` (e.g., a node named "Badge" that is visible in some instances and hidden in others → property `Show Badge` of type `BOOLEAN`).
+3. **Naming convention for auto-generated properties**: `{NodeName}` for TEXT, `Show {NodeName}` for BOOLEAN. If duplicate names arise (two TEXT nodes named "Label"), append a 1-based index: `Label`, `Label 2`.
+4. Only Figma-supported property types (TEXT, BOOLEAN) are inferred. Structural differences (different child counts, different node types) are NOT converted to properties — they indicate a false dedup match and trigger a warning.
+
+`extractPropertyOverrides` returns the inferred override values:
+```typescript
+interface ExtractedOverrides {
+  readonly properties: Record<string, string | boolean>;
+  readonly warnings: string[];
+}
+```
+- `properties`: Maps inferred property names to instance-specific values.
+- `warnings`: Lists any structural differences that could not be expressed as property overrides (indicating potential false dedup match).
 
 #### CodeConnectGenerator
 
