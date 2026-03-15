@@ -10,8 +10,12 @@
       "import": "./dist/index.js"
     }
   },
+  "bin": {
+    "figma-sync": "dist/cli.js"
+  },
   "scripts": {
     "build": "tsc",
+    "start": "node dist/cli.js",
     "test": "vitest run"
   },
   "dependencies": {
