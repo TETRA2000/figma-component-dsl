@@ -143,6 +143,7 @@ describe('generatePluginInput() — IMAGE fills', () => {
     const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
     const fill = input.components[0]!.fills![0]!;
     expect(fill.type).toBe('IMAGE');
+    expect(fill.imageSrc).toBe('./test.png');
     expect(fill.imageData).toBeDefined();
     expect(fill.imageData!.startsWith('data:image/png;base64,')).toBe(true);
     expect(fill.imageScaleMode).toBe('FILL');
@@ -191,5 +192,67 @@ describe('generatePluginInput() — IMAGE fills', () => {
     const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
     const fill = input.components[0]!.fills![0]!;
     expect(fill.imageScaleMode).toBe('TILE');
+  });
+});
+
+describe('generatePluginInput() — IMAGE nodes', () => {
+  it('embeds image data for IMAGE node with local src', () => {
+    const node = frame('Root', {
+      size: { x: 200, y: 200 },
+      children: [
+        image('Photo', { src: './test.png', size: { x: 100, y: 100 } }),
+      ],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
+    const imgNode = input.components[0]!.children[0]!;
+    expect(imgNode.type).toBe('IMAGE');
+    expect(imgNode.imageSrc).toBe('./test.png');
+    expect(imgNode.imageScaleMode).toBe('FILL');
+    expect(imgNode.imageData).toBeDefined();
+    expect(imgNode.imageData!.startsWith('data:image/png;base64,')).toBe(true);
+    expect(imgNode.imageFormat).toBe('PNG');
+  });
+
+  it('sets imageError for IMAGE node with missing file', () => {
+    const node = frame('Root', {
+      size: { x: 200, y: 200 },
+      children: [
+        image('Missing', { src: './nonexistent.png', size: { x: 100, y: 100 } }),
+      ],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
+    const imgNode = input.components[0]!.children[0]!;
+    expect(imgNode.imageSrc).toBe('./nonexistent.png');
+    expect(imgNode.imageError).toBeDefined();
+    expect(imgNode.imageData).toBeUndefined();
+  });
+
+  it('sets imageError for IMAGE node with URL src', () => {
+    const node = frame('Root', {
+      size: { x: 200, y: 200 },
+      children: [
+        image('Remote', { src: 'https://example.com/img.png', size: { x: 100, y: 100 } }),
+      ],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
+    const imgNode = input.components[0]!.children[0]!;
+    expect(imgNode.imageSrc).toBe('https://example.com/img.png');
+    expect(imgNode.imageError).toBeDefined();
+  });
+
+  it('preserves custom fit mode for IMAGE nodes', () => {
+    const node = frame('Root', {
+      size: { x: 200, y: 200 },
+      children: [
+        image('Fitted', { src: './test.png', size: { x: 100, y: 100 }, fit: 'FIT' }),
+      ],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
+    const imgNode = input.components[0]!.children[0]!;
+    expect(imgNode.imageScaleMode).toBe('FIT');
   });
 });

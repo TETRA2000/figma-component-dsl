@@ -12,6 +12,7 @@ export interface PluginNodeDef {
     opacity: number;
     gradientStops?: ReadonlyArray<{ color: { r: number; g: number; b: number; a: number }; position: number }>;
     gradientTransform?: [[number, number, number], [number, number, number]];
+    imageSrc?: string;
     imageData?: string;
     imageScaleMode?: string;
     imageDimensions?: { width: number; height: number };
@@ -55,6 +56,14 @@ export interface PluginNodeDef {
 
   // Component
   readonly componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
+
+  // Image (IMAGE node)
+  readonly imageSrc?: string;
+  readonly imageScaleMode?: string;
+  readonly imageData?: string;
+  readonly imageFormat?: string;
+  readonly imageDimensions?: { width: number; height: number };
+  readonly imageError?: string;
 
   // Instance
   readonly componentId?: string;
