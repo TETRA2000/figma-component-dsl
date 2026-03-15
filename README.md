@@ -17,9 +17,9 @@ npx vitest run
 
 | Package | Description |
 |---------|-------------|
-| `@figma-dsl/core` | DSL node primitives, color/fill helpers, layout config, component/variant system, changeset schema, canonical PluginNodeDef types, diff algorithm |
+| `@figma-dsl/core` | DSL node primitives, color/fill helpers, image support, layout config, component/variant system, changeset schema, canonical PluginNodeDef types, diff algorithm |
 | `@figma-dsl/compiler` | Compiles DslNode trees to FigmaNodeDict with GUID assignment, text measurement, and two-pass auto-layout |
-| `@figma-dsl/renderer` | Renders compiled nodes to PNG via @napi-rs/canvas (Skia) |
+| `@figma-dsl/renderer` | Renders compiled nodes to PNG via @napi-rs/canvas (Skia), with image loading and caching |
 | `@figma-dsl/capturer` | Captures React component screenshots via Playwright |
 | `@figma-dsl/comparator` | Pixel-level image comparison with similarity scoring via pixelmatch |
 | `@figma-dsl/exporter` | Generates Figma plugin input JSON from compiled DSL |
@@ -53,7 +53,7 @@ bin/figma-dsl-validate src/components/Button
 bin/figma-dsl-validate src/components/ --format json --strict
 
 # Batch compile, render, and export multiple DSL files
-bin/figma-dsl-batch examples/ -o output/
+bin/figma-dsl-batch examples/ -o output/ [--asset-dir assets/]
 
 # Batch compare DSL renders against Figma captures
 bin/figma-dsl-batch-compare output/dsl/ output/figma/ -o output/report.json
@@ -73,8 +73,8 @@ bin/figma-dsl-calibrate -o calibration/ --file-key FILE_KEY
 ## DSL Example
 
 ```typescript
-import { frame, text, component } from '@figma-dsl/core';
-import { solid, gradient } from '@figma-dsl/core';
+import { frame, text, image, component } from '@figma-dsl/core';
+import { solid, gradient, imageFill } from '@figma-dsl/core';
 import { horizontal } from '@figma-dsl/core';
 
 export default component('Button', {
@@ -88,6 +88,10 @@ export default component('Button', {
     text('Click', { fontSize: 14, fontWeight: 500, color: '#ffffff' }),
   ],
 });
+
+// Image support: embed images as nodes or fills
+image('Avatar', { src: './assets/avatar.png', size: { x: 48, y: 48 }, cornerRadius: 24 });
+frame('Hero', { size: { x: 800, y: 400 }, fills: [imageFill('./assets/hero.jpg', { scaleMode: 'FILL' })] });
 ```
 
 ## Pipeline

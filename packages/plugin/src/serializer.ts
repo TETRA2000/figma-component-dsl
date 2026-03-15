@@ -52,6 +52,8 @@ export interface SerializablePaint {
   readonly opacity?: number;
   readonly gradientStops?: ReadonlyArray<{ color: { r: number; g: number; b: number; a: number }; position: number }>;
   readonly gradientTransform?: [[number, number, number], [number, number, number]];
+  readonly imageHash?: string | null;
+  readonly scaleMode?: string;
 }
 
 export function serializeFills(node: SerializableNode): PluginNodeDef['fills'] {
@@ -77,6 +79,14 @@ export function serializeFills(node: SerializableNode): PluginNodeDef['fills'] {
           position: s.position,
         })),
         gradientTransform: f.gradientTransform,
+      };
+    }
+    if (f.type === 'IMAGE') {
+      return {
+        type: 'IMAGE',
+        opacity: f.opacity ?? 1,
+        imageHash: f.imageHash,
+        imageScaleMode: f.scaleMode,
       };
     }
     return { type: f.type, opacity: f.opacity ?? 1 };

@@ -22,6 +22,7 @@ function mapNodeType(node: DslNode): FigmaNodeType {
              node.cornerRadii !== undefined
         ? 'ROUNDED_RECTANGLE'
         : 'RECTANGLE';
+    case 'IMAGE':
     case 'FRAME':
     case 'TEXT':
     case 'ELLIPSE':
@@ -38,6 +39,15 @@ function convertFill(fill: Fill): FigmaPaint {
     return {
       type: 'SOLID',
       color: { ...fill.color },
+      opacity: fill.opacity,
+      visible: fill.visible,
+    };
+  }
+  if (fill.type === 'IMAGE') {
+    return {
+      type: 'IMAGE',
+      imageSrc: fill.src,
+      imageScaleMode: fill.scaleMode,
       opacity: fill.opacity,
       visible: fill.visible,
     };
@@ -129,6 +139,22 @@ function validateNode(
     }
   }
 
+  // Validate image
+  if (node.type === 'IMAGE') {
+    if (!node.imageSrc) {
+      errors.push({ message: 'IMAGE node must have an imageSrc', nodePath: path, nodeType: node.type });
+    }
+  }
+
+  // Validate fills for image type
+  if (node.fills) {
+    for (const fill of node.fills) {
+      if (fill.type === 'IMAGE' && !fill.src) {
+        errors.push({ message: 'IMAGE fill must have a non-empty src', nodePath: path, nodeType: node.type });
+      }
+    }
+  }
+
   // Validate text
   if (node.type === 'TEXT') {
     const fontSize = node.textStyle?.fontSize;
@@ -184,6 +210,12 @@ function compileNode(
       ? { guid: parentGuid, position: String(childIndex) }
       : undefined,
   };
+
+  // Image passthrough
+  if (node.type === 'IMAGE') {
+    result.imageSrc = node.imageSrc;
+    result.imageScaleMode = node.imageScaleMode;
+  }
 
   // Auto-layout passthrough
   if (node.autoLayout) {

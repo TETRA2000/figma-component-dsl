@@ -47,9 +47,11 @@ Key characteristics:
 ```
 packages/renderer/
 ├── src/
-│   ├── index.ts              # Barrel export (re-exports renderer.ts)
-│   ├── renderer.ts           # All implementation (~440 lines)
-│   └── renderer.test.ts      # Test suite (208 lines)
+│   ├── index.ts              # Barrel export (re-exports renderer.ts + image-loader.ts)
+│   ├── renderer.ts           # Core rendering implementation (~440 lines)
+│   ├── image-loader.ts       # Image source collection, resolution, and preloading
+│   ├── renderer.test.ts      # Renderer test suite (208 lines)
+│   └── image-loader.test.ts  # Image loader test suite (18 test statements)
 ├── dist/                     # Compiled output (ESM + types)
 ├── package.json
 └── tsconfig.json
@@ -98,8 +100,12 @@ interface RenderOptions {
   backgroundColor: RgbaColor;   // Default: white (1,1,1,1)
   scale: number;                // Default: 1
   debugLayout?: boolean;        // Overlay layout debug info (frame borders, padding, sizes)
-  assetDir?: string;            // Declared but unused
+  assetDir?: string;            // Base directory for image path resolution
+  imageCache?: ImageCache;      // Pre-loaded image cache (from preloadImages())
 }
+
+type ImageCache = ReadonlyMap<string, Image>;
+
 
 interface RenderResult {
   pngBuffer: Buffer;    // PNG-encoded image bytes
@@ -128,7 +134,18 @@ Core rendering function. Creates canvas at node dimensions × scale, renders the
 #### `renderToFile(node: FigmaNodeDict, outputPath: string, options?: Partial<RenderOptions>): RenderResult`
 Convenience wrapper: calls `render()` → writes PNG to disk via `writeFileSync()` → returns same `RenderResult`.
 
-**Evidence**: `src/renderer.ts:6-34,43-52,249-293`
+### Image Loading Functions
+
+#### `collectImageSources(node: FigmaNodeDict): Set<string>`
+Traverses a compiled node tree and collects all image source references from IMAGE nodes (`imageSrc`) and IMAGE fills (`fillPaints` with `type: 'IMAGE'`). Returns deduplicated `Set<string>`.
+
+#### `resolveImageSource(src: string, assetDir: string): string`
+Resolves a relative image path against an asset directory. HTTP/HTTPS URLs and absolute paths pass through unchanged; relative paths are resolved via `resolve(assetDir, src)`.
+
+#### `preloadImages(sources: Set<string>, assetDir: string): Promise<ImageCache>`
+Loads all collected image sources in parallel using `Promise.allSettled()`. Failed loads are silently omitted (the renderer draws a placeholder instead). Returns an immutable `Map<string, Image>`.
+
+**Evidence**: `src/renderer.ts:6-34,43-52,249-293`, `src/image-loader.ts:14-81`
 
 ---
 
@@ -179,6 +196,12 @@ FigmaNodeDict (compiled tree)
 - If `gradientTransform` is undefined, defaults to horizontal gradient
 - Color stops from `gradientStops` array applied via `gradient.addColorStop()`
 
+### Image Fills
+- `IMAGE` type
+- Renders image from `imageCache` using `drawImageOnNode()` with scale mode support via `computeDrawInstruction()` from `@figma-dsl/core`
+- Supports four scale modes: FILL (cover, may crop), FIT (contain, may letterbox), CROP (center crop), TILE (repeat pattern via `createPattern()`)
+- Falls back to `drawImagePlaceholder()` if image not found in cache — gray background with crosshatch pattern
+
 ### Radial Gradient Fills
 - `GRADIENT_RADIAL` type
 - Center and radius computed from node dimensions using normalized 0–1 coordinates
@@ -207,6 +230,7 @@ FigmaNodeDict (compiled tree)
 | RECTANGLE | Rectangle with optional corner radius |
 | ROUNDED_RECTANGLE | Rectangle with corner radius |
 | ELLIPSE | Ellipse via `ctx.ellipse()` (center, radiusX, radiusY) |
+| IMAGE | Image from cache with cornerRadius clipping; placeholder if not cached |
 | TEXT | Delegated to `renderText()` |
 | GROUP | Transparent container — children rendered, no shape |
 
@@ -511,7 +535,7 @@ npm run test     # vitest run
 
 1. **No shadow/blur effects**: Not in FigmaNodeDict type or rendering implementation.
 2. **No dashed/dotted strokes**: Stroke dash patterns not supported.
-3. **Unused `assetDir` option**: Declared in `RenderOptions` but never used in implementation.
+3. ~~**Unused `assetDir` option**~~: **Resolved** — Image loading now uses `imageCache` (pre-loaded via `preloadImages()`) for rendering IMAGE nodes and fills.
 4. **Silent text failure**: Text nodes without `textData`/`derivedTextData` render as blank without error.
 5. **No input validation**: Beyond dimension checks, no validation of RGBA ranges, scale bounds, or transform matrices.
 6. **Synchronous only**: All operations block the event loop; no async rendering support.

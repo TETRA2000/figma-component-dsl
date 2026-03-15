@@ -198,6 +198,43 @@ rectangle('Avatar', {
 | `x` | `number` | Absolute X position (for non-auto-layout children) |
 | `y` | `number` | Absolute Y position (for non-auto-layout children) |
 
+#### `image(name, options)`
+
+Creates an image node. Renders an image from a local file path or URL.
+
+```ts
+// Simple image
+image('Logo', {
+  src: './assets/logo.png',
+  size: { x: 120, y: 40 },
+})
+
+// Image with rounded corners and fit mode
+image('Avatar', {
+  src: './assets/avatar.jpg',
+  size: { x: 48, y: 48 },
+  cornerRadius: 24,  // circle
+  fit: 'FILL',
+})
+```
+
+**Options:**
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `src` | `string` | *(required)* | Image source — relative path, absolute path, or URL |
+| `size` | `{ x: number, y: number }` | | Width and height |
+| `fit` | `ImageScaleMode` | `'FILL'` | How the image fills its bounds |
+| `cornerRadius` | `number` | | Border radius (use half of size for circle) |
+| `opacity` | `number` | `1` | Opacity (0–1) |
+| `visible` | `boolean` | `true` | Visibility |
+| `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | | Horizontal sizing in auto-layout |
+| `layoutSizingVertical` | `'FIXED' \| 'HUG' \| 'FILL'` | | Vertical sizing in auto-layout |
+
+**ImageScaleMode values:** `'FILL'` (cover, may crop), `'FIT'` (contain, may letterbox), `'CROP'` (center crop), `'TILE'` (repeat pattern).
+
+> **Note:** Use `--asset-dir` in CLI commands to set the base directory for resolving relative image paths. Supported formats: PNG, JPG, JPEG, WebP.
+
 #### `component(name, options)`
 
 Creates a Figma component node. Same options as `frame()` plus `componentProperties`.
@@ -360,7 +397,15 @@ fills: [
 ]
 ```
 
-Gradient stops support 8-digit hex with alpha (e.g., `#FF000080` for 50% red).
+**Angle convention (differs from CSS!):** Angles follow Figma's coordinate system:
+- `0°` = left → right
+- `90°` = bottom → top
+- `180°` = right → left
+- `270°` = top → bottom
+
+> **Tip:** CSS `linear-gradient(180deg, ...)` (top→bottom) maps to DSL `gradient(stops, 270)`.
+
+Gradient stops support 8-digit hex with alpha (e.g., `#FF000080` for 50% red). This is useful for semi-transparent overlays on top of other fills.
 
 #### `radialGradient(stops, opts?)`
 
@@ -386,6 +431,53 @@ fills: [
 |----------|------|-------------|
 | `hex` | `string` | Color in hex format (6 or 8 digit, e.g., `#ff0000` or `#ff000080`) |
 | `position` | `number` | Position along gradient (0–1) |
+
+#### `imageFill(src, options?)`
+
+Creates an image fill that can be applied to any node's `fills` array. Useful for adding background images to frames or rectangles.
+
+```ts
+// Background image on a frame
+frame('Hero', {
+  size: { x: 800, y: 400 },
+  fills: [imageFill('./assets/hero-bg.jpg')],
+  children: [
+    text('Welcome', { fontSize: 32, color: '#ffffff' }),
+  ],
+})
+
+// Tiled pattern fill
+rectangle('Pattern', {
+  size: { x: 200, y: 200 },
+  fills: [imageFill('./assets/texture.png', { scaleMode: 'TILE' })],
+})
+
+// Multi-fill stacking: background image + gradient overlay
+// (Use this instead of a separate overlay rectangle)
+frame('Hero', {
+  size: { x: 800, y: 300 },
+  fills: [
+    imageFill('./assets/hero-bg.jpg'),
+    gradient([
+      { hex: '#00000033', position: 0 },  // 20% black at top
+      { hex: '#000000cc', position: 1 },  // 80% black at bottom
+    ], 270),
+  ],
+  autoLayout: vertical({ widthSizing: 'FIXED', heightSizing: 'FIXED', align: 'MAX', padX: 32, padBottom: 32 }),
+  children: [
+    text('Heading', { fontSize: 36, fontWeight: 700, color: '#ffffff' }),
+  ],
+})
+```
+
+**Options:**
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `scaleMode` | `ImageScaleMode` | `'FILL'` | How the image fills the node |
+| `opacity` | `number` | `1` | Fill opacity (0–1) |
+
+**ImageScaleMode values:** `'FILL'`, `'FIT'`, `'CROP'`, `'TILE'` (same as `image()` node).
 
 #### `hex(colorStr)`
 
@@ -1046,7 +1138,7 @@ These are limitations of the DSL pipeline itself (compiler/renderer), distinct f
 | Limitation | Description | Workaround |
 |------------|-------------|------------|
 | No absolute positioning in auto-layout | DSL auto-layout does not support overlapping children like CSS `position: absolute`. | Use invisible spacers (`opacity: 0` rectangles) to push content, or use separate stacked frames. |
-| Gradient angle approximation | Gradient angles are mapped to Figma's gradient handle positions, which may differ slightly from CSS `linear-gradient()` angles. | Test visually and adjust angle if needed. |
+| Gradient angle differs from CSS | DSL gradient angles follow Figma convention (0°=L→R, 90°=B→T, 270°=T→B), not CSS convention (180deg=T→B). | See gradient angle convention table in Fill & Stroke Builders section. |
 | No shadow/blur effects | Drop shadows, inner shadows, and blur effects are not supported. | Use layered frames with gradient fills to approximate shadow effects. |
 | No dashed/dotted strokes | Stroke dash patterns are not supported. | Use rectangles as visual separators. |
 | CJK font coverage | CJK text uses Noto Sans JP; other CJK scripts (Chinese, Korean) may render with fallback glyphs. | Stick to Japanese text for best results. |
@@ -1057,7 +1149,7 @@ These limitations from earlier versions have been fixed:
 
 | Previously | Resolution |
 |------------|------------|
-| ~~No per-stop gradient alpha~~ | 8-digit hex (`#rrggbbaa`) is now supported in gradient stops. |
+| ~~No per-stop gradient alpha~~ | 8-digit hex (`#rrggbbaa`) is supported in gradient stops. Renderer now correctly applies per-stop alpha (fixed `rgbaToString` defaulting to alpha=1). |
 | ~~Single stroke only~~ | Multiple strokes are now rendered (layered in order). |
 | ~~Stroke alignment ignored~~ | `INSIDE`, `CENTER`, and `OUTSIDE` alignment are now implemented. |
 | ~~No radial gradients~~ | `radialGradient()` is now supported. |

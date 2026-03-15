@@ -1,8 +1,8 @@
 export type FigmaNodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ROUNDED_RECTANGLE'
-  | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'VECTOR';
+  | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'VECTOR' | 'IMAGE';
 
 export interface FigmaPaint {
-  type: 'SOLID' | 'GRADIENT_LINEAR' | 'GRADIENT_RADIAL';
+  type: 'SOLID' | 'GRADIENT_LINEAR' | 'GRADIENT_RADIAL' | 'IMAGE';
   color?: { r: number; g: number; b: number; a: number };
   opacity: number;
   visible: boolean;
@@ -10,6 +10,8 @@ export interface FigmaPaint {
   gradientTransform?: [[number, number, number], [number, number, number]];
   center?: { x: number; y: number };
   radius?: number;
+  imageSrc?: string;
+  imageScaleMode?: 'FILL' | 'FIT' | 'CROP' | 'TILE';
 }
 
 export interface FigmaStroke {
@@ -62,6 +64,10 @@ export interface FigmaNodeDict {
   counterAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX';
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+
+  // Image
+  imageSrc?: string;
+  imageScaleMode?: 'FILL' | 'FIT' | 'CROP' | 'TILE';
 
   // Text
   textData?: { characters: string; lines: string[] };

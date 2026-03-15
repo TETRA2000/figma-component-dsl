@@ -58,7 +58,7 @@ packages/exporter/
 ## Public API
 **Confidence**: 0.98 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-### `generatePluginInput(compileResult: CompileResult, pageName?: string): PluginInput`
+### `generatePluginInput(compileResult: CompileResult, pageName?: string, options?: ExportOptions): PluginInput`
 
 Transforms a `CompileResult` into a `PluginInput` object.
 
@@ -66,10 +66,17 @@ Transforms a `CompileResult` into a `PluginInput` object.
 |-----------|------|----------|---------|
 | `compileResult` | `CompileResult` | Yes | — |
 | `pageName` | `string` | No | `'Component Library'` |
+| `options` | `ExportOptions` | No | `{}` |
 
-Returns `PluginInput` with schema version `'1.0.0'`, target page, and components array.
+```typescript
+interface ExportOptions {
+  assetDir?: string;  // Base directory for resolving image paths (default: process.cwd())
+}
+```
 
-### `exportToFile(compileResult: CompileResult, outputPath: string, pageName?: string): PluginInput`
+Returns `PluginInput` with schema version `'1.0.0'`, target page, and components array. When `assetDir` is provided, IMAGE fills have their local image files embedded as base64 data URIs in the output JSON.
+
+### `exportToFile(compileResult: CompileResult, outputPath: string, pageName?: string, options?: ExportOptions): PluginInput`
 
 Convenience wrapper: calls `generatePluginInput()` → creates directories recursively → writes pretty-printed JSON (2-space indent) → returns the generated `PluginInput`.
 
@@ -181,7 +188,15 @@ Example: 100×50 frame with `cornerRadius: 40` → clamped to 25 (half of 50px h
 ## Fill & Stroke Conversion
 **Confidence**: 0.92 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-**Fills**: Maps each `FigmaPaint` preserving `type` (SOLID/GRADIENT_LINEAR), `color`, `opacity`, `gradientStops`, `gradientTransform`. Only exported if array is non-empty.
+**Fills**: Maps each `FigmaPaint` preserving `type` (SOLID/GRADIENT_LINEAR/IMAGE), `color`, `opacity`, `gradientStops`, `gradientTransform`. Only exported if array is non-empty.
+
+**Image Fills**: IMAGE type fills are processed via `convertFillForPlugin()`:
+- Local image files are read from disk and embedded as base64 data URIs (`data:image/{format};base64,...`)
+- Image format and dimensions are recorded (`imageFormat`, `imageDimensions`)
+- Scale mode (`imageScaleMode`) is preserved
+- Files exceeding 4 MB trigger a console warning
+- HTTP/HTTPS URLs cannot be embedded (returns an `imageError` property)
+- Embedding failures are graceful — `imageError` is set without crashing the export
 
 **Strokes**: Maps each stroke preserving `color`, `weight`, `align`. Uses optional chaining for safety.
 

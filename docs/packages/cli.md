@@ -121,9 +121,9 @@ Compiles DSL and transforms to Figma plugin-compatible JSON format.
 
 #### `batch` — Bulk compile/render/export
 ```bash
-figma-dsl batch <dir|glob> -o <output-dir> [--include <path>...] [-p page] [-s scale]
+figma-dsl batch <dir|glob> -o <output-dir> [--include <path>...] [-p page] [-s scale] [--asset-dir <path>]
 ```
-Processes multiple `.dsl.ts` files. Outputs: `dsl/` (PNGs), `plugin-input.json` (merged), `batch-manifest.json`.
+Processes multiple `.dsl.ts` files. Outputs: `dsl/` (PNGs), `plugin-input.json` (merged), `batch-manifest.json`. The `--asset-dir` option sets the base directory for resolving relative image paths (defaults to each DSL file's directory). Images are preloaded and cached per-component, and the asset directory is passed to the exporter for image embedding.
 
 #### `batch-compare` — Compare PNG directories
 ```bash
@@ -278,6 +278,8 @@ The `processBatch()` function orchestrates bulk operations:
 └── batch-manifest.json
 ```
 
+**Image support**: When `--asset-dir` is provided, relative image paths in `image()` nodes and `imageFill()` fills are resolved against the specified directory. Without `--asset-dir`, each DSL file's own directory is used as the base. Images are preloaded via `collectImageSources()` + `preloadImages()` before rendering, and the asset directory is passed to `generatePluginInput()` for base64 embedding in the plugin JSON.
+
 **Error isolation**: If one component fails, processing continues. Failed components are marked `status: 'error'` in the manifest.
 
 **Batch Manifest** includes: timestamp, input pattern, output directory, per-component results (name, paths, status, error, dimensions), and summary counts.
@@ -408,7 +410,7 @@ Component names are heuristically parsed to extract category prefixes (e.g., `co
 |---------|---------|
 | `@figma-dsl/core` | `DslNode` type, node constructors |
 | `@figma-dsl/compiler` | `compileWithLayout()`, `textMeasurer` |
-| `@figma-dsl/renderer` | `renderToFile()`, `initializeRenderer()` |
+| `@figma-dsl/renderer` | `renderToFile()`, `initializeRenderer()`, `collectImageSources()`, `preloadImages()` |
 | `@figma-dsl/capturer` | `captureUrl()` for browser automation |
 | `@figma-dsl/comparator` | `compareFiles()` for visual diff |
 | `@figma-dsl/exporter` | `exportToFile()`, `generatePluginInput()` |

@@ -480,3 +480,83 @@ export function FullComp({ variant = 'primary', className, ...rest }: FullCompPr
     cleanFixtures();
   });
 });
+
+describe('image-refs rule', () => {
+  it('passes when no image references exist', async () => {
+    const dir = setupFixture('NoImages', {
+      'NoImages.tsx': 'export function NoImages() { return <div />; }',
+    });
+    const result = await validateComponent(dir, { rules: ['image-refs'] });
+    expect(result.warnings).toHaveLength(0);
+    expect(result.errors).toHaveLength(0);
+    cleanFixtures();
+  });
+
+  it('warns on missing image file', async () => {
+    const dir = setupFixture('MissingImg', {
+      'MissingImg.tsx': `
+import { image } from '@figma-dsl/core';
+const img = image('Photo', { src: './missing.png', size: { x: 100, y: 100 } });
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['image-refs'] });
+    expect(result.warnings.length).toBeGreaterThan(0);
+    expect(result.warnings[0]!.message).toContain('not found');
+    cleanFixtures();
+  });
+
+  it('errors on unsupported format', async () => {
+    const dir = setupFixture('BadFormat', {
+      'BadFormat.tsx': `
+import { image } from '@figma-dsl/core';
+const img = image('Icon', { src: './icon.svg', size: { x: 24, y: 24 } });
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['image-refs'] });
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('Unsupported image format');
+    cleanFixtures();
+  });
+
+  it('accepts valid HTTPS URLs', async () => {
+    const dir = setupFixture('ValidUrl', {
+      'ValidUrl.tsx': `
+import { image } from '@figma-dsl/core';
+const img = image('Remote', { src: 'https://example.com/photo.png', size: { x: 100, y: 100 } });
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['image-refs'] });
+    expect(result.errors).toHaveLength(0);
+    expect(result.warnings).toHaveLength(0);
+    cleanFixtures();
+  });
+
+  it('validates imageFill references', async () => {
+    const dir = setupFixture('FillRef', {
+      'FillRef.tsx': `
+import { imageFill } from '@figma-dsl/core';
+const fill = imageFill('./missing-bg.png');
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['image-refs'] });
+    expect(result.warnings.length).toBeGreaterThan(0);
+    expect(result.warnings[0]!.message).toContain('not found');
+    cleanFixtures();
+  });
+
+  it('passes when image file exists', async () => {
+    const dir = setupFixture('ExistsImg', {
+      'ExistsImg.tsx': `
+import { image } from '@figma-dsl/core';
+const img = image('Photo', { src: './photo.png', size: { x: 100, y: 100 } });
+`,
+      'photo.png': 'fake-png-data',
+    });
+    const result = await validateComponent(dir, { rules: ['image-refs'] });
+    expect(result.errors).toHaveLength(0);
+    // No "not found" warnings
+    const notFoundWarnings = result.warnings.filter(w => w.message.includes('not found'));
+    expect(notFoundWarnings).toHaveLength(0);
+    cleanFixtures();
+  });
+});

@@ -12,6 +12,12 @@ export interface PluginNodeDef {
     opacity: number;
     gradientStops?: ReadonlyArray<{ color: { r: number; g: number; b: number; a: number }; position: number }>;
     gradientTransform?: [[number, number, number], [number, number, number]];
+    imageData?: string;
+    imageScaleMode?: string;
+    imageDimensions?: { width: number; height: number };
+    imageFormat?: string;
+    imageHash?: string;
+    imageError?: string;
   }>;
   readonly strokes?: ReadonlyArray<{
     color: { r: number; g: number; b: number; a: number };

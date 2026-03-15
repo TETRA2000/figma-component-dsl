@@ -13,6 +13,8 @@ export function describeChange(path: string, oldVal: unknown, newVal: unknown): 
   if (path.includes('opacity')) return `Opacity changed from ${String(oldVal)} to ${String(newVal)}`;
   if (path.includes('Spacing') || path.includes('padding')) return `Spacing changed at ${path}`;
   if (path.includes('size')) return `Size changed at ${path}`;
+  if (path.includes('imageHash')) return `Image changed at ${path}`;
+  if (path.includes('imageScaleMode')) return `Image scale mode changed from ${String(oldVal)} to ${String(newVal)}`;
   return `Property ${path} changed`;
 }
 

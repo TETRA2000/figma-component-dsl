@@ -101,9 +101,17 @@ function startTracking(): void {
   });
 }
 
-function toFigmaPaints(fills: PluginNodeDef['fills']): Paint[] {
-  if (!fills) return [];
-  return fills.map(f => {
+// Pending image fills that need async processing after node creation
+interface PendingImageFill {
+  fillIndex: number;
+  imageData: string;
+  scaleMode: string;
+}
+
+function toFigmaPaints(fills: PluginNodeDef['fills']): { paints: Paint[]; pendingImages: PendingImageFill[] } {
+  if (!fills) return { paints: [], pendingImages: [] };
+  const pendingImages: PendingImageFill[] = [];
+  const paints = fills.map((f, index) => {
     if (f.type === 'SOLID' && f.color) {
       return {
         type: 'SOLID' as const,
@@ -124,8 +132,58 @@ function toFigmaPaints(fills: PluginNodeDef['fills']): Paint[] {
         visible: true,
       };
     }
+    if (f.type === 'IMAGE' && f.imageData) {
+      // Queue for async processing — return placeholder that will be replaced
+      pendingImages.push({
+        fillIndex: index,
+        imageData: f.imageData,
+        scaleMode: f.imageScaleMode ?? 'FILL',
+      });
+      // Temporary gray placeholder — will be replaced after image creation
+      return { type: 'SOLID' as const, color: { r: 0.8, g: 0.8, b: 0.8 }, opacity: f.opacity, visible: true };
+    }
+    if (f.type === 'IMAGE' && f.imageError) {
+      // Image had an error during export — gray placeholder
+      console.error(`Image fill error: ${f.imageError}`);
+      return { type: 'SOLID' as const, color: { r: 0.8, g: 0.8, b: 0.8 }, opacity: 1, visible: true };
+    }
     return { type: 'SOLID' as const, color: { r: 0, g: 0, b: 0 }, opacity: 1, visible: true };
   });
+  return { paints, pendingImages };
+}
+
+async function applyFillsWithImages(
+  node: SceneNode & MinimalFillsMixin,
+  fills: PluginNodeDef['fills'],
+): Promise<void> {
+  const { paints, pendingImages } = toFigmaPaints(fills);
+  node.fills = paints;
+
+  if (pendingImages.length === 0) return;
+
+  const currentFills = [...paints];
+  for (const pending of pendingImages) {
+    try {
+      // Decode base64 data URI to bytes
+      const base64 = pending.imageData.replace(/^data:image\/[^;]+;base64,/, '');
+      const bytes = figma.base64Decode(base64);
+      const imageHash = figma.createImage(bytes);
+
+      const scaleMode = pending.scaleMode as 'FILL' | 'FIT' | 'CROP' | 'TILE';
+
+      currentFills[pending.fillIndex] = {
+        type: 'IMAGE',
+        imageHash: imageHash.hash,
+        scaleMode,
+        visible: true,
+        opacity: currentFills[pending.fillIndex]?.opacity ?? 1,
+      } as ImagePaint;
+    } catch (err) {
+      console.error(`Failed to create Figma image: ${err}`);
+      // Keep the placeholder gray fill
+    }
+  }
+  node.fills = currentFills;
 }
 
 // Sets the node's OWN auto-layout configuration (makes it a layout container).
@@ -170,7 +228,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         const frame = figma.createFrame();
         frame.name = def.name;
         frame.resize(def.size.x, def.size.y);
-        frame.fills = toFigmaPaints(def.fills);
+        await applyFillsWithImages(frame, def.fills);
         if (def.cornerRadius) frame.cornerRadius = def.cornerRadius;
         if (def.clipContent !== undefined) frame.clipsContent = def.clipContent;
         frame.opacity = def.opacity;
@@ -189,7 +247,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         const rect = figma.createRectangle();
         rect.name = def.name;
         rect.resize(def.size.x, def.size.y);
-        rect.fills = toFigmaPaints(def.fills);
+        await applyFillsWithImages(rect, def.fills);
         if (def.cornerRadius) rect.cornerRadius = def.cornerRadius;
         rect.opacity = def.opacity;
         rect.visible = def.visible;
@@ -203,7 +261,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         const ellipse = figma.createEllipse();
         ellipse.name = def.name;
         ellipse.resize(def.size.x, def.size.y);
-        ellipse.fills = toFigmaPaints(def.fills);
+        await applyFillsWithImages(ellipse, def.fills);
         ellipse.opacity = def.opacity;
         ellipse.visible = def.visible;
         parent.appendChild(ellipse);
@@ -231,12 +289,30 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
             text.resize(def.size.x, def.size.y);
           }
         }
-        text.fills = toFigmaPaints(def.fills);
+        await applyFillsWithImages(text, def.fills);
         text.opacity = def.opacity;
         text.visible = def.visible;
         parent.appendChild(text);
         setLayoutSizing(text, def);
         node = text;
+        break;
+      }
+
+      case 'IMAGE': {
+        // In Figma, IMAGE nodes are rectangles with an IMAGE fill
+        const imgRect = figma.createRectangle();
+        imgRect.name = def.name;
+        imgRect.resize(def.size.x, def.size.y);
+        if (def.cornerRadius) imgRect.cornerRadius = def.cornerRadius;
+        imgRect.opacity = def.opacity;
+        imgRect.visible = def.visible;
+
+        // Apply image fills from the node's fills array
+        await applyFillsWithImages(imgRect, def.fills);
+
+        parent.appendChild(imgRect);
+        setLayoutSizing(imgRect, def);
+        node = imgRect;
         break;
       }
 
@@ -259,7 +335,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         const comp = figma.createComponent();
         comp.name = def.name;
         comp.resize(def.size.x, def.size.y);
-        comp.fills = toFigmaPaints(def.fills);
+        await applyFillsWithImages(comp, def.fills);
         if (def.cornerRadius) comp.cornerRadius = def.cornerRadius;
         if (def.clipContent !== undefined) comp.clipsContent = def.clipContent;
         comp.opacity = def.opacity;
@@ -292,7 +368,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
             const comp = figma.createComponent();
             comp.name = child.name;
             comp.resize(child.size.x, child.size.y);
-            comp.fills = toFigmaPaints(child.fills);
+            await applyFillsWithImages(comp, child.fills);
             if (child.cornerRadius) comp.cornerRadius = child.cornerRadius;
             if (child.clipContent !== undefined) comp.clipsContent = child.clipContent;
             comp.opacity = child.opacity;
@@ -407,7 +483,39 @@ function serializeNode(node: SceneNode): PluginNodeDef {
   return serializeNodeImpl(node as unknown as SerializableNode);
 }
 
-function computeChangeset(nodeIds: ReadonlyArray<string>): ChangesetDocument {
+async function embedImageDataForChange(
+  change: PropertyChange,
+  node: SceneNode,
+): Promise<PropertyChange> {
+  // Only embed image data for image hash changes
+  if (!change.propertyPath.includes('imageHash') || change.changeType === 'removed') {
+    return change;
+  }
+
+  try {
+    // Find the image fill on the node and get its bytes
+    if ('fills' in node) {
+      const fills = node.fills as ReadonlyArray<Paint>;
+      for (const fill of fills) {
+        if (fill.type === 'IMAGE') {
+          const imgPaint = fill as ImagePaint;
+          const image = figma.getImageByHash(imgPaint.imageHash);
+          if (image) {
+            const bytes = await image.getBytesAsync();
+            const base64 = figma.base64Encode(bytes);
+            return { ...change, imageData: `data:image/png;base64,${base64}` };
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn(`Failed to retrieve image bytes: ${err}`);
+  }
+
+  return change;
+}
+
+async function computeChangeset(nodeIds: ReadonlyArray<string>): Promise<ChangesetDocument> {
   const components: ComponentChangeEntry[] = [];
 
   for (const nodeId of nodeIds) {
@@ -426,10 +534,14 @@ function computeChangeset(nodeIds: ReadonlyArray<string>): ChangesetDocument {
     const changes = diffNodes(baseline, current);
 
     if (changes.length > 0) {
+      // Embed image data for image-related changes
+      const enrichedChanges = await Promise.all(
+        changes.map(c => embedImageDataForChange(c, node)),
+      );
       components.push({
         componentName: identity.componentName,
         componentId: nodeId,
-        changes,
+        changes: enrichedChanges,
       });
     }
   }
@@ -592,7 +704,7 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
       }
 
       if (msg.type === 'export-changeset') {
-        const changeset = computeChangeset(nodeIds);
+        const changeset = await computeChangeset(nodeIds);
         const totalChanges = changeset.components.reduce((sum, c) => sum + c.changes.length, 0);
         const json = JSON.stringify(changeset, null, 2);
         figma.ui.postMessage({

@@ -1,7 +1,9 @@
-import { createCanvas, GlobalFonts, type SKRSContext2D, type Canvas } from '@napi-rs/canvas';
+import { createCanvas, GlobalFonts, type SKRSContext2D, type Canvas, type Image } from '@napi-rs/canvas';
 import { join } from 'path';
 import { readdirSync, writeFileSync } from 'fs';
 import type { FigmaNodeDict } from '@figma-dsl/compiler';
+import { computeDrawInstruction } from '@figma-dsl/core';
+import type { ImageCache } from './image-loader.js';
 
 export interface RgbaColor {
   r: number;
@@ -15,6 +17,7 @@ export interface RenderOptions {
   scale: number;
   assetDir?: string;
   debugLayout?: boolean;
+  imageCache?: ImageCache;
 }
 
 export interface RenderResult {
@@ -103,8 +106,8 @@ function chooseFontFamily(text: string, requested: string): string {
   return containsCJK(text) ? CJK_FONT_FAMILY : 'Inter';
 }
 
-function rgbaToString(color: { r: number; g: number; b: number; a: number }, alpha = 1): string {
-  return `rgba(${Math.round(color.r * 255)}, ${Math.round(color.g * 255)}, ${Math.round(color.b * 255)}, ${alpha})`;
+function rgbaToString(color: { r: number; g: number; b: number; a: number }, alpha?: number): string {
+  return `rgba(${Math.round(color.r * 255)}, ${Math.round(color.g * 255)}, ${Math.round(color.b * 255)}, ${alpha ?? color.a})`;
 }
 
 function fontWeightToCss(weight: number): string {
@@ -115,13 +118,21 @@ function applyFills(
   ctx: SKRSContext2D,
   node: FigmaNodeDict,
   drawShape: (ctx: SKRSContext2D) => void,
+  imageCache?: ImageCache,
 ): void {
   for (const paint of node.fillPaints) {
     if (!paint.visible) continue;
 
     ctx.globalAlpha = (node.opacity ?? 1) * paint.opacity;
 
-    if (paint.type === 'SOLID' && paint.color) {
+    if (paint.type === 'IMAGE' && paint.imageSrc) {
+      const img = imageCache?.get(paint.imageSrc);
+      if (img) {
+        drawImageOnNode(ctx, img, node, paint.imageScaleMode ?? 'FILL');
+      } else {
+        drawImagePlaceholder(ctx, node);
+      }
+    } else if (paint.type === 'SOLID' && paint.color) {
       ctx.fillStyle = rgbaToString(paint.color);
       drawShape(ctx);
     } else if (paint.type === 'GRADIENT_LINEAR' && paint.gradientStops) {
@@ -162,6 +173,54 @@ function applyFills(
       drawShape(ctx);
     }
   }
+}
+
+function drawImageOnNode(
+  ctx: SKRSContext2D,
+  img: Image,
+  node: FigmaNodeDict,
+  scaleMode: string,
+): void {
+  const w = node.size.x;
+  const h = node.size.y;
+  const mode = (scaleMode as 'FILL' | 'FIT' | 'CROP' | 'TILE') || 'FILL';
+  const instruction = computeDrawInstruction(mode, img.width, img.height, w, h);
+
+  if (instruction.type === 'tile') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const pattern = ctx.createPattern(img as any, 'repeat');
+    if (pattern) {
+      ctx.fillStyle = pattern;
+      ctx.fillRect(0, 0, w, h);
+    }
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ctx.drawImage(
+      img as any,
+      instruction.sx, instruction.sy, instruction.sw, instruction.sh,
+      instruction.dx, instruction.dy, instruction.dw, instruction.dh,
+    );
+  }
+}
+
+function drawImagePlaceholder(ctx: SKRSContext2D, node: FigmaNodeDict): void {
+  const w = node.size.x;
+  const h = node.size.y;
+
+  // Draw a light gray background
+  ctx.fillStyle = 'rgba(200, 200, 200, 0.5)';
+  ctx.fillRect(0, 0, w, h);
+
+  // Draw crosshatch diagonal lines
+  ctx.strokeStyle = 'rgba(150, 150, 150, 0.5)';
+  ctx.lineWidth = 1;
+  const spacing = 10;
+  ctx.beginPath();
+  for (let i = -h; i < w; i += spacing) {
+    ctx.moveTo(i, 0);
+    ctx.lineTo(i + h, h);
+  }
+  ctx.stroke();
 }
 
 /**
@@ -205,7 +264,7 @@ function drawRoundedRect(
   ctx.fill();
 }
 
-function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string): void {
+function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, imageCache?: ImageCache): void {
   if (!node.visible) return;
 
   ctx.save();
@@ -250,15 +309,37 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string): void
     case 'RECTANGLE':
     case 'ROUNDED_RECTANGLE':
       if (node.fillPaints.length > 0) {
-        applyFills(ctx, node, drawShape);
+        applyFills(ctx, node, drawShape, imageCache);
       }
       break;
 
     case 'ELLIPSE':
       if (node.fillPaints.length > 0) {
-        applyFills(ctx, node, drawShape);
+        applyFills(ctx, node, drawShape, imageCache);
       }
       break;
+
+    case 'IMAGE': {
+      // Clip to node bounds (with optional cornerRadius)
+      ctx.save();
+      ctx.beginPath();
+      if (hasCornerRadius(radius)) {
+        ctx.roundRect(0, 0, w, h, radius!);
+      } else {
+        ctx.rect(0, 0, w, h);
+      }
+      ctx.clip();
+
+      ctx.globalAlpha = node.opacity ?? 1;
+      const img = node.imageSrc ? imageCache?.get(node.imageSrc) : undefined;
+      if (img) {
+        drawImageOnNode(ctx, img, node, node.imageScaleMode ?? 'FILL');
+      } else {
+        drawImagePlaceholder(ctx, node);
+      }
+      ctx.restore();
+      break;
+    }
 
     case 'TEXT':
       renderText(ctx, node);
@@ -349,7 +430,7 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string): void
 
   // Render children
   for (const child of node.children) {
-    renderNode(ctx, child, `${path} > ${child.name}`);
+    renderNode(ctx, child, `${path} > ${child.name}`, imageCache);
   }
 
   ctx.restore();
@@ -571,7 +652,7 @@ export function render(
   ctx.fillRect(0, 0, node.size.x, node.size.y);
 
   // Render the tree
-  renderNode(ctx, node, node.name);
+  renderNode(ctx, node, node.name, opts.imageCache);
 
   // Debug layout overlay
   if (opts.debugLayout) {

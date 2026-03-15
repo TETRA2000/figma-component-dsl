@@ -8,6 +8,7 @@ export { classnamePropRule } from './classname-prop.js';
 export { variantUnionRule } from './variant-union.js';
 export { htmlAttrsRule } from './html-attrs.js';
 export { dslCompatibleLayoutRule } from './dsl-compatible-layout.js';
+export { imageRefsRule } from './image-refs.js';
 
 import type { ValidationRule } from '../types.js';
 import { threeFileRule } from './three-file.js';
@@ -20,6 +21,7 @@ import { classnamePropRule } from './classname-prop.js';
 import { variantUnionRule } from './variant-union.js';
 import { htmlAttrsRule } from './html-attrs.js';
 import { dslCompatibleLayoutRule } from './dsl-compatible-layout.js';
+import { imageRefsRule } from './image-refs.js';
 
 export const allRules: ValidationRule[] = [
   threeFileRule,
@@ -32,4 +34,5 @@ export const allRules: ValidationRule[] = [
   variantUnionRule,
   htmlAttrsRule,
   dslCompatibleLayoutRule,
+  imageRefsRule,
 ];
