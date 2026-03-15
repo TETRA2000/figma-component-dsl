@@ -11,6 +11,8 @@
    - [Token System](#token-system)
    - [Component Properties](#component-properties)
 4. [CLI Commands](#cli-commands)
+   - [Validator Severity Presets](#validator-severity-presets)
+   - [Compiler Validation Levels](#compiler-validation-levels)
 5. [Figma Plugin Export](#figma-plugin-export)
    - [Single Component Export](#single-component-export)
    - [Page-Level Export (Multiple Sections)](#page-level-export-multiple-sections)
@@ -655,6 +657,63 @@ Both images must have the same dimensions.
 bin/figma-dsl validate examples/navbar.dsl.ts --check-tokens
 ```
 
+#### Validator Severity Presets
+
+The validator supports three severity presets that control how strictly rules are enforced:
+
+| Preset | Description |
+|--------|-------------|
+| `strict` | All rules at original severity (default) |
+| `normal` | Relaxes structural/boilerplate rules (`three-file`, `barrel-export` off; `css-modules`, `no-inline-style` downgraded to warning) |
+| `loose` | Maximum flexibility — most rules off, only `image-refs` as warning |
+
+**Programmatic usage:**
+
+```ts
+import { validateComponent } from '@figma-dsl/validator';
+
+const result = await validateComponent('./components/Button', {
+  preset: 'normal',
+});
+// result.skippedRules — rules turned off by preset
+// result.preset — the preset that was applied
+```
+
+**Per-rule severity overrides** take priority over presets:
+
+```ts
+const result = await validateComponent('./components/Button', {
+  preset: 'normal',
+  severityOverrides: {
+    'css-modules': 'error',    // escalate back to error
+    'image-refs': 'off',       // turn off entirely
+  },
+});
+```
+
+Available severity levels: `'error'` | `'warning'` | `'off'`
+
+#### Compiler Validation Levels
+
+The compiler's `validateNode()` also supports three validation levels via `CompilerOptions.validationLevel`:
+
+| Level | Behavior |
+|-------|----------|
+| `strict` | Current behavior — all checks are errors (default) |
+| `normal` | `strokeWeight === 0` becomes a warning instead of error |
+| `loose` | Negative `cornerRadius` and zero `fontSize` also become warnings instead of errors |
+
+> **Note:** RGBA out-of-range and missing `imageSrc` are always errors regardless of level (Figma API hard constraints).
+
+```ts
+import { compile } from '@figma-dsl/compiler';
+
+const result = compile(dslNode, { validationLevel: 'normal' });
+// result.errors may now include items with severity: 'warning'
+```
+
+`CompileError` objects now include an optional `severity` field (`'error' | 'warning'`). Errors without an explicit severity should be treated as errors.
+
 ### Batch workflow
 
 ```bash
@@ -1156,7 +1215,7 @@ These limitations from earlier versions have been fixed:
 | ~~Inter font only~~ | CJK text is auto-detected and rendered using Noto Sans JP. |
 | ~~No canvas reuse~~ | Canvas pooling (`acquireCanvas`/`releaseCanvas`) is now used in batch operations. |
 | ~~No text decoration~~ | `textDecoration: 'UNDERLINE' \| 'STRIKETHROUGH'` is now supported. |
-| ~~No compiler validation~~ | `validateNode()` now checks cornerRadius, RGBA bounds, strokeWeight, fontSize. |
+| ~~No compiler validation~~ | `validateNode()` now checks cornerRadius, RGBA bounds, strokeWeight, fontSize. Supports configurable `validationLevel` (`strict`/`normal`/`loose`) via `CompilerOptions`. |
 
 ---
 

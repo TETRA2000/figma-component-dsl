@@ -6,8 +6,10 @@ import type {
   ValidationContext,
   ValidationError,
   ValidationRule,
+  SeverityLevel,
 } from './types.js';
 import { allRules } from './rules/index.js';
+import { resolveRuleSeverity } from './presets.js';
 
 function buildContext(
   componentDir: string,
@@ -58,18 +60,44 @@ function buildContext(
   return context;
 }
 
-function selectRules(options?: ValidatorOptions): ValidationRule[] {
-  let rules = [...allRules];
+interface ResolvedRule {
+  rule: ValidationRule;
+  effectiveSeverity: SeverityLevel;
+}
+
+function selectAndResolveRules(options?: ValidatorOptions): {
+  active: ResolvedRule[];
+  skipped: string[];
+} {
+  let candidates = [...allRules];
 
   if (options?.rules && options.rules.length > 0) {
-    rules = rules.filter((r) => options.rules!.includes(r.id));
+    candidates = candidates.filter((r) => options.rules!.includes(r.id));
   }
 
   if (options?.skipRules && options.skipRules.length > 0) {
-    rules = rules.filter((r) => !options.skipRules!.includes(r.id));
+    candidates = candidates.filter((r) => !options.skipRules!.includes(r.id));
   }
 
-  return rules;
+  const active: ResolvedRule[] = [];
+  const skipped: string[] = [];
+
+  for (const rule of candidates) {
+    const severity = resolveRuleSeverity(
+      rule.id,
+      rule.severity,
+      options?.preset,
+      options?.severityOverrides,
+    );
+
+    if (severity === 'off') {
+      skipped.push(rule.id);
+    } else {
+      active.push({ rule, effectiveSeverity: severity });
+    }
+  }
+
+  return { active, skipped };
 }
 
 export async function validateComponent(
@@ -77,13 +105,19 @@ export async function validateComponent(
   options?: ValidatorOptions
 ): Promise<ValidationResult> {
   const context = buildContext(componentDir, options);
-  const rules = selectRules(options);
+  const { active, skipped } = selectAndResolveRules(options);
 
   const allErrors: ValidationError[] = [];
 
-  for (const rule of rules) {
+  for (const { rule, effectiveSeverity } of active) {
     const ruleErrors = await rule.validate(context);
-    allErrors.push(...ruleErrors);
+    // Apply effective severity override
+    for (const err of ruleErrors) {
+      if (effectiveSeverity !== rule.severity) {
+        err.severity = effectiveSeverity as 'error' | 'warning';
+      }
+      allErrors.push(err);
+    }
   }
 
   const errors = allErrors.filter((e) => e.severity === 'error');
@@ -93,7 +127,9 @@ export async function validateComponent(
     valid: errors.length === 0,
     errors,
     warnings,
-    checkedRules: rules.map((r) => r.id),
+    checkedRules: active.map((r) => r.rule.id),
+    skippedRules: skipped,
+    preset: options?.preset,
   };
 }
 

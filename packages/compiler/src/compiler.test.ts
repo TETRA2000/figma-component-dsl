@@ -546,6 +546,57 @@ describe('compile() — validation errors', () => {
   });
 });
 
+describe('compile() — validation levels', () => {
+  it('strict rejects strokeWeight=0', () => {
+    const node = rectangle('Bad', {
+      size: { x: 10, y: 10 },
+      strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 0 }],
+    });
+    const result = compile(node, { validationLevel: 'strict' });
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('strokeWeight');
+  });
+
+  it('normal allows strokeWeight=0 as warning', () => {
+    const node = rectangle('OK', {
+      size: { x: 10, y: 10 },
+      strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 0 }],
+    });
+    const result = compile(node, { validationLevel: 'normal' });
+    expect(result.errors.length).toBe(1);
+    expect(result.errors[0]!.severity).toBe('warning');
+    expect(result.errors[0]!.message).toContain('invisible');
+  });
+
+  it('loose treats negative cornerRadius as warning', () => {
+    const node = frame('Neg', { cornerRadius: -5 });
+    const result = compile(node, { validationLevel: 'loose' });
+    expect(result.errors.length).toBe(1);
+    expect(result.errors[0]!.severity).toBe('warning');
+    expect(result.errors[0]!.message).toContain('clamping');
+  });
+
+  it('loose treats zero fontSize as warning', () => {
+    const node = frame('Root', {
+      children: [text('Hidden', { fontSize: 0 })],
+    });
+    const result = compile(node, { validationLevel: 'loose' });
+    expect(result.errors.length).toBe(1);
+    expect(result.errors[0]!.severity).toBe('warning');
+  });
+
+  it('all levels reject invalid RGBA (Figma hard constraint)', () => {
+    const node = frame('Bad', {
+      fills: [{ type: 'SOLID', color: { r: 2, g: 0, b: 0, a: 1 }, opacity: 1, visible: true }],
+    });
+    for (const level of ['strict', 'normal', 'loose'] as const) {
+      const result = compile(node, { validationLevel: level });
+      expect(result.errors.length).toBeGreaterThan(0);
+      expect(result.errors[0]!.message).toContain('RGBA');
+    }
+  });
+});
+
 describe('compile() — textDecoration passthrough', () => {
   it('passes through UNDERLINE textDecoration', () => {
     const node = frame('Root', {
