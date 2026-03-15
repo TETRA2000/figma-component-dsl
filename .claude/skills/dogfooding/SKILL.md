@@ -121,15 +121,23 @@ navigate_page to http://localhost:5173
 take_screenshot → save to dogfooding/<timestamp>/iteration-<N>/browser.png
 ```
 
-### Step 4: Create DSL equivalent and render
+### Step 4: Create DSL equivalent, render, and export Figma Plugin JSON
 
 Write a `.dsl.ts` file that recreates the same page layout using DSL primitives (`frame`, `text`, `rectangle`, `solid`, `gradient`, `horizontal`, `vertical`, etc.). Place it at `workspace/dsl/{theme-name}-page.dsl.ts`.
 
-Then compile and render:
+Then compile, render, and export the Figma Plugin JSON:
 ```bash
+# Compile DSL to intermediate JSON
 bin/figma-dsl compile workspace/dsl/{theme-name}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
+
+# Render to PNG for visual comparison
 bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl.png
+
+# Export Figma Plugin JSON — this is the file the Figma plugin can import directly
+bin/figma-dsl export workspace/dsl/{theme-name}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/figma-plugin.json -p "<Theme Name> Dogfooding"
 ```
+
+The `figma-plugin.json` file is the Figma-importable payload (`PluginInput` format with `schemaVersion`, `targetPage`, and `components` array). Keeping it alongside the compiled JSON and rendered PNG serves two purposes: (1) it validates the full compile → export pipeline end-to-end, and (2) it gives the user a ready-to-import artifact they can paste into the Figma DSL Import plugin to verify the design in Figma itself.
 
 ### Step 5: Compare renders
 
@@ -209,6 +217,8 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
 
 Keep pipeline fixes in their own commit, separate from component/page additions.
 
+**Figma Plugin JSON files** are always left in `dogfooding/<timestamp>/iteration-<N>/figma-plugin.json` (and persisted to `docs/history/figma-plugin/` — see Step 9). These are generated artifacts so they're not committed to git by default, but they remain on disk for the user to import into Figma at any time.
+
 ### Step 9: Log to history
 
 After each iteration, write a history log to `docs/history/`. This is the project's permanent record of dogfooding work — it prevents future sessions from repeating themes and preserves visual evidence of what was found and fixed.
@@ -248,19 +258,28 @@ DSL features stressed: <comma-separated list>
 ## Known pipeline gaps (not fixed)
 - **<gap title>**: <description>. Workaround: <what DSL did instead>. Fix needed in: <pipeline layer>.
 
+## Figma Plugin JSON
+Ready-to-import file: [figma-plugin/<date>-<theme-slug>-plugin.json](figma-plugin/<date>-<theme-slug>-plugin.json)
+
 ## Commits
 - `<hash>` — <commit message summary>
 ```
 
-**Copy render PNGs to history:** Also copy the browser and DSL render PNGs into `docs/history/images/` with descriptive names so they persist even if the `dogfooding/` working directory is cleaned up:
+**Copy render PNGs and Figma Plugin JSON to history:** Also copy the browser/DSL render PNGs and the Figma Plugin JSON into `docs/history/` with descriptive names so they persist even if the `dogfooding/` working directory is cleaned up:
 
 ```bash
-mkdir -p docs/history/images
+mkdir -p docs/history/images docs/history/figma-plugin
 cp dogfooding/<timestamp>/iteration-<N>/browser.png docs/history/images/<date>-<theme-slug>-browser.png
 cp dogfooding/<timestamp>/iteration-<N>/dsl.png docs/history/images/<date>-<theme-slug>-dsl.png
+cp dogfooding/<timestamp>/iteration-<N>/figma-plugin.json docs/history/figma-plugin/<date>-<theme-slug>-plugin.json
 ```
 
-Update the image paths in the log file to reference these local copies.
+Update the image paths in the log file to reference these local copies. Add a link to the Figma Plugin JSON in the log file so the user can find it easily:
+
+```markdown
+## Figma Plugin JSON
+Ready-to-import file: [figma-plugin/<date>-<theme-slug>-plugin.json](figma-plugin/<date>-<theme-slug>-plugin.json)
+```
 
 **Update the index:** Prepend an entry to `docs/history/README.md`:
 

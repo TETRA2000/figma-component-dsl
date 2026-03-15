@@ -188,15 +188,28 @@ This is critical for effective dogfooding. Write the DSL using the features that
 
 If a feature doesn't work, that's a discovery — not a reason to restructure the DSL. Log it, investigate the pipeline, and fix it there.
 
-### Compile and render
+### Compile, render, and export Figma Plugin JSON
 
 ```bash
-# Compile DSL to JSON
+# Compile DSL to intermediate JSON
 bin/figma-dsl compile workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
 
-# Render JSON to PNG
+# Render JSON to PNG for visual comparison
 bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl.png
+
+# Export Figma Plugin JSON — ready to import into Figma via the DSL Import plugin
+bin/figma-dsl export workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/figma-plugin.json -p "<Theme Name> Dogfooding"
 ```
+
+### Why export the Figma Plugin JSON
+
+The `figma-plugin.json` file is the `PluginInput` payload that the Figma DSL Import plugin consumes directly. Generating it during dogfooding serves two purposes:
+
+1. **Validates the full pipeline end-to-end.** The export step runs through `compile → exporter` (the `generatePluginInput` path), which is a different code path than `compile → render`. Bugs that only affect the exporter (e.g., missing property passthrough, incorrect fill conversion, corner radius clamping issues) would go undetected if we only render to PNG.
+
+2. **Produces a ready-to-import artifact.** The user (or a future session) can paste this JSON into the Figma plugin to see exactly how the pipeline's output looks in Figma. This is especially useful for verifying things the PNG renderer can't fully represent — like component property definitions, instance overrides, and auto-layout behavior in Figma's native engine.
+
+The `-p` flag sets the `targetPage` name in the JSON, making it easy to identify which dogfooding iteration the import came from inside Figma.
 
 ## Step 5: Compare renders (detailed)
 
@@ -277,11 +290,12 @@ This is not optional. Before touching the `.dsl.ts` file, trace the property thr
 
 3. **Fix the first layer where the property disappears or is mishandled**
 
-4. **Rebuild and re-render:**
+4. **Rebuild, re-render, and re-export:**
    ```bash
    npm run build
    bin/figma-dsl compile workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
    bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl-fix1.png
+   bin/figma-dsl export workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/figma-plugin.json -p "<Theme Name> Dogfooding"
    ```
 
 5. **Re-inspect** the new render to verify the fix
@@ -293,6 +307,7 @@ After pipeline investigation, if the issue is genuinely a DSL authoring error (w
 ```bash
 bin/figma-dsl compile workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
 bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl-fix1.png
+bin/figma-dsl export workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/figma-plugin.json -p "<Theme Name> Dogfooding"
 ```
 
 ### Step 6.3 — Log pipeline gaps even when unfixed
@@ -426,21 +441,25 @@ DSL features stressed: <comma-separated list>
   Workaround used: <what the DSL did instead>
   Fix needed in: <which pipeline layer>
 
+## Figma Plugin JSON
+Ready-to-import file: [figma-plugin/<date>-<theme-slug>-plugin.json](figma-plugin/<date>-<theme-slug>-plugin.json)
+
 ## Commits
 - `<hash>` — <commit message summary>
 ```
 
-### Copy render images to history
+### Copy render images and Figma Plugin JSON to history
 
-The `dogfooding/` working directory may be cleaned up later, so copy images to a persistent location:
+The `dogfooding/` working directory may be cleaned up later, so copy artifacts to a persistent location:
 
 ```bash
-mkdir -p docs/history/images
+mkdir -p docs/history/images docs/history/figma-plugin
 cp dogfooding/<timestamp>/iteration-<N>/browser.png docs/history/images/<date>-<theme-slug>-browser.png
 cp dogfooding/<timestamp>/iteration-<N>/dsl.png docs/history/images/<date>-<theme-slug>-dsl.png
+cp dogfooding/<timestamp>/iteration-<N>/figma-plugin.json docs/history/figma-plugin/<date>-<theme-slug>-plugin.json
 ```
 
-Update the image paths in the log file to reference these local copies (relative paths from `docs/history/`).
+Update the image paths in the log file to reference these local copies (relative paths from `docs/history/`). Include a link to the Figma Plugin JSON so the user can find and import it into Figma.
 
 ### Update the history index
 
