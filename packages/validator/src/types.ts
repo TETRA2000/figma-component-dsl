@@ -1,3 +1,7 @@
+export type SeverityLevel = 'error' | 'warning' | 'off';
+
+export type ValidationPreset = 'strict' | 'normal' | 'loose';
+
 export interface ValidationError {
   rule: string;
   message: string;
@@ -11,6 +15,8 @@ export interface ValidationResult {
   errors: ValidationError[];
   warnings: ValidationError[];
   checkedRules: string[];
+  skippedRules: string[];
+  preset?: ValidationPreset;
 }
 
 export interface ValidatorOptions {
@@ -20,6 +26,10 @@ export interface ValidatorOptions {
   rules?: string[];
   /** Skip specific rules */
   skipRules?: string[];
+  /** Override severity per rule (takes priority over preset) */
+  severityOverrides?: Record<string, SeverityLevel>;
+  /** Apply a preset severity configuration */
+  preset?: ValidationPreset;
 }
 
 export interface ValidationRule {

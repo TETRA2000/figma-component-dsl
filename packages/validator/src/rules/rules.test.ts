@@ -604,3 +604,125 @@ const img = image('Photo', { src: './photo.png', size: { x: 100, y: 100 } });
     cleanFixtures();
   });
 });
+
+describe('validation presets', () => {
+  it('strict preset keeps original severity levels', async () => {
+    const dir = setupFixture('StrictComp', {
+      'StrictComp.tsx': `
+export function StrictComp() {
+  return <div style={{ color: 'red' }}>hello</div>;
+}`,
+    });
+
+    const result = await validateComponent(dir, { preset: 'strict', rules: ['no-inline-style'] });
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0].severity).toBe('error');
+    expect(result.preset).toBe('strict');
+    cleanFixtures();
+  });
+
+  it('normal preset downgrades no-inline-style from error to warning', async () => {
+    const dir = setupFixture('NormalComp', {
+      'NormalComp.tsx': `
+export function NormalComp() {
+  return <div style={{ color: 'red' }}>hello</div>;
+}`,
+    });
+
+    const result = await validateComponent(dir, { preset: 'normal', rules: ['no-inline-style'] });
+    expect(result.errors).toHaveLength(0);
+    expect(result.warnings).toHaveLength(1);
+    expect(result.warnings[0].severity).toBe('warning');
+    expect(result.valid).toBe(true);
+    cleanFixtures();
+  });
+
+  it('loose preset turns off most rules', async () => {
+    const dir = setupFixture('LooseComp', {
+      'LooseComp.tsx': `
+export function LooseComp() {
+  return <div style={{ color: 'red' }}>hello</div>;
+}`,
+    });
+
+    const result = await validateComponent(dir, { preset: 'loose' });
+    // no-inline-style, css-modules, classname-prop, variant-union, design-tokens, token-exists,
+    // three-file, barrel-export, html-attrs, dsl-compatible-layout are all off in loose
+    // Only image-refs remains as warning
+    expect(result.errors).toHaveLength(0);
+    expect(result.skippedRules.length).toBeGreaterThan(5);
+    expect(result.valid).toBe(true);
+    cleanFixtures();
+  });
+
+  it('severityOverrides take priority over preset', async () => {
+    const dir = setupFixture('OverrideComp', {
+      'OverrideComp.tsx': `
+export function OverrideComp() {
+  return <div style={{ color: 'red' }}>hello</div>;
+}`,
+    });
+
+    // Even with loose preset (no-inline-style → off),
+    // explicit override can set it back to error
+    const result = await validateComponent(dir, {
+      preset: 'loose',
+      severityOverrides: { 'no-inline-style': 'error' },
+      rules: ['no-inline-style'],
+    });
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0].severity).toBe('error');
+    cleanFixtures();
+  });
+
+  it('severity override can turn a rule off', async () => {
+    const dir = setupFixture('OffComp', {
+      'OffComp.tsx': `
+export function OffComp() {
+  return <div style={{ color: 'red' }}>hello</div>;
+}`,
+    });
+
+    const result = await validateComponent(dir, {
+      severityOverrides: { 'no-inline-style': 'off' },
+      rules: ['no-inline-style'],
+    });
+    expect(result.errors).toHaveLength(0);
+    expect(result.warnings).toHaveLength(0);
+    expect(result.skippedRules).toContain('no-inline-style');
+    cleanFixtures();
+  });
+
+  it('skippedRules tracks rules turned off by preset', async () => {
+    const dir = setupFixture('SkippedComp', {
+      'SkippedComp.tsx': 'export function SkippedComp() { return <div />; }',
+    });
+
+    const result = await validateComponent(dir, { preset: 'normal' });
+    expect(result.skippedRules).toContain('three-file');
+    expect(result.skippedRules).toContain('barrel-export');
+    expect(result.skippedRules).toContain('design-tokens');
+    expect(result.skippedRules).toContain('html-attrs');
+    cleanFixtures();
+  });
+});
+
+describe('resolveRuleSeverity', () => {
+  it('returns default severity when no preset or overrides', async () => {
+    const { resolveRuleSeverity } = await import('../presets.js');
+    expect(resolveRuleSeverity('no-inline-style', 'error')).toBe('error');
+    expect(resolveRuleSeverity('three-file', 'warning')).toBe('warning');
+  });
+
+  it('applies preset severity', async () => {
+    const { resolveRuleSeverity } = await import('../presets.js');
+    expect(resolveRuleSeverity('no-inline-style', 'error', 'normal')).toBe('warning');
+    expect(resolveRuleSeverity('three-file', 'warning', 'normal')).toBe('off');
+    expect(resolveRuleSeverity('no-inline-style', 'error', 'loose')).toBe('off');
+  });
+
+  it('override takes priority over preset', async () => {
+    const { resolveRuleSeverity } = await import('../presets.js');
+    expect(resolveRuleSeverity('no-inline-style', 'error', 'loose', { 'no-inline-style': 'error' })).toBe('error');
+  });
+});
