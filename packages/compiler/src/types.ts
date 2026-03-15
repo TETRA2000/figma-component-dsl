@@ -1,13 +1,17 @@
 export type FigmaNodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ROUNDED_RECTANGLE'
-  | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'VECTOR';
+  | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'VECTOR' | 'IMAGE';
 
 export interface FigmaPaint {
-  type: 'SOLID' | 'GRADIENT_LINEAR';
+  type: 'SOLID' | 'GRADIENT_LINEAR' | 'GRADIENT_RADIAL' | 'IMAGE';
   color?: { r: number; g: number; b: number; a: number };
   opacity: number;
   visible: boolean;
   gradientStops?: Array<{ color: { r: number; g: number; b: number; a: number }; position: number }>;
   gradientTransform?: [[number, number, number], [number, number, number]];
+  center?: { x: number; y: number };
+  radius?: number;
+  imageSrc?: string;
+  imageScaleMode?: 'FILL' | 'FIT' | 'CROP' | 'TILE';
 }
 
 export interface FigmaStroke {
@@ -61,6 +65,10 @@ export interface FigmaNodeDict {
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
 
+  // Image
+  imageSrc?: string;
+  imageScaleMode?: 'FILL' | 'FIT' | 'CROP' | 'TILE';
+
   // Text
   textData?: { characters: string; lines: string[] };
   derivedTextData?: { baselines: Baseline[]; fontMetaData: FontMeta[] };
@@ -68,6 +76,7 @@ export interface FigmaNodeDict {
   fontFamily?: string;
   textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
   textAutoResize?: 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT';
+  textDecoration?: 'NONE' | 'UNDERLINE' | 'STRIKETHROUGH';
 
   // Component
   componentProperties?: Record<string, { type: string; defaultValue: string | boolean }>;

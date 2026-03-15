@@ -1,7 +1,7 @@
-import { McDonaldsShowcase } from './pages/McDonaldsShowcase';
+import { DogfoodingGallery } from './pages/_generated/DogfoodingGallery';
 
 function App() {
-  return <McDonaldsShowcase />;
+  return <DogfoodingGallery />;
 }
 
 export default App;

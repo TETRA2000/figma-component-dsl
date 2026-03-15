@@ -1,14 +1,26 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { generatePluginInput, exportToFile } from './exporter.js';
 import { compile } from '@figma-dsl/compiler';
-import { frame, text, component, componentSet, instance } from '@figma-dsl/core';
-import { solid } from '@figma-dsl/core';
+import { frame, text, component, componentSet, instance, image } from '@figma-dsl/core';
+import { solid, imageFill } from '@figma-dsl/core';
 import { horizontal } from '@figma-dsl/core';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { existsSync, unlinkSync, readFileSync } from 'fs';
+import { existsSync, unlinkSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { createCanvas } from '@napi-rs/canvas';
 
 const __dirname2 = dirname(fileURLToPath(import.meta.url));
+const testAssetDir = join(__dirname2, '../../../.test-assets');
+
+beforeAll(() => {
+  // Create a tiny test PNG for image export tests
+  mkdirSync(testAssetDir, { recursive: true });
+  const canvas = createCanvas(4, 4);
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'red';
+  ctx.fillRect(0, 0, 4, 4);
+  writeFileSync(join(testAssetDir, 'test.png'), canvas.toBuffer('image/png'));
+});
 
 describe('generatePluginInput()', () => {
   it('generates plugin input with schema version', () => {
@@ -49,6 +61,25 @@ describe('generatePluginInput()', () => {
       type: 'TEXT',
       defaultValue: 'Click',
     });
+  });
+
+  it('filters out VARIANT properties from standalone COMPONENT nodes', () => {
+    const node = component('PizzaCard', {
+      componentProperties: [
+        { name: 'Name', type: 'TEXT', defaultValue: 'Margherita' },
+        { name: 'Variant', type: 'VARIANT', defaultValue: 'Default' },
+        { name: 'Size', type: 'VARIANT', defaultValue: 'Medium' },
+      ],
+      children: [text('Hello')],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled);
+    const defs = input.components[0]!.componentPropertyDefinitions!;
+    // TEXT property should be preserved
+    expect(defs['Name']).toEqual({ type: 'TEXT', defaultValue: 'Margherita' });
+    // VARIANT properties should be stripped
+    expect(defs['Variant']).toBeUndefined();
+    expect(defs['Size']).toBeUndefined();
   });
 
   it('preserves instance references', () => {
@@ -99,5 +130,66 @@ describe('exportToFile()', () => {
 
     // Cleanup
     unlinkSync(outPath);
+  });
+});
+
+describe('generatePluginInput() — IMAGE fills', () => {
+  it('embeds image data as base64 for local files', () => {
+    const node = frame('BgImage', {
+      size: { x: 100, y: 100 },
+      fills: [imageFill('./test.png')],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
+    const fill = input.components[0]!.fills![0]!;
+    expect(fill.type).toBe('IMAGE');
+    expect(fill.imageData).toBeDefined();
+    expect(fill.imageData!.startsWith('data:image/png;base64,')).toBe(true);
+    expect(fill.imageScaleMode).toBe('FILL');
+  });
+
+  it('sets imageFormat for embedded images', () => {
+    const node = frame('BgImage', {
+      size: { x: 100, y: 100 },
+      fills: [imageFill('./test.png')],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
+    const fill = input.components[0]!.fills![0]!;
+    expect(fill.imageFormat).toBe('PNG');
+  });
+
+  it('sets imageError for missing files', () => {
+    const node = frame('Missing', {
+      size: { x: 100, y: 100 },
+      fills: [imageFill('./nonexistent.png')],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
+    const fill = input.components[0]!.fills![0]!;
+    expect(fill.imageError).toBeDefined();
+    expect(fill.imageData).toBeUndefined();
+  });
+
+  it('sets imageError for URL images', () => {
+    const node = frame('Remote', {
+      size: { x: 100, y: 100 },
+      fills: [imageFill('https://example.com/img.png')],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
+    const fill = input.components[0]!.fills![0]!;
+    expect(fill.imageError).toBeDefined();
+  });
+
+  it('preserves scaleMode in exported IMAGE fills', () => {
+    const node = frame('Tiled', {
+      size: { x: 100, y: 100 },
+      fills: [imageFill('./test.png', { scaleMode: 'TILE' })],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
+    const fill = input.components[0]!.fills![0]!;
+    expect(fill.imageScaleMode).toBe('TILE');
   });
 });

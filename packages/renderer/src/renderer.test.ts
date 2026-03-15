@@ -1,12 +1,14 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { initializeRenderer, render, renderToFile, RenderError } from './renderer.js';
 import { compile, compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
-import { frame, text, rectangle, ellipse, group } from '@figma-dsl/core';
-import { solid, gradient } from '@figma-dsl/core';
+import { frame, text, rectangle, ellipse, group, image } from '@figma-dsl/core';
+import { solid, gradient, radialGradient, imageFill } from '@figma-dsl/core';
 import { horizontal, vertical } from '@figma-dsl/core';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { existsSync, unlinkSync } from 'fs';
+import { createCanvas } from '@napi-rs/canvas';
+import type { ImageCache } from './image-loader.js';
 
 const __dirname2 = dirname(fileURLToPath(import.meta.url));
 const fontDir = join(__dirname2, '../../dsl-core/fonts');
@@ -144,6 +146,42 @@ describe('render() — gradients', () => {
     const result = render(compiled.root);
     expect(result.pngBuffer.length).toBeGreaterThan(0);
   });
+
+  it('preserves alpha from gradient stop colors (8-digit hex)', async () => {
+    // Solid red background + semi-transparent black gradient overlay
+    const node = frame('AlphaGrad', {
+      size: { x: 100, y: 100 },
+      fills: [
+        solid('#ff0000'),
+        gradient([
+          { hex: '#00000033', position: 0 },  // 20% opacity at start
+          { hex: '#000000cc', position: 1 },  // 80% opacity at end
+        ]),
+      ],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+
+    // Verify output has non-zero red channel (image should show through gradient)
+    const { loadImage } = await import('@napi-rs/canvas');
+    const img = await loadImage(result.pngBuffer);
+    const c = createCanvas(img.width, img.height);
+    const ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    // Sample pixel at left side (start of gradient, 20% black over red)
+    // Expected: ~80% of red visible → R ≈ 204
+    const pLeft = ctx.getImageData(5, 50, 1, 1).data;
+    expect(pLeft[0]).toBeGreaterThan(150); // red channel should be significant
+    expect(pLeft[1]).toBeLessThan(20); // green should be near 0
+    expect(pLeft[2]).toBeLessThan(20); // blue should be near 0
+
+    // Sample pixel at right side (end of gradient, 80% black over red)
+    // Expected: ~20% of red visible → R ≈ 51
+    const pRight = ctx.getImageData(95, 50, 1, 1).data;
+    expect(pRight[0]).toBeGreaterThan(30); // still some red visible
+    expect(pRight[0]).toBeLessThan(100); // but much dimmer
+  });
 });
 
 describe('render() — strokes', () => {
@@ -228,5 +266,216 @@ describe('render() — error handling', () => {
     const node = frame('Empty', {});
     const compiled = compile(node);
     expect(() => render(compiled.root)).toThrow(RenderError);
+  });
+});
+
+describe('render() — multi-stroke', () => {
+  it('renders multiple strokes on a rectangle', () => {
+    const node = frame('Root', {
+      size: { x: 100, y: 100 },
+      children: [rectangle('MultiStroke', {
+        size: { x: 80, y: 40 },
+        fills: [solid('#ffffff')],
+        strokes: [
+          { color: { r: 1, g: 0, b: 0, a: 1 }, weight: 3 },
+          { color: { r: 0, g: 0, b: 1, a: 1 }, weight: 1 },
+        ],
+      })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — stroke alignment', () => {
+  it('renders INSIDE stroke', () => {
+    const node = frame('Root', {
+      size: { x: 100, y: 100 },
+      children: [rectangle('Inside', {
+        size: { x: 80, y: 40 },
+        fills: [solid('#ffffff')],
+        strokes: [{ color: { r: 1, g: 0, b: 0, a: 1 }, weight: 4, align: 'INSIDE' }],
+      })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders OUTSIDE stroke', () => {
+    const node = frame('Root', {
+      size: { x: 100, y: 100 },
+      children: [rectangle('Outside', {
+        size: { x: 60, y: 30 },
+        fills: [solid('#ffffff')],
+        strokes: [{ color: { r: 0, g: 1, b: 0, a: 1 }, weight: 4, align: 'OUTSIDE' }],
+      })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — text decoration', () => {
+  it('renders underlined text', () => {
+    const node = frame('Root', {
+      size: { x: 200, y: 50 },
+      children: [text('Underlined', { fontSize: 16, color: '#000000', textDecoration: 'UNDERLINE' })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders strikethrough text', () => {
+    const node = frame('Root', {
+      size: { x: 200, y: 50 },
+      children: [text('Strikethrough', { fontSize: 16, color: '#000000', textDecoration: 'STRIKETHROUGH' })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — radial gradient', () => {
+  it('renders radial gradient fill', () => {
+    const node = frame('RadialBox', {
+      size: { x: 200, y: 200 },
+      fills: [radialGradient([
+        { hex: '#ff0000', position: 0 },
+        { hex: '#0000ff', position: 1 },
+      ])],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — debug layout overlay', () => {
+  it('renders without error with debugLayout=true', () => {
+    const node = frame('DebugRoot', {
+      size: { x: 200, y: 100 },
+      fills: [solid('#ffffff')],
+      autoLayout: horizontal({ spacing: 8, padX: 16, padY: 8 }),
+      children: [
+        text('Hello', { fontSize: 14, color: '#000000' }),
+      ],
+    });
+    const compiled = compileWithLayout(node, textMeasurer);
+    const result = render(compiled.root, { debugLayout: true });
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — CJK text', () => {
+  it('renders Japanese text without error', () => {
+    const node = frame('Root', {
+      size: { x: 300, y: 50 },
+      children: [text('こんにちは世界', { fontSize: 16, color: '#000000' })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+});
+
+describe('render() — canvas pooling', () => {
+  it('renders correctly across multiple same-sized renders', () => {
+    const node = frame('Box', {
+      size: { x: 100, y: 50 },
+      fills: [solid('#ff0000')],
+    });
+    // Render multiple times with same dimensions to exercise pooling
+    for (let i = 0; i < 5; i++) {
+      const compiled = compile(node);
+      const result = render(compiled.root);
+      expect(result.width).toBe(100);
+      expect(result.height).toBe(50);
+    }
+  });
+});
+
+// Helper: create a small test image as an Image object
+function createTestImage(width: number, height: number) {
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+  ctx.fillRect(0, 0, width, height);
+  return canvas;
+}
+
+describe('render() — IMAGE nodes', () => {
+  it('renders IMAGE node with placeholder when no cache', () => {
+    const node = image('Photo', { src: './photo.png', size: { x: 100, y: 80 } });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+    expect(result.width).toBe(100);
+    expect(result.height).toBe(80);
+  });
+
+  it('renders IMAGE node with placeholder when image not in cache', () => {
+    const node = image('Photo', { src: './missing.png', size: { x: 100, y: 80 } });
+    const compiled = compile(node);
+    const emptyCache: ImageCache = new Map();
+    const result = render(compiled.root, { imageCache: emptyCache });
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders IMAGE node with cached image', () => {
+    const testImg = createTestImage(200, 150);
+    const cache: ImageCache = new Map([['./photo.png', testImg as never]]);
+
+    const node = image('Photo', { src: './photo.png', size: { x: 100, y: 80 } });
+    const compiled = compile(node);
+    const result = render(compiled.root, { imageCache: cache });
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders IMAGE node with cornerRadius clipping', () => {
+    const node = image('Round', { src: './photo.png', size: { x: 100, y: 100 }, cornerRadius: 16 });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+  });
+
+  it('renders IMAGE node as child of FRAME', () => {
+    const node = frame('Container', {
+      size: { x: 200, y: 200 },
+      fills: [solid('#ffffff')],
+      children: [image('Photo', { src: './photo.png', size: { x: 100, y: 80 } })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+    expect(result.width).toBe(200);
+  });
+});
+
+describe('render() — IMAGE fills', () => {
+  it('renders frame with imageFill placeholder when no cache', () => {
+    const node = frame('BgImage', {
+      size: { x: 200, y: 150 },
+      fills: [imageFill('./hero.jpg')],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
+  });
+
+  it('renders frame with mixed solid and image fills', () => {
+    const node = frame('Mixed', {
+      size: { x: 200, y: 150 },
+      fills: [solid('#ff0000'), imageFill('./overlay.png')],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer).toBeInstanceOf(Buffer);
   });
 });

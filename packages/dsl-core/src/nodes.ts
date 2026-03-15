@@ -1,6 +1,7 @@
 import type {
   DslNode, FrameProps, RectangleProps, EllipseProps,
   ComponentProps, ComponentSetProps, TextStyle, ChildLayoutProps,
+  ImageProps,
 } from './types.js';
 import { hex as parseHex } from './colors.js';
 
@@ -46,12 +47,16 @@ export function text(
     letterSpacing: style.letterSpacing,
     textAlignHorizontal: style.textAlignHorizontal,
     textAutoResize: style.textAutoResize,
+    textDecoration: style.textDecoration,
     color: style.color,
   } : undefined;
 
   // Auto-convert color shorthand to fill
   const fills = style?.color
-    ? [{ type: 'SOLID' as const, color: parseHex(style.color), opacity: 1, visible: true }]
+    ? (() => {
+        const parsed = parseHex(style.color!);
+        return [{ type: 'SOLID' as const, color: { ...parsed, a: 1 }, opacity: parsed.a, visible: true }];
+      })()
     : undefined;
 
   // Text node size — if width specified, pass it through for constrained text
@@ -155,6 +160,25 @@ export function componentSet(name: string, props: ComponentSetProps): DslNode {
     children: props.children ? [...props.children] : undefined,
     variantAxes: props.variantAxes,
     autoLayout: props.autoLayout,
+  };
+}
+
+export function image(name: string, props: ImageProps): DslNode {
+  validateName(name);
+  if (!props.src) {
+    throw new Error('Image src must be a non-empty string.');
+  }
+  return {
+    type: 'IMAGE',
+    name,
+    visible: props.visible ?? true,
+    opacity: props.opacity ?? 1,
+    size: props.size,
+    cornerRadius: props.cornerRadius,
+    imageSrc: props.src,
+    imageScaleMode: props.fit ?? 'FILL',
+    layoutSizingHorizontal: props.layoutSizingHorizontal,
+    layoutSizingVertical: props.layoutSizingVertical,
   };
 }
 

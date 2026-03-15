@@ -1,84 +1,94 @@
-import type { FigmaNodeDict, CompileResult } from '@figma-dsl/compiler';
-import { writeFileSync, mkdirSync } from 'fs';
-import { dirname } from 'path';
+import type { FigmaNodeDict, CompileResult, FigmaPaint } from '@figma-dsl/compiler';
+import type { PluginNodeDef, PluginInput } from '@figma-dsl/core';
+import { writeFileSync, mkdirSync, readFileSync } from 'fs';
+import { dirname, resolve, extname, isAbsolute } from 'path';
 
-export interface PluginNodeDef {
-  type: string;
-  name: string;
-  size: { x: number; y: number };
-  fills?: Array<{
-    type: string;
-    color?: { r: number; g: number; b: number; a: number };
-    opacity: number;
-    gradientStops?: Array<{ color: { r: number; g: number; b: number; a: number }; position: number }>;
-    gradientTransform?: [[number, number, number], [number, number, number]];
-  }>;
-  strokes?: Array<{
-    color: { r: number; g: number; b: number; a: number };
-    weight: number;
-    align?: string;
-  }>;
-  cornerRadius?: number;
-  opacity: number;
-  visible: boolean;
-  clipContent?: boolean;
-  children: PluginNodeDef[];
+export type { PluginNodeDef, PluginInput } from '@figma-dsl/core';
 
-  // Auto-layout
-  stackMode?: string;
-  itemSpacing?: number;
-  paddingTop?: number;
-  paddingRight?: number;
-  paddingBottom?: number;
-  paddingLeft?: number;
-  primaryAxisAlignItems?: string;
-  counterAxisAlignItems?: string;
-  layoutSizingHorizontal?: string;
-  layoutSizingVertical?: string;
+const SIZE_WARNING_THRESHOLD = 4 * 1024 * 1024; // 4 MB
 
-  // Text
-  characters?: string;
-  fontSize?: number;
-  fontFamily?: string;
-  fontWeight?: number;
-  fontStyle?: string;
-  textAlignHorizontal?: string;
-  textAutoResize?: string;
-  lineHeight?: { value: number; unit: string };
-  letterSpacing?: { value: number; unit: string };
-
-  // Component
-  componentPropertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
-
-  // Instance
-  componentId?: string;
-  overriddenProperties?: Record<string, string | boolean>;
+export interface ExportOptions {
+  assetDir?: string;
 }
 
-export interface PluginInput {
-  schemaVersion: string;
-  targetPage: string;
-  components: PluginNodeDef[];
+function resolveImagePath(src: string, assetDir: string): string {
+  if (src.startsWith('https://') || src.startsWith('http://')) {
+    return src;
+  }
+  if (isAbsolute(src)) {
+    return src;
+  }
+  return resolve(assetDir, src);
 }
 
-function convertToPluginNode(node: FigmaNodeDict): PluginNodeDef {
-  const result: PluginNodeDef = {
+function embedImageData(
+  src: string,
+  assetDir: string,
+): { imageData?: string; imageDimensions?: { width: number; height: number }; imageFormat?: string; imageError?: string } {
+  if (src.startsWith('https://') || src.startsWith('http://')) {
+    // URLs can't be embedded synchronously — include reference only
+    return { imageError: 'URL images not embedded; use local files for embedding' };
+  }
+
+  const resolved = resolveImagePath(src, assetDir);
+
+  try {
+    const buffer = readFileSync(resolved);
+    const ext = extname(resolved).toLowerCase().replace('.', '');
+    const format = ext === 'jpg' ? 'jpeg' : ext;
+    const base64 = buffer.toString('base64');
+    const dataUri = `data:image/${format};base64,${base64}`;
+
+    if (buffer.length > SIZE_WARNING_THRESHOLD) {
+      console.warn(`Warning: Image ${src} is ${(buffer.length / 1024 / 1024).toFixed(1)} MB — consider optimizing`);
+    }
+
+    return {
+      imageData: dataUri,
+      imageFormat: format.toUpperCase(),
+    };
+  } catch {
+    return { imageError: `Failed to read image: ${src}` };
+  }
+}
+
+function convertFillForPlugin(
+  p: FigmaPaint,
+  assetDir: string,
+): Record<string, unknown> {
+  const fill: Record<string, unknown> = {
+    type: p.type,
+    color: p.color,
+    opacity: p.opacity,
+    gradientStops: p.gradientStops,
+    gradientTransform: p.gradientTransform,
+  };
+
+  if (p.type === 'IMAGE' && p.imageSrc) {
+    fill.imageScaleMode = p.imageScaleMode;
+    const embedded = embedImageData(p.imageSrc, assetDir);
+    if (embedded.imageData) fill.imageData = embedded.imageData;
+    if (embedded.imageFormat) fill.imageFormat = embedded.imageFormat;
+    if (embedded.imageDimensions) fill.imageDimensions = embedded.imageDimensions;
+    if (embedded.imageError) fill.imageError = embedded.imageError;
+  }
+
+  return fill;
+}
+
+function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeDef {
+  // Build a mutable record then return as readonly PluginNodeDef
+  const result: Record<string, unknown> = {
     type: node.type,
     name: node.name,
     size: node.size,
     opacity: node.opacity,
     visible: node.visible,
-    children: node.children.map(convertToPluginNode),
+    children: node.children.map(c => convertToPluginNode(c, assetDir)),
   };
 
   if (node.fillPaints.length > 0) {
-    result.fills = node.fillPaints.map(p => ({
-      type: p.type,
-      color: p.color,
-      opacity: p.opacity,
-      gradientStops: p.gradientStops,
-      gradientTransform: p.gradientTransform,
-    }));
+    result.fills = node.fillPaints.map(p => convertFillForPlugin(p, assetDir));
   }
 
   if (node.strokes?.length) {
@@ -128,9 +138,22 @@ function convertToPluginNode(node: FigmaNodeDict): PluginNodeDef {
     }
   }
 
-  // Component
+  // Component properties
+  // Filter out VARIANT properties for standalone COMPONENT nodes — Figma only
+  // allows VARIANT properties on COMPONENT_SET nodes.
   if (node.componentPropertyDefinitions) {
-    result.componentPropertyDefinitions = node.componentPropertyDefinitions;
+    if (node.type === 'COMPONENT') {
+      const filtered = Object.fromEntries(
+        Object.entries(node.componentPropertyDefinitions).filter(
+          ([, v]) => v.type !== 'VARIANT',
+        ),
+      );
+      if (Object.keys(filtered).length > 0) {
+        result.componentPropertyDefinitions = filtered;
+      }
+    } else {
+      result.componentPropertyDefinitions = node.componentPropertyDefinitions;
+    }
   }
 
   // Instance
@@ -139,14 +162,16 @@ function convertToPluginNode(node: FigmaNodeDict): PluginNodeDef {
     result.overriddenProperties = node.overriddenProperties;
   }
 
-  return result;
+  return result as unknown as PluginNodeDef;
 }
 
 export function generatePluginInput(
   compileResult: CompileResult,
   pageName = 'Component Library',
+  options?: ExportOptions,
 ): PluginInput {
-  const rootNode = convertToPluginNode(compileResult.root);
+  const assetDir = options?.assetDir ?? process.cwd();
+  const rootNode = convertToPluginNode(compileResult.root, assetDir);
 
   // Extract top-level components or treat root as single component
   const components = rootNode.type === 'COMPONENT_SET'
@@ -166,8 +191,9 @@ export function exportToFile(
   compileResult: CompileResult,
   outputPath: string,
   pageName?: string,
+  options?: ExportOptions,
 ): PluginInput {
-  const pluginInput = generatePluginInput(compileResult, pageName);
+  const pluginInput = generatePluginInput(compileResult, pageName, options);
   mkdirSync(dirname(outputPath), { recursive: true });
   writeFileSync(outputPath, JSON.stringify(pluginInput, null, 2));
   return pluginInput;

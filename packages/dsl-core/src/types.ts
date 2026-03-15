@@ -1,6 +1,6 @@
 // --- Node Types ---
 export type NodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ELLIPSE' | 'GROUP'
-  | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE';
+  | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'IMAGE';
 
 // --- Color & Fill ---
 export interface RgbaColor {
@@ -30,7 +30,26 @@ export interface GradientFill {
   visible: boolean;
 }
 
-export type Fill = SolidFill | GradientFill;
+export interface RadialGradientFill {
+  type: 'GRADIENT_RADIAL';
+  gradientStops: GradientStop[];
+  center?: { x: number; y: number };  // 0-1 normalized, default (0.5, 0.5)
+  radius?: number;                      // 0-1 normalized, default 0.5
+  opacity: number;
+  visible: boolean;
+}
+
+export type ImageScaleMode = 'FILL' | 'FIT' | 'CROP' | 'TILE';
+
+export interface ImageFill {
+  type: 'IMAGE';
+  src: string;
+  scaleMode: ImageScaleMode;
+  opacity: number;
+  visible: boolean;
+}
+
+export type Fill = SolidFill | GradientFill | RadialGradientFill | ImageFill;
 
 export interface StrokePaint {
   color: RgbaColor;
@@ -71,6 +90,7 @@ export interface TextStyle {
   letterSpacing?: { value: number; unit: 'PERCENT' | 'PIXELS' };
   textAlignHorizontal?: 'LEFT' | 'CENTER' | 'RIGHT';
   textAutoResize?: 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT';
+  textDecoration?: 'NONE' | 'UNDERLINE' | 'STRIKETHROUGH';
   color?: string;            // hex string, convenience shorthand
 }
 
@@ -105,6 +125,10 @@ export interface DslNode {
   layoutGrow?: number;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+
+  // Image (IMAGE only)
+  imageSrc?: string;
+  imageScaleMode?: ImageScaleMode;
 
   // Text (TEXT only)
   characters?: string;
@@ -176,6 +200,17 @@ export interface ComponentSetProps {
   children?: DslNode[];
   variantAxes?: Record<string, string[]>;
   autoLayout?: AutoLayoutConfig;
+}
+
+export interface ImageProps {
+  src: string;
+  size: { x: number; y: number };
+  fit?: ImageScaleMode;
+  cornerRadius?: number;
+  opacity?: number;
+  visible?: boolean;
+  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
 }
 
 export interface ColorTokenMap {

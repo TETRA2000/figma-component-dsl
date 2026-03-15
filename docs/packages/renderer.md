@@ -34,10 +34,10 @@ The `@figma-dsl/renderer` package is a PNG rasterization engine that converts co
 The package fits into the DSL pipeline as: `DSL → Compile → **Render** → Compare → Export → Figma`.
 
 Key characteristics:
-- Single-file implementation (~293 lines)
-- Stateless design (no mutable global state beyond one-time font registration)
+- Single-file implementation (~440 lines)
+- Stateless design (no mutable global state beyond one-time font registration and canvas pool)
 - O(n) linear tree traversal
-- Supports 9 node types, solid/gradient fills, strokes, text with multi-line layout, and clipping
+- Supports 9 node types, solid/linear/radial gradient fills, multi-stroke rendering with alignment (INSIDE/CENTER/OUTSIDE), text with decorations and CJK support, clipping, and canvas pooling
 
 ---
 
@@ -47,9 +47,11 @@ Key characteristics:
 ```
 packages/renderer/
 ├── src/
-│   ├── index.ts              # Barrel export (re-exports renderer.ts)
-│   ├── renderer.ts           # All implementation (293 lines)
-│   └── renderer.test.ts      # Test suite (208 lines)
+│   ├── index.ts              # Barrel export (re-exports renderer.ts + image-loader.ts)
+│   ├── renderer.ts           # Core rendering implementation (~440 lines)
+│   ├── image-loader.ts       # Image source collection, resolution, and preloading
+│   ├── renderer.test.ts      # Renderer test suite (208 lines)
+│   └── image-loader.test.ts  # Image loader test suite (18 test statements)
 ├── dist/                     # Compiled output (ESM + types)
 ├── package.json
 └── tsconfig.json
@@ -57,20 +59,25 @@ packages/renderer/
 
 **Internal organization** of `renderer.ts`:
 
-| Section | Lines | Purpose |
-|---------|-------|---------|
-| Imports & type definitions | 1–34 | `RgbaColor`, `RenderOptions`, `RenderResult`, `RenderError` |
-| Default configuration | 36–39 | `DEFAULT_OPTIONS` (white bg, scale 1) |
-| Global state | 41 | `fontsRegistered` boolean flag |
-| Font initialization | 43–52 | `initializeRenderer()` |
-| Color utility | 54–56 | `rgbaToString()` |
-| Font weight utility | 58–60 | `fontWeightToCss()` |
-| Fill rendering | 62–98 | `applyFills()` — solid + gradient |
-| Corner radius resolution | 100–126 | `resolveCornerRadius()`, `hasCornerRadius()` |
-| Shape utility | 128–139 | `drawRoundedRect()` |
-| Node rendering | 141–234 | `renderNode()` — recursive tree traversal |
-| Text rendering | 236–318 | `renderText()` with word-wrap support |
-| Public API | 320–365 | `render()`, `renderToFile()` |
+| Section | Purpose |
+|---------|---------|
+| Imports & type definitions | `RgbaColor`, `RenderOptions`, `RenderResult`, `RenderError` |
+| Default configuration | `DEFAULT_OPTIONS` (white bg, scale 1) |
+| Global state | `fontsRegistered` flag, canvas pool |
+| Font initialization | `initializeRenderer()` — registers Inter + Noto Sans JP |
+| CJK detection | `containsCJK()`, `chooseFontFamily()` |
+| Color utility | `rgbaToString()` |
+| Font weight utility | `fontWeightToCss()` |
+| Fill rendering | `applyFills()` — solid + linear gradient + radial gradient |
+| Corner radius resolution | `resolveCornerRadius()`, `hasCornerRadius()` |
+| Shape utility | `drawRoundedRect()` |
+| Node rendering | `renderNode()` — recursive tree traversal |
+| Stroke rendering | Multi-stroke loop with INSIDE/CENTER/OUTSIDE alignment |
+| Text rendering | `renderText()` with word-wrap + `drawTextDecoration()` |
+| Text decoration | `drawTextDecoration()` — UNDERLINE/STRIKETHROUGH lines |
+| Canvas pooling | `acquireCanvas()`, `releaseCanvas()` |
+| Debug overlay | `renderDebugOverlay()` — frame borders, padding, computed sizes |
+| Public API | `render()`, `renderToFile()` |
 
 **Evidence**: `src/index.ts:1`, `src/renderer.ts`, `package.json`
 
@@ -92,8 +99,13 @@ interface RgbaColor {
 interface RenderOptions {
   backgroundColor: RgbaColor;   // Default: white (1,1,1,1)
   scale: number;                // Default: 1
-  assetDir?: string;            // Declared but unused
+  debugLayout?: boolean;        // Overlay layout debug info (frame borders, padding, sizes)
+  assetDir?: string;            // Base directory for image path resolution
+  imageCache?: ImageCache;      // Pre-loaded image cache (from preloadImages())
 }
+
+type ImageCache = ReadonlyMap<string, Image>;
+
 
 interface RenderResult {
   pngBuffer: Buffer;    // PNG-encoded image bytes
@@ -122,7 +134,18 @@ Core rendering function. Creates canvas at node dimensions × scale, renders the
 #### `renderToFile(node: FigmaNodeDict, outputPath: string, options?: Partial<RenderOptions>): RenderResult`
 Convenience wrapper: calls `render()` → writes PNG to disk via `writeFileSync()` → returns same `RenderResult`.
 
-**Evidence**: `src/renderer.ts:6-34,43-52,249-293`
+### Image Loading Functions
+
+#### `collectImageSources(node: FigmaNodeDict): Set<string>`
+Traverses a compiled node tree and collects all image source references from IMAGE nodes (`imageSrc`) and IMAGE fills (`fillPaints` with `type: 'IMAGE'`). Returns deduplicated `Set<string>`.
+
+#### `resolveImageSource(src: string, assetDir: string): string`
+Resolves a relative image path against an asset directory. HTTP/HTTPS URLs and absolute paths pass through unchanged; relative paths are resolved via `resolve(assetDir, src)`.
+
+#### `preloadImages(sources: Set<string>, assetDir: string): Promise<ImageCache>`
+Loads all collected image sources in parallel using `Promise.allSettled()`. Failed loads are silently omitted (the renderer draws a placeholder instead). Returns an immutable `Map<string, Image>`.
+
+**Evidence**: `src/renderer.ts:6-34,43-52,249-293`, `src/image-loader.ts:14-81`
 
 ---
 
@@ -144,10 +167,11 @@ FigmaNodeDict (compiled tree)
     │       ├── Save canvas state
     │       ├── Apply node transform (absolute 2x3 affine matrix)
     │       ├── Apply clipping if clipContent
-    │       ├── Render fills (solid/gradient)
-    │       ├── Render strokes (first stroke only)
+    │       ├── Render fills (solid/linear gradient/radial gradient)
+    │       ├── Render all strokes (with INSIDE/CENTER/OUTSIDE alignment)
     │       ├── Reset transform to identity
     │       ├── Recurse into children
+    │       ├── Render text decorations (UNDERLINE/STRIKETHROUGH)
     │       └── Restore canvas state
     ├── 7. canvas.toBuffer('image/png')
     └── 8. Return { pngBuffer, width, height }
@@ -167,10 +191,22 @@ FigmaNodeDict (compiled tree)
 - Converts RGBA (0–1 normalized) to CSS `rgba()` string via `rgbaToString()`
 
 ### Linear Gradient Fills
-- Only `GRADIENT_LINEAR` type supported
+- `GRADIENT_LINEAR` type
 - Transforms `gradientTransform` matrix from UV space (0,0)→(1,1) to canvas coordinates
 - If `gradientTransform` is undefined, defaults to horizontal gradient
 - Color stops from `gradientStops` array applied via `gradient.addColorStop()`
+
+### Image Fills
+- `IMAGE` type
+- Renders image from `imageCache` using `drawImageOnNode()` with scale mode support via `computeDrawInstruction()` from `@figma-dsl/core`
+- Supports four scale modes: FILL (cover, may crop), FIT (contain, may letterbox), CROP (center crop), TILE (repeat pattern via `createPattern()`)
+- Falls back to `drawImagePlaceholder()` if image not found in cache — gray background with crosshatch pattern
+
+### Radial Gradient Fills
+- `GRADIENT_RADIAL` type
+- Center and radius computed from node dimensions using normalized 0–1 coordinates
+- Default center: `(width/2, height/2)`, default radius: `max(width, height) / 2`
+- Uses `ctx.createRadialGradient(cx, cy, 0, cx, cy, radius)` for circular spread
 
 ### Color Conversion
 - Input: `RgbaColor { r, g, b, a }` with values 0–1
@@ -194,6 +230,7 @@ FigmaNodeDict (compiled tree)
 | RECTANGLE | Rectangle with optional corner radius |
 | ROUNDED_RECTANGLE | Rectangle with corner radius |
 | ELLIPSE | Ellipse via `ctx.ellipse()` (center, radiusX, radiusY) |
+| IMAGE | Image from cache with cornerRadius clipping; placeholder if not cached |
 | TEXT | Delegated to `renderText()` |
 | GROUP | Transparent container — children rendered, no shape |
 
@@ -281,9 +318,9 @@ ctx.setTransform(1, 0, 0, 1, 0, 0);  // Reset to identity before children
 ---
 
 ## Stroke Rendering
-**Confidence**: 0.90 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
+**Confidence**: 0.95 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-- Only the **first stroke** in `node.strokes` is rendered (`node.strokes[0]`)
+- **All strokes** in `node.strokes` are rendered in order (layered)
 - Stroke weight: `node.strokeWeight ?? stroke.weight`
 - Stroke color: RGBA converted to CSS string
 - Opacity: Combined with node opacity via `globalAlpha`
@@ -292,10 +329,13 @@ ctx.setTransform(1, 0, 0, 1, 0, 0);  // Reset to identity before children
   - Rounded rect: `ctx.roundRect()` stroke
   - Default: `ctx.strokeRect()`
 
+### Stroke Alignment
+- **CENTER** (default): Standard canvas stroke centered on the shape edge
+- **INSIDE**: Uses `ctx.save()` + clip to node shape + 2× stroke weight (half inside, half clipped away) + `ctx.restore()`
+- **OUTSIDE**: Uses `ctx.save()` + inverse clip (full canvas minus node shape, via `evenodd` fill rule) + 2× stroke weight + `ctx.restore()`
+
 ### Limitations
-- Stroke alignment (`INSIDE`, `CENTER`, `OUTSIDE`) is ignored — always renders as CENTER
 - No support for dashed/dotted strokes
-- Multiple strokes are not composited
 
 **Evidence**: `src/renderer.ts:176-194`
 
@@ -317,13 +357,19 @@ export function initializeRenderer(fontDir: string): void {
 
 ### Registered Fonts
 From `@figma-dsl/core/fonts`:
+
+**Inter** (Latin script):
 - Inter-Regular.otf (400)
 - Inter-Medium.otf (500)
 - Inter-SemiBold.otf (600)
 - Inter-Bold.otf (700)
 
-### Design Decision
-All fonts are registered under the single family name `'Inter'`. This means the `fontFamily` property in nodes is effectively ignored — all text renders using Inter. This simplifies font resolution but limits custom font support.
+**Noto Sans JP** (CJK/Japanese script):
+- NotoSansJP-Regular.ttf (400)
+- NotoSansJP-Bold.ttf (700)
+
+### CJK Font Selection
+The renderer auto-detects CJK characters (U+3000–U+9FFF, U+F900–U+FAFF) in text content via `containsCJK()`. When CJK characters are present, `chooseFontFamily()` selects `'Noto Sans JP'` instead of `'Inter'`. This is transparent to DSL authors — no `fontFamily` override needed.
 
 **Evidence**: `src/renderer.ts:41-52`
 
@@ -346,7 +392,7 @@ The renderer uses **@napi-rs/canvas** (Rust/NAPI-RS wrapper around Skia):
 - `GlobalFonts.registerFromPath()` — Font registration
 - Drawing: `fillRect`, `strokeRect`, `roundRect`, `ellipse`, `fillText`, `measureText`
 - State: `save`, `restore`, `setTransform`, `scale`, `clip`
-- Paint: `fillStyle`, `strokeStyle`, `lineWidth`, `globalAlpha`, `createLinearGradient`
+- Paint: `fillStyle`, `strokeStyle`, `lineWidth`, `globalAlpha`, `createLinearGradient`, `createRadialGradient`
 - Output: `canvas.toBuffer('image/png')` — PNG encoding
 
 **Evidence**: `src/renderer.ts:1,265-281`, `package.json:20`
@@ -428,7 +474,7 @@ The renderer is a **terminal module** — it produces PNG output and does not fe
 
 ### Characteristics
 - All operations are **synchronous** — blocks the event loop
-- New canvas created per `render()` call — no canvas reuse
+- **Canvas pooling**: `acquireCanvas(w, h)` / `releaseCanvas(canvas, w, h)` reuse canvases by `${width}x${height}` key, reducing allocation in batch operations
 - Font registration is one-time per process (idempotent)
 - Scaling produces proportionally larger canvas (2× scale = 4× pixels)
 - PNG encoding via native Rust/Skia (fast)
@@ -487,17 +533,21 @@ npm run test     # vitest run
 ## Known Limitations
 **Confidence**: 0.92 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-1. **Single stroke only**: Only first stroke in `node.strokes[]` rendered; multi-stroke ignored.
-2. **Linear gradients only**: GRADIENT_LINEAR supported; no radial, conic, or diamond gradients.
-3. **Inter font only**: All fonts registered under 'Inter' family; custom fonts not supported.
-4. **No shadow/blur effects**: Not in FigmaNodeDict type or rendering implementation.
-5. ~~**Uniform corner radius**~~: **Resolved** — both uniform `cornerRadius` and per-corner `cornerRadii` (`{ topLeft, topRight, bottomLeft, bottomRight }`) are now supported.
-6. **Stroke alignment ignored**: Always renders as CENTER regardless of `INSIDE`/`CENTER`/`OUTSIDE`.
-7. **Unused `assetDir` option**: Declared in `RenderOptions` but never used in implementation.
-8. **Silent text failure**: Text nodes without `textData`/`derivedTextData` render as blank without error.
-9. **No input validation**: Beyond dimension checks, no validation of RGBA ranges, scale bounds, or transform matrices.
-10. **Synchronous only**: All operations block the event loop; no async rendering support.
-11. **No canvas reuse**: New canvas allocated per `render()` call; no pooling or caching.
+1. **No shadow/blur effects**: Not in FigmaNodeDict type or rendering implementation.
+2. **No dashed/dotted strokes**: Stroke dash patterns not supported.
+3. ~~**Unused `assetDir` option**~~: **Resolved** — Image loading now uses `imageCache` (pre-loaded via `preloadImages()`) for rendering IMAGE nodes and fills.
+4. **Silent text failure**: Text nodes without `textData`/`derivedTextData` render as blank without error.
+5. **No input validation**: Beyond dimension checks, no validation of RGBA ranges, scale bounds, or transform matrices.
+6. **Synchronous only**: All operations block the event loop; no async rendering support.
+7. **CJK font limited to Japanese**: Only Noto Sans JP is bundled; Chinese (Simplified/Traditional) and Korean text may render with fallback glyphs.
+
+### Resolved Limitations
+- ~~**Single stroke only**~~: All strokes in `node.strokes[]` are now rendered in order.
+- ~~**Linear gradients only**~~: `GRADIENT_RADIAL` is now supported via `ctx.createRadialGradient()`.
+- ~~**Inter font only**~~: CJK text auto-detected and rendered using Noto Sans JP.
+- ~~**Uniform corner radius**~~: Both uniform `cornerRadius` and per-corner `cornerRadii` are supported.
+- ~~**Stroke alignment ignored**~~: INSIDE, CENTER, and OUTSIDE alignment now implemented via clipping.
+- ~~**No canvas reuse**~~: Canvas pooling (`acquireCanvas`/`releaseCanvas`) now reuses canvases by dimension.
 
 ---
 

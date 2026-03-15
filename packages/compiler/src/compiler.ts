@@ -22,6 +22,7 @@ function mapNodeType(node: DslNode): FigmaNodeType {
              node.cornerRadii !== undefined
         ? 'ROUNDED_RECTANGLE'
         : 'RECTANGLE';
+    case 'IMAGE':
     case 'FRAME':
     case 'TEXT':
     case 'ELLIPSE':
@@ -38,6 +39,28 @@ function convertFill(fill: Fill): FigmaPaint {
     return {
       type: 'SOLID',
       color: { ...fill.color },
+      opacity: fill.opacity,
+      visible: fill.visible,
+    };
+  }
+  if (fill.type === 'IMAGE') {
+    return {
+      type: 'IMAGE',
+      imageSrc: fill.src,
+      imageScaleMode: fill.scaleMode,
+      opacity: fill.opacity,
+      visible: fill.visible,
+    };
+  }
+  if (fill.type === 'GRADIENT_RADIAL') {
+    return {
+      type: 'GRADIENT_RADIAL',
+      gradientStops: fill.gradientStops.map(s => ({
+        color: { ...s.color },
+        position: s.position,
+      })),
+      center: fill.center,
+      radius: fill.radius,
       opacity: fill.opacity,
       visible: fill.visible,
     };
@@ -85,6 +108,62 @@ function resolveAutoLayoutPadding(al: AutoLayoutConfig): {
   return { paddingTop: padTop, paddingRight: padRight, paddingBottom: padBottom, paddingLeft: padLeft };
 }
 
+function validateNode(
+  node: DslNode,
+  path: string,
+  errors: CompileError[],
+): void {
+  // Validate cornerRadius
+  if (node.cornerRadius !== undefined && node.cornerRadius < 0) {
+    errors.push({ message: `cornerRadius must be >= 0, got ${node.cornerRadius}`, nodePath: path, nodeType: node.type });
+  }
+
+  // Validate fills
+  if (node.fills) {
+    for (const fill of node.fills) {
+      if (fill.type === 'SOLID' && fill.color) {
+        const { r, g, b, a } = fill.color;
+        if (r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1) {
+          errors.push({ message: `RGBA values must be in 0-1 range, got rgba(${r}, ${g}, ${b}, ${a})`, nodePath: path, nodeType: node.type });
+        }
+      }
+    }
+  }
+
+  // Validate strokes
+  if (node.strokes) {
+    for (const stroke of node.strokes) {
+      if (stroke.weight <= 0) {
+        errors.push({ message: `strokeWeight must be > 0, got ${stroke.weight}`, nodePath: path, nodeType: node.type });
+      }
+    }
+  }
+
+  // Validate image
+  if (node.type === 'IMAGE') {
+    if (!node.imageSrc) {
+      errors.push({ message: 'IMAGE node must have an imageSrc', nodePath: path, nodeType: node.type });
+    }
+  }
+
+  // Validate fills for image type
+  if (node.fills) {
+    for (const fill of node.fills) {
+      if (fill.type === 'IMAGE' && !fill.src) {
+        errors.push({ message: 'IMAGE fill must have a non-empty src', nodePath: path, nodeType: node.type });
+      }
+    }
+  }
+
+  // Validate text
+  if (node.type === 'TEXT') {
+    const fontSize = node.textStyle?.fontSize;
+    if (fontSize !== undefined && fontSize <= 0) {
+      errors.push({ message: `fontSize must be > 0, got ${fontSize}`, nodePath: path, nodeType: node.type });
+    }
+  }
+}
+
 function compileNode(
   node: DslNode,
   parentGuid: [number, number] | undefined,
@@ -92,6 +171,7 @@ function compileNode(
   path: string,
   errors: CompileError[],
 ): FigmaNodeDict {
+  validateNode(node, path, errors);
   const guid = nextGuid();
   const figmaType = mapNodeType(node);
 
@@ -130,6 +210,12 @@ function compileNode(
       ? { guid: parentGuid, position: String(childIndex) }
       : undefined,
   };
+
+  // Image passthrough
+  if (node.type === 'IMAGE') {
+    result.imageSrc = node.imageSrc;
+    result.imageScaleMode = node.imageScaleMode;
+  }
 
   // Auto-layout passthrough
   if (node.autoLayout) {
@@ -186,6 +272,11 @@ function compileNode(
     result.fontFamily = fontFamily;
     result.textAlignHorizontal = style.textAlignHorizontal ?? 'LEFT';
 
+    // textDecoration passthrough
+    if (style.textDecoration && style.textDecoration !== 'NONE') {
+      result.textDecoration = style.textDecoration;
+    }
+
     // textAutoResize passthrough
     const textAutoResize = node.textAutoResize ?? style.textAutoResize;
     if (textAutoResize) {
@@ -220,14 +311,25 @@ function compileNode(
 
   // Component property definitions
   if (node.type === 'COMPONENT' && node.componentProperties) {
+    const validTypes = new Set(['TEXT', 'BOOLEAN', 'INSTANCE_SWAP']);
     const defs: Record<string, { type: string; defaultValue: string | boolean }> = {};
     for (const prop of node.componentProperties) {
+      if (!validTypes.has(prop.type)) {
+        errors.push({
+          message: `Invalid componentProperty type '${prop.type}' on standalone COMPONENT '${node.name}'. Only TEXT, BOOLEAN, and INSTANCE_SWAP are allowed. Use componentSet() with variantAxes for variant properties.`,
+          nodePath: path,
+          nodeType: node.type,
+        });
+        continue;
+      }
       defs[prop.name] = {
         type: prop.type,
         defaultValue: prop.defaultValue,
       };
     }
-    result.componentPropertyDefinitions = defs;
+    if (Object.keys(defs).length > 0) {
+      result.componentPropertyDefinitions = defs;
+    }
   }
 
   // Instance compilation
