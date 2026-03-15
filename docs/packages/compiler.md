@@ -292,6 +292,7 @@ For each TEXT node, generates:
 ### Component Compilation
 - `node.componentProperties[]` array → `componentPropertyDefinitions` record
 - Format: `{ [name]: { type, defaultValue } }`
+- Only `TEXT`, `BOOLEAN`, and `INSTANCE_SWAP` types are accepted; invalid types (e.g. `VARIANT`) are skipped with a compile error directing the author to use `componentSet()` with `variantAxes`
 
 ### Instance Compilation
 - `componentId` ← `node.componentRef`

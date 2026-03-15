@@ -158,7 +158,7 @@ The internal `convertToPluginNode()` function performs a single recursive tree t
 | `layoutSizingH/V` | Same | Truthy |
 | `textData` | Text bundle | Truthy |
 | `derivedTextData.fontMetaData[0]` | `fontWeight`, `fontStyle` | Index exists |
-| `componentPropertyDefinitions` | Same | Truthy |
+| `componentPropertyDefinitions` | Same (VARIANT filtered for COMPONENT) | Truthy |
 | `componentId` | + `overriddenProperties` | Truthy |
 
 **Complexity**: O(n) single-pass traversal where n = total nodes in tree.
@@ -237,7 +237,7 @@ When `node.textData` exists:
 ## Component & Instance Properties
 **Confidence**: 0.94 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-- **Component**: `componentPropertyDefinitions` passed through if present (Record of `{type, defaultValue}`)
+- **Component**: `componentPropertyDefinitions` passed through if present (Record of `{type, defaultValue}`). For standalone `COMPONENT` nodes, VARIANT-type properties are automatically filtered out (Figma only allows VARIANT properties on COMPONENT_SET nodes).
 - **Instance**: `componentId` + `overriddenProperties` passed through if `componentId` exists
 
 Mutual exclusivity (a node cannot be both) is not enforced but assumed correct from the compiler.
