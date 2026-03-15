@@ -2,6 +2,7 @@ import type { DslNode, Fill, StrokePaint, AutoLayoutConfig } from '@figma-dsl/co
 import type {
   FigmaNodeDict, FigmaNodeType, FigmaPaint, FigmaStroke,
   CompileResult, CompileError, Baseline, FontMeta, TextMeasurer,
+  CompilerOptions, CompilerValidationLevel,
 } from './types.js';
 import { resolveLayout } from './layout-resolver.js';
 
@@ -119,10 +120,19 @@ function validateNode(
   node: DslNode,
   path: string,
   errors: CompileError[],
+  level: CompilerValidationLevel = 'strict',
 ): void {
+  const push = (msg: string, sev?: 'error' | 'warning') => {
+    errors.push({ message: msg, nodePath: path, nodeType: node.type, severity: sev });
+  };
+
   // Validate cornerRadius
   if (node.cornerRadius !== undefined && node.cornerRadius < 0) {
-    errors.push({ message: `cornerRadius must be >= 0, got ${node.cornerRadius}`, nodePath: path, nodeType: node.type });
+    if (level === 'loose') {
+      push(`cornerRadius is negative (${node.cornerRadius}), clamping to 0`, 'warning');
+    } else {
+      push(`cornerRadius must be >= 0, got ${node.cornerRadius}`);
+    }
   }
 
   // Validate fills
@@ -131,7 +141,8 @@ function validateNode(
       if (fill.type === 'SOLID' && fill.color) {
         const { r, g, b, a } = fill.color;
         if (r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1) {
-          errors.push({ message: `RGBA values must be in 0-1 range, got rgba(${r}, ${g}, ${b}, ${a})`, nodePath: path, nodeType: node.type });
+          // RGBA range is always an error — Figma API hard constraint
+          push(`RGBA values must be in 0-1 range, got rgba(${r}, ${g}, ${b}, ${a})`);
         }
       }
     }
@@ -140,24 +151,30 @@ function validateNode(
   // Validate strokes
   if (node.strokes) {
     for (const stroke of node.strokes) {
-      if (stroke.weight <= 0) {
-        errors.push({ message: `strokeWeight must be > 0, got ${stroke.weight}`, nodePath: path, nodeType: node.type });
+      if (stroke.weight < 0) {
+        push(`strokeWeight must be >= 0, got ${stroke.weight}`);
+      } else if (stroke.weight === 0) {
+        if (level === 'strict') {
+          push(`strokeWeight must be > 0, got ${stroke.weight}`);
+        } else {
+          push(`strokeWeight is 0, stroke will be invisible`, 'warning');
+        }
       }
     }
   }
 
-  // Validate image
+  // Validate image — always required (no image src = broken node)
   if (node.type === 'IMAGE') {
     if (!node.imageSrc) {
-      errors.push({ message: 'IMAGE node must have an imageSrc', nodePath: path, nodeType: node.type });
+      push('IMAGE node must have an imageSrc');
     }
   }
 
-  // Validate fills for image type
+  // Validate fills for image type — always required
   if (node.fills) {
     for (const fill of node.fills) {
       if (fill.type === 'IMAGE' && !fill.src) {
-        errors.push({ message: 'IMAGE fill must have a non-empty src', nodePath: path, nodeType: node.type });
+        push('IMAGE fill must have a non-empty src');
       }
     }
   }
@@ -166,7 +183,11 @@ function validateNode(
   if (node.type === 'TEXT') {
     const fontSize = node.textStyle?.fontSize;
     if (fontSize !== undefined && fontSize <= 0) {
-      errors.push({ message: `fontSize must be > 0, got ${fontSize}`, nodePath: path, nodeType: node.type });
+      if (level === 'loose') {
+        push(`fontSize is ${fontSize}, text will not render`, 'warning');
+      } else {
+        push(`fontSize must be > 0, got ${fontSize}`);
+      }
     }
   }
 }
@@ -177,8 +198,9 @@ function compileNode(
   childIndex: number,
   path: string,
   errors: CompileError[],
+  validationLevel?: CompilerValidationLevel,
 ): FigmaNodeDict {
-  validateNode(node, path, errors);
+  validateNode(node, path, errors, validationLevel);
   const guid = nextGuid();
   const figmaType = mapNodeType(node);
 
@@ -399,17 +421,17 @@ function compileNode(
   // Compile children
   if (node.children) {
     result.children = node.children.map((child, idx) =>
-      compileNode(child, guid, idx, `${path} > ${child.name}`, errors)
+      compileNode(child, guid, idx, `${path} > ${child.name}`, errors, validationLevel)
     );
   }
 
   return result;
 }
 
-export function compile(node: DslNode): CompileResult {
+export function compile(node: DslNode, options?: CompilerOptions): CompileResult {
   resetGuidCounter();
   const errors: CompileError[] = [];
-  const root = compileNode(node, undefined, 0, node.name, errors);
+  const root = compileNode(node, undefined, 0, node.name, errors, options?.validationLevel);
   return {
     root,
     nodeCount: guidCounter,
@@ -417,11 +439,11 @@ export function compile(node: DslNode): CompileResult {
   };
 }
 
-export function compileWithLayout(node: DslNode, measurer: TextMeasurer): CompileResult {
+export function compileWithLayout(node: DslNode, measurer: TextMeasurer, options?: CompilerOptions): CompileResult {
   const { sizes, offsets } = resolveLayout(node, measurer);
   resetGuidCounter();
   const errors: CompileError[] = [];
-  const root = compileNodeWithLayout(node, undefined, 0, node.name, errors, sizes, offsets, [1, 0, 0, 0, 1, 0]);
+  const root = compileNodeWithLayout(node, undefined, 0, node.name, errors, sizes, offsets, [1, 0, 0, 0, 1, 0], options?.validationLevel);
   return { root, nodeCount: guidCounter, errors };
 }
 
@@ -434,8 +456,9 @@ function compileNodeWithLayout(
   sizes: Map<DslNode, { width: number; height: number }>,
   offsets: Map<DslNode, { x: number; y: number }>,
   parentTransform: [number, number, number, number, number, number],
+  validationLevel?: CompilerValidationLevel,
 ): FigmaNodeDict {
-  const result = compileNode(node, parentGuid, childIndex, path, errors);
+  const result = compileNode(node, parentGuid, childIndex, path, errors, validationLevel);
 
   // Apply resolved size
   const resolvedSize = sizes.get(node);
@@ -465,7 +488,7 @@ function compileNodeWithLayout(
     result.children = node.children.map((child, idx) =>
       compileNodeWithLayout(
         child, result.guid, idx, `${path} > ${child.name}`,
-        errors, sizes, offsets, currentTransform,
+        errors, sizes, offsets, currentTransform, validationLevel,
       )
     );
   }
