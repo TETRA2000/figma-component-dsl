@@ -155,6 +155,7 @@ CompileResult { root: FigmaNodeDict (with geometry), nodeCount, errors[] }
 |----------|-----------|------------|
 | RECTANGLE | cornerRadius > 0 OR cornerRadii defined | ROUNDED_RECTANGLE |
 | RECTANGLE | No corner radius | RECTANGLE |
+| IMAGE | — | IMAGE (compiled with `imageSrc` and `imageScaleMode`) |
 | FRAME, TEXT, ELLIPSE, GROUP | — | Pass-through |
 | COMPONENT, COMPONENT_SET, INSTANCE | — | Pass-through |
 
@@ -162,6 +163,7 @@ CompileResult { root: FigmaNodeDict (with geometry), nodeCount, errors[] }
 - **SOLID**: Copies color (r,g,b,a normalized 0–1), opacity, visible
 - **GRADIENT_LINEAR**: Deep-copies gradientStops, gradientTransform matrix, opacity, visible
 - **GRADIENT_RADIAL**: Copies gradientStops, center, radius, opacity, visible
+- **IMAGE**: Copies `imageSrc`, `imageScaleMode`, opacity, visible
 - Fill array order is preserved
 
 ### Stroke Conversion (`convertStroke`)
@@ -337,7 +339,7 @@ Root node always has identity (no parent). Translation is additive through the t
 ### FigmaNodeDict (key fields)
 - **Identity**: `guid: [number, number]`, `name: string`, `type: FigmaNodeType`
 - **Geometry**: `size: {x, y}`, `transform: number[3][3]`
-- **Visual**: `fillPaints: FigmaPaint[]`, `strokes: FigmaStroke[]`, `opacity`, `visible`, `cornerRadius`, `cornerRadii`, `clipContent`
+- **Visual**: `fillPaints: FigmaPaint[]`, `strokes: FigmaStroke[]`, `opacity`, `visible`, `cornerRadius`, `cornerRadii`, `clipContent`, `imageSrc`, `imageScaleMode`
 - **Layout**: `stackMode`, `itemSpacing`, `padding*`, `primaryAxisAlignItems`, `counterAxisAlignItems`, `layoutSizingHorizontal/Vertical`
 - **Text**: `textData`, `derivedTextData`, `fontSize`, `fontFamily`, `textAlignHorizontal`, `textAutoResize`
 - **Component**: `componentPropertyDefinitions`, `componentId`, `overriddenProperties`
@@ -347,6 +349,7 @@ Root node always has identity (no parent). Translation is additive through the t
 - **SOLID**: `{type, color: {r,g,b,a}, opacity, visible}`
 - **GRADIENT_LINEAR**: `{type, gradientStops[], gradientTransform, opacity, visible}`
 - **GRADIENT_RADIAL**: `{type, gradientStops[], center?, radius?, opacity, visible}`
+- **IMAGE**: `{type, imageSrc, imageScaleMode, opacity, visible}`
 
 ### LayoutResult
 ```typescript

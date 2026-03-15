@@ -23,7 +23,7 @@
 ## Overview
 **Confidence**: 0.97 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-The `@figma-dsl/core` package is the foundational module of the Figma Component DSL system. It provides a fully-typed AST (Abstract Syntax Tree) layer that models Figma design elements programmatically. The package exports factory functions for creating design nodes (`frame`, `text`, `rectangle`, `ellipse`, `group`, `component`, `componentSet`, `instance`), utility functions for color handling (`hex`, `solid`, `gradient`, `defineTokens`, `token`), and configuration helpers for auto-layout (`horizontal`, `vertical`).
+The `@figma-dsl/core` package is the foundational module of the Figma Component DSL system. It provides a fully-typed AST (Abstract Syntax Tree) layer that models Figma design elements programmatically. The package exports factory functions for creating design nodes (`frame`, `text`, `rectangle`, `ellipse`, `image`, `group`, `component`, `componentSet`, `instance`), utility functions for color handling (`hex`, `solid`, `gradient`, `imageFill`, `defineTokens`, `token`), image helpers (`computeDrawInstruction`, `isSupportedImageFormat`), and configuration helpers for auto-layout (`horizontal`, `vertical`).
 
 All modules are stateless — no runtime state is maintained. The design enables developers to compose complex component hierarchies declaratively using TypeScript.
 
@@ -36,14 +36,15 @@ All modules are stateless — no runtime state is maintained. The design enables
 packages/dsl-core/
 ├── src/
 │   ├── types.ts           # Type definitions only (no runtime values)
-│   ├── nodes.ts           # Node factory functions (8 constructors)
-│   ├── colors.ts          # Color utilities & fill factories
+│   ├── nodes.ts           # Node factory functions (9 constructors, including image)
+│   ├── colors.ts          # Color utilities & fill factories (including imageFill)
+│   ├── image-helpers.ts   # Image draw instruction computation & format validation
 │   ├── layout.ts          # Auto-layout configuration helpers
 │   ├── changeset.ts       # Changeset schema types (ChangesetDocument, PropertyChange)
 │   ├── plugin-types.ts    # Canonical PluginNodeDef, PluginInput, ComponentIdentity, EditLogEntry
 │   ├── diff.ts            # PluginNodeDef diff algorithm (diffNodes, diffValues, describeChange)
 │   ├── patterns.ts        # Pre-built UI pattern helpers (card, badge, navBar, etc.)
-│   ├── *.test.ts          # Test files (7 suites)
+│   ├── *.test.ts          # Test files (8 suites, including image.test.ts)
 │   └── index.ts           # Re-export barrel
 ├── fonts/                 # Inter + Noto Sans JP font families
 ├── fixtures/              # Sample changeset and complete export JSON files
@@ -58,6 +59,7 @@ index.ts
   ├── types.ts (types only, leaf)
   ├── nodes.ts → colors.ts (hex parser), types.ts
   ├── colors.ts → types.ts
+  ├── image-helpers.ts → types.ts
   ├── layout.ts → types.ts
   ├── patterns.ts → nodes.ts, colors.ts, layout.ts, types.ts
   ├── changeset.ts (types only, leaf)
@@ -86,6 +88,7 @@ All factories validate inputs, apply defaults (`visible: true`, `opacity: 1`), d
 | `text` | TEXT | `text(characters: string, style?: TextStyle & ChildLayoutProps): DslNode` |
 | `rectangle` | RECTANGLE | `rectangle(name: string, props: RectangleProps): DslNode` |
 | `ellipse` | ELLIPSE | `ellipse(name: string, props: EllipseProps): DslNode` |
+| `image` | IMAGE | `image(name: string, props: ImageProps): DslNode` |
 | `group` | GROUP | `group(name: string, children: DslNode[]): DslNode` |
 
 ### Component Factories
@@ -100,6 +103,7 @@ All factories validate inputs, apply defaults (`visible: true`, `opacity: 1`), d
 
 - **frame/component**: Support `autoLayout`, `clipContent`, child sizing props
 - **text**: Auto-converts `color` hex shorthand to `SolidFill`; node name = characters
+- **image**: Accepts `src` (required, non-empty), `size`, `fit` (default `'FILL'`), `cornerRadius`, `opacity`, `visible`, and layout sizing props. Validates non-empty src
 - **group**: Only accepts name + children (no styling)
 - **instance**: Requires non-empty `componentRef`; throws otherwise
 - **componentSet**: Records variant axes as `Record<string, string[]>`
@@ -125,6 +129,11 @@ Creates `GRADIENT_LINEAR` fill. Stops use 0–1 positions. Angle in degrees (0°
 #### `radialGradient(stops: {hex: string, position: number}[], opts?): RadialGradientFill`
 Creates `GRADIENT_RADIAL` fill. Optional `center` (default `{x: 0.5, y: 0.5}`) and `radius` (default `0.5`) in 0–1 normalized coordinates. The renderer computes actual pixel center and radius from node dimensions.
 
+#### `imageFill(src: string, options?: { scaleMode?: ImageScaleMode; opacity?: number }): ImageFill`
+Creates an image fill for use in any node's `fills` array. Validates non-empty `src`. Default `scaleMode` is `'FILL'`, default `opacity` is `1`.
+
+**ImageScaleMode**: `'FILL'` | `'FIT'` | `'CROP'` | `'TILE'`
+
 #### `defineTokens(tokens: Record<string, string>): ColorTokenMap`
 Eagerly parses all hex values at definition time. Returns opaque `ColorTokenMap` with `readonly _tokens` field.
 
@@ -134,7 +143,7 @@ Looks up token by name. Throws descriptive error listing available tokens if not
 ### Fill Types
 
 ```typescript
-type Fill = SolidFill | GradientFill | RadialGradientFill;  // Discriminated union via 'type' field
+type Fill = SolidFill | GradientFill | RadialGradientFill | ImageFill;  // Discriminated union via 'type' field
 
 interface SolidFill {
   type: 'SOLID'; color: RgbaColor; opacity: number; visible: boolean;
@@ -149,6 +158,12 @@ interface RadialGradientFill {
   type: 'GRADIENT_RADIAL'; gradientStops: GradientStop[];
   center?: { x: number; y: number };  // 0-1 normalized, default (0.5, 0.5)
   radius?: number;                      // 0-1 normalized, default 0.5
+  opacity: number; visible: boolean;
+}
+
+interface ImageFill {
+  type: 'IMAGE'; src: string;
+  scaleMode: ImageScaleMode;  // 'FILL' | 'FIT' | 'CROP' | 'TILE'
   opacity: number; visible: boolean;
 }
 ```
@@ -285,7 +300,7 @@ Sizes use `{x: number, y: number}` (not width/height).
 
 ### NodeType Union
 ```typescript
-type NodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ELLIPSE' | 'GROUP'
+type NodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ELLIPSE' | 'IMAGE' | 'GROUP'
   | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE'
 ```
 
@@ -302,6 +317,8 @@ The package validates critical user inputs at runtime with descriptive error mes
 |------------|--------------|--------|
 | Empty node name | `"Node name must be a non-empty string."` | `nodes.ts:7-11` |
 | Empty text characters | `"Text characters must be a non-empty string."` | `nodes.ts:39` |
+| Empty image src | `"Image src must be a non-empty string."` | `nodes.ts` |
+| Empty imageFill src | `"ImageFill src must be a non-empty string."` | `colors.ts` |
 | Empty instance ref | `"Instance componentRef must be a non-empty string."` | `nodes.ts:158` |
 | Invalid hex color | `'Invalid hex color: "{value}". Expected 6-digit hex (e.g., "#ff0000").'` | `colors.ts:8` |
 | Undefined token | `'Undefined color token: "{name}". Available tokens: [list]'` | `colors.ts:68` |
@@ -507,7 +524,8 @@ The `fonts/` directory includes two font families:
 | `components.test.ts` | 10 | component, componentSet, instance, properties, variants |
 | `changeset.test.ts` | 8 | Changeset type structure, usage patterns, schema validation |
 | `plugin-types.test.ts` | 8 | PluginNodeDef, PluginInput, ComponentIdentity, EditLogEntry |
-| `diff.test.ts` | 22 | diffValues, diffNodes, describeChange, nested diffs, structural changes |
+| `image.test.ts` | 54 | image() builder, imageFill(), computeDrawInstruction, isSupportedImageFormat |
+| `diff.test.ts` | 22 | diffValues, diffNodes, describeChange, nested diffs, structural changes, image diffs |
 
 **Evidence**: `package.json:14-22`, `tsconfig.json`
 
