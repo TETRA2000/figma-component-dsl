@@ -99,7 +99,19 @@ The MCP server acts as a **thin interface layer** — it does not generate React
 6. When the Figma Plugin receives a `request-export` message, the Figma Plugin shall serialize the requested components and return the complete PluginInput JSON.
 7. If the WebSocket connection is lost, the Figma Plugin shall display a reconnection indicator in the plugin UI and retry connection every 5 seconds.
 
-### Requirement 8: Unsyncable Change Detection
+### Requirement 8: Sync Activity Visibility
+
+**Objective:** As a developer, I want to see clear, human-readable output in Claude Desktop describing what components were edited and how, so that I understand exactly what changed on both the React and Figma sides without inspecting raw JSON.
+
+#### Acceptance Criteria
+1. When Claude pushes a component to Figma (Requirement 2), Claude shall output a summary describing which component was pushed and what properties it contains.
+2. When Claude pulls a changeset from Figma (Requirement 3), Claude shall output a human-readable summary of each property change (e.g., "Button: background color changed from #7c3aed to #3b82f6, font size increased from 16px to 18px").
+3. When the Sync MCP Server returns a changeset, the ChangesetDocument shall include a `description` field on each `PropertyChange` entry containing a human-readable explanation of the change.
+4. When Claude applies changeset modifications to React/CSS files, Claude shall output which files were modified and what edits were made.
+5. When real-time change notifications arrive (Requirement 4), Claude shall output a notification summary listing the affected component names and the categories of changed properties (e.g., "Designer edited HeroSection: fills, typography").
+6. When warnings or unsyncable properties are detected, Claude shall present them inline with the change summary, clearly distinguishing warnings from successful changes.
+
+### Requirement 9: Unsyncable Change Detection
 
 **Objective:** As a developer, I want the changeset to include warnings about properties that cannot be faithfully represented across the React-Figma boundary, so that I can take corrective action.
 
