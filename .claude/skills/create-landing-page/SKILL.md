@@ -48,7 +48,7 @@ If the user gives a vague request like "build me a landing page", use sensible d
 
 ### Step 3: Compose the Page
 
-Create the page file at `preview/src/pages/{PageName}.tsx`.
+Create the page file at `preview/src/pages/_generated/{PageName}.tsx`.
 
 Follow the reference pattern from `references/figma_design_playground/src/pages/LandingPage.tsx`:
 
@@ -70,7 +70,7 @@ Key patterns:
 Edit `preview/src/App.tsx` to import and render the new page:
 
 ```tsx
-import { PageName } from './pages/PageName'
+import { PageName } from './pages/_generated/PageName'
 
 function App() {
   return <PageName />

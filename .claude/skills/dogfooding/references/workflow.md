@@ -49,7 +49,7 @@ When picking, announce the theme and explain what DSL features it will stress:
 For each theme, create 2-4 components. Follow the create-react-component skill's 3-file pattern:
 
 ```
-preview/src/components/{ComponentName}/
+preview/src/components/_generated/{ComponentName}/
   ├── {ComponentName}.tsx         # React component
   ├── {ComponentName}.module.css  # CSS Module
   └── {ComponentName}.figma.tsx   # Code Connect binding
@@ -64,7 +64,7 @@ Key rules from the create-react-component skill:
 
 ### Page creation
 
-Create a showcase page at `preview/src/pages/{Theme}Showcase.tsx`:
+Create a showcase page at `preview/src/pages/_generated/{Theme}Showcase.tsx`:
 
 ```tsx
 import { ComponentA } from '../components/ComponentA/ComponentA';
@@ -91,13 +91,13 @@ function App() { return <ThemeShowcase />; }
 
 ### Register components
 
-Add exports to `preview/src/components/index.ts` below the `// --- END REFERENCE EXPORTS ---` comment.
+Append exports to `preview/src/components/_generated.ts` (create if missing). Do **not** modify `index.ts`.
 
 ### Validate
 
 Run the DSL validator on each new component:
 ```bash
-bin/figma-dsl validate preview/src/components/{ComponentName}/{ComponentName}.tsx
+bin/figma-dsl validate preview/src/components/_generated/{ComponentName}/{ComponentName}.tsx
 ```
 
 Fix any validation errors before proceeding.
@@ -170,11 +170,29 @@ The DSL file should recreate the same visual layout as the React page. Key mappi
 - Use rectangle placeholders for images (gray fills)
 - Text nodes need explicit `fontSize` and optionally `fontWeight`, `color`
 
+### Write DSL as-intended — don't preemptively avoid features
+
+This is critical for effective dogfooding. Write the DSL using the features that most naturally match the React/CSS patterns — even if you suspect they might not work perfectly. The goal is to expose pipeline gaps, and you can't find gaps in features you never use.
+
+**Do this:**
+- Browser uses `opacity: 0.4` on background → use `opacity: 0.4` on the fill, or add a dedicated fill opacity
+- Browser centers children → use `counterAlign: 'CENTER'` or `align: 'CENTER'`
+- Children stretch to fill parent → use `layoutSizingHorizontal: 'FILL'`
+- Text wraps within a container → use `textAutoResize: 'HEIGHT'` with a fixed width
+
+**Don't do this:**
+- Pre-bake low-opacity colors (e.g., calculating `#2a1520` instead of using pink at 10% opacity)
+- Add extra wrapper frames to force centering
+- Use fixed pixel widths instead of FILL sizing
+- Restructure the nesting to work around spacing bugs
+
+If a feature doesn't work, that's a discovery — not a reason to restructure the DSL. Log it, investigate the pipeline, and fix it there.
+
 ### Compile and render
 
 ```bash
 # Compile DSL to JSON
-bin/figma-dsl compile examples/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
+bin/figma-dsl compile workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
 
 # Render JSON to PNG
 bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl.png
@@ -207,54 +225,89 @@ bin/figma-dsl compare \
 
 Note: Image dimensions must match for pixel comparison. Browser screenshots may be a different size than DSL renders. This is expected — focus on visual inspection for size-mismatched comparisons.
 
-### Categorizing issues
+### Categorizing issues — pipeline investigation is mandatory
 
-Each difference falls into one of:
+Each difference falls into one of these categories, but you must investigate before classifying:
 
 1. **Expected/acceptable** — Stars rendered as rectangles, placeholder images vs real images
-2. **DSL authoring error** — Missing property in the `.dsl.ts` file that should be there
-3. **Pipeline bug** — DSL is correct but the compiled JSON or rendered PNG is wrong
+2. **DSL authoring error** — Genuine typo or wrong API choice (e.g., `align: 'MIN'` when `SPACE_BETWEEN` was intended)
+3. **Pipeline bug** — DSL correctly expresses the design but the compiled JSON or rendered PNG is wrong
+4. **Pipeline gap** — The DSL API doesn't offer a way to express what the browser does (e.g., no fill-level opacity separate from node opacity)
 
-Focus fixing effort on categories 2 and 3. Category 3 (pipeline bugs) is the primary goal of dogfooding.
+Category 3 and 4 are the primary goal of dogfooding. Category 4 is especially important — these are features the pipeline should support but doesn't yet.
 
-## Step 6: Fix root causes (detailed)
+**Before classifying anything as category 2, you must rule out categories 3 and 4.** The question to ask: "If I restructure the DSL to work around this, am I hiding a feature the pipeline should support?"
 
-### For DSL authoring errors (category 2)
+### Example: What pipeline investigation looks like
 
-Fix the `.dsl.ts` file and re-render:
-```bash
-bin/figma-dsl compile examples/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
-bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl-fix1.png
-```
+Suppose the browser shows a card with a subtly tinted background (pink at 8% opacity), but the DSL render shows nothing or the wrong color.
 
-### For pipeline bugs (category 3)
+**Wrong approach (DSL workaround):** Calculate the pre-baked color (`#2a1520`) and use `solid('#2a1520')`. Log it as "DSL fix." This hides the fact that the pipeline can't handle low-opacity fills properly.
 
-Follow the calibrate skill's pipeline diagnosis process:
+**Right approach (pipeline investigation):**
+1. Write the DSL with `solid('#ff2d55', 0.08)` — expressing the intent directly
+2. Compile and check the JSON — does the fill have `opacity: 0.08`?
+3. If yes, check the renderer — does it use fill opacity when painting?
+4. If the renderer ignores fill opacity, fix the renderer
+5. If the DSL core doesn't pass opacity through to the fill, fix the factory function
+
+Even if you can't fix the pipeline bug right now (maybe it's too complex), log it as a known pipeline gap in the history — don't silently work around it.
+
+## Step 6: Investigate and fix root causes (detailed)
+
+### Step 6.1 — For every mismatch, investigate the pipeline first
+
+This is not optional. Before touching the `.dsl.ts` file, trace the property through the pipeline:
 
 1. **Compile and inspect JSON:**
    ```bash
-   bin/figma-dsl compile examples/{theme}-page.dsl.ts -o /tmp/debug.json
+   bin/figma-dsl compile workspace/dsl/{theme}-page.dsl.ts -o /tmp/debug.json
    ```
-   Read the JSON — is the property present?
+   Read the JSON — is the property present and correct?
 
-2. **Trace through layers:**
+2. **Read the actual source code at each pipeline layer:**
    - Layer 1: `packages/dsl-core/src/types.ts` — Is the property in DslNode?
-   - Layer 2: `packages/dsl-core/src/nodes.ts` — Does the factory accept it?
+   - Layer 2: `packages/dsl-core/src/nodes.ts` — Does the factory accept and pass it through?
    - Layer 3: `packages/compiler/src/types.ts` — Is it in FigmaNodeDict?
    - Layer 4: `packages/compiler/src/compiler.ts` — Does compileNode copy it?
-   - Layer 5: `packages/compiler/src/layout-resolver.ts` — Does layout handle it?
-   - Layer 6: `packages/renderer/src/renderer.ts` — Does the renderer use it?
+   - Layer 5: `packages/compiler/src/layout-resolver.ts` — Does layout resolution handle it?
+   - Layer 6: `packages/renderer/src/renderer.ts` — Does the renderer actually use it?
 
-3. **Fix the first layer where the property breaks**
+   You must actually read these files — don't guess based on whether the output looks right.
+
+3. **Fix the first layer where the property disappears or is mishandled**
 
 4. **Rebuild and re-render:**
    ```bash
    npm run build
-   bin/figma-dsl compile examples/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
+   bin/figma-dsl compile workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
    bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl-fix1.png
    ```
 
 5. **Re-inspect** the new render to verify the fix
+
+### Step 6.2 — Only then consider DSL authoring fixes
+
+After pipeline investigation, if the issue is genuinely a DSL authoring error (wrong API, typo, logical mistake in the helper function), fix the `.dsl.ts` file:
+
+```bash
+bin/figma-dsl compile workspace/dsl/{theme}-page.dsl.ts -o dogfooding/<timestamp>/iteration-<N>/compiled.json
+bin/figma-dsl render dogfooding/<timestamp>/iteration-<N>/compiled.json -o dogfooding/<timestamp>/iteration-<N>/dsl-fix1.png
+```
+
+### Step 6.3 — Log pipeline gaps even when unfixed
+
+If you discover a pipeline limitation you can't fix in this iteration (too complex, needs design discussion, etc.), log it in the history under a "Known Pipeline Gaps" section:
+
+```markdown
+## Known pipeline gaps (not fixed)
+- **Fill-level opacity**: The renderer applies opacity to the entire node, not per-fill.
+  Workaround: pre-bake colors. Pipeline fix needed in `renderer.ts` paint logic.
+- **Child centering without explicit parent width**: Layout resolver requires parent
+  to have fixed width for `counterAlign: 'CENTER'` to work on children.
+```
+
+This ensures future sessions can pick up where you left off instead of rediscovering the same gaps.
 
 ## Step 7: Update docs and tests (detailed)
 
@@ -320,7 +373,7 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
 
 **Component addition commit** (optional, only if the user wants components committed):
 ```bash
-git add preview/src/components/<New>/ preview/src/pages/ examples/<theme>.dsl.ts
+git add preview/src/components/_generated/<New>/ preview/src/pages/_generated/ workspace/dsl/<theme>.dsl.ts
 git commit -m "feat: add <theme> components and DSL for dogfooding
 
 Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
@@ -368,6 +421,11 @@ DSL features stressed: <comma-separated list>
 - **<fix title>**: <root cause> → <what was changed> (files: <list>)
 - ...
 
+## Known pipeline gaps (not fixed)
+- **<gap title>**: <description of what the pipeline can't do>
+  Workaround used: <what the DSL did instead>
+  Fix needed in: <which pipeline layer>
+
 ## Commits
 - `<hash>` — <commit message summary>
 ```
@@ -413,7 +471,7 @@ After each iteration, provide a brief summary:
 | # | Description | Type | Fixed? | Affected file |
 |---|---|---|---|---|
 | 1 | Per-corner radii dropped | Pipeline | YES | types.ts, compiler.ts, renderer.ts |
-| 2 | Missing gradient in DSL | DSL | YES | examples/{theme}-page.dsl.ts |
+| 2 | Missing gradient in DSL | DSL | YES | workspace/dsl/{theme}-page.dsl.ts |
 
 **Pipeline commits:** <commit hashes>
 ```
