@@ -99,12 +99,27 @@ graph TB
   CLI --> Plugin
 ```
 
-**Architecture Integration**:
-- Selected pattern: Extend existing pipeline with new fields and optional processing passes
+**Architecture Integration** (Hybrid approach — see `gap-analysis.md` Option C):
+- Selected pattern: **Hybrid** — extend existing types/functions in all packages for natural integrations; create new modules for distinct responsibilities (registry, dedup, hashing, Code Connect)
 - Domain boundaries: Slot semantics defined in core, validated in compiler, encoded in exporter, created in plugin
+- **Extend existing files**: `types.ts`, `nodes.ts`, `plugin-types.ts`, `compiler.ts`, `exporter.ts`, `code.ts`, `serializer.ts`, `diff.ts`, `cli.ts`, `changeset.ts` — add optional fields, new builder parameters, validation branches, encoding logic
+- **New modules in exporter**: `structural-hash.ts` (StructuralHasher), `component-registry.ts` (ComponentRegistry), `structural-deduplicator.ts` (StructuralDeduplicator), `code-connect-generator.ts` (CodeConnectGenerator) — each independently testable with clear interfaces
+- **Plugin**: FileScanner is a single function inlined in `code.ts` (not complex enough for its own module); slot frame creation is a conditional branch in the existing FRAME case
 - Existing patterns preserved: DslNode → FigmaNodeDict → PluginNodeDef linear transformation; readonly plugin types; componentMap-based instance resolution
-- New components rationale: Registry (enables cross-session reuse), Deduplicator (automatic page-level optimization), CodeConnectGenerator (new output format)
 - Steering compliance: TypeScript strict mode, no `any`, vitest testing, single-responsibility modules
+
+#### Implementation Phasing
+
+| Phase | Scope | Requirements | Blocking? |
+|-------|-------|-------------|-----------|
+| 1. Types & Builders | `isSlot`/`slotName`/`slotOverrides`/`preferredInstances` on DslNode; `slot()` builder; `instance()` slotOverrides param; PluginNodeDef/PluginInput extensions; FigmaNodeDict extensions | 3, 9.1 | Yes — all downstream work depends on type definitions |
+| 2. Compiler | Slot validation (slot-in-COMPONENT), SLOT property injection, `isSlot`/`slotName` passthrough, `slotOverrides` compilation | 4, 9.2, 9.5 | Yes — exporter needs compiled output with slot metadata |
+| 3. Exporter Core | Slot encoding in `convertToPluginNode()`, `slotProperties` map on components | 5 | Yes — plugin needs slot fields in PluginNodeDef |
+| 4. Plugin | FileScanner (`resolveExisting`), slot frame creation (`[Slot]` naming), detached-copy strategy for slot overrides, `handleWsMessage` integration | 2, 6, 9.4 | Partially — can run in parallel with Phase 5 |
+| 5. Registry & Dedup | `StructuralHasher`, `ComponentRegistry`, `StructuralDeduplicator`, `inferComponentProperties()` | 1, 8 | No — independent of plugin work |
+| 6. Code Connect | `CodeConnectGenerator` module, `.figma.tsx` generation | 7 | No — independent module |
+| 7. CLI | `--registry`, `--deduplicate`, `--resolve-existing` flags | 1.3, 8.1, 2.5 | No — wires options to exporter |
+| 8. Bidirectional Sync | `'slot-structure'` change category, slot frame identification via plugin data, nested content serialization | 10 | No — extends existing edit tracker |
 
 #### MCP Server / Real-Time Sync Integration
 
@@ -118,13 +133,13 @@ The codebase now includes `@figma-dsl/mcp-server` — a stdio MCP server with a 
 
 ### Technology Stack
 
-| Layer | Choice / Version | Role in Feature | Notes |
-|-------|------------------|-----------------|-------|
-| Core types | @figma-dsl/core (TypeScript 5.9) | DslNode slot fields, PluginNodeDef slot fields, ComponentRegistry type | Extends existing types |
-| Compiler | @figma-dsl/compiler | Slot validation, SLOT property injection | Extends compileNode |
-| Exporter | @figma-dsl/exporter | Registry matching, dedup, slot encoding, Code Connect generation | New functions in existing package |
-| Plugin | @figma-dsl/plugin (esbuild IIFE) | File scanner, slot frame creation, enhanced instance resolver | Figma sandbox constraints apply |
-| CLI | @figma-dsl/cli | New flags on export/batch/pipeline commands | Passes options to exporter/plugin |
+| Layer | Choice / Version | Role in Feature | Files Modified / Created |
+|-------|------------------|-----------------|--------------------------|
+| Core types | @figma-dsl/core (TypeScript 5.9) | DslNode slot fields, PluginNodeDef slot fields, ComponentRegistry type | **Extend**: `types.ts`, `nodes.ts`, `plugin-types.ts`, `changeset.ts`, `diff.ts` |
+| Compiler | @figma-dsl/compiler | Slot validation, SLOT property injection, slotOverrides compilation | **Extend**: `compiler.ts` |
+| Exporter | @figma-dsl/exporter | Registry matching, dedup, slot encoding, Code Connect generation | **Extend**: `exporter.ts`; **New**: `structural-hash.ts`, `component-registry.ts`, `structural-deduplicator.ts`, `code-connect-generator.ts` |
+| Plugin | @figma-dsl/plugin (esbuild IIFE) | File scanner, slot frame creation, detached copies, enhanced instance resolver | **Extend**: `code.ts`, `serializer.ts` |
+| CLI | @figma-dsl/cli | `--registry`, `--deduplicate`, `--resolve-existing` flags | **Extend**: `cli.ts` |
 
 ## System Flows
 
