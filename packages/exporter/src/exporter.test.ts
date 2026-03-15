@@ -143,6 +143,7 @@ describe('generatePluginInput() — IMAGE fills', () => {
     const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
     const fill = input.components[0]!.fills![0]!;
     expect(fill.type).toBe('IMAGE');
+    expect(fill.imageSrc).toBe('./test.png');
     expect(fill.imageData).toBeDefined();
     expect(fill.imageData!.startsWith('data:image/png;base64,')).toBe(true);
     expect(fill.imageScaleMode).toBe('FILL');
