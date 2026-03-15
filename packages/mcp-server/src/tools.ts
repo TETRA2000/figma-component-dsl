@@ -32,8 +32,9 @@ export function registerTools(mcpServer: McpServer, deps: ToolDependencies): voi
   // --- push-to-figma ---
   mcpServer.tool(
     'push-to-figma',
-    'Push DSL-compiled PluginInput JSON to Figma. Creates or updates component nodes in the connected Figma file.',
-    { pluginInput: z.string().describe('JSON-serialized PluginInput') },
+    'Push DSL-compiled PluginInput JSON to Figma. Creates or updates component nodes in the connected Figma file. ' +
+    'Generate the JSON with: node bin/figma-dsl export <file.dsl.ts> -o output.json',
+    { pluginInput: z.string().describe('JSON-serialized PluginInput: {schemaVersion, targetPage, components: [...]}. Generate with: node bin/figma-dsl export <file.dsl.ts> -o output.json') },
     async ({ pluginInput }: { pluginInput: string }) => {
       if (!connectionManager.getStatus().connected) {
         return notConnectedError();
