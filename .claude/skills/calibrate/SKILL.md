@@ -45,6 +45,12 @@ bin/figma-dsl batch <input-dir-or-glob> -o <output-dir> [--include <extra-glob>.
 # Compare DSL renders vs Figma captures (when Figma PNGs are available)
 bin/figma-dsl batch-compare <dsl-dir> <figma-dir> [-o report.json] [-t <threshold>]
 
+# Capture React component screenshot from dev server
+bin/figma-dsl capture <url> -o output.png [-v WxH] [--selector <css>]
+
+# Validate components for DSL compatibility
+bin/figma-dsl validate <component-dir> [--format json] [--strict] [--skip <rules>]
+
 # Full orchestrated pipeline
 bin/figma-dsl calibrate -o <output-dir> [--property <category>...] [-t <threshold>]
 ```
@@ -84,6 +90,28 @@ For full runs across all categories, use `full-suite` as the theme name. For fix
 
 Copy rendered PNGs and the batch manifest into this directory after each batch render step so there is a persistent record of every iteration's output.
 
+### Step 0.7: Validate components
+
+Run the validator on all components that will be part of this calibration to catch structural issues early. This step serves two purposes: (1) catching problems before rendering, and (2) building a log of common validation errors that informs how components should be authored.
+
+```bash
+bin/figma-dsl validate preview/src/components --format json > docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/validation.json
+bin/figma-dsl validate preview/src/components --format text > docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/validation.log
+```
+
+The validator checks 10 rules including `css-modules`, `no-inline-style`, `classname-prop`, `variant-union`, `html-attrs`, `design-tokens`, `dsl-compatible-layout`, and others. See `packages/validator/src/rules/` for the full rule set.
+
+**Review the validation output.** Errors (not warnings) indicate components that will likely cause issues downstream. Common patterns to watch for:
+
+| Rule | What it means | Impact on calibration |
+|---|---|---|
+| `no-inline-style` | Uses `style={{}}` instead of CSS Modules | DSL can't map inline styles — renders will diverge |
+| `dsl-compatible-layout` | Missing `display: flex/grid` | Auto-layout won't compile correctly |
+| `variant-union` | `variant: string` instead of literal union | Component properties won't map to Figma variants |
+| `css-modules` | No CSS Module import | Styling won't be captured in DSL conversion |
+
+The accumulated `validation.json` files in `docs/history/` create a record of recurring issues. When the same rule fails repeatedly across iterations, it signals a pattern that component creation guidance (e.g., in the create-react-component skill or steering docs) should address to prevent the issue at authoring time.
+
 ### Step 1: Generate test suite
 
 ```bash
@@ -112,9 +140,42 @@ cp calibration/<timestamp>/dsl/*.png docs/history/<YYYY-MM-DD_HH-mm>-<theme-name
 cp calibration/<timestamp>/batch-manifest.json docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/
 ```
 
+### Step 2.5: Capture React component renders
+
+Capture browser screenshots of the React components via the preview dev server. This gives a ground-truth reference to compare against DSL-rendered PNGs.
+
+1. **Start the preview dev server** (if not already running):
+   ```bash
+   cd preview && npm run dev &
+   DEV_PID=$!
+   cd ..
+   ```
+   Wait for the server to be ready (typically at `http://localhost:5173`).
+
+2. **Capture each component or showcase page**:
+   ```bash
+   # Capture a showcase page
+   bin/figma-dsl capture http://localhost:5173/<page-path> \
+     -o docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/react-render.png
+
+   # Capture a specific component with a CSS selector
+   bin/figma-dsl capture http://localhost:5173 \
+     --selector ".component-class" \
+     -o docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/react-<ComponentName>.png
+   ```
+
+   If a showcase page exists for the theme (e.g., `preview/src/pages/TravelShowcase.tsx`), capture that. Otherwise capture individual components.
+
+3. **Stop the dev server** when done:
+   ```bash
+   kill $DEV_PID 2>/dev/null
+   ```
+
+The React renders saved in the history directory serve as the browser baseline for visual comparison. When inspecting DSL renders in Step 3, compare them side-by-side with these screenshots to spot divergences.
+
 ### Step 3: Inspect rendered PNGs
 
-Read the rendered PNG files to visually verify correctness. Focus on:
+Read the rendered PNG files to visually verify correctness. Compare against the React renders captured in Step 2.5. Focus on:
 
 - **Layout** -- Are children positioned correctly? Is spacing right?
 - **Text** -- Does text wrap properly? Are font sizes/weights correct?
@@ -297,16 +358,16 @@ To add a new theme or component category to calibration:
 
 ### Option B: Use standalone DSL files (quick one-off testing)
 
-Place `.dsl.ts` files anywhere and batch them directly:
+Place `.dsl.ts` files in the workspace and batch them directly:
 
 ```bash
-bin/figma-dsl batch examples/my-component.dsl.ts -o output/
+bin/figma-dsl batch workspace/dsl/my-component.dsl.ts -o output/
 ```
 
 Or batch an entire directory:
 
 ```bash
-bin/figma-dsl batch examples/ -o output/ --include "examples/my-*.dsl.ts"
+bin/figma-dsl batch workspace/dsl/ -o output/ --include "workspace/dsl/my-*.dsl.ts"
 ```
 
 ## Analyzing previous calibration results
@@ -335,7 +396,24 @@ calibration/<timestamp>/
   plugin-input.json     # For Figma plugin import
   batch-manifest.json   # Component metadata
   report.json           # Comparison report (if Figma captures exist)
+
+docs/history/<YYYY-MM-DD_HH-mm>-<theme-name>/
+  *.png                 # DSL-rendered PNGs (copied from calibration)
+  react-render.png      # React browser screenshot (from capture)
+  react-<Component>.png # Per-component React screenshots (optional)
+  batch-manifest.json   # Component metadata
+  validation.json       # Validator output (JSON)
+  validation.log        # Validator output (text)
 ```
+
+## Commit policy
+
+When committing changes from a calibration run, only commit files under these paths:
+
+- `packages/` — pipeline code fixes (compiler, renderer, dsl-core, etc.)
+- `docs/` — history logs, validation results, rendered PNGs
+
+Do **not** commit changes under `preview/`, `examples/`, `workspace/`, `dogfooding/`, `calibration/`, or other directories. Those are working artifacts for local use, not tracked output. Stage files explicitly by path — never use `git add .` or `git add -A`.
 
 ## Reference
 

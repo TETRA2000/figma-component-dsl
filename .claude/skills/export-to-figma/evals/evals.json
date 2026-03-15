@@ -1,30 +1,46 @@
 [
   {
     "prompt": "Export the Button component to Figma",
-    "expected_behavior": "Checks for MCP availability, compiles Button.tsx via figma-dsl, exports JSON, and either pushes via MCP or provides plugin-ready JSON file.",
+    "expected_behavior": "Checks MCP availability via whoami, starts dev server if needed, calls generate_figma_design without outputMode to get captureId, asks user for output preference (newFile/existingFile/clipboard), polls captureId until completed, then sets up Code Connect mapping.",
     "validation": [
-      "figma-dsl compile runs on Button.tsx",
-      "output/Button.figma.json is generated",
-      "Approach selection is presented to user",
-      "Code Connect file path is referenced"
+      "mcp__figma__whoami is called to verify MCP connection",
+      "Dev server is started (npm run dev or storybook)",
+      "mcp__figma__generate_figma_design called without outputMode first",
+      "captureId polling loop implemented (every 5s, up to 10 times)",
+      "Output mode selection presented to user",
+      "Code Connect file path is referenced after capture completes"
     ]
   },
   {
     "prompt": "Push all my components to our Figma design file",
-    "expected_behavior": "Iterates over all components in preview/src/components/, compiles and exports each, then uses batch operations for import and comparison.",
+    "expected_behavior": "Starts dev server, iterates over components, captures each page via generate_figma_design with separate captureIds, uses existingFile outputMode with the target fileKey.",
     "validation": [
-      "All components discovered from index.ts",
-      "Each component compiled and exported",
+      "All components discovered from preview/src/components/",
+      "Dev server started to serve component pages",
+      "Separate captureId generated per component page",
+      "existingFile outputMode used with user's fileKey",
       "Batch comparison offered post-import"
     ]
   },
   {
     "prompt": "Set up Code Connect for my Hero component with Figma URL https://figma.com/design/abc123?node-id=1-2",
-    "expected_behavior": "Updates Hero.figma.tsx with the provided Figma URL, replacing PLACEHOLDER. Verifies the mapping if MCP is available.",
+    "expected_behavior": "Updates Hero.figma.tsx with the provided Figma URL, replacing PLACEHOLDER. Calls add_code_connect_map with nodeId 1:2 and fileKey abc123.",
     "validation": [
       "Hero.figma.tsx FIGMA_URL updated with provided URL",
       "PLACEHOLDER is no longer in the file",
+      "mcp__figma__add_code_connect_map called with nodeId=1:2, fileKey=abc123, label=React",
       "Props are properly mapped in the Code Connect binding"
+    ]
+  },
+  {
+    "prompt": "Export the PricingCard to a new Figma file",
+    "expected_behavior": "Starts dev server, calls generate_figma_design with outputMode=newFile, auto-generates fileName, polls captureId, returns the new Figma file URL.",
+    "validation": [
+      "Dev server is running before capture",
+      "mcp__figma__generate_figma_design called with outputMode=newFile",
+      "fileName is auto-generated (not asked from user)",
+      "captureId polled until status=completed",
+      "New Figma file URL returned to user"
     ]
   }
 ]

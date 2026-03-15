@@ -1,26 +1,27 @@
-import type { RgbaColor, SolidFill, GradientFill, GradientStop, ColorTokenMap } from './types.js';
+import type { RgbaColor, SolidFill, GradientFill, RadialGradientFill, GradientStop, ColorTokenMap, ImageFill, ImageScaleMode } from './types.js';
 
-const HEX_PATTERN = /^#?([0-9a-fA-F]{6})$/;
+const HEX_PATTERN = /^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
 
 export function hex(value: string): RgbaColor {
   const match = HEX_PATTERN.exec(value);
   if (!match?.[1]) {
-    throw new Error(`Invalid hex color: "${value}". Expected 6-digit hex (e.g., "#ff0000").`);
+    throw new Error(`Invalid hex color: "${value}". Expected 6 or 8-digit hex (e.g., "#ff0000" or "#ff000080").`);
   }
   const hexStr = match[1];
   return {
     r: parseInt(hexStr.substring(0, 2), 16) / 255,
     g: parseInt(hexStr.substring(2, 4), 16) / 255,
     b: parseInt(hexStr.substring(4, 6), 16) / 255,
-    a: 1,
+    a: hexStr.length === 8 ? parseInt(hexStr.substring(6, 8), 16) / 255 : 1,
   };
 }
 
-export function solid(hexValue: string, opacity = 1): SolidFill {
+export function solid(hexValue: string, opacity?: number): SolidFill {
+  const parsed = hex(hexValue);
   return {
     type: 'SOLID',
-    color: hex(hexValue),
-    opacity,
+    color: { ...parsed, a: 1 },
+    opacity: opacity ?? parsed.a,
     visible: true,
   };
 }
@@ -50,6 +51,40 @@ export function gradient(
     gradientStops,
     gradientTransform: angleToGradientTransform(angle),
     opacity: 1,
+    visible: true,
+  };
+}
+
+export function radialGradient(
+  stops: { hex: string; position: number }[],
+  opts?: { center?: { x: number; y: number }; radius?: number },
+): RadialGradientFill {
+  const gradientStops: GradientStop[] = stops.map(s => ({
+    color: hex(s.hex),
+    position: s.position,
+  }));
+  return {
+    type: 'GRADIENT_RADIAL',
+    gradientStops,
+    center: opts?.center,
+    radius: opts?.radius,
+    opacity: 1,
+    visible: true,
+  };
+}
+
+export function imageFill(
+  src: string,
+  options?: { scaleMode?: ImageScaleMode; opacity?: number },
+): ImageFill {
+  if (!src) {
+    throw new Error('Image fill src must be a non-empty string.');
+  }
+  return {
+    type: 'IMAGE',
+    src,
+    scaleMode: options?.scaleMode ?? 'FILL',
+    opacity: options?.opacity ?? 1,
     visible: true,
   };
 }

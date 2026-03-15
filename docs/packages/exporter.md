@@ -27,9 +27,9 @@
 ## Overview
 **Confidence**: 0.96 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-The `@figma-dsl/exporter` package is the final step in the DSL compilation pipeline, transforming compiled `CompileResult` objects into a plugin-consumable `PluginInput` JSON format. It provides two functions (`generatePluginInput` for in-memory transformation and `exportToFile` for filesystem persistence), a recursive node conversion utility, and two TypeScript interfaces (`PluginNodeDef`, `PluginInput`) that define the schema consumed by the Figma plugin.
+The `@figma-dsl/exporter` package is the final step in the DSL compilation pipeline, transforming compiled `CompileResult` objects into a plugin-consumable `PluginInput` JSON format. It provides two functions (`generatePluginInput` for in-memory transformation and `exportToFile` for filesystem persistence) and a recursive node conversion utility.
 
-The module is lightweight (~170 LOC of core logic), dependency-minimal, and focused on property projection — selectively mapping compiler output to plugin schema with one notable constraint: corner radius clamping.
+The canonical `PluginNodeDef` and `PluginInput` types are now defined in `@figma-dsl/core` and re-exported by this package for backward compatibility. The module is lightweight (~170 LOC of core logic), dependency-minimal, and focused on property projection — selectively mapping compiler output to plugin schema with one notable constraint: corner radius clamping.
 
 ---
 
@@ -58,7 +58,7 @@ packages/exporter/
 ## Public API
 **Confidence**: 0.98 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-### `generatePluginInput(compileResult: CompileResult, pageName?: string): PluginInput`
+### `generatePluginInput(compileResult: CompileResult, pageName?: string, options?: ExportOptions): PluginInput`
 
 Transforms a `CompileResult` into a `PluginInput` object.
 
@@ -66,17 +66,26 @@ Transforms a `CompileResult` into a `PluginInput` object.
 |-----------|------|----------|---------|
 | `compileResult` | `CompileResult` | Yes | — |
 | `pageName` | `string` | No | `'Component Library'` |
+| `options` | `ExportOptions` | No | `{}` |
 
-Returns `PluginInput` with schema version `'1.0.0'`, target page, and components array.
+```typescript
+interface ExportOptions {
+  assetDir?: string;  // Base directory for resolving image paths (default: process.cwd())
+}
+```
 
-### `exportToFile(compileResult: CompileResult, outputPath: string, pageName?: string): PluginInput`
+Returns `PluginInput` with schema version `'1.0.0'`, target page, and components array. When `assetDir` is provided, IMAGE fills have their local image files embedded as base64 data URIs in the output JSON.
+
+### `exportToFile(compileResult: CompileResult, outputPath: string, pageName?: string, options?: ExportOptions): PluginInput`
 
 Convenience wrapper: calls `generatePluginInput()` → creates directories recursively → writes pretty-printed JSON (2-space indent) → returns the generated `PluginInput`.
 
-### Exported Interfaces
+### Re-exported Types
 
-- **`PluginNodeDef`**: Complete tree node representation for plugin consumption
-- **`PluginInput`**: Envelope structure (`schemaVersion`, `targetPage`, `components[]`)
+- **`PluginNodeDef`**: Re-exported from `@figma-dsl/core` (canonical definition)
+- **`PluginInput`**: Re-exported from `@figma-dsl/core` (canonical definition)
+
+These types were previously defined inline in this package. They have been consolidated into `@figma-dsl/core` and are re-exported here for backward compatibility: `export type { PluginNodeDef, PluginInput } from '@figma-dsl/core';`
 
 **Evidence**: `src/exporter.ts:141-170`
 
@@ -149,7 +158,7 @@ The internal `convertToPluginNode()` function performs a single recursive tree t
 | `layoutSizingH/V` | Same | Truthy |
 | `textData` | Text bundle | Truthy |
 | `derivedTextData.fontMetaData[0]` | `fontWeight`, `fontStyle` | Index exists |
-| `componentPropertyDefinitions` | Same | Truthy |
+| `componentPropertyDefinitions` | Same (VARIANT filtered for COMPONENT) | Truthy |
 | `componentId` | + `overriddenProperties` | Truthy |
 
 **Complexity**: O(n) single-pass traversal where n = total nodes in tree.
@@ -179,7 +188,15 @@ Example: 100×50 frame with `cornerRadius: 40` → clamped to 25 (half of 50px h
 ## Fill & Stroke Conversion
 **Confidence**: 0.92 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-**Fills**: Maps each `FigmaPaint` preserving `type` (SOLID/GRADIENT_LINEAR), `color`, `opacity`, `gradientStops`, `gradientTransform`. Only exported if array is non-empty.
+**Fills**: Maps each `FigmaPaint` preserving `type` (SOLID/GRADIENT_LINEAR/IMAGE), `color`, `opacity`, `gradientStops`, `gradientTransform`. Only exported if array is non-empty.
+
+**Image Fills**: IMAGE type fills are processed via `convertFillForPlugin()`:
+- Local image files are read from disk and embedded as base64 data URIs (`data:image/{format};base64,...`)
+- Image format and dimensions are recorded (`imageFormat`, `imageDimensions`)
+- Scale mode (`imageScaleMode`) is preserved
+- Files exceeding 4 MB trigger a console warning
+- HTTP/HTTPS URLs cannot be embedded (returns an `imageError` property)
+- Embedding failures are graceful — `imageError` is set without crashing the export
 
 **Strokes**: Maps each stroke preserving `color`, `weight`, `align`. Uses optional chaining for safety.
 
@@ -220,7 +237,7 @@ When `node.textData` exists:
 ## Component & Instance Properties
 **Confidence**: 0.94 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-- **Component**: `componentPropertyDefinitions` passed through if present (Record of `{type, defaultValue}`)
+- **Component**: `componentPropertyDefinitions` passed through if present (Record of `{type, defaultValue}`). For standalone `COMPONENT` nodes, VARIANT-type properties are automatically filtered out (Figma only allows VARIANT properties on COMPONENT_SET nodes).
 - **Instance**: `componentId` + `overriddenProperties` passed through if `componentId` exists
 
 Mutual exclusivity (a node cannot be both) is not enforced but assumed correct from the compiler.
@@ -242,7 +259,7 @@ Calls `exportToFile()` internally.
 `batch-processor.ts` calls `generatePluginInput()` per file, collects all `PluginNodeDef[]`, and writes a single merged `plugin-input.json`.
 
 ### Plugin Consumption
-The Figma plugin (`plugin/src/code.ts`) receives `PluginInput` JSON and recursively reconstructs Figma nodes via the plugin API. The `PluginNodeDef` interface is independently defined in both packages (type parity, not shared import).
+The Figma plugin (`plugin/src/code.ts`) receives `PluginInput` JSON and recursively reconstructs Figma nodes via the plugin API. Both packages now import `PluginNodeDef` from the canonical definition in `@figma-dsl/core` (consolidated from previous independent definitions).
 
 **Evidence**: CLI `src/cli.ts:272-299`, `src/batch-processor.ts:88-120`
 
@@ -300,7 +317,7 @@ Schema validation, auto-layout preservation, component properties, instance refe
 1. **lineHeight/letterSpacing gap**: Declared in `PluginNodeDef` but never populated during conversion (`textAutoResize` is now populated).
 2. **No input validation**: Assumes valid CompileResult from compiler (no null checks for children, no enum validation).
 3. **Schema version hardcoded**: No migration strategy for breaking schema changes.
-4. **Type parity risk**: `PluginNodeDef` is independently defined in both exporter and plugin packages — risk of drift.
+4. ~~**Type parity risk**~~: Resolved — `PluginNodeDef` is now consolidated in `@figma-dsl/core` and imported by both exporter and plugin.
 5. **Single font metadata**: Only first `fontMetaData[0]` entry extracted for text nodes.
 6. **Synchronous I/O**: `exportToFile()` uses `writeFileSync` — blocks event loop.
 

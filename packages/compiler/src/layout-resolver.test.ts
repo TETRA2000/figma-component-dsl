@@ -122,6 +122,64 @@ describe('resolveLayout() — FILL children', () => {
   });
 });
 
+describe('resolveLayout() — FILL inside FILL container', () => {
+  it('FILL children expand inside a FILL-sized container', () => {
+    const c1 = rectangle('R1', {
+      size: { x: 0, y: 30 },
+      layoutSizingHorizontal: 'FILL',
+    });
+    const c2 = rectangle('R2', {
+      size: { x: 0, y: 30 },
+      layoutSizingHorizontal: 'FILL',
+    });
+    // Inner row is FILL-sized (no explicit width or widthSizing)
+    const innerRow = frame('InnerRow', {
+      autoLayout: horizontal({ spacing: 10 }),
+      layoutSizingHorizontal: 'FILL',
+      children: [c1, c2],
+    });
+    // Outer container has fixed width
+    const outer = frame('Outer', {
+      size: { x: 400, y: 100 },
+      autoLayout: vertical({ spacing: 0, padX: 20, padY: 10 }),
+      children: [innerRow],
+    });
+    const { sizes } = resolveLayout(outer, textMeasurer);
+    // InnerRow gets FILL: 400 - 20 - 20 = 360
+    expect(sizes.get(innerRow)!.width).toBe(360);
+    // Each child: (360 - 10) / 2 = 175
+    expect(sizes.get(c1)!.width).toBe(175);
+    expect(sizes.get(c2)!.width).toBe(175);
+  });
+
+  it('three FILL children share space equally inside FILL container', () => {
+    const cards = [0, 1, 2].map(i =>
+      rectangle(`Card${i}`, {
+        size: { x: 0, y: 40 },
+        layoutSizingHorizontal: 'FILL',
+      })
+    );
+    const row = frame('Row', {
+      autoLayout: horizontal({ spacing: 16 }),
+      layoutSizingHorizontal: 'FILL',
+      children: cards,
+    });
+    const page = frame('Page', {
+      size: { x: 960, y: 200 },
+      autoLayout: vertical({ spacing: 0, padX: 32, padY: 0 }),
+      children: [row],
+    });
+    const { sizes } = resolveLayout(page, textMeasurer);
+    // Row: 960 - 32 - 32 = 896
+    expect(sizes.get(row)!.width).toBe(896);
+    // Each card: (896 - 16*2) / 3 = 864/3 = 288
+    const cardWidth = sizes.get(cards[0]!)!.width;
+    expect(cardWidth).toBeCloseTo(288, 0);
+    expect(sizes.get(cards[1]!)!.width).toBeCloseTo(288, 0);
+    expect(sizes.get(cards[2]!)!.width).toBeCloseTo(288, 0);
+  });
+});
+
 describe('resolveLayout() — positioning', () => {
   it('positions children along primary axis with spacing', () => {
     const c1 = rectangle('R1', { size: { x: 40, y: 20 } });

@@ -9,7 +9,7 @@ A domain-specific language for defining Figma component structures declaratively
 git submodule update --init --recursive
 npm install
 
-# Run all tests (218 tests across 14 files)
+# Run all tests (273 tests across 17 files)
 npx vitest run
 ```
 
@@ -17,13 +17,13 @@ npx vitest run
 
 | Package | Description |
 |---------|-------------|
-| `@figma-dsl/core` | DSL node primitives, color/fill helpers, layout config, component/variant system |
+| `@figma-dsl/core` | DSL node primitives, color/fill helpers, image support, layout config, component/variant system, changeset schema, canonical PluginNodeDef types, diff algorithm |
 | `@figma-dsl/compiler` | Compiles DslNode trees to FigmaNodeDict with GUID assignment, text measurement, and two-pass auto-layout |
-| `@figma-dsl/renderer` | Renders compiled nodes to PNG via @napi-rs/canvas (Skia) |
+| `@figma-dsl/renderer` | Renders compiled nodes to PNG via @napi-rs/canvas (Skia), with image loading and caching |
 | `@figma-dsl/capturer` | Captures React component screenshots via Playwright |
 | `@figma-dsl/comparator` | Pixel-level image comparison with similarity scoring via pixelmatch |
 | `@figma-dsl/exporter` | Generates Figma plugin input JSON from compiled DSL |
-| `@figma-dsl/plugin` | Figma plugin that creates real Figma nodes from DSL definitions |
+| `@figma-dsl/plugin` | Figma plugin: imports DSL definitions as Figma nodes, tracks edits, exports changesets and complete DSL JSON |
 | `@figma-dsl/validator` | DSL compatibility validator with 10 rules (file-structure, styling, AST-based) |
 | `@figma-dsl/cli` | CLI interface for all pipeline operations |
 
@@ -53,7 +53,7 @@ bin/figma-dsl-validate src/components/Button
 bin/figma-dsl-validate src/components/ --format json --strict
 
 # Batch compile, render, and export multiple DSL files
-bin/figma-dsl-batch examples/ -o output/
+bin/figma-dsl-batch examples/ -o output/ [--asset-dir assets/]
 
 # Batch compare DSL renders against Figma captures
 bin/figma-dsl-batch-compare output/dsl/ output/figma/ -o output/report.json
@@ -73,8 +73,8 @@ bin/figma-dsl-calibrate -o calibration/ --file-key FILE_KEY
 ## DSL Example
 
 ```typescript
-import { frame, text, component } from '@figma-dsl/core';
-import { solid, gradient } from '@figma-dsl/core';
+import { frame, text, image, component } from '@figma-dsl/core';
+import { solid, gradient, imageFill } from '@figma-dsl/core';
 import { horizontal } from '@figma-dsl/core';
 
 export default component('Button', {
@@ -88,6 +88,10 @@ export default component('Button', {
     text('Click', { fontSize: 14, fontWeight: 500, color: '#ffffff' }),
   ],
 });
+
+// Image support: embed images as nodes or fills
+image('Avatar', { src: './assets/avatar.png', size: { x: 48, y: 48 }, cornerRadius: 24 });
+frame('Hero', { size: { x: 800, y: 400 }, fills: [imageFill('./assets/hero.jpg', { scaleMode: 'FILL' })] });
 ```
 
 ## Pipeline
@@ -108,10 +112,24 @@ DSL Definition (.dsl.ts)
 
     │
     ▼
-┌─────────┐     ┌──────────┐
-│  Export  │────▶│  Plugin  │──▶ Figma
-│  (JSON)  │     │ (import) │
-└─────────┘     └──────────┘
+┌─────────┐     ┌──────────────────────────────┐
+│  Export  │────▶│  Plugin (import + tracking)  │──▶ Figma
+│  (JSON)  │     └──────────┬───────────────────┘
+└─────────┘                 │
+                            ▼
+               ┌────────────────────────┐
+               │ Export (changeset/JSON) │
+               └────────────┬───────────┘
+                            │
+                            ▼
+               ┌────────────────────────┐
+               │  Apply Changeset Skill │──▶ React/CSS
+               └────────────┬───────────┘
+                            │
+                            ▼
+               ┌────────────────────────┐
+               │  Verify Changeset Skill│──▶ Visual comparison
+               └────────────────────────┘
 ```
 
 ## Calibration
@@ -131,7 +149,13 @@ bin/figma-dsl-batch-compare calibration/output/dsl/ calibration/figma/ -o calibr
 
 ## Preview App
 
-The `preview/` directory contains a Vite + React app for live previewing components and landing pages. It includes all 16 reference components synced from the reference app.
+The `preview/` directory contains a Vite + React app for live previewing components and landing pages. Reference components (16 components in `preview/src/components/`) are checked into git. Skill-generated components and pages live under `_generated/` directories which are gitignored.
+
+On a fresh clone, the preview app won't build because `_generated/` directories are missing. To get started:
+
+1. Run any component-generating skill (e.g., `/create-react-component` or `/dogfooding`)
+2. Or manually create `preview/src/pages/_generated/DogfoodingGallery.tsx` that exports a `DogfoodingGallery` component
+3. Then run:
 
 ```bash
 cd preview && npm install --legacy-peer-deps && npm run dev
@@ -143,9 +167,25 @@ A sync script keeps reference components up to date:
 preview/scripts/sync-reference-components.sh
 ```
 
+## Component Catalog (Storybook)
+
+A Storybook-based catalog for browsing all components and page templates with interactive controls, variant grids, and DSL artifact inspection.
+
+```bash
+cd preview && npm run storybook
+```
+
+Features:
+- **29 stories** — 25 component stories + 4 page template stories with interactive controls
+- **All Variants grid** — every component includes a grid view showing all variant combinations
+- **DSL Panel addon** — view DSL source code, compiled JSON, and rendered PNG alongside React previews
+- **Side-by-side comparison** — toggle between React-only, DSL-only, and side-by-side views
+- **Viewport switching** — desktop, tablet, and mobile presets for page templates
+- **Pre-built artifacts** — DSL files are compiled and rendered to PNG before Storybook starts (`prestorybook` script)
+
 ## Claude Desktop Skills
 
-Four AI skills for Claude Desktop are available in `.claude/skills/`:
+Six AI skills for Claude Desktop are available in `.claude/skills/`:
 
 | Skill | Description |
 |-------|-------------|
@@ -153,6 +193,8 @@ Four AI skills for Claude Desktop are available in `.claude/skills/`:
 | `create-react-component` | Scaffold 3-file components with validation and dual preview (React + DSL PNG) |
 | `export-to-figma` | Export components to Figma via MCP auto-publish, plugin JSON, or visual fidelity pipeline |
 | `export-to-html` | Build self-contained HTML files from React pages via vite-plugin-singlefile |
+| `apply-changeset` | Apply Figma design changesets to React/CSS source code with property mapping |
+| `verify-changeset` | Verify visual fidelity between Figma exports and React components with iterative correction |
 
 Shared references (component registry and design tokens) are in `.claude/skills/shared/references/`.
 
@@ -180,9 +222,15 @@ See `references/` for the full source of each project.
 
 ## Documentation
 
-MAGI consensus-generated documentation (multi-agent analysis with confidence scoring):
+### User Guides
+
+Workflow-oriented guides for developers and designers: **[docs/guides/](docs/guides/README.md)**
+
+Covers: creating components, composing pages, exporting to Figma, syncing design changes, calibrating the pipeline, and dogfooding.
 
 ### Package Documentation
+
+MAGI consensus-generated documentation (multi-agent analysis with confidence scoring):
 
 - [`docs/packages/dsl-core.md`](docs/packages/dsl-core.md) — Node factories, color/fill system, auto-layout, component/variant types
 - [`docs/packages/compiler.md`](docs/packages/compiler.md) — Two-pass layout algorithm, text measurement, GUID assignment

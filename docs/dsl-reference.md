@@ -52,7 +52,7 @@ Example skeleton:
 ```ts
 import {
   frame, text, rectangle,
-  solid, gradient,
+  solid, gradient, radialGradient,
   horizontal, vertical,
 } from '@figma-dsl/core';
 
@@ -98,10 +98,12 @@ frame('Card', {
 | `fills` | `Fill[]` | Background fills |
 | `strokes` | `Stroke[]` | Border strokes |
 | `cornerRadius` | `number` | Border radius for all corners |
+| `cornerRadii` | `{ topLeft, topRight, bottomLeft, bottomRight }` | Per-corner border radii (overrides `cornerRadius`) |
 | `opacity` | `number` | 0–1 opacity |
 | `visible` | `boolean` | Visibility toggle |
 | `children` | `Node[]` | Child nodes |
-| `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | Horizontal sizing mode (see [constraints](#figma-plugin-constraints)) |
+| `clipContent` | `boolean` | Clip children that overflow the frame bounds |
+| `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | Horizontal sizing mode |
 | `layoutSizingVertical` | `'FIXED' \| 'HUG' \| 'FILL'` | Vertical sizing mode |
 
 #### `text(content, options)`
@@ -140,7 +142,29 @@ text('Long description text that wraps at 228px width.', {
 | `size` | `{ x: number, y?: number }` | Explicit size constraint. Used with `textAutoResize: 'HEIGHT'` for width-constrained wrapping |
 | `lineHeight` | `{ value: number, unit: 'PERCENT' \| 'PIXELS' }` | Line height |
 | `letterSpacing` | `{ value: number, unit: 'PERCENT' \| 'PIXELS' }` | Letter spacing |
+| `textDecoration` | `'NONE' \| 'UNDERLINE' \| 'STRIKETHROUGH'` | Text decoration (underline or strikethrough) |
 | `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | Horizontal sizing mode |
+
+#### `ellipse(name, options)`
+
+Creates an ellipse shape. Commonly used for circular indicators, status dots, and chart elements.
+
+```ts
+// Status dot
+ellipse('StatusDot', {
+  size: { x: 8, y: 8 },
+  fills: [solid('#22c55e')],
+})
+
+// Chart donut ring (stroke-only circle)
+ellipse('Ring', {
+  size: { x: 120, y: 120 },
+  fills: [],
+  strokes: [{ color: hex('#7c3aed'), weight: 12, align: 'INSIDE' }],
+})
+```
+
+**Options:** Same as `rectangle()` (see below).
 
 #### `rectangle(name, options)`
 
@@ -173,6 +197,43 @@ rectangle('Avatar', {
 | `cornerRadius` | `number` | Border radius (use half of size for circle) |
 | `x` | `number` | Absolute X position (for non-auto-layout children) |
 | `y` | `number` | Absolute Y position (for non-auto-layout children) |
+
+#### `image(name, options)`
+
+Creates an image node. Renders an image from a local file path or URL.
+
+```ts
+// Simple image
+image('Logo', {
+  src: './assets/logo.png',
+  size: { x: 120, y: 40 },
+})
+
+// Image with rounded corners and fit mode
+image('Avatar', {
+  src: './assets/avatar.jpg',
+  size: { x: 48, y: 48 },
+  cornerRadius: 24,  // circle
+  fit: 'FILL',
+})
+```
+
+**Options:**
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `src` | `string` | *(required)* | Image source — relative path, absolute path, or URL |
+| `size` | `{ x: number, y: number }` | | Width and height |
+| `fit` | `ImageScaleMode` | `'FILL'` | How the image fills its bounds |
+| `cornerRadius` | `number` | | Border radius (use half of size for circle) |
+| `opacity` | `number` | `1` | Opacity (0–1) |
+| `visible` | `boolean` | `true` | Visibility |
+| `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | | Horizontal sizing in auto-layout |
+| `layoutSizingVertical` | `'FIXED' \| 'HUG' \| 'FILL'` | | Vertical sizing in auto-layout |
+
+**ImageScaleMode values:** `'FILL'` (cover, may crop), `'FIT'` (contain, may letterbox), `'CROP'` (center crop), `'TILE'` (repeat pattern).
+
+> **Note:** Use `--asset-dir` in CLI commands to set the base directory for resolving relative image paths. Supported formats: PNG, JPG, JPEG, WebP.
 
 #### `component(name, options)`
 
@@ -257,6 +318,58 @@ autoLayout: horizontal({
 | `'MAX'` | Pack right | Pack bottom |
 | `'SPACE_BETWEEN'` | Distribute evenly with space between | Distribute evenly with space between |
 
+| `counterAlign` value | `horizontal()` effect | `vertical()` effect |
+|----------------------|----------------------|---------------------|
+| `'MIN'` | Align children to top | Align children to left |
+| `'CENTER'` | Vertically center children | Horizontally center children |
+| `'MAX'` | Align children to bottom | Align children to right |
+
+> **Common gotcha — `align` vs `counterAlign` in `vertical()` layouts:**
+> - `align` controls the **vertical** (primary) axis — top/center/bottom/distribute
+> - `counterAlign` controls the **horizontal** (cross) axis — left/center/right
+>
+> To horizontally center children in a vertical layout, use `counterAlign: 'CENTER'`, NOT `align: 'CENTER'`.
+> `align: 'CENTER'` in vertical layouts centers children vertically (between top and bottom padding).
+
+**Practical alignment examples:**
+
+```ts
+// Horizontally center a heading inside a vertical layout
+frame('Header', {
+  autoLayout: vertical({ spacing: 12, counterAlign: 'CENTER' }),
+  layoutSizingHorizontal: 'FILL',
+  children: [
+    text('Centered Title', { fontSize: 32, fontWeight: 700, color: '#fff' }),
+  ],
+})
+
+// Push content to the bottom of a fixed-height container
+frame('Poster', {
+  size: { x: 230, y: 130 },
+  autoLayout: vertical({ spacing: 4, padX: 8, padY: 8, align: 'MAX' }),
+  fills: [gradient([...], 135)],
+  children: [
+    text('Title at bottom', { fontSize: 12, fontWeight: 600, color: '#fff' }),
+  ],
+})
+
+// Push a CTA button to the bottom using FILL sizing on the middle section
+frame('Card', {
+  autoLayout: vertical({ spacing: 16, padX: 24, padY: 24 }),
+  size: { x: 320, y: 480 },
+  children: [
+    text('Title', { fontSize: 20, fontWeight: 700, color: '#fff' }),
+    frame('Features', {
+      autoLayout: vertical({ spacing: 8 }),
+      layoutSizingHorizontal: 'FILL',
+      layoutSizingVertical: 'FILL',   // ← acts like CSS flex: 1
+      children: [/* feature items */],
+    }),
+    frame('CTA', { /* button pinned to bottom */ }),
+  ],
+})
+```
+
 ---
 
 ### Fill & Stroke Builders
@@ -284,12 +397,87 @@ fills: [
 ]
 ```
 
-**Stop format:**
+**Angle convention (differs from CSS!):** Angles follow Figma's coordinate system:
+- `0°` = left → right
+- `90°` = bottom → top
+- `180°` = right → left
+- `270°` = top → bottom
+
+> **Tip:** CSS `linear-gradient(180deg, ...)` (top→bottom) maps to DSL `gradient(stops, 270)`.
+
+Gradient stops support 8-digit hex with alpha (e.g., `#FF000080` for 50% red). This is useful for semi-transparent overlays on top of other fills.
+
+#### `radialGradient(stops, opts?)`
+
+Creates a radial gradient fill.
+
+```ts
+fills: [
+  radialGradient([
+    { hex: '#ffffff', position: 0 },       // Center color
+    { hex: '#000000', position: 1 },       // Edge color
+  ], { center: { x: 0.5, y: 0.3 }, radius: 0.6 })
+]
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `center` | `{ x: number, y: number }` | `{ x: 0.5, y: 0.5 }` | Center position (0–1 normalized) |
+| `radius` | `number` | `0.5` | Gradient radius (0–1 normalized) |
+
+**Stop format (shared by `gradient` and `radialGradient`):**
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `hex` | `string` | Color in hex format |
+| `hex` | `string` | Color in hex format (6 or 8 digit, e.g., `#ff0000` or `#ff000080`) |
 | `position` | `number` | Position along gradient (0–1) |
+
+#### `imageFill(src, options?)`
+
+Creates an image fill that can be applied to any node's `fills` array. Useful for adding background images to frames or rectangles.
+
+```ts
+// Background image on a frame
+frame('Hero', {
+  size: { x: 800, y: 400 },
+  fills: [imageFill('./assets/hero-bg.jpg')],
+  children: [
+    text('Welcome', { fontSize: 32, color: '#ffffff' }),
+  ],
+})
+
+// Tiled pattern fill
+rectangle('Pattern', {
+  size: { x: 200, y: 200 },
+  fills: [imageFill('./assets/texture.png', { scaleMode: 'TILE' })],
+})
+
+// Multi-fill stacking: background image + gradient overlay
+// (Use this instead of a separate overlay rectangle)
+frame('Hero', {
+  size: { x: 800, y: 300 },
+  fills: [
+    imageFill('./assets/hero-bg.jpg'),
+    gradient([
+      { hex: '#00000033', position: 0 },  // 20% black at top
+      { hex: '#000000cc', position: 1 },  // 80% black at bottom
+    ], 270),
+  ],
+  autoLayout: vertical({ widthSizing: 'FIXED', heightSizing: 'FIXED', align: 'MAX', padX: 32, padBottom: 32 }),
+  children: [
+    text('Heading', { fontSize: 36, fontWeight: 700, color: '#ffffff' }),
+  ],
+})
+```
+
+**Options:**
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `scaleMode` | `ImageScaleMode` | `'FILL'` | How the image fills the node |
+| `opacity` | `number` | `1` | Fill opacity (0–1) |
+
+**ImageScaleMode values:** `'FILL'`, `'FIT'`, `'CROP'`, `'TILE'` (same as `image()` node).
 
 #### `hex(colorStr)`
 
@@ -348,15 +536,59 @@ componentProperties: [
 ]
 ```
 
-**Supported types:**
+**Supported types on standalone `component()`:**
 
 | Type | Description | `defaultValue` |
 |------|-------------|----------------|
 | `'TEXT'` | Editable text content | `string` |
 | `'BOOLEAN'` | Toggle visibility/state | `boolean` |
-| `'VARIANT'` | Variant selector | `string` with `options: string[]` |
 
-> **Warning:** `type: 'VARIANT'` only works on **component sets** (groups of variants), NOT on standalone components. See [Figma Plugin Constraints](#figma-plugin-constraints).
+> **Note:** `type: 'VARIANT'` is NOT valid on standalone components. The compiler will report an error and skip VARIANT properties. Use `componentSet()` instead (see below).
+
+### Component Sets (Variants)
+
+To create a component with Figma variants (e.g., size, style), use `componentSet()` with child `component()` nodes. Each child's name encodes its variant values using Figma's `Property=Value` naming convention.
+
+```ts
+import { component, componentSet, text } from '@figma-dsl/core';
+
+function myVariant(style: string, size: string) {
+  return component(`Style=${style}, Size=${size}`, {
+    // Each child is a full component definition
+    componentProperties: [
+      { name: 'Label', type: 'TEXT', defaultValue: 'Click me' },
+    ],
+    children: [text('Click me', { fontSize: size === 'Large' ? 18 : 14 })],
+  });
+}
+
+export default componentSet('Button', {
+  children: [
+    myVariant('Primary', 'Small'),
+    myVariant('Primary', 'Large'),
+    myVariant('Secondary', 'Small'),
+    myVariant('Secondary', 'Large'),
+  ],
+});
+```
+
+Figma automatically creates variant properties (`Style`, `Size`) from the child component names. Use a helper function to generate all combinations:
+
+```ts
+const styles = ['Primary', 'Secondary'];
+const sizes = ['Small', 'Medium', 'Large'];
+const children = styles.flatMap(s => sizes.map(sz => myVariant(s, sz)));
+
+export default componentSet('Button', { children });
+```
+
+**When to use `component()` vs `componentSet()`:**
+
+| Scenario | Use |
+|----------|-----|
+| Single visual design, no variants | `component()` |
+| Multiple visual variants (size, style, state) | `componentSet()` with child `component()` nodes |
+| Configurable text/boolean props only | `component()` with `componentProperties` |
 
 ---
 
@@ -394,7 +626,28 @@ bin/figma-dsl export examples/navbar.dsl.ts -o output/navbar.figma.json
 
 ```bash
 bin/figma-dsl render output/navbar.json -o output/navbar.png
+bin/figma-dsl render output/navbar.json -o output/navbar-debug.png --debug-layout
 ```
+
+| Parameter | Description |
+|-----------|-------------|
+| First argument | Path to compiled `.json` file |
+| `-o` | Output PNG file path |
+| `--debug-layout` | Overlay layout debug info (frame borders, padding areas, computed sizes) |
+
+### `compare` — Compare two rendered PNGs
+
+```bash
+bin/figma-dsl compare image-a.png image-b.png -t 85
+```
+
+| Parameter | Description |
+|-----------|-------------|
+| First argument | Path to first PNG |
+| Second argument | Path to second PNG |
+| `-t` | Similarity threshold percentage (e.g., 85 = 85% match required) |
+
+Both images must have the same dimensions.
 
 ### `validate` — Check token compatibility
 
@@ -514,7 +767,51 @@ Each `.figma.json` file follows this structure:
 
 ## Authoring Patterns
 
-### Helper Functions
+### Built-in Pattern Helpers
+
+The `@figma-dsl/core` package includes pre-built pattern helpers for common UI elements. Import them alongside the core API:
+
+```ts
+import { card, badge, statBlock, navBar, sectionHeader, divider } from '@figma-dsl/core';
+```
+
+#### `card(name, opts?)`
+Frame with `clipContent`, `cornerRadius`, and vertical layout.
+```ts
+card('ProductCard', { width: 300, cornerRadius: 16, spacing: 12, children: [...] })
+```
+
+#### `badge(label, bgColor?, textColor?, opts?)`
+Pill-shaped frame (9999 radius) with centered text.
+```ts
+badge('NEW', '#7C3AED', '#FFFFFF', { fontSize: 11 })
+```
+
+#### `statBlock(value, label, opts?)`
+Vertical frame with large value + small label.
+```ts
+statBlock('1,234', 'Users', { valueColor: '#1d1d1f' })
+```
+
+#### `navBar(brand, links, opts?)`
+Horizontal SPACE_BETWEEN layout with brand text and nav links.
+```ts
+navBar('Acme', ['Products', 'Pricing', 'Docs'], { width: 1440 })
+```
+
+#### `sectionHeader(title, opts?)`
+Padded frame with large title text.
+```ts
+sectionHeader('Features', { fontSize: 32, color: '#111827' })
+```
+
+#### `divider(color?, height?)`
+Thin horizontal line spanning full width via `layoutSizingHorizontal: 'FILL'`.
+```ts
+divider('#E5E7EB')
+```
+
+### Custom Helper Functions
 
 Extract repeated structures into TypeScript functions for reuse:
 
@@ -599,7 +896,7 @@ rectangle('Divider', {
 })
 ```
 
-> **Note:** Without `layoutSizingHorizontal: 'FILL'`, dividers import as 1x1 px in Figma. This is a known trade-off due to plugin constraints. Manually stretch them in Figma after import, or set an explicit width matching the parent.
+> **Tip:** Use `layoutSizingHorizontal: 'FILL'` on dividers so they stretch to fill their parent's width in Figma.
 
 #### Card with Subtle Border
 
@@ -653,6 +950,63 @@ rectangle('Avatar', {
     { hex: '#4f46e5', position: 1 },
   ], 135)],
   cornerRadius: 20,
+})
+```
+
+#### Invisible Spacer
+
+Use a zero-opacity rectangle to add vertical space inside auto-layout frames (useful when you can't use padding alone):
+
+```ts
+rectangle('Spacer', { size: { x: 1, y: 40 }, opacity: 0 })
+```
+
+#### Progress Bar
+
+```ts
+frame('ProgressTrack', {
+  size: { x: 300, y: 4 },
+  fills: [solid('#5a5a5a')],
+  cornerRadius: 2,
+  clipContent: true,
+  autoLayout: horizontal({ spacing: 0 }),
+  children: [
+    rectangle('ProgressFill', {
+      size: { x: 180, y: 4 },  // width = track width × percentage
+      fills: [solid('#e50914')],
+    }),
+  ],
+})
+```
+
+#### Thumbnail Card with Gradient Background
+
+```ts
+frame('Thumbnail', {
+  size: { x: 230, y: 130 },
+  fills: [gradient([
+    { hex: '#4a2a0a', position: 0 },
+    { hex: '#1a0a00', position: 1 },
+  ], 135)],
+  autoLayout: vertical({ spacing: 4, padX: 8, padY: 8, align: 'MAX' }),
+  cornerRadius: 4,
+  clipContent: true,
+  children: [
+    text('Title', { fontSize: 12, fontWeight: 600, color: '#ffffff' }),
+  ],
+})
+```
+
+#### Metadata Badge with Stroke Border
+
+```ts
+frame('Badge: 16+', {
+  autoLayout: horizontal({ padX: 6, padY: 1, align: 'CENTER', counterAlign: 'CENTER' }),
+  strokes: [{ color: { r: 0.5, g: 0.5, b: 0.5, a: 1 }, weight: 1, align: 'INSIDE' }],
+  cornerRadius: 2,
+  children: [
+    text('16+', { fontSize: 11, fontWeight: 600, color: '#bcbcbc' }),
+  ],
 })
 ```
 
@@ -711,19 +1065,9 @@ Apple-style dark theme colors used across the landing page:
 
 These are critical limitations of the Figma Plugin API that affect how DSL files must be authored for successful import.
 
-### 1. `layoutSizingHorizontal: 'FILL'` is not supported
+### ~~1. `layoutSizingHorizontal: 'FILL'` — FIXED~~
 
-**Error:** `"FILL can only be set on children of auto-layout frames"`
-
-**Cause:** The Figma plugin creates nodes top-down. When setting `layoutSizingHorizontal: 'FILL'` on a child node, its parent's auto-layout has not yet been configured. This fails at every nesting level, not just the root.
-
-**Solution:** Never use `layoutSizingHorizontal: 'FILL'` (or `layoutSizingVertical: 'FILL'`) in any DSL file intended for Figma plugin export. Use explicit `size` values instead, or rely on parent auto-layout defaults.
-
-**Affected patterns:**
-- Cards inside grid rows (feature cards, stat cards, testimonial cards)
-- FAQ items and dividers inside lists
-- Text nodes that should stretch to fill parent width
-- Any child frame meant to fill its parent
+This was previously broken because the plugin set `layoutSizingHorizontal` before calling `parent.appendChild()`. The plugin now splits auto-layout setup into two phases: `setAutoLayoutConfig()` (own layout mode, called before appendChild) and `setLayoutSizing()` (sizing within parent, called after appendChild). **`FILL` is now fully supported** for both `layoutSizingHorizontal` and `layoutSizingVertical`.
 
 ### 2. `type: 'VARIANT'` only works on component sets
 
@@ -732,6 +1076,8 @@ These are critical limitations of the Figma Plugin API that affect how DSL files
 **Cause:** The Figma Plugin API restricts VARIANT-type component properties to component sets (collections of variants), not standalone components.
 
 **Solution:** Only use `type: 'TEXT'` and `type: 'BOOLEAN'` in `componentProperties` for standalone components. If you need variant support, the component must be part of a component set.
+
+> **Note:** The exporter now automatically strips VARIANT properties from standalone COMPONENT nodes during export, and the plugin skips them during import. DSL files with VARIANT properties on standalone components will export and import without errors, but the VARIANT properties will be silently removed.
 
 ```ts
 // Bad — fails on standalone component
@@ -745,6 +1091,14 @@ componentProperties: [
   { name: 'Checked', type: 'BOOLEAN', defaultValue: false },
 ]
 ```
+
+### ~~2b. `componentPropertyDefinitions` on variant children — FIXED~~
+
+**Error:** `"Can only get component property definitions of a component set or non-variant component"`
+
+**Cause:** After `combineAsVariants()`, child COMPONENT nodes become "variant components". Figma's Plugin API does not allow reading `componentPropertyDefinitions` from variant components — this property is only accessible on the parent COMPONENT_SET or standalone COMPONENTs.
+
+**Fix:** The plugin serializer (`serializeNode()`) now checks `node.parent?.type === 'COMPONENT_SET'` and skips `componentPropertyDefinitions` for variant children. Component property definitions are instead read from the COMPONENT_SET node itself, where `combineAsVariants()` promotes them.
 
 ### 3. `instance()` requires the component in the same import
 
@@ -777,6 +1131,35 @@ frame('Button', {
 
 ---
 
+## Known Pipeline Limitations
+
+These are limitations of the DSL pipeline itself (compiler/renderer), distinct from the Figma Plugin constraints above.
+
+| Limitation | Description | Workaround |
+|------------|-------------|------------|
+| No absolute positioning in auto-layout | DSL auto-layout does not support overlapping children like CSS `position: absolute`. | Use invisible spacers (`opacity: 0` rectangles) to push content, or use separate stacked frames. |
+| Gradient angle differs from CSS | DSL gradient angles follow Figma convention (0°=L→R, 90°=B→T, 270°=T→B), not CSS convention (180deg=T→B). | See gradient angle convention table in Fill & Stroke Builders section. |
+| No shadow/blur effects | Drop shadows, inner shadows, and blur effects are not supported. | Use layered frames with gradient fills to approximate shadow effects. |
+| No dashed/dotted strokes | Stroke dash patterns are not supported. | Use rectangles as visual separators. |
+| CJK font coverage | CJK text uses Noto Sans JP; other CJK scripts (Chinese, Korean) may render with fallback glyphs. | Stick to Japanese text for best results. |
+
+### Resolved Limitations
+
+These limitations from earlier versions have been fixed:
+
+| Previously | Resolution |
+|------------|------------|
+| ~~No per-stop gradient alpha~~ | 8-digit hex (`#rrggbbaa`) is supported in gradient stops. Renderer now correctly applies per-stop alpha (fixed `rgbaToString` defaulting to alpha=1). |
+| ~~Single stroke only~~ | Multiple strokes are now rendered (layered in order). |
+| ~~Stroke alignment ignored~~ | `INSIDE`, `CENTER`, and `OUTSIDE` alignment are now implemented. |
+| ~~No radial gradients~~ | `radialGradient()` is now supported. |
+| ~~Inter font only~~ | CJK text is auto-detected and rendered using Noto Sans JP. |
+| ~~No canvas reuse~~ | Canvas pooling (`acquireCanvas`/`releaseCanvas`) is now used in batch operations. |
+| ~~No text decoration~~ | `textDecoration: 'UNDERLINE' \| 'STRIKETHROUGH'` is now supported. |
+| ~~No compiler validation~~ | `validateNode()` now checks cornerRadius, RGBA bounds, strokeWeight, fontSize. |
+
+---
+
 ## Troubleshooting
 
 | Error | Cause | Fix |
@@ -784,11 +1167,11 @@ frame('Button', {
 | `EISDIR: illegal operation on a directory` | `-o` flag points to a directory | Use a full file path: `-o output/name.json` |
 | `Module needs import attribute of type: json` | Passed compiled `.json` to `export` | Use the `.dsl.ts` source file instead |
 | `Unknown option '--format'` | `--format` flag not supported | Remove `--format plugin` from the command |
-| `FILL can only be set on children of auto-layout frames` | `layoutSizingHorizontal: 'FILL'` used | Remove all `layoutSizingHorizontal: 'FILL'` |
-| `Can only add variant property to a component set` | `type: 'VARIANT'` on standalone component | Use `type: 'TEXT'` or `type: 'BOOLEAN'` only |
+| `FILL can only be set on children of auto-layout frames` | Plugin version too old | Update plugin — this was fixed by splitting setAutoLayout into config + sizing phases |
+| `Can only add variant property to a component set` | `type: 'VARIANT'` on standalone component | Now auto-filtered by exporter and plugin; use `type: 'TEXT'` or `type: 'BOOLEAN'` for clarity |
 | `Component not found for instance: X` | `instance()` referencing missing component | Replace with inline `frame()` |
 | Sections scattered on canvas | No parent wrapper in merged JSON | Wrap sections in a parent FRAME with vertical layout |
-| Dividers are 1x1 px | No `layoutSizingHorizontal: 'FILL'` (can't use it) | Set explicit width or manually adjust in Figma |
+| Dividers are 1x1 px | Missing `layoutSizingHorizontal: 'FILL'` | Add `layoutSizingHorizontal: 'FILL'` to the divider rectangle |
 
 ---
 

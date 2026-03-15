@@ -15,6 +15,14 @@
       "runtimeArgs": ["serve", "output"],
       "port": 8080,
       "autoPort": true
+    },
+    {
+      "name": "storybook",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "storybook"],
+      "cwd": "preview",
+      "port": 6006,
+      "autoPort": true
     }
   ]
 }

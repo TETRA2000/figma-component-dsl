@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { compile, compileToJson } from './compiler.js';
-import { frame, text, rectangle, ellipse, group, component, componentSet, instance, line, section, polygon, star, union, subtract, intersect, exclude } from '@figma-dsl/core';
-import { solid, gradient, defineTokens, token } from '@figma-dsl/core';
+import { frame, text, rectangle, ellipse, group, component, componentSet, instance, image, line, section, polygon, star, union, subtract, intersect, exclude } from '@figma-dsl/core';
+import { solid, gradient, radialGradient, imageFill, defineTokens, token } from '@figma-dsl/core';
 import { horizontal, vertical } from '@figma-dsl/core';
 
 describe('compile() — GUID assignment', () => {
@@ -303,6 +303,23 @@ describe('compile() — component compilation', () => {
     });
   });
 
+  it('reports error and skips VARIANT properties on standalone COMPONENT', () => {
+    const node = component('Card', {
+      componentProperties: [
+        { name: 'Title', type: 'TEXT', defaultValue: 'Hello' },
+        { name: 'Style', type: 'VARIANT' as any, defaultValue: 'Default' },
+      ],
+    });
+    const result = compile(node);
+    // VARIANT property should be excluded
+    expect(result.root.componentPropertyDefinitions!['Title']).toBeDefined();
+    expect(result.root.componentPropertyDefinitions!['Style']).toBeUndefined();
+    // Should report a compile error
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('VARIANT');
+    expect(result.errors[0]!.message).toContain('componentSet()');
+  });
+
   it('maps instance overrides', () => {
     const node = frame('Root', {
       children: [instance('Button', { Label: 'Submit' })],
@@ -478,5 +495,199 @@ describe('compile() — error handling', () => {
     const node = frame('Root', {});
     const result = compile(node);
     expect(result.errors).toEqual([]);
+  });
+});
+
+describe('compile() — validation errors', () => {
+  it('reports negative cornerRadius', () => {
+    const node = frame('Bad', { cornerRadius: -5 });
+    const result = compile(node);
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('cornerRadius');
+  });
+
+  it('reports invalid RGBA values', () => {
+    const node = frame('Bad', {
+      fills: [{ type: 'SOLID', color: { r: 2, g: 0, b: 0, a: 1 }, opacity: 1, visible: true }],
+    });
+    const result = compile(node);
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('RGBA');
+  });
+
+  it('reports non-positive strokeWeight', () => {
+    const node = rectangle('Bad', {
+      size: { x: 10, y: 10 },
+      strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 0 }],
+    });
+    const result = compile(node);
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('strokeWeight');
+  });
+
+  it('reports non-positive fontSize', () => {
+    const node = frame('Root', {
+      children: [text('Bad', { fontSize: 0 })],
+    });
+    const result = compile(node);
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]!.message).toContain('fontSize');
+  });
+
+  it('returns no errors for valid nodes', () => {
+    const node = frame('Root', {
+      fills: [solid('#ff0000')],
+      cornerRadius: 8,
+      strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 2 }],
+      children: [text('OK', { fontSize: 14 })],
+    });
+    const result = compile(node);
+    expect(result.errors).toEqual([]);
+  });
+});
+
+describe('compile() — textDecoration passthrough', () => {
+  it('passes through UNDERLINE textDecoration', () => {
+    const node = frame('Root', {
+      children: [text('Underlined', { fontSize: 14, textDecoration: 'UNDERLINE' })],
+    });
+    const result = compile(node);
+    expect(result.root.children[0]!.textDecoration).toBe('UNDERLINE');
+  });
+
+  it('omits NONE textDecoration', () => {
+    const node = frame('Root', {
+      children: [text('Normal', { fontSize: 14, textDecoration: 'NONE' })],
+    });
+    const result = compile(node);
+    expect(result.root.children[0]!.textDecoration).toBeUndefined();
+  });
+});
+
+describe('compile() — radial gradient', () => {
+  it('compiles radial gradient fills', () => {
+    const node = frame('Grad', {
+      fills: [radialGradient([
+        { hex: '#ff0000', position: 0 },
+        { hex: '#0000ff', position: 1 },
+      ])],
+    });
+    const result = compile(node);
+    expect(result.root.fillPaints[0]!.type).toBe('GRADIENT_RADIAL');
+    expect(result.root.fillPaints[0]!.gradientStops).toHaveLength(2);
+  });
+});
+
+describe('compile() — IMAGE node', () => {
+  it('maps IMAGE type correctly', () => {
+    const node = image('Photo', { src: './photo.png', size: { x: 200, y: 150 } });
+    const result = compile(node);
+    expect(result.root.type).toBe('IMAGE');
+  });
+
+  it('passes through imageSrc and imageScaleMode', () => {
+    const node = image('Photo', { src: './photo.png', size: { x: 200, y: 150 }, fit: 'FIT' });
+    const result = compile(node);
+    expect(result.root.imageSrc).toBe('./photo.png');
+    expect(result.root.imageScaleMode).toBe('FIT');
+  });
+
+  it('defaults imageScaleMode to FILL', () => {
+    const node = image('Photo', { src: './photo.png', size: { x: 200, y: 150 } });
+    const result = compile(node);
+    expect(result.root.imageScaleMode).toBe('FILL');
+  });
+
+  it('preserves size on IMAGE nodes', () => {
+    const node = image('Photo', { src: './photo.png', size: { x: 300, y: 200 } });
+    const result = compile(node);
+    expect(result.root.size).toEqual({ x: 300, y: 200 });
+  });
+
+  it('preserves cornerRadius on IMAGE nodes', () => {
+    const node = image('Round', { src: 'img.png', size: { x: 100, y: 100 }, cornerRadius: 8 });
+    const result = compile(node);
+    expect(result.root.cornerRadius).toBe(8);
+  });
+
+  it('compiles IMAGE nodes as children of FRAME', () => {
+    const node = frame('Container', {
+      children: [image('Photo', { src: './photo.png', size: { x: 200, y: 150 } })],
+    });
+    const result = compile(node);
+    expect(result.root.children).toHaveLength(1);
+    expect(result.root.children[0]!.type).toBe('IMAGE');
+    expect(result.root.children[0]!.imageSrc).toBe('./photo.png');
+  });
+
+  it('compiles IMAGE nodes in auto-layout with layout sizing', () => {
+    const node = frame('Container', {
+      autoLayout: horizontal({ spacing: 8 }),
+      children: [image('Photo', {
+        src: './photo.png',
+        size: { x: 200, y: 150 },
+        layoutSizingHorizontal: 'FILL',
+        layoutSizingVertical: 'FIXED',
+      })],
+    });
+    const result = compile(node);
+    const child = result.root.children[0]!;
+    expect(child.layoutSizingHorizontal).toBe('FILL');
+    expect(child.layoutSizingVertical).toBe('FIXED');
+  });
+});
+
+describe('compile() — IMAGE fills', () => {
+  it('converts imageFill to IMAGE paint', () => {
+    const node = frame('BgImage', {
+      size: { x: 400, y: 300 },
+      fills: [imageFill('./hero.jpg')],
+    });
+    const result = compile(node);
+    expect(result.root.fillPaints).toHaveLength(1);
+    expect(result.root.fillPaints[0]!.type).toBe('IMAGE');
+    expect(result.root.fillPaints[0]!.imageSrc).toBe('./hero.jpg');
+    expect(result.root.fillPaints[0]!.imageScaleMode).toBe('FILL');
+  });
+
+  it('preserves imageFill scaleMode', () => {
+    const node = frame('BgImage', {
+      size: { x: 400, y: 300 },
+      fills: [imageFill('./bg.png', { scaleMode: 'TILE' })],
+    });
+    const result = compile(node);
+    expect(result.root.fillPaints[0]!.imageScaleMode).toBe('TILE');
+  });
+
+  it('preserves imageFill opacity', () => {
+    const node = frame('BgImage', {
+      size: { x: 400, y: 300 },
+      fills: [imageFill('./bg.png', { opacity: 0.5 })],
+    });
+    const result = compile(node);
+    expect(result.root.fillPaints[0]!.opacity).toBe(0.5);
+  });
+
+  it('handles mixed solid and image fills', () => {
+    const node = frame('Mixed', {
+      size: { x: 400, y: 300 },
+      fills: [solid('#ff0000'), imageFill('./overlay.png'), solid('#0000ff')],
+    });
+    const result = compile(node);
+    expect(result.root.fillPaints).toHaveLength(3);
+    expect(result.root.fillPaints[0]!.type).toBe('SOLID');
+    expect(result.root.fillPaints[1]!.type).toBe('IMAGE');
+    expect(result.root.fillPaints[2]!.type).toBe('SOLID');
+  });
+
+  it('converts imageFill on rectangles', () => {
+    const node = rectangle('Bg', {
+      size: { x: 200, y: 100 },
+      fills: [imageFill('./texture.png', { scaleMode: 'FIT' })],
+    });
+    const result = compile(node);
+    expect(result.root.fillPaints[0]!.type).toBe('IMAGE');
+    expect(result.root.fillPaints[0]!.imageSrc).toBe('./texture.png');
+    expect(result.root.fillPaints[0]!.imageScaleMode).toBe('FIT');
   });
 });

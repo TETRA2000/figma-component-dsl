@@ -46,7 +46,7 @@ From the user's request, determine:
 
 ### Step 3: Generate Component Files
 
-Create a 3-file component at `preview/src/components/{ComponentName}/`:
+Create a 3-file component at `preview/src/components/_generated/{ComponentName}/`:
 
 #### 3a. `{ComponentName}.tsx` — React component
 
@@ -165,7 +165,7 @@ Key rules:
 Run the figma-dsl validator:
 
 ```bash
-bin/figma-dsl validate preview/src/components/{ComponentName}/{ComponentName}.tsx
+bin/figma-dsl validate preview/src/components/_generated/{ComponentName}/{ComponentName}.tsx
 ```
 
 If validation fails:
@@ -194,22 +194,57 @@ Create a quick preview page or update `App.tsx` to render the new component with
 For DSL-rendered PNG comparison:
 
 ```bash
-bin/figma-dsl compile preview/src/components/{ComponentName}/{ComponentName}.tsx -o output/
+bin/figma-dsl compile preview/src/components/_generated/{ComponentName}/{ComponentName}.tsx -o output/
 bin/figma-dsl render output/{ComponentName}.json -o output/{ComponentName}.png
 ```
 
 This produces a PNG rendering of how the component will look in Figma.
 
-### Step 7: Register the Component
+### Step 6b: Create DSL File for Figma Export (if component has variants)
 
-Add the new component export to `preview/src/components/index.ts`, inserting it **below the END marker comment**:
+If the component has `variant`, `size`, or similar visual variant props, create a DSL file at `output/{ComponentName}.dsl.ts` using `componentSet()` instead of `component()`. Figma requires a COMPONENT_SET to support variant properties.
 
 ```ts
-// --- END REFERENCE EXPORTS ---
-export { ComponentName } from './ComponentName/ComponentName';
+import { component, componentSet, frame, text, solid, horizontal, vertical } from '@figma-dsl/core';
+
+// Helper to build one variant combination
+function myVariant(variant: string, size: string) {
+  return component(`Variant=${variant}, Size=${size}`, {
+    size: { x: sizeMap[size].width, y: undefined },
+    autoLayout: vertical({ spacing: 0, widthSizing: 'FIXED', heightSizing: 'HUG' }),
+    // Vary visual properties based on variant/size
+    componentProperties: [
+      { name: 'Label', type: 'TEXT', defaultValue: 'Text' },
+    ],
+    children: [/* ... */],
+  });
+}
+
+// Generate all combinations
+const variants = ['Default', 'Active'];
+const sizes = ['Small', 'Medium', 'Large'];
+const children = variants.flatMap(v => sizes.map(s => myVariant(v, s)));
+
+export default componentSet('ComponentName', { children });
 ```
 
-If the component defines new shared types, add them to `preview/src/components/types.ts`.
+Key rules:
+- Child component names **must** use `Property=Value, Property=Value` format
+- Only use `type: 'TEXT'` and `type: 'BOOLEAN'` in `componentProperties` — never `type: 'VARIANT'`
+- Vary the visual design between variants (width, colors, borders, font sizes)
+- Use a helper function + `flatMap` to generate all variant × size combinations
+
+If the component has **no variants** (just text/boolean props), use a standalone `component()` instead.
+
+### Step 7: Register the Component
+
+Append the new component export to `preview/src/components/_generated.ts` (create this file if it doesn't exist):
+
+```ts
+export { ComponentName } from './_generated/ComponentName/ComponentName';
+```
+
+Do **not** modify `preview/src/components/index.ts` — that file is reserved for reference exports only. If the component defines new shared types, add them to `preview/src/components/types.ts`.
 
 ## Template Files
 
