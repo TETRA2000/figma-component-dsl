@@ -1,0 +1,868 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "Minimal Blog Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "MinimalBlogPage",
+      "size": {
+        "x": 800,
+        "y": 742.8
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "Header",
+          "size": {
+            "x": 672,
+            "y": 96.39999999999999
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "THE JOURNAL",
+              "size": {
+                "x": 77.56999969482422,
+                "y": 13.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.47058823529411764,
+                    "g": 0.44313725490196076,
+                    "b": 0.4235294117647059,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "THE JOURNAL",
+              "fontSize": 11,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "CENTER",
+              "fontWeight": 600,
+              "fontStyle": "Semi Bold"
+            },
+            {
+              "type": "TEXT",
+              "name": "Stories & Reflections",
+              "size": {
+                "x": 364.8500061035156,
+                "y": 43.199999999999996
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.10980392156862745,
+                    "g": 0.09803921568627451,
+                    "b": 0.09019607843137255,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Stories & Reflections",
+              "fontSize": 36,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "CENTER",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "TEXT",
+              "name": "Thoughts on design, craft, and the beauty of simple things.",
+              "size": {
+                "x": 446.1400146484375,
+                "y": 24
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.47058823529411764,
+                    "g": 0.44313725490196076,
+                    "b": 0.4235294117647059,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Thoughts on design, craft, and the beauty of simple things.",
+              "fontSize": 16,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "CENTER",
+              "fontWeight": 400,
+              "fontStyle": "Regular"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 8,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "RECTANGLE",
+          "name": "Spacer1",
+          "size": {
+            "x": 1,
+            "y": 48
+          },
+          "opacity": 0,
+          "visible": true,
+          "children": []
+        },
+        {
+          "type": "FRAME",
+          "name": "Blockquote",
+          "size": {
+            "x": 672,
+            "y": 100
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "ROUNDED_RECTANGLE",
+              "name": "Bar",
+              "size": {
+                "x": 3,
+                "y": 60
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.47058823529411764,
+                    "g": 0.44313725490196076,
+                    "b": 0.4235294117647059,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 1.5
+            },
+            {
+              "type": "FRAME",
+              "name": "Content",
+              "size": {
+                "x": 653,
+                "y": 52.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Simplicity is the ultimate sophistication.",
+                  "size": {
+                    "x": 334.6400146484375,
+                    "y": 28.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.26666666666666666,
+                        "g": 0.25098039215686274,
+                        "b": 0.23529411764705882,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Simplicity is the ultimate sophistication.",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "— Leonardo da Vinci",
+                  "size": {
+                    "x": 128.6199951171875,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.6588235294117647,
+                        "g": 0.6352941176470588,
+                        "b": 0.6196078431372549,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "— Leonardo da Vinci",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 8,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 16,
+          "paddingTop": 20,
+          "paddingRight": 0,
+          "paddingBottom": 20,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "RECTANGLE",
+          "name": "Spacer2",
+          "size": {
+            "x": 1,
+            "y": 48
+          },
+          "opacity": 0,
+          "visible": true,
+          "children": []
+        },
+        {
+          "type": "FRAME",
+          "name": "ArticleGrid",
+          "size": {
+            "x": 672,
+            "y": 354.4
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Article: The Art of Minimalism",
+              "size": {
+                "x": 340,
+                "y": 354.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ROUNDED_RECTANGLE",
+                  "name": "Image",
+                  "size": {
+                    "x": 340,
+                    "y": 200
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9058823529411765,
+                        "g": 0.8980392156862745,
+                        "b": 0.8941176470588236,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Tags",
+                  "size": {
+                    "x": 139.70000076293945,
+                    "y": 21.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Tag: Design",
+                      "size": {
+                        "x": 61.220001220703125,
+                        "y": 21.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "DESIGN",
+                          "size": {
+                            "x": 41.220001220703125,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.47058823529411764,
+                                "g": 0.44313725490196076,
+                                "b": 0.4235294117647059,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "DESIGN",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9607843137254902,
+                            "g": 0.9607843137254902,
+                            "b": 0.9568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 10.6,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 4,
+                      "paddingRight": 10,
+                      "paddingBottom": 4,
+                      "paddingLeft": 10,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Tag: Culture",
+                      "size": {
+                        "x": 70.47999954223633,
+                        "y": 21.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "CULTURE",
+                          "size": {
+                            "x": 50.47999954223633,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.47058823529411764,
+                                "g": 0.44313725490196076,
+                                "b": 0.4235294117647059,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "CULTURE",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9607843137254902,
+                            "g": 0.9607843137254902,
+                            "b": 0.9568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 10.6,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 4,
+                      "paddingRight": 10,
+                      "paddingBottom": 4,
+                      "paddingLeft": 10,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "The Art of Minimalism",
+                  "size": {
+                    "x": 215.02000427246094,
+                    "y": 26
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10980392156862745,
+                        "g": 0.09803921568627451,
+                        "b": 0.09019607843137255,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "The Art of Minimalism",
+                  "fontSize": 20,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Exploring how less can truly be more in design, architecture, and everyday life.",
+                  "size": {
+                    "x": 340,
+                    "y": 44.800000000000004
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.47058823529411764,
+                        "g": 0.44313725490196076,
+                        "b": 0.4235294117647059,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Exploring how less can truly be more in design, architecture, and everyday life.",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "textAutoResize": "HEIGHT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Jane Doe · Mar 10, 2026",
+                  "size": {
+                    "x": 138.2100067138672,
+                    "y": 14.399999999999999
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.6588235294117647,
+                        "g": 0.6352941176470588,
+                        "b": 0.6196078431372549,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Jane Doe · Mar 10, 2026",
+                  "fontSize": 12,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            },
+            {
+              "type": "FRAME",
+              "name": "Article: Finding Beauty in Restraint",
+              "size": {
+                "x": 340,
+                "y": 354.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ROUNDED_RECTANGLE",
+                  "name": "Image",
+                  "size": {
+                    "x": 340,
+                    "y": 200
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9058823529411765,
+                        "g": 0.8980392156862745,
+                        "b": 0.8941176470588236,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Tags",
+                  "size": {
+                    "x": 146.6699981689453,
+                    "y": 21.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Tag: Typography",
+                      "size": {
+                        "x": 96.55999755859375,
+                        "y": 21.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "TYPOGRAPHY",
+                          "size": {
+                            "x": 76.55999755859375,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.47058823529411764,
+                                "g": 0.44313725490196076,
+                                "b": 0.4235294117647059,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "TYPOGRAPHY",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9607843137254902,
+                            "g": 0.9607843137254902,
+                            "b": 0.9568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 10.6,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 4,
+                      "paddingRight": 10,
+                      "paddingBottom": 4,
+                      "paddingLeft": 10,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Tag: Art",
+                      "size": {
+                        "x": 42.11000061035156,
+                        "y": 21.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "ART",
+                          "size": {
+                            "x": 22.110000610351562,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.47058823529411764,
+                                "g": 0.44313725490196076,
+                                "b": 0.4235294117647059,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "ART",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9607843137254902,
+                            "g": 0.9607843137254902,
+                            "b": 0.9568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 10.6,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 4,
+                      "paddingRight": 10,
+                      "paddingBottom": 4,
+                      "paddingLeft": 10,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Finding Beauty in Restraint",
+                  "size": {
+                    "x": 262.0199890136719,
+                    "y": 26
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10980392156862745,
+                        "g": 0.09803921568627451,
+                        "b": 0.09019607843137255,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Finding Beauty in Restraint",
+                  "fontSize": 20,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "A meditation on the power of white space and intentional absence in creative work.",
+                  "size": {
+                    "x": 340,
+                    "y": 44.800000000000004
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.47058823529411764,
+                        "g": 0.44313725490196076,
+                        "b": 0.4235294117647059,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "A meditation on the power of white space and intentional absence in creative work.",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "textAutoResize": "HEIGHT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "John Smith · Mar 8, 2026",
+                  "size": {
+                    "x": 143.05999755859375,
+                    "y": 14.399999999999999
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.6588235294117647,
+                        "g": 0.6352941176470588,
+                        "b": 0.6196078431372549,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "John Smith · Mar 8, 2026",
+                  "fontSize": 12,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 24,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.9803921568627451,
+            "g": 0.9803921568627451,
+            "b": 0.9764705882352941,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 48,
+      "paddingRight": 64,
+      "paddingBottom": 48,
+      "paddingLeft": 64,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}
