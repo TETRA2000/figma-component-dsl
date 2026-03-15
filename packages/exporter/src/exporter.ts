@@ -36,6 +36,20 @@ export interface PluginNodeDef {
   layoutSizingHorizontal?: string;
   layoutSizingVertical?: string;
 
+  // Geometry (POLYGON, STAR)
+  pointCount?: number;
+  innerRadius?: number;
+  rotation?: number;
+
+  // Boolean operation
+  booleanOperation?: string;
+
+  // Stroke cap (LINE)
+  strokeCap?: string;
+
+  // Section
+  sectionContentsHidden?: boolean;
+
   // Text
   characters?: string;
   fontSize?: number;
@@ -138,6 +152,14 @@ function convertToPluginNode(node: FigmaNodeDict): PluginNodeDef {
     result.componentId = node.componentId;
     result.overriddenProperties = node.overriddenProperties;
   }
+
+  // New node type properties
+  if (node.pointCount !== undefined) result.pointCount = node.pointCount;
+  if (node.innerRadius !== undefined) result.innerRadius = node.innerRadius;
+  if (node.rotation !== undefined) result.rotation = node.rotation;
+  if (node.booleanOperation) result.booleanOperation = node.booleanOperation;
+  if (node.strokeCap) result.strokeCap = node.strokeCap;
+  if (node.sectionContentsHidden !== undefined) result.sectionContentsHidden = node.sectionContentsHidden;
 
   return result;
 }

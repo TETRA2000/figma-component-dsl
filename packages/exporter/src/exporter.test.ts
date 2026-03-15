@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { generatePluginInput, exportToFile } from './exporter.js';
 import { compile } from '@figma-dsl/compiler';
-import { frame, text, component, componentSet, instance } from '@figma-dsl/core';
+import { frame, text, component, componentSet, instance, line, section, polygon, star, subtract, rectangle, ellipse } from '@figma-dsl/core';
 import { solid } from '@figma-dsl/core';
 import { horizontal } from '@figma-dsl/core';
 import { join, dirname } from 'path';
@@ -82,6 +82,70 @@ describe('generatePluginInput()', () => {
     const compiled = compile(node);
     const input = generatePluginInput(compiled, 'Custom Page');
     expect(input.targetPage).toBe('Custom Page');
+  });
+});
+
+describe('generatePluginInput() — new node types', () => {
+  it('exports LINE with strokeCap and rotation', () => {
+    const node = line('Divider', {
+      size: { x: 200 },
+      strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 2, strokeCap: 'ROUND' }],
+      rotation: 45,
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled);
+    const comp = input.components[0]!;
+    expect(comp.type).toBe('LINE');
+    expect(comp.strokeCap).toBe('ROUND');
+    expect(comp.rotation).toBe(45);
+  });
+
+  it('exports POLYGON with pointCount', () => {
+    const node = polygon('Hex', { pointCount: 6, size: { x: 100, y: 100 }, fills: [solid('#ff0000')] });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled);
+    const comp = input.components[0]!;
+    expect(comp.type).toBe('POLYGON');
+    expect(comp.pointCount).toBe(6);
+  });
+
+  it('exports STAR with pointCount and innerRadius', () => {
+    const node = star('Star', { pointCount: 5, innerRadius: 0.5, size: { x: 100, y: 100 } });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled);
+    const comp = input.components[0]!;
+    expect(comp.type).toBe('STAR');
+    expect(comp.pointCount).toBe(5);
+    expect(comp.innerRadius).toBe(0.5);
+  });
+
+  it('exports BOOLEAN_OPERATION with operation type and children', () => {
+    const node = subtract('Cutout', {
+      children: [
+        rectangle('R', { size: { x: 50, y: 50 } }),
+        ellipse('E', { size: { x: 30, y: 30 } }),
+      ],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled);
+    const comp = input.components[0]!;
+    expect(comp.type).toBe('BOOLEAN_OPERATION');
+    expect(comp.booleanOperation).toBe('SUBTRACT');
+    expect(comp.children).toHaveLength(2);
+  });
+
+  it('exports SECTION with sectionContentsHidden', () => {
+    const node = section('S', {
+      size: { x: 200, y: 200 },
+      contentsHidden: true,
+      children: [rectangle('R', { size: { x: 50, y: 50 } })],
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled);
+    const comp = input.components[0]!;
+    expect(comp.type).toBe('SECTION');
+    expect(comp.sectionContentsHidden).toBe(true);
+    expect(comp.children).toHaveLength(1);
   });
 });
 

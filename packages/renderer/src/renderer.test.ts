@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { initializeRenderer, render, renderToFile, RenderError } from './renderer.js';
+import { initializeRenderer, render, renderToFile, RenderError, calculatePolygonVertices, calculateStarVertices } from './renderer.js';
 import { compile, compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
-import { frame, text, rectangle, ellipse, group } from '@figma-dsl/core';
+import { frame, text, rectangle, ellipse, group, line, section, polygon, star, union, subtract } from '@figma-dsl/core';
 import { solid, gradient } from '@figma-dsl/core';
 import { horizontal, vertical } from '@figma-dsl/core';
 import { join, dirname } from 'path';
@@ -220,6 +220,117 @@ describe('renderToFile()', () => {
     expect(result.width).toBe(50);
     // Cleanup
     unlinkSync(outPath);
+  });
+});
+
+describe('render() — new node types', () => {
+  it('renders a LINE node', () => {
+    const node = frame('Root', {
+      size: { x: 200, y: 50 },
+      children: [line('Divider', { size: { x: 200 } })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders a SECTION node', () => {
+    const node = frame('Root', {
+      size: { x: 200, y: 200 },
+      children: [section('My Section', {
+        size: { x: 200, y: 200 },
+        fills: [solid('#f0f0f0')],
+      })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders a POLYGON node', () => {
+    const node = frame('Root', {
+      size: { x: 100, y: 100 },
+      children: [polygon('Hex', {
+        pointCount: 6,
+        size: { x: 80, y: 80 },
+        fills: [solid('#ff0000')],
+      })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders a STAR node', () => {
+    const node = frame('Root', {
+      size: { x: 100, y: 100 },
+      children: [star('Star', {
+        pointCount: 5,
+        size: { x: 80, y: 80 },
+        fills: [solid('#ffcc00')],
+      })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('renders a BOOLEAN_OPERATION (SUBTRACT)', () => {
+    const node = frame('Root', {
+      size: { x: 100, y: 100 },
+      children: [subtract('Cutout', {
+        children: [
+          rectangle('Base', { size: { x: 80, y: 80 }, fills: [solid('#0000ff')] }),
+          ellipse('Hole', { size: { x: 40, y: 40 }, fills: [solid('#ffffff')] }),
+        ],
+      })],
+    });
+    const compiled = compile(node);
+    const result = render(compiled.root);
+    expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('compile-to-render round-trip for all new types without exceptions', () => {
+    const nodes = [
+      line('L', { size: { x: 100 } }),
+      section('S', { size: { x: 100, y: 100 }, fills: [solid('#eeeeee')] }),
+      polygon('P', { pointCount: 5, size: { x: 100, y: 100 }, fills: [solid('#ff0000')] }),
+      star('St', { pointCount: 5, size: { x: 100, y: 100 }, fills: [solid('#00ff00')] }),
+    ];
+    for (const n of nodes) {
+      const container = frame('Root', { size: { x: 200, y: 200 }, children: [n] });
+      const compiled = compile(container);
+      expect(() => render(compiled.root)).not.toThrow();
+    }
+  });
+});
+
+describe('vertex calculations', () => {
+  it('calculates correct number of polygon vertices', () => {
+    const verts = calculatePolygonVertices(6, 50, 50, 50, 50);
+    expect(verts).toHaveLength(6);
+  });
+
+  it('places first polygon vertex at top (−90°)', () => {
+    const verts = calculatePolygonVertices(4, 50, 50, 50, 50);
+    // First vertex should be at top: (50, 0)
+    expect(verts[0]!.x).toBeCloseTo(50);
+    expect(verts[0]!.y).toBeCloseTo(0);
+  });
+
+  it('calculates correct number of star vertices (pointCount * 2)', () => {
+    const verts = calculateStarVertices(5, 0.382, 50, 50, 50, 50);
+    expect(verts).toHaveLength(10);
+  });
+
+  it('star with innerRadius 1.0 matches polygon', () => {
+    const starVerts = calculateStarVertices(5, 1.0, 50, 50, 50, 50);
+    const polyVerts = calculatePolygonVertices(5, 50, 50, 50, 50);
+    // Star with innerRadius 1.0 has same outer vertices (every other one)
+    for (let i = 0; i < 5; i++) {
+      expect(starVerts[i * 2]!.x).toBeCloseTo(polyVerts[i]!.x, 5);
+      expect(starVerts[i * 2]!.y).toBeCloseTo(polyVerts[i]!.y, 5);
+    }
   });
 });
 

@@ -1,7 +1,7 @@
 # Implementation Plan
 
-- [ ] 1. Extend DSL core type system with new node types and properties
-- [ ] 1.1 Add five new node type literals and supporting types to the type definitions
+- [x] 1. Extend DSL core type system with new node types and properties
+- [x] 1.1 Add five new node type literals and supporting types to the type definitions
   - Extend the `NodeType` union with `'LINE' | 'SECTION' | 'POLYGON' | 'STAR' | 'BOOLEAN_OPERATION'`
   - Add `StrokeCap` type with all 8 Figma stroke cap values
   - Add `BooleanOperationType` with the 4 operation values
@@ -9,7 +9,7 @@
   - Add `rotation`, `pointCount`, `innerRadius`, `booleanOperation`, and `contentsHidden` as optional properties on the node interface
   - _Requirements: 6.1, 6.2_
 
-- [ ] 1.2 (P) Create props interfaces for each new node type
+- [x] 1.2 (P) Create props interfaces for each new node type
   - Define `LineProps` with size (length), strokes, rotation, opacity, visibility, and layout sizing
   - Define `SectionProps` with size, fills, children, contentsHidden, and visibility — intentionally omitting opacity, strokes, rotation, and auto-layout (not supported by Figma sections)
   - Define `PolygonProps` with required `pointCount`, size, fills, strokes, corner radius, rotation, opacity, and layout sizing
@@ -17,50 +17,50 @@
   - Define `BooleanOperationProps` with required children, fills, strokes, opacity, and visibility
   - _Requirements: 1.1, 2.1, 3.1, 4.1, 5.1_
 
-- [ ] 2. Implement factory functions with validation
-- [ ] 2.1 Create `line()` factory function
+- [x] 2. Implement factory functions with validation
+- [x] 2.1 Create `line()` factory function
   - Accept name and line props, return a node with type LINE
   - Default to a 1px black stroke when no strokes are provided
   - Set height to 0 (lines have zero height)
   - Follow the existing factory pattern: validate name, spread props, return node
   - _Requirements: 1.1, 1.8_
 
-- [ ] 2.2 (P) Create `section()` factory function
+- [x] 2.2 (P) Create `section()` factory function
   - Accept name and section props, return a node with type SECTION
   - Map `contentsHidden` to the node's `contentsHidden` property
   - Do not accept or propagate auto-layout, opacity, strokes, or rotation properties
   - _Requirements: 2.1_
 
-- [ ] 2.3 (P) Create `polygon()` factory function
+- [x] 2.3 (P) Create `polygon()` factory function
   - Accept name and polygon props with required `pointCount`
   - Validate that `pointCount` is an integer >= 3, throw if invalid
   - Map all shape properties (fills, strokes, corner radius, rotation, opacity)
   - _Requirements: 3.1, 3.2_
 
-- [ ] 2.4 (P) Create `star()` factory function
+- [x] 2.4 (P) Create `star()` factory function
   - Accept name and star props with required `pointCount` and optional `innerRadius`
   - Validate that `pointCount` is an integer >= 3, throw if invalid
   - Default `innerRadius` to 0.382 when not specified
   - _Requirements: 4.1, 4.2_
 
-- [ ] 2.5 (P) Create four boolean operation factory functions
+- [x] 2.5 (P) Create four boolean operation factory functions
   - Implement `union()`, `subtract()`, `intersect()`, `exclude()` — each accepting name, children array, and optional shape props
   - Validate that at least 2 children are provided, throw if fewer
   - Set `booleanOperation` to the corresponding operation type
   - _Requirements: 5.1, 5.2_
 
-- [ ] 2.6 Export all new factory functions from the package entry point
+- [x] 2.6 Export all new factory functions from the package entry point
   - Ensure `line`, `section`, `polygon`, `star`, `union`, `subtract`, `intersect`, `exclude` are re-exported
   - Verify all new types and props interfaces are also exported
   - _Requirements: 6.7_
 
-- [ ] 3. Extend compiler for new node types
-- [ ] 3.1 Add new type literals to the compiled node type system
+- [x] 3. Extend compiler for new node types
+- [x] 3.1 Add new type literals to the compiled node type system
   - Extend the Figma node type union with LINE, SECTION, POLYGON, STAR, BOOLEAN_OPERATION
   - Add `pointCount`, `innerRadius`, `booleanOperation`, `strokeCap`, `rotation`, and `sectionContentsHidden` to the compiled node dictionary
   - _Requirements: 6.3_
 
-- [ ] 3.2 Extend node type mapping and compilation logic
+- [x] 3.2 Extend node type mapping and compilation logic
   - Add 5 new cases to the type mapping function, each returning its type directly
   - Map `pointCount` and `rotation` for POLYGON nodes
   - Map `pointCount`, `innerRadius` (default 0.382), and `rotation` for STAR nodes
@@ -70,81 +70,81 @@
   - Emit a warning and skip unknown node types instead of throwing
   - _Requirements: 1.2, 1.3, 2.2, 2.3, 3.3, 4.3, 5.3, 6.6_
 
-- [ ] 3.3 Extend layout resolver for new node types
+- [x] 3.3 Extend layout resolver for new node types
   - Handle LINE as a leaf node with height always 0 and width equal to the specified length
   - Handle POLYGON and STAR as leaf shapes using their specified size
   - Handle SECTION as an absolute-positioned container — position children at explicit coordinates or stack sequentially (no auto-layout)
   - Handle BOOLEAN_OPERATION by computing the union bounding box of all children (reuse GROUP logic)
   - _Requirements: 2.4, 5.4_
 
-- [ ] 4. Extend renderer for new node types
-- [ ] 4.1 Implement LINE rendering
+- [x] 4. Extend renderer for new node types
+- [x] 4.1 Implement LINE rendering
   - Draw a horizontal stroke from origin to (width, 0) using the node's stroke color and weight
   - Apply rotation transform around the start point when rotation is specified
   - Apply opacity via global alpha
   - _Requirements: 1.4, 1.5_
 
-- [ ] 4.2 (P) Implement SECTION rendering
+- [x] 4.2 (P) Implement SECTION rendering
   - Draw the section as a filled rectangle using the node's fill colors
   - Render the section name as a text label above the content area
   - Render children without clipping
   - _Requirements: 2.5_
 
-- [ ] 4.3 (P) Implement POLYGON rendering with vertex calculation
+- [x] 4.3 (P) Implement POLYGON rendering with vertex calculation
   - Calculate regular polygon vertices by distributing `pointCount` points evenly around the inscribed ellipse, first vertex at -90 degrees (top)
   - Draw a filled and/or stroked closed path through all vertices
   - Apply corner radius at vertices when specified (quadratic bezier approximation)
   - Apply rotation transform when specified
   - _Requirements: 3.4, 3.5, 3.6_
 
-- [ ] 4.4 (P) Implement STAR rendering with vertex calculation
+- [x] 4.4 (P) Implement STAR rendering with vertex calculation
   - Calculate star vertices by alternating outer and inner radius points, producing `pointCount * 2` vertices total, first outer vertex at -90 degrees
   - Scale inner vertices by the `innerRadius` factor (0–1)
   - When `innerRadius` is 1.0, produce a regular polygon identical to POLYGON rendering
   - Draw filled and/or stroked closed path
   - _Requirements: 4.4, 4.5_
 
-- [ ] 4.5 Implement BOOLEAN_OPERATION rendering with canvas compositing
+- [x] 4.5 Implement BOOLEAN_OPERATION rendering with canvas compositing
   - Create an offscreen canvas matching the boolean operation's bounding box
   - Render the first child normally, then render subsequent children using the appropriate composite operation: `source-over` for UNION, `destination-out` for SUBTRACT, `destination-in` for INTERSECT, `xor` for EXCLUDE
   - Composite the offscreen result onto the main canvas
   - When the boolean operation has its own fills or strokes, apply them to the composited result shape
   - _Requirements: 5.5, 5.6_
 
-- [ ] 4.6 Ensure renderer dispatch handles all new types without throwing
+- [x] 4.6 Ensure renderer dispatch handles all new types without throwing
   - Add all 5 new types to the rendering dispatch
   - Verify that unknown types fall through gracefully (no crash)
   - _Requirements: 6.4_
 
-- [ ] 5. Extend exporter for new node types
-- [ ] 5.1 Add new properties to the plugin node definition
+- [x] 5. Extend exporter for new node types
+- [x] 5.1 Add new properties to the plugin node definition
   - Add `pointCount`, `innerRadius`, `booleanOperation`, `strokeCap`, `rotation`, and `sectionContentsHidden` as optional fields
   - _Requirements: 1.6, 2.6, 3.7, 4.6, 5.7_
 
-- [ ] 5.2 Extend the node conversion function to map new properties
+- [x] 5.2 Extend the node conversion function to map new properties
   - Pass through `pointCount`, `innerRadius`, `booleanOperation`, `strokeCap`, `rotation`, and `sectionContentsHidden` from compiled nodes to plugin node definitions
   - Ensure children are recursively converted for SECTION and BOOLEAN_OPERATION nodes
   - _Requirements: 1.6, 2.6, 3.7, 4.6, 5.7_
 
-- [ ] 6. Extend Figma plugin for new node types
-- [ ] 6.1 Implement LINE node creation in the plugin
+- [x] 6. Extend Figma plugin for new node types
+- [x] 6.1 Implement LINE node creation in the plugin
   - Create a line via the Figma API, set width (resize to length, 0), apply strokes, stroke cap, and rotation
   - _Requirements: 1.7_
 
-- [ ] 6.2 (P) Implement SECTION node creation in the plugin
+- [x] 6.2 (P) Implement SECTION node creation in the plugin
   - Create a section via the Figma API, resize using `resizeWithoutConstraints` (not `resize`), set fills and `sectionContentsHidden`
   - Do not set opacity (sections don't support it) — recursively create children
   - _Requirements: 2.7_
 
-- [ ] 6.3 (P) Implement POLYGON node creation in the plugin
+- [x] 6.3 (P) Implement POLYGON node creation in the plugin
   - Create a polygon via the Figma API, set `pointCount`, fills, strokes, corner radius, and rotation
   - _Requirements: 3.8_
 
-- [ ] 6.4 (P) Implement STAR node creation in the plugin
+- [x] 6.4 (P) Implement STAR node creation in the plugin
   - Create a star via the Figma API, set `pointCount`, `innerRadius`, fills, strokes, and rotation
   - _Requirements: 4.7_
 
-- [ ] 6.5 Implement BOOLEAN_OPERATION node creation in the plugin
+- [x] 6.5 Implement BOOLEAN_OPERATION node creation in the plugin
   - Create child nodes first in a temporary frame container
   - Combine children using the appropriate Figma boolean method (`figma.union`, `figma.subtract`, `figma.intersect`, or `figma.exclude`) with the parent
   - Remove the temporary frame after combining
@@ -202,29 +202,29 @@
   - Emit informational suggestion (not error) when a PNG image could be replaced by a shape node
   - _Requirements: 10.1, 10.2, 10.3_
 
-- [ ] 10. Add unit and integration tests
-- [ ] 10.1 Add factory function tests
+- [x] 10. Add unit and integration tests
+- [x] 10.1 Add factory function tests
   - Test that each factory returns a node with the correct type and properties
   - Test validation: `pointCount < 3` throws for polygon and star; `children < 2` throws for boolean operations
   - Test default values: LINE default 1px black stroke, STAR default `innerRadius` 0.382
   - Test that section props don't include opacity, strokes, rotation, or auto-layout
   - _Requirements: 1.1, 1.8, 2.1, 3.1, 3.2, 4.1, 4.2, 5.1, 5.2_
 
-- [ ] 10.2 (P) Add compiler tests
+- [x] 10.2 (P) Add compiler tests
   - Test type mapping for all 5 new types
   - Test compilation output includes node-specific properties (pointCount, innerRadius, booleanOperation, strokeCap, sectionContentsHidden)
   - Test that SECTION compilation skips auto-layout
   - Test unknown type warning and skip behavior
   - _Requirements: 1.2, 1.3, 2.2, 2.3, 3.3, 4.3, 5.3, 6.3, 6.6_
 
-- [ ] 10.3 (P) Add renderer tests
+- [x] 10.3 (P) Add renderer tests
   - Test vertex calculation accuracy for polygon (correct count, first vertex at top)
   - Test star vertex calculation (alternating radii, correct count = pointCount * 2)
   - Test that star with `innerRadius` 1.0 matches a polygon with same `pointCount`
   - Test compile-to-render round-trip for each type (no exceptions)
   - _Requirements: 3.4, 3.5, 4.4, 4.5, 5.5_
 
-- [ ] 10.4 (P) Add exporter tests
+- [x] 10.4 (P) Add exporter tests
   - Test that converted plugin node definitions include all new properties
   - Test children are recursively converted for SECTION and BOOLEAN_OPERATION
   - _Requirements: 1.6, 2.6, 3.7, 4.6, 5.7_

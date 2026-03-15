@@ -81,6 +81,13 @@ function measureNode(
     return size;
   }
 
+  // LINE: leaf node with height always 0
+  if (node.type === 'LINE') {
+    const size = { width: node.size?.x ?? 0, height: 0 };
+    sizes.set(node, size);
+    return size;
+  }
+
   // Leaf node: shapes with explicit size
   if (!node.children?.length) {
     const size = {
@@ -94,6 +101,29 @@ function measureNode(
   // Recurse children first
   for (const child of node.children) {
     measureNode(child, sizes, measurer);
+  }
+
+  // SECTION: absolute-positioned container, no auto-layout
+  if (node.type === 'SECTION') {
+    const size = { width: node.size?.x ?? 0, height: node.size?.y ?? 0 };
+    sizes.set(node, size);
+    return size;
+  }
+
+  // BOOLEAN_OPERATION: compute union bounding box of children (like GROUP)
+  if (node.type === 'BOOLEAN_OPERATION') {
+    let maxWidth = 0;
+    let maxHeight = 0;
+    for (const child of node.children!) {
+      const childSize = sizes.get(child);
+      if (childSize) {
+        if (childSize.width > maxWidth) maxWidth = childSize.width;
+        if (childSize.height > maxHeight) maxHeight = childSize.height;
+      }
+    }
+    const size = { width: node.size?.x ?? maxWidth, height: node.size?.y ?? maxHeight };
+    sizes.set(node, size);
+    return size;
   }
 
   // If this node has explicit FIXED size, use it
