@@ -222,9 +222,15 @@ See `references/` for the full source of each project.
 
 ## Documentation
 
-MAGI consensus-generated documentation (multi-agent analysis with confidence scoring):
+### User Guides
+
+Workflow-oriented guides for developers and designers: **[docs/guides/](docs/guides/README.md)**
+
+Covers: creating components, composing pages, exporting to Figma, syncing design changes, calibrating the pipeline, and dogfooding.
 
 ### Package Documentation
+
+MAGI consensus-generated documentation (multi-agent analysis with confidence scoring):
 
 - [`docs/packages/dsl-core.md`](docs/packages/dsl-core.md) — Node factories, color/fill system, auto-layout, component/variant types
 - [`docs/packages/compiler.md`](docs/packages/compiler.md) — Two-pass layout algorithm, text measurement, GUID assignment
