@@ -13,9 +13,10 @@ The DSL is implemented as a TypeScript monorepo with npm workspaces under `packa
 - `exporter` — Figma plugin-compatible JSON export
 - `capturer` — Playwright-based React screenshot capture
 - `comparator` — Pixel-diff image comparison with similarity scoring
-- `cli` — 12-command CLI (`figma-dsl`) with bin stubs
+- `cli` — 14-command CLI (`figma-dsl`) with bin stubs
 - `plugin` — Figma plugin (esbuild → IIFE) for importing JSON into Figma
 - `validator` — DSL compatibility validation with 10 rules (file structure, styling, AST-based checks)
+- `mcp-server` — MCP (Model Context Protocol) server for real-time Figma sync via stdio + WebSocket bridge
 
 **Reference implementations** (git submodules in `references/`):
 - **figma_design_playground**: React 19 component library → Figma plugin → Figma component
@@ -49,6 +50,8 @@ The DSL is implemented as a TypeScript monorepo with npm workspaces under `packa
 | Design-to-code mapping | @figma/code-connect | Dev Mode integration (reference app) |
 | Testing | vitest | All packages use vitest |
 | Plugin bundling | esbuild | IIFE bundle for Figma sandbox |
+| WebSocket server | ws | MCP server ↔ Figma plugin bridge |
+| MCP protocol | @modelcontextprotocol/sdk | Stdio-based MCP server for Claude Code integration |
 
 ### Reference-only Libraries
 | Purpose | Library | Context |
@@ -96,6 +99,7 @@ pytest                   # Unit tests
 5. **Figma Plugin API (native)** — Direct manipulation of Figma's `figma` global, not wrapped in abstractions
 6. **npm workspaces monorepo** — Each package independently buildable/testable, cross-referenced via workspace dependencies
 7. **Node >= 22** — Required for native TypeScript support and top-level await in bin stubs
+8. **MCP over stdio + WebSocket bridge** — MCP server communicates with Claude Code via stdio and with Figma plugin via WebSocket on localhost:9800; plugin UI relays messages between WebSocket and Figma sandbox
 
 ---
 _Document standards and patterns, not every dependency_
