@@ -79,6 +79,15 @@ export function createSyncServer(options?: SyncServerOptions): SyncServer {
       // Start WebSocket server on localhost only
       wss = new WebSocketServer({ port: wsPort, host: '127.0.0.1' });
 
+      wss.on('error', (err: NodeJS.ErrnoException) => {
+        if (err.code === 'EADDRINUSE') {
+          process.stderr.write(
+            `Error: Port ${wsPort} is already in use. ` +
+            `Set FIGMA_SYNC_PORT environment variable to use a different port.\n`,
+          );
+        }
+      });
+
       wss.on('connection', (socket) => {
         activeSocket = socket;
 
