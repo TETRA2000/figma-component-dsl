@@ -7,8 +7,10 @@ description: >
   web page — even if they don't explicitly say "landing page". Also trigger
   when the user asks to compose Hero, Navbar, Footer, Pricing, FAQ, or other
   page sections together, or wants to build a page from existing components.
-  Covers: "create a landing page", "build a page", "compose sections",
-  "marketing page", "prototype page", "put together a homepage".
+  Also trigger when the user provides a reference website URL to replicate or
+  draw inspiration from. Covers: "create a landing page", "build a page",
+  "compose sections", "marketing page", "prototype page", "put together a
+  homepage", "replicate this site", "clone this page".
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 
@@ -17,6 +19,60 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 Compose multi-section landing pages from registered React components and launch a live preview.
 
 ## Workflow
+
+### Step 0: Reference Website Analysis (if URL provided)
+
+If the user provides a reference website URL (e.g., "replicate https://example.com" or "make a page like this site"), use Playwright MCP tools to capture the site's design before proceeding. This gives you accurate structure, content, and visual details instead of guessing.
+
+#### 0a. Navigate and capture
+
+```
+mcp__playwright__browser_navigate  → URL
+mcp__playwright__browser_take_screenshot  → fullPage: true (JPEG for overview)
+mcp__playwright__browser_snapshot  → accessibility tree for structure/content
+```
+
+#### 0b. Extract design tokens
+
+Use `mcp__playwright__browser_evaluate` to extract computed styles:
+
+```js
+() => {
+  const body = document.body;
+  const bcs = getComputedStyle(body);
+  const styles = {
+    body: { bg: bcs.backgroundColor, color: bcs.color, fontFamily: bcs.fontFamily },
+  };
+  // Sample headings
+  const h1 = document.querySelector('h1');
+  if (h1) { const cs = getComputedStyle(h1); styles.h1 = { fontSize: cs.fontSize, fontWeight: cs.fontWeight, color: cs.color, fontFamily: cs.fontFamily }; }
+  const h2 = document.querySelector('h2');
+  if (h2) { const cs = getComputedStyle(h2); styles.h2 = { fontSize: cs.fontSize, fontWeight: cs.fontWeight, color: cs.color }; }
+  // Sample links/buttons for accent colors
+  const links = [...document.querySelectorAll('a, button')].slice(0, 10);
+  styles.accents = links.map(el => {
+    const cs = getComputedStyle(el);
+    return { bg: cs.backgroundColor, color: cs.color, text: el.textContent?.trim().slice(0, 30) };
+  }).filter(s => s.bg !== 'rgba(0, 0, 0, 0)');
+  // Footer
+  const footer = document.querySelector('footer');
+  if (footer) { const cs = getComputedStyle(footer); styles.footer = { bg: cs.backgroundColor, color: cs.color }; }
+  return styles;
+}
+```
+
+#### 0c. Use findings to guide page creation
+
+From the screenshot, snapshot, and extracted styles, determine:
+- **Color scheme** — background colors, text colors, accent/brand colors
+- **Typography** — font families, heading sizes, weights
+- **Section structure** — which sections exist, their order and layout
+- **Content** — all text, labels, navigation items
+- **Visual style** — corporate/playful, light/dark, minimal/rich
+
+If the reference site's style differs significantly from the existing design system components (e.g., light corporate vs dark gradient theme), build custom styled sections with inline styles rather than forcing the existing components to match.
+
+Then proceed to Step 1 as usual, using the captured data to inform every decision.
 
 ### Step 1: Load Component Registry
 

@@ -9,9 +9,11 @@ description: >
   validates DSL compatibility and iterates until the component passes all
   checks. Also trigger when the user asks to scaffold, design, or prototype
   a component, even if they just describe what it should look like without
-  using the word "component". Covers: "create a component", "new component",
-  "build a button", "design a card", "scaffold component", "make a widget",
-  "I need a dropdown", "add a tooltip component".
+  using the word "component". Also trigger when the user provides a reference
+  website URL and wants to extract or replicate a specific component from it.
+  Covers: "create a component", "new component", "build a button", "design a
+  card", "scaffold component", "make a widget", "I need a dropdown", "add a
+  tooltip component", "make a component like this one on [URL]".
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 
@@ -20,6 +22,54 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 Generate React components with CSS Modules and Code Connect bindings, validate DSL compatibility, and preview in dual mode (React dev server + DSL-rendered PNG).
 
 ## Workflow
+
+### Step 0: Reference Website Analysis (if URL provided)
+
+If the user provides a reference website URL (e.g., "build a card like the one on https://example.com" or "replicate this component from [URL]"), use Playwright MCP tools to capture the component's design before coding.
+
+#### 0a. Navigate and capture
+
+```
+mcp__playwright__browser_navigate  → URL
+mcp__playwright__browser_snapshot  → accessibility tree for structure/content
+mcp__playwright__browser_take_screenshot  → full page or specific element screenshot
+```
+
+If the user points to a specific component, use the element ref from the snapshot to take a targeted screenshot:
+```
+mcp__playwright__browser_take_screenshot  → element: "the card component", ref: "e42"
+```
+
+#### 0b. Extract component styles
+
+Use `mcp__playwright__browser_evaluate` to extract computed styles from the target element. Adapt the selector to match the component:
+
+```js
+(el) => {
+  const cs = getComputedStyle(el);
+  return {
+    bg: cs.backgroundColor, color: cs.color,
+    fontFamily: cs.fontFamily, fontSize: cs.fontSize, fontWeight: cs.fontWeight,
+    padding: cs.padding, margin: cs.margin,
+    borderRadius: cs.borderRadius, border: cs.border,
+    boxShadow: cs.boxShadow, gap: cs.gap,
+    display: cs.display, flexDirection: cs.flexDirection,
+    width: cs.width, height: cs.height,
+  };
+}
+```
+
+Run this on the target element ref, or use a CSS selector via page-level evaluate.
+
+#### 0c. Use findings to guide component creation
+
+From the screenshot, snapshot, and extracted styles, determine:
+- **Visual properties** — colors, border radius, shadows, spacing, typography
+- **Layout** — flex direction, gap, alignment, padding
+- **Content structure** — what child elements exist, their hierarchy
+- **Variants** — if multiple variations are visible, capture each
+
+Use these extracted values as the basis for CSS Module styles and component structure. Then proceed to Step 1 as usual.
 
 ### Step 1: Load References
 
