@@ -106,6 +106,16 @@ graph TB
 - New components rationale: Registry (enables cross-session reuse), Deduplicator (automatic page-level optimization), CodeConnectGenerator (new output format)
 - Steering compliance: TypeScript strict mode, no `any`, vitest testing, single-responsibility modules
 
+#### MCP Server / Real-Time Sync Integration
+
+The codebase now includes `@figma-dsl/mcp-server` — a stdio MCP server with a WebSocket bridge to the Figma plugin (localhost:9800). The plugin receives `push-components` messages via `handleWsMessage()` and creates nodes using the same `createNode()` function. This means:
+
+1. **Slot frame creation works automatically** on the WebSocket path — `createNode()` is the shared entry point for both paste-JSON and push-components flows.
+2. **`resolveExisting` and FileScanner** must also be triggered from `handleWsMessage` when processing `push-components`. The current handler iterates `input.components` and calls `createNode()` but does not check `input.resolveExisting`. Implementation must add this check.
+3. **MCP `MappingRegistry`** (maps component names → Figma node IDs, persisted to JSON) overlaps with the design's `ComponentRegistry`. During implementation, the exporter's `ComponentRegistry` should be able to load from the MCP server's mapping file as an alternative to `--registry`, enabling seamless reuse between CLI and real-time sync workflows.
+4. **Change notifications** flow through `categorizeChanges()` which already emits `'structure'` for CREATE/DELETE events. Slot content changes in `[Slot]` frames will be captured under this category. Implementation should add a `'slot-structure'` category for slot-specific change filtering via the MCP `get-pending-changes` tool.
+5. **Sync message protocol** (`sync-messages.ts`) uses discriminated unions and is extensible. No new message types are required — `push-components` already accepts full PluginInput, and slot/registry fields flow through the existing schema.
+
 ### Technology Stack
 
 | Layer | Choice / Version | Role in Feature | Notes |
@@ -137,7 +147,7 @@ sequenceDiagram
   Note over Exporter: Match subtrees to registry entries
   Note over Exporter: Emit INSTANCE refs for matches
   Exporter-->>CLI: PluginInput (with instances + slots)
-  Author->>Plugin: Paste JSON into plugin
+  Author->>Plugin: Paste JSON or push via MCP server (push-to-figma)
   Note over Plugin: resolveExisting=true
   Note over Plugin: Scan file for existing components
   Note over Plugin: Build componentMap from file + import
