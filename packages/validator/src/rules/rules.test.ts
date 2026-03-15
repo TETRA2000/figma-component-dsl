@@ -423,6 +423,50 @@ describe('dsl-compatible-layout rule', () => {
     cleanFixtures();
   });
 
+  it('passes when TSX contains inline SVG elements (polygon/star DSL mapping)', async () => {
+    const dir = setupFixture('SvgComp', {
+      'SvgComp.tsx': `import styles from './SvgComp.module.css';\nexport function SvgComp() { return <svg viewBox="0 0 100 100"><polygon points="50,0 100,100 0,100" /></svg>; }`,
+      'SvgComp.module.css': '.root { width: 100px; }',
+    });
+
+    const result = await validateComponent(dir, { rules: ['dsl-compatible-layout'] });
+    expect(result.warnings).toHaveLength(0);
+    cleanFixtures();
+  });
+
+  it('passes when TSX contains <line> SVG element', async () => {
+    const dir = setupFixture('LineComp', {
+      'LineComp.tsx': `import styles from './LineComp.module.css';\nexport function LineComp() { return <svg><line x1="0" y1="0" x2="100" y2="0" /></svg>; }`,
+      'LineComp.module.css': '.root { width: 100px; }',
+    });
+
+    const result = await validateComponent(dir, { rules: ['dsl-compatible-layout'] });
+    expect(result.warnings).toHaveLength(0);
+    cleanFixtures();
+  });
+
+  it('passes when TSX contains <clipPath> SVG element (boolean operation mapping)', async () => {
+    const dir = setupFixture('ClipComp', {
+      'ClipComp.tsx': `import styles from './ClipComp.module.css';\nexport function ClipComp() { return <svg><clipPath id="c"><rect /></clipPath></svg>; }`,
+      'ClipComp.module.css': '.root { width: 100px; }',
+    });
+
+    const result = await validateComponent(dir, { rules: ['dsl-compatible-layout'] });
+    expect(result.warnings).toHaveLength(0);
+    cleanFixtures();
+  });
+
+  it('passes when CSS contains border-bottom (LINE mapping)', async () => {
+    const dir = setupFixture('BorderComp', {
+      'BorderComp.tsx': `import styles from './BorderComp.module.css';\nexport function BorderComp() { return <div className={styles.root} />; }`,
+      'BorderComp.module.css': '.root { border-bottom: 1px solid #000; }',
+    });
+
+    const result = await validateComponent(dir, { rules: ['dsl-compatible-layout'] });
+    expect(result.warnings).toHaveLength(0);
+    cleanFixtures();
+  });
+
   it('warns when CSS does not use flex or grid', async () => {
     const dir = setupFixture('NoLayout', {
       'NoLayout.tsx': `import styles from './NoLayout.module.css';\nexport function NoLayout() { return <div className={styles.root} />; }`,

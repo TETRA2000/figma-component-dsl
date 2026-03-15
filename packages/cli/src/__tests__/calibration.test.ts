@@ -305,6 +305,261 @@ describe('CalibrationReporter', () => {
 });
 
 // =========================================================================
+// Task 11.2: New node type calibration categories
+// =========================================================================
+describe('TestSuiteGenerator — new node type categories', () => {
+  it('generates line-shapes category', () => {
+    const outputDir = join(TEST_DIR, 'suite-lines');
+    const result = generateTestSuite({ outputDir, properties: ['line-shapes'] });
+
+    expect(result.categories).toEqual(['line-shapes']);
+    expect(result.filesGenerated).toBeGreaterThan(0);
+    for (const filePath of result.filePaths) {
+      const content = readFileSync(filePath, 'utf-8');
+      expect(content).toContain('export default');
+      expect(content).toContain('@figma-dsl/core');
+    }
+  });
+
+  it('generates polygon-star-shapes category', () => {
+    const outputDir = join(TEST_DIR, 'suite-poly');
+    const result = generateTestSuite({ outputDir, properties: ['polygon-star-shapes'] });
+
+    expect(result.categories).toEqual(['polygon-star-shapes']);
+    expect(result.filesGenerated).toBeGreaterThan(0);
+    for (const filePath of result.filePaths) {
+      const content = readFileSync(filePath, 'utf-8');
+      expect(content).toContain('export default');
+      expect(content).toContain('@figma-dsl/core');
+    }
+  });
+
+  it('generates boolean-operations category', () => {
+    const outputDir = join(TEST_DIR, 'suite-bool');
+    const result = generateTestSuite({ outputDir, properties: ['boolean-operations'] });
+
+    expect(result.categories).toEqual(['boolean-operations']);
+    expect(result.filesGenerated).toBeGreaterThan(0);
+    for (const filePath of result.filePaths) {
+      const content = readFileSync(filePath, 'utf-8');
+      expect(content).toContain('export default');
+      expect(content).toContain('@figma-dsl/core');
+    }
+  });
+
+  it('generates section-layout category', () => {
+    const outputDir = join(TEST_DIR, 'suite-sect');
+    const result = generateTestSuite({ outputDir, properties: ['section-layout'] });
+
+    expect(result.categories).toEqual(['section-layout']);
+    expect(result.filesGenerated).toBeGreaterThan(0);
+    for (const filePath of result.filePaths) {
+      const content = readFileSync(filePath, 'utf-8');
+      expect(content).toContain('export default');
+      expect(content).toContain('@figma-dsl/core');
+    }
+  });
+
+  it('includes new categories in ALL_CATEGORIES', () => {
+    expect(ALL_CATEGORIES).toContain('line-shapes');
+    expect(ALL_CATEGORIES).toContain('polygon-star-shapes');
+    expect(ALL_CATEGORIES).toContain('boolean-operations');
+    expect(ALL_CATEGORIES).toContain('section-layout');
+  });
+});
+
+// =========================================================================
+// Task 11.3: Round-trip fidelity test
+// =========================================================================
+describe('Round-trip fidelity — new node types', () => {
+  it('round-trips LINE properties through compile→export→serialize', async () => {
+    const { compile } = await import('@figma-dsl/compiler');
+    const { generatePluginInput } = await import('../../../exporter/src/exporter.js');
+    const { serializeNode } = await import('../../../plugin/src/serializer.js');
+    const { line } = await import('@figma-dsl/core');
+
+    const node = line('TestLine', {
+      size: { x: 200 },
+      strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 2, strokeCap: 'ROUND' }],
+      rotation: 45,
+    });
+
+    const compiled = compile(node);
+    const exported = generatePluginInput(compiled);
+    const comp = exported.components[0]!;
+
+    // Simulate Figma node from exported data
+    const mockFigmaNode = {
+      type: comp.type,
+      name: comp.name,
+      visible: comp.visible,
+      width: comp.size.x,
+      height: comp.size.y,
+      opacity: comp.opacity,
+      strokeCap: comp.strokeCap,
+      rotation: comp.rotation,
+      strokes: comp.strokes?.map(s => ({
+        type: 'SOLID' as const,
+        color: { r: s.color.r, g: s.color.g, b: s.color.b },
+        opacity: s.color.a,
+        visible: true,
+      })),
+      strokeWeight: comp.strokes?.[0]?.weight,
+      children: [],
+    };
+
+    const serialized = serializeNode(mockFigmaNode);
+    expect(serialized.type).toBe('LINE');
+    expect(serialized.strokeCap).toBe('ROUND');
+    expect((serialized as any).rotation).toBe(45);
+  });
+
+  it('round-trips POLYGON properties through compile→export→serialize', async () => {
+    const { compile } = await import('@figma-dsl/compiler');
+    const { generatePluginInput } = await import('../../../exporter/src/exporter.js');
+    const { serializeNode } = await import('../../../plugin/src/serializer.js');
+    const { polygon } = await import('@figma-dsl/core');
+    const { solid } = await import('@figma-dsl/core');
+
+    const node = polygon('Hex', { pointCount: 6, size: { x: 100, y: 100 }, fills: [solid('#ff0000')] });
+    const compiled = compile(node);
+    const exported = generatePluginInput(compiled);
+    const comp = exported.components[0]!;
+
+    const mockFigmaNode = {
+      type: comp.type,
+      name: comp.name,
+      visible: comp.visible,
+      width: comp.size.x,
+      height: comp.size.y,
+      opacity: comp.opacity,
+      pointCount: (comp as any).pointCount,
+      fills: comp.fills?.map(f => ({
+        type: f.type,
+        color: f.color ? { r: f.color.r, g: f.color.g, b: f.color.b } : undefined,
+        opacity: f.color?.a ?? 1,
+        visible: true,
+      })),
+      children: [],
+    };
+
+    const serialized = serializeNode(mockFigmaNode);
+    expect(serialized.type).toBe('POLYGON');
+    expect((serialized as any).pointCount).toBe(6);
+  });
+
+  it('round-trips STAR properties through compile→export→serialize', async () => {
+    const { compile } = await import('@figma-dsl/compiler');
+    const { generatePluginInput } = await import('../../../exporter/src/exporter.js');
+    const { serializeNode } = await import('../../../plugin/src/serializer.js');
+    const { star } = await import('@figma-dsl/core');
+
+    const node = star('Star5', { pointCount: 5, innerRadius: 0.5, size: { x: 100, y: 100 } });
+    const compiled = compile(node);
+    const exported = generatePluginInput(compiled);
+    const comp = exported.components[0]!;
+
+    const mockFigmaNode = {
+      type: comp.type,
+      name: comp.name,
+      visible: comp.visible,
+      width: comp.size.x,
+      height: comp.size.y,
+      opacity: comp.opacity,
+      pointCount: (comp as any).pointCount,
+      innerRadius: (comp as any).innerRadius,
+      children: [],
+    };
+
+    const serialized = serializeNode(mockFigmaNode);
+    expect(serialized.type).toBe('STAR');
+    expect((serialized as any).pointCount).toBe(5);
+    expect((serialized as any).innerRadius).toBe(0.5);
+  });
+
+  it('round-trips BOOLEAN_OPERATION through compile→export→serialize', async () => {
+    const { compile } = await import('@figma-dsl/compiler');
+    const { generatePluginInput } = await import('../../../exporter/src/exporter.js');
+    const { serializeNode } = await import('../../../plugin/src/serializer.js');
+    const { subtract, rectangle, ellipse } = await import('@figma-dsl/core');
+
+    const node = subtract('Cutout', {
+      children: [
+        rectangle('R', { size: { x: 50, y: 50 } }),
+        ellipse('E', { size: { x: 30, y: 30 } }),
+      ],
+    });
+    const compiled = compile(node);
+    const exported = generatePluginInput(compiled);
+    const comp = exported.components[0]!;
+
+    const mockFigmaNode = {
+      type: comp.type,
+      name: comp.name,
+      visible: comp.visible,
+      width: comp.size.x,
+      height: comp.size.y,
+      opacity: comp.opacity,
+      booleanOperation: (comp as any).booleanOperation,
+      children: comp.children.map(c => ({
+        type: c.type,
+        name: c.name,
+        visible: c.visible,
+        width: c.size.x,
+        height: c.size.y,
+        opacity: c.opacity,
+        children: [],
+      })),
+    };
+
+    const serialized = serializeNode(mockFigmaNode);
+    expect(serialized.type).toBe('BOOLEAN_OPERATION');
+    expect((serialized as any).booleanOperation).toBe('SUBTRACT');
+    expect(serialized.children).toHaveLength(2);
+  });
+
+  it('round-trips SECTION through compile→export→serialize', async () => {
+    const { compile } = await import('@figma-dsl/compiler');
+    const { generatePluginInput } = await import('../../../exporter/src/exporter.js');
+    const { serializeNode } = await import('../../../plugin/src/serializer.js');
+    const { section, rectangle } = await import('@figma-dsl/core');
+
+    const node = section('S', {
+      size: { x: 200, y: 200 },
+      contentsHidden: true,
+      children: [rectangle('R', { size: { x: 50, y: 50 } })],
+    });
+    const compiled = compile(node);
+    const exported = generatePluginInput(compiled);
+    const comp = exported.components[0]!;
+
+    const mockFigmaNode = {
+      type: comp.type,
+      name: comp.name,
+      visible: comp.visible,
+      width: comp.size.x,
+      height: comp.size.y,
+      opacity: comp.opacity,
+      sectionContentsHidden: (comp as any).sectionContentsHidden,
+      children: comp.children.map(c => ({
+        type: c.type,
+        name: c.name,
+        visible: c.visible,
+        width: c.size.x,
+        height: c.size.y,
+        opacity: c.opacity,
+        children: [],
+      })),
+    };
+
+    const serialized = serializeNode(mockFigmaNode);
+    expect(serialized.type).toBe('SECTION');
+    expect((serialized as any).sectionContentsHidden).toBe(true);
+    expect(serialized.children).toHaveLength(1);
+  });
+});
+
+// =========================================================================
 // Task 6.1: CLI command wiring
 // =========================================================================
 describe('CLI — new commands', () => {

@@ -32,6 +32,30 @@ The user provides:
 | Max iterations | 3 | Maximum correction rounds |
 | Scale | 1x | PNG export scale |
 
+### Per-Node-Type Similarity Thresholds
+
+When the component being verified contains specific node types, adjust the similarity threshold accordingly:
+
+| Node Type | Threshold | Rationale |
+|---|---|---|
+| FRAME, RECTANGLE, TEXT | 95% (default) | Precise CSS mapping, high fidelity expected |
+| LINE | 93% | Stroke rendering differences between CSS borders and canvas lines |
+| POLYGON | 90% | SVG vertex rendering may differ slightly from canvas rendering |
+| STAR | 90% | Inner radius calculation and anti-aliasing produce minor differences |
+| BOOLEAN_OPERATION | 85% | Compositing artifacts, anti-aliasing at intersection edges, and SVG clipPath approximation |
+| SECTION | N/A | Sections are skipped in React — no visual comparison needed |
+| IMAGE | 95% | Direct image embedding, high fidelity expected |
+
+**Threshold selection rule**: When a component contains multiple node types, use the **lowest threshold** among all node types present. For example, a component with FRAME + BOOLEAN_OPERATION children should use 85%.
+
+### Node Type Identification in Diff Analysis
+
+When analyzing diff images to identify visual differences:
+- **LINE differences**: Look for border/stroke weight or color mismatches along straight edges
+- **POLYGON/STAR differences**: Look for vertex positioning errors, especially at sharp corners where anti-aliasing varies
+- **BOOLEAN_OPERATION differences**: Look for edge artifacts at the intersection of overlapping shapes, especially where compositing operations produce semi-transparent edges
+- **SVG vs Canvas rendering**: SVG elements in React may render with different sub-pixel positioning than canvas-rendered reference images. Small (< 1px) shifts are acceptable.
+
 ## Verification Flow
 
 ### Step 1: Render Reference Image

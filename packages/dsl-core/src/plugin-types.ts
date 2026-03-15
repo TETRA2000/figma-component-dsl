@@ -68,6 +68,18 @@ export interface PluginNodeDef {
   // Instance
   readonly componentId?: string;
   readonly overriddenProperties?: Record<string, string | boolean>;
+
+  // Shape-specific (LINE, POLYGON, STAR)
+  readonly pointCount?: number;
+  readonly innerRadius?: number;
+  readonly rotation?: number;
+  readonly strokeCap?: string;
+
+  // Boolean operation
+  readonly booleanOperation?: string;
+
+  // Section
+  readonly sectionContentsHidden?: boolean;
 }
 
 export interface PluginInput {

@@ -151,35 +151,35 @@
   - Apply fills, strokes, and opacity to the resulting boolean operation node
   - _Requirements: 5.8_
 
-- [ ] 7. Extend plugin serializer for bidirectional sync
-- [ ] 7.1 Serialize LINE nodes in the serializer
+- [x] 7. Extend plugin serializer for bidirectional sync
+- [x] 7.1 Serialize LINE nodes in the serializer
   - Extract width (length), strokes, stroke cap, and rotation from Figma LINE nodes into the plugin node definition format
   - _Requirements: 7.1_
 
-- [ ] 7.2 (P) Serialize POLYGON nodes in the serializer
+- [x] 7.2 (P) Serialize POLYGON nodes in the serializer
   - Extract `pointCount`, fills, strokes, and corner radius from Figma POLYGON nodes
   - _Requirements: 7.2_
 
-- [ ] 7.3 (P) Serialize STAR nodes in the serializer
+- [x] 7.3 (P) Serialize STAR nodes in the serializer
   - Extract `pointCount`, `innerRadius`, fills, and strokes from Figma STAR nodes
   - _Requirements: 7.3_
 
-- [ ] 7.4 (P) Serialize BOOLEAN_OPERATION nodes in the serializer
+- [x] 7.4 (P) Serialize BOOLEAN_OPERATION nodes in the serializer
   - Extract `booleanOperation`, recursively serialize child nodes, and extract shape properties
   - _Requirements: 7.4_
 
-- [ ] 7.5 (P) Serialize SECTION nodes in the serializer
+- [x] 7.5 (P) Serialize SECTION nodes in the serializer
   - Extract fills and `sectionContentsHidden`, recursively serialize children
   - _Requirements: 7.5_
 
-- [ ] 7.6 Verify changeset property paths support new node type properties
+- [x] 7.6 Verify changeset property paths support new node type properties
   - Confirm that `propertyPath` strings for `pointCount`, `innerRadius`, `booleanOperation`, `strokeCap`, `contentsHidden`, and `rotation` are valid in the existing changeset schema
   - Verify structural change tracking (add/remove) captures full property snapshots for new node types
   - No schema changes needed — existing string-based property paths already support arbitrary paths
   - _Requirements: 7.6, 7.7, 7.8_
 
-- [ ] 8. Update apply-changeset and verify-changeset skills
-- [ ] 8.1 Add React/CSS mapping rules for new node types to the apply-changeset skill
+- [x] 8. Update apply-changeset and verify-changeset skills
+- [x] 8.1 Add React/CSS mapping rules for new node types to the apply-changeset skill
   - Document LINE mapping: stroke → CSS `border-bottom` or `<hr>` element (color, weight, width)
   - Document POLYGON mapping: compute vertex coordinates from `pointCount` and size, render as inline SVG `<polygon>`
   - Document STAR mapping: compute star vertex coordinates from `pointCount`, `innerRadius`, and size, render as inline SVG `<polygon>`
@@ -188,15 +188,15 @@
   - Add handling for geometry property changes (`pointCount`, `innerRadius`) that require vertex recalculation
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7_
 
-- [ ] 8.2 Update verify-changeset skill for new node type verification
+- [x] 8.2 Update verify-changeset skill for new node type verification
   - Ensure the renderer produces accurate reference PNGs for new types (already covered by renderer extension)
   - Document that SVG captures from React components must use matching scale and viewport
   - Add per-node-type similarity threshold configuration (lower thresholds for boolean operations)
   - Add guidance for identifying which node type elements contribute to visual differences
   - _Requirements: 9.1, 9.2, 9.3, 9.4_
 
-- [ ] 9. Update validator for new node type patterns
-- [ ] 9.1 Extend layout compatibility rule to recognize SVG and CSS border patterns
+- [x] 9. Update validator for new node type patterns
+- [x] 9.1 Extend layout compatibility rule to recognize SVG and CSS border patterns
   - Accept inline SVG elements (`<svg>`, `<polygon>`, `<line>`, `<clipPath>`) as valid DSL-compatible patterns
   - Accept CSS `border-bottom` patterns as valid LINE representations
   - Emit informational suggestion (not error) when a PNG image could be replaced by a shape node
@@ -229,8 +229,8 @@
   - Test children are recursively converted for SECTION and BOOLEAN_OPERATION
   - _Requirements: 1.6, 2.6, 3.7, 4.6, 5.7_
 
-- [ ] 11. Add calibration examples and round-trip tests
-- [ ] 11.1 (P) Create example DSL files for each new node type
+- [x] 11. Add calibration examples and round-trip tests
+- [x] 11.1 (P) Create example DSL files for each new node type
   - Add a divider line example (horizontal line with stroke)
   - Add a hexagonal badge example (6-sided polygon with fills and corner radius)
   - Add a 5-point star example (star with default inner radius)
@@ -238,12 +238,12 @@
   - Add a section grouping example (section containing multiple components)
   - _Requirements: 11.3_
 
-- [ ] 11.2 Add calibration categories for new node types
+- [x] 11.2 Add calibration categories for new node types
   - Register `line-shapes`, `polygon-star-shapes`, `boolean-operations`, and `section-layout` as calibration categories
   - Configure lower similarity thresholds for boolean operations (anti-aliasing artifacts)
   - _Requirements: 11.1, 11.2, 11.4_
 
-- [ ] 11.3 Add round-trip fidelity test
+- [x] 11.3 Add round-trip fidelity test
   - Compile a DSL file, export to Figma JSON, serialize back via the plugin serializer, and compare the serialized output against the original node tree
   - Verify new node-specific properties survive the round-trip
   - _Requirements: 11.5_

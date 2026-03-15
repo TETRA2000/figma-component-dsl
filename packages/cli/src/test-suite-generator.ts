@@ -13,7 +13,11 @@ export type PropertyCategory =
   | 'opacity'
   | 'clip-content'
   | 'combined'
-  | 'hamburger-theme';
+  | 'hamburger-theme'
+  | 'line-shapes'
+  | 'polygon-star-shapes'
+  | 'boolean-operations'
+  | 'section-layout';
 
 export const ALL_CATEGORIES: PropertyCategory[] = [
   'corner-radius',
@@ -28,6 +32,10 @@ export const ALL_CATEGORIES: PropertyCategory[] = [
   'clip-content',
   'combined',
   'hamburger-theme',
+  'line-shapes',
+  'polygon-star-shapes',
+  'boolean-operations',
+  'section-layout',
 ];
 
 export interface GenerateTestSuiteOptions {
@@ -1046,6 +1054,196 @@ export default frame('BurgerValueSection', {
   ];
 }
 
+function shapeImports(): string {
+  return `import { line, polygon, star, section, rectangle, ellipse, subtract, union, intersect, exclude, frame } from '@figma-dsl/core';
+import { solid } from '@figma-dsl/core';
+`;
+}
+
+function lineShapesVariants(): TestVariant[] {
+  return [
+    {
+      name: 'line-basic',
+      code: `${shapeImports()}
+export default line('line-basic', {
+  size: { x: 200 },
+  strokes: [{ color: { r: 0, g: 0, b: 0, a: 1 }, weight: 1 }],
+});
+`,
+    },
+    {
+      name: 'line-thick-round',
+      code: `${shapeImports()}
+export default line('line-thick-round', {
+  size: { x: 150 },
+  strokes: [{ color: { r: 1, g: 0, b: 0, a: 1 }, weight: 4, strokeCap: 'ROUND' }],
+});
+`,
+    },
+    {
+      name: 'line-rotated',
+      code: `${shapeImports()}
+export default line('line-rotated', {
+  size: { x: 100 },
+  strokes: [{ color: { r: 0, g: 0, b: 1, a: 1 }, weight: 2 }],
+  rotation: 45,
+});
+`,
+    },
+  ];
+}
+
+function polygonStarShapesVariants(): TestVariant[] {
+  return [
+    {
+      name: 'polygon-triangle',
+      code: `${shapeImports()}
+export default polygon('polygon-triangle', {
+  pointCount: 3,
+  size: { x: 100, y: 100 },
+  fills: [solid('#E74C3C')],
+});
+`,
+    },
+    {
+      name: 'polygon-hexagon',
+      code: `${shapeImports()}
+export default polygon('polygon-hexagon', {
+  pointCount: 6,
+  size: { x: 100, y: 100 },
+  fills: [solid('#3498DB')],
+  cornerRadius: 4,
+});
+`,
+    },
+    {
+      name: 'star-five-point',
+      code: `${shapeImports()}
+export default star('star-five-point', {
+  pointCount: 5,
+  size: { x: 100, y: 100 },
+  fills: [solid('#F1C40F')],
+});
+`,
+    },
+    {
+      name: 'star-custom-inner-radius',
+      code: `${shapeImports()}
+export default star('star-custom-inner-radius', {
+  pointCount: 5,
+  innerRadius: 0.2,
+  size: { x: 100, y: 100 },
+  fills: [solid('#9B59B6')],
+});
+`,
+    },
+    {
+      name: 'star-as-polygon',
+      code: `${shapeImports()}
+export default star('star-as-polygon', {
+  pointCount: 6,
+  innerRadius: 1.0,
+  size: { x: 100, y: 100 },
+  fills: [solid('#2ECC71')],
+});
+`,
+    },
+  ];
+}
+
+function booleanOperationsVariants(): TestVariant[] {
+  return [
+    {
+      name: 'boolean-subtract',
+      code: `${shapeImports()}
+export default subtract('boolean-subtract', {
+  children: [
+    rectangle('Base', { size: { x: 80, y: 80 }, fills: [solid('#3498DB')] }),
+    ellipse('Hole', { size: { x: 40, y: 40 } }),
+  ],
+});
+`,
+    },
+    {
+      name: 'boolean-union',
+      code: `${shapeImports()}
+export default union('boolean-union', {
+  children: [
+    rectangle('Left', { size: { x: 60, y: 60 }, fills: [solid('#E74C3C')] }),
+    rectangle('Right', { size: { x: 60, y: 60 } }),
+  ],
+});
+`,
+    },
+    {
+      name: 'boolean-intersect',
+      code: `${shapeImports()}
+export default intersect('boolean-intersect', {
+  children: [
+    ellipse('A', { size: { x: 80, y: 80 }, fills: [solid('#2ECC71')] }),
+    ellipse('B', { size: { x: 80, y: 80 } }),
+  ],
+});
+`,
+    },
+    {
+      name: 'boolean-exclude',
+      code: `${shapeImports()}
+export default exclude('boolean-exclude', {
+  children: [
+    rectangle('X', { size: { x: 60, y: 60 }, fills: [solid('#F39C12')] }),
+    rectangle('Y', { size: { x: 60, y: 60 } }),
+  ],
+});
+`,
+    },
+  ];
+}
+
+function sectionLayoutVariants(): TestVariant[] {
+  return [
+    {
+      name: 'section-basic',
+      code: `${shapeImports()}
+export default section('section-basic', {
+  size: { x: 300, y: 200 },
+  fills: [solid('#ECF0F1')],
+  children: [
+    rectangle('Card', { size: { x: 100, y: 80 }, fills: [solid('#FFFFFF')] }),
+  ],
+});
+`,
+    },
+    {
+      name: 'section-hidden-contents',
+      code: `${shapeImports()}
+export default section('section-hidden-contents', {
+  size: { x: 300, y: 200 },
+  fills: [solid('#BDC3C7')],
+  contentsHidden: true,
+  children: [
+    rectangle('Hidden', { size: { x: 100, y: 80 }, fills: [solid('#E74C3C')] }),
+  ],
+});
+`,
+    },
+    {
+      name: 'section-multiple-children',
+      code: `${shapeImports()}
+export default section('section-multiple-children', {
+  size: { x: 400, y: 300 },
+  fills: [solid('#F5F5F5')],
+  children: [
+    rectangle('A', { size: { x: 80, y: 60 }, fills: [solid('#3498DB')] }),
+    rectangle('B', { size: { x: 80, y: 60 }, fills: [solid('#E74C3C')] }),
+    rectangle('C', { size: { x: 80, y: 60 }, fills: [solid('#2ECC71')] }),
+  ],
+});
+`,
+    },
+  ];
+}
+
 const CATEGORY_GENERATORS: Record<PropertyCategory, () => TestVariant[]> = {
   'corner-radius': cornerRadiusVariants,
   'fills-solid': fillsSolidVariants,
@@ -1059,6 +1257,10 @@ const CATEGORY_GENERATORS: Record<PropertyCategory, () => TestVariant[]> = {
   'clip-content': clipContentVariants,
   'combined': combinedVariants,
   'hamburger-theme': hamburgerThemeVariants,
+  'line-shapes': lineShapesVariants,
+  'polygon-star-shapes': polygonStarShapesVariants,
+  'boolean-operations': booleanOperationsVariants,
+  'section-layout': sectionLayoutVariants,
 };
 
 export function generateTestSuite(options: GenerateTestSuiteOptions): GenerateTestSuiteResult {
