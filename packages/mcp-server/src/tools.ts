@@ -32,6 +32,7 @@ export function registerTools(mcpServer: McpServer, deps: ToolDependencies): voi
   // --- push-to-figma ---
   mcpServer.tool(
     'push-to-figma',
+    'Push DSL-compiled PluginInput JSON to Figma. Creates or updates component nodes in the connected Figma file.',
     { pluginInput: z.string().describe('JSON-serialized PluginInput') },
     async ({ pluginInput }: { pluginInput: string }) => {
       if (!connectionManager.getStatus().connected) {
@@ -67,6 +68,7 @@ export function registerTools(mcpServer: McpServer, deps: ToolDependencies): voi
   // --- pull-changeset ---
   mcpServer.tool(
     'pull-changeset',
+    'Pull a ChangesetDocument from Figma showing property diffs since last sync. Returns raw JSON for Claude to interpret.',
     {
       componentNames: z.array(z.string()).optional().describe('Filter by component names'),
     },
@@ -105,6 +107,7 @@ export function registerTools(mcpServer: McpServer, deps: ToolDependencies): voi
   // --- pull-export ---
   mcpServer.tool(
     'pull-export',
+    'Pull a complete PluginInput JSON snapshot of components from Figma. Returns the full DSL export for Claude to interpret.',
     {
       componentNames: z.array(z.string()).optional().describe('Filter by component names'),
       pageName: z.string().optional().describe('Figma page name to export from'),
@@ -133,6 +136,7 @@ export function registerTools(mcpServer: McpServer, deps: ToolDependencies): voi
   // --- get-status ---
   mcpServer.tool(
     'get-status',
+    'Get the current sync connection status: WebSocket state, Figma file key, plugin version, tracked components, and pending changes.',
     {},
     async () => {
       const status = connectionManager.getStatus();
@@ -163,6 +167,7 @@ export function registerTools(mcpServer: McpServer, deps: ToolDependencies): voi
   // --- list-mappings ---
   mcpServer.tool(
     'list-mappings',
+    'List all component mappings between React component names and Figma node IDs with sync status.',
     {},
     async () => {
       const mappings = mappingRegistry.list();
@@ -180,6 +185,7 @@ export function registerTools(mcpServer: McpServer, deps: ToolDependencies): voi
   // --- update-mapping ---
   mcpServer.tool(
     'update-mapping',
+    'Add or update a component mapping between a React component name and a Figma node ID.',
     {
       componentName: z.string().describe('Component name'),
       figmaFileKey: z.string().describe('Figma file key'),
@@ -204,6 +210,7 @@ export function registerTools(mcpServer: McpServer, deps: ToolDependencies): voi
   // --- remove-mapping ---
   mcpServer.tool(
     'remove-mapping',
+    'Remove a component mapping by name. Use when a component is no longer tracked.',
     {
       componentName: z.string().describe('Component name to remove'),
     },
@@ -216,6 +223,7 @@ export function registerTools(mcpServer: McpServer, deps: ToolDependencies): voi
   // --- get-pending-changes ---
   mcpServer.tool(
     'get-pending-changes',
+    'Get and clear pending Figma change notifications. Returns component names, changed property categories, and timestamps.',
     {},
     async () => {
       const changes = pendingQueue.getAndClear();

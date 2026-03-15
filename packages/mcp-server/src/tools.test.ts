@@ -6,10 +6,10 @@ import { PendingQueue } from './pending-queue.js';
 import type { ClientMessage } from '@figma-dsl/core';
 
 function createMockMcpServer() {
-  const tools = new Map<string, { schema: unknown; handler: (...args: unknown[]) => unknown }>();
+  const tools = new Map<string, { description: string; schema: unknown; handler: (...args: unknown[]) => unknown }>();
   return {
-    tool: vi.fn((name: string, schema: unknown, handler: (...args: unknown[]) => unknown) => {
-      tools.set(name, { schema, handler });
+    tool: vi.fn((name: string, description: string, schema: unknown, handler: (...args: unknown[]) => unknown) => {
+      tools.set(name, { description, schema, handler });
     }),
     tools,
   };
