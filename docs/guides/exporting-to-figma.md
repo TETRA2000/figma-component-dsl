@@ -26,14 +26,20 @@ Do you have the Figma MCP server?
 
 Best when you have the Figma MCP server configured. This is the most streamlined path.
 
+**How it works:** The `generate_figma_design` MCP tool captures a **running web page by URL** and converts it into a Figma design. It does not accept JSON data — you need your component rendering in a browser.
+
 **Steps:**
 
-1. **Compile** the component to DSL JSON
-2. **Export** the JSON in Figma plugin format
-3. **Generate** the Figma design via MCP (`generate_figma_design`)
-4. **Connect** the code via MCP (`add_code_connect_map`)
-5. **Update** the `.figma.tsx` file with the real Figma URL (replacing the placeholder)
-6. **Verify** via MCP (`get_code_connect_suggestions`)
+1. **Start the dev server** — run `npm run dev` in `preview/` (port 5173) or use Storybook (`npm run storybook`, port 6006)
+2. **Initiate capture** — call `generate_figma_design` without `outputMode` to get a `captureId` and capture instructions
+3. **Choose output** — call again with `outputMode`:
+   - `"newFile"` + `fileName` — creates a new Figma file
+   - `"existingFile"` + `fileKey` — adds to an existing file
+   - `"clipboard"` — copies the design for pasting
+4. **Poll for completion** — call with `captureId` every 5 seconds until `status === "completed"` (each ID is single-use)
+5. **Connect** the code via MCP (`add_code_connect_map`) with the Figma node ID from the captured design
+6. **Update** the `.figma.tsx` file with the real Figma URL (replacing the placeholder)
+7. **Verify** via MCP (`get_code_connect_map`) to confirm the mapping
 
 The Claude AI skill `/export-to-figma` automates this entire sequence.
 
