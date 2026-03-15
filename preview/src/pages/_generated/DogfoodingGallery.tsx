@@ -1,2 +1,2 @@
-import { JapaneseSaaSLP } from "./JapaneseSaaSLP";
-export function DogfoodingGallery() { return <JapaneseSaaSLP />; }
+import { JapaneseMeditationLP } from "./JapaneseMeditationLP";
+export function DogfoodingGallery() { return <JapaneseMeditationLP />; }
