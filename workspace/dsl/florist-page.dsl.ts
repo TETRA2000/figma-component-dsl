@@ -1,108 +1,94 @@
 /**
- * Florist Shop — Bouquet gallery, occasion categories, and delivery scheduler
- * DSL features: soft pink/green palette, gradient flower images, category pills, price cards
+ * Florist Shop — Bouquet cards, occasion filters, and delivery info
  */
 import { frame, text, rectangle, ellipse, solid, gradient, horizontal, vertical } from '@figma-dsl/core';
 
-function bouquetCard(name: string, price: string, desc: string, grad1: string, grad2: string) {
+function bouquetCard(name: string, price: string, flowers: string, color: string) {
   return frame(`Bouquet: ${name}`, {
-    autoLayout: vertical({ spacing: 0 }),
+    autoLayout: vertical({ spacing: 10, padX: 14, padY: 14 }),
     fills: [solid('#ffffff')],
-    cornerRadius: 14,
+    cornerRadius: 12,
+    strokes: [{ color: { r: 0.94, g: 0.92, b: 0.92, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     layoutSizingHorizontal: 'FILL',
-    strokes: [{ color: { r: 0.95, g: 0.88, b: 0.91, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      rectangle('FlowerImage', { size: { x: 1, y: 140 }, fills: [gradient([{ hex: grad1, position: 0 }, { hex: grad2, position: 1 }], 135)], cornerRadius: { topLeft: 14, topRight: 14, bottomLeft: 0, bottomRight: 0 }, layoutSizingHorizontal: 'FILL' }),
-      frame('BouquetInfo', {
-        autoLayout: vertical({ spacing: 6, padX: 14, padY: 12 }),
-        layoutSizingHorizontal: 'FILL',
-        children: [
-          text(name, { fontSize: 15, fontWeight: 600, color: '#4a1942' }),
-          text(desc, { fontSize: 11, fontWeight: 400, color: '#9d7a91' }),
-          frame('PriceTag', { autoLayout: horizontal({ spacing: 0, padX: 10, padY: 4 }), fills: [solid('#fce7f3')], cornerRadius: 8, children: [
-            text(price, { fontSize: 14, fontWeight: 700, color: '#be185d' }),
-          ] }),
-        ],
-      }),
+      rectangle('BouquetImg', { size: { x: 200, y: 140 }, fills: [gradient([{ hex: color, position: 0 }, { hex: '#fecdd3', position: 1 }], 135)], cornerRadius: 8, layoutSizingHorizontal: 'FILL' }),
+      text(name, { fontSize: 15, fontWeight: 600, color: '#1c1917' }),
+      text(flowers, { fontSize: 11, fontWeight: 400, color: '#78716c' }),
+      frame('PriceRow', { autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN' }), layoutSizingHorizontal: 'FILL', children: [
+        text(price, { fontSize: 18, fontWeight: 700, color: '#e11d48' }),
+        frame('AddBtn', { autoLayout: horizontal({ padX: 12, padY: 4 }), fills: [solid('#e11d48')], cornerRadius: 8, children: [
+          text('Add', { fontSize: 11, fontWeight: 600, color: '#ffffff' }),
+        ] }),
+      ] }),
     ],
   });
 }
 
 function occasionPill(label: string, active: boolean) {
   return frame(`Occ: ${label}`, {
-    autoLayout: horizontal({ spacing: 0, padX: 16, padY: 7 }),
-    fills: [solid(active ? '#be185d' : '#fdf2f8')],
+    autoLayout: horizontal({ padX: 14, padY: 6 }),
+    fills: [solid(active ? '#e11d48' : '#fff1f2')],
     cornerRadius: 9999,
-    strokes: active ? [] : [{ color: { r: 0.95, g: 0.85, b: 0.90, a: 1 }, weight: 1, align: 'INSIDE' as const }],
-    children: [text(label, { fontSize: 12, fontWeight: 600, color: active ? '#ffffff' : '#9d174d' })],
+    children: [text(label, { fontSize: 12, fontWeight: 600, color: active ? '#ffffff' : '#be123c' })],
   });
 }
 
-function deliverySlot(date: string, time: string, available: boolean) {
-  return frame(`Slot: ${date}`, {
-    autoLayout: vertical({ spacing: 4, padX: 16, padY: 12, counterAlign: 'CENTER' }),
-    fills: [solid(available ? '#ecfdf5' : '#fdf2f8')],
-    cornerRadius: 10,
+function deliveryRow(label: string, value: string) {
+  return frame(`Del: ${label}`, {
+    autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN', padX: 12, padY: 8 }),
+    fills: [solid('#fff1f2')],
+    cornerRadius: 6,
     layoutSizingHorizontal: 'FILL',
-    strokes: available ? [{ color: { r: 0.60, g: 0.90, b: 0.72, a: 1 }, weight: 1, align: 'INSIDE' as const }] : [],
     children: [
-      text(date, { fontSize: 13, fontWeight: 600, color: available ? '#059669' : '#9d7a91' }),
-      text(time, { fontSize: 11, fontWeight: 400, color: available ? '#6ee7b7' : '#d4a8c4' }),
+      text(label, { fontSize: 12, fontWeight: 500, color: '#78716c' }),
+      text(value, { fontSize: 12, fontWeight: 600, color: '#1c1917' }),
     ],
   });
 }
 
 export default frame('FloristPage', {
-  size: { x: 1000 },
+  size: { x: 900 },
   autoLayout: vertical({ spacing: 0 }),
-  fills: [solid('#fdf2f8')],
+  fills: [solid('#fff1f2')],
   children: [
     frame('Hero', {
-      autoLayout: vertical({ spacing: 8, padX: 48, padY: 36, counterAlign: 'CENTER' }),
-      fills: [gradient([{ hex: '#9d174d', position: 0 }, { hex: '#be185d', position: 1 }], 135)],
+      autoLayout: vertical({ spacing: 4, padX: 36, padY: 28 }),
+      fills: [gradient([{ hex: '#881337', position: 0 }, { hex: '#e11d48', position: 1 }], 135)],
       layoutSizingHorizontal: 'FILL',
       children: [
-        text('Petal & Bloom', { fontSize: 30, fontWeight: 800, color: '#ffffff', textAlignHorizontal: 'CENTER' }),
-        text('Handcrafted bouquets for every moment', { fontSize: 14, fontWeight: 400, color: '#fbcfe8', textAlignHorizontal: 'CENTER' }),
+        text('Bloom & Petal', { fontSize: 26, fontWeight: 800, color: '#ffffff' }),
+        text('Handcrafted bouquets for every occasion', { fontSize: 13, fontWeight: 400, color: '#fecdd3' }),
       ],
     }),
     frame('Content', {
-      autoLayout: vertical({ spacing: 28, padX: 44, padY: 28 }),
+      autoLayout: vertical({ spacing: 24, padX: 36, padY: 24 }),
       layoutSizingHorizontal: 'FILL',
       children: [
         frame('Occasions', { autoLayout: horizontal({ spacing: 8 }), children: [
-          occasionPill('All', true), occasionPill('Birthday', false), occasionPill('Anniversary', false),
-          occasionPill('Sympathy', false), occasionPill('Thank You', false), occasionPill('Wedding', false),
+          occasionPill('All', false), occasionPill('Birthday', true), occasionPill('Anniversary', false),
+          occasionPill('Sympathy', false), occasionPill('Wedding', false), occasionPill('Just Because', false),
         ] }),
         frame('BouquetGrid', {
-          autoLayout: horizontal({ spacing: 14 }),
+          autoLayout: horizontal({ spacing: 12 }),
           layoutSizingHorizontal: 'FILL',
           children: [
-            bouquetCard('Rose Romance', '$65', 'Red roses, baby breath, eucalyptus', '#be185d', '#ec4899'),
-            bouquetCard('Garden Bliss', '$55', 'Mixed wildflowers, lavender, fern', '#059669', '#34d399'),
-            bouquetCard('Sunset Peony', '$75', 'Peonies, ranunculus, dusty miller', '#f59e0b', '#fbbf24'),
-          ],
-        }),
-        frame('MoreBouquets', {
-          autoLayout: horizontal({ spacing: 14 }),
-          layoutSizingHorizontal: 'FILL',
-          children: [
-            bouquetCard('Pastel Dream', '$60', 'Soft pink tulips, white lilies', '#ec4899', '#f9a8d4'),
-            bouquetCard('Tropical Sun', '$70', 'Birds of paradise, orchids, monstera', '#ea580c', '#f97316'),
-            bouquetCard('Winter White', '$80', 'White roses, hydrangea, silver dollar', '#64748b', '#94a3b8'),
+            bouquetCard('Sunset Romance', '$65', 'Roses, lilies, baby breath', '#e11d48'),
+            bouquetCard('Garden Bliss', '$48', 'Daisies, sunflowers, eucalyptus', '#16a34a'),
+            bouquetCard('Royal Elegance', '$85', 'Orchids, hydrangeas, peonies', '#7c3aed'),
+            bouquetCard('Spring Joy', '$55', 'Tulips, ranunculus, freesia', '#f59e0b'),
           ],
         }),
         frame('Delivery', {
-          autoLayout: vertical({ spacing: 12 }),
+          autoLayout: vertical({ spacing: 8, padX: 18, padY: 18 }),
+          fills: [solid('#ffffff')],
+          cornerRadius: 12,
           layoutSizingHorizontal: 'FILL',
           children: [
-            text('Schedule Delivery', { fontSize: 18, fontWeight: 700, color: '#4a1942' }),
-            frame('SlotGrid', { autoLayout: horizontal({ spacing: 10 }), layoutSizingHorizontal: 'FILL', children: [
-              deliverySlot('Mar 17', '9 AM - 12 PM', true),
-              deliverySlot('Mar 17', '2 PM - 5 PM', false),
-              deliverySlot('Mar 18', '9 AM - 12 PM', true),
-              deliverySlot('Mar 18', '2 PM - 5 PM', true),
-            ] }),
+            text('Delivery Information', { fontSize: 16, fontWeight: 700, color: '#1c1917' }),
+            deliveryRow('Same-day delivery', 'Order by 2 PM'),
+            deliveryRow('Next-day delivery', 'Free for orders $50+'),
+            deliveryRow('Delivery area', 'Within 15 miles'),
+            deliveryRow('Gift message', 'Included with every order'),
           ],
         }),
       ],

@@ -1,93 +1,37 @@
 /**
- * Warehouse Inventory — Stock levels, category filters, item table
- *
- * DSL features stressed: data table, filter pills, stock level bars,
- * clipContent, FILL sizing, SPACE_BETWEEN rows
+ * Warehouse Inventory — Stock table, category badges, status indicators (1200px)
+ * DSL features: wide table layout, status badges, category pills, progress bars, stats row
  */
-import {
-  frame, text, rectangle, ellipse,
-  solid, gradient,
-  horizontal, vertical,
-} from '@figma-dsl/core';
+import { frame, text, rectangle, ellipse, solid, gradient, horizontal, vertical } from '@figma-dsl/core';
 
-function filterPill(label: string, active: boolean, count: string) {
-  return frame(`Filter: ${label}`, {
-    autoLayout: horizontal({ padX: 16, padY: 8, spacing: 8, counterAlign: 'CENTER' }),
-    fills: active ? [solid('#1e293b')] : [solid('#ffffff')],
-    cornerRadius: 9999,
-    strokes: active ? [] : [{ color: { r: 0.88, g: 0.88, b: 0.88, a: 1 }, weight: 1, align: 'INSIDE' as const }],
-    children: [
-      text(label, { fontSize: 13, fontWeight: 600, color: active ? '#ffffff' : '#374151' }),
-      frame(`${label}Count`, {
-        autoLayout: horizontal({ padX: 8, padY: 2 }),
-        fills: [solid(active ? '#ffffff22' : '#f1f5f9')],
-        cornerRadius: 9999,
-        children: [
-          text(count, { fontSize: 11, fontWeight: 600, color: active ? '#e2e8f0' : '#64748b' }),
-        ],
-      }),
-    ],
-  });
-}
-
-function stockBar(pct: number) {
-  const color = pct > 60 ? '#16a34a' : pct > 25 ? '#f59e0b' : '#dc2626';
-  return frame('StockBar', {
-    size: { x: 80, y: 8 },
-    fills: [solid('#f1f5f9')],
-    cornerRadius: 4,
-    clipContent: true,
-    children: [
-      rectangle('StockFill', {
-        size: { x: Math.round(pct * 0.8), y: 8 },
-        fills: [solid(color)],
-        cornerRadius: 4,
-      }),
-    ],
-  });
-}
-
-function tableHeader() {
-  return frame('TableHeader', {
-    autoLayout: horizontal({ spacing: 0, padX: 18, padY: 12, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
-    fills: [solid('#f8fafc')],
-    layoutSizingHorizontal: 'FILL',
-    strokes: [{ color: { r: 0.91, g: 0.91, b: 0.91, a: 1 }, weight: 1, align: 'INSIDE' as const }],
-    children: [
-      text('Item', { fontSize: 12, fontWeight: 700, color: '#64748b', width: 200 }),
-      text('SKU', { fontSize: 12, fontWeight: 700, color: '#64748b', width: 100 }),
-      text('Category', { fontSize: 12, fontWeight: 700, color: '#64748b', width: 100 }),
-      text('Qty', { fontSize: 12, fontWeight: 700, color: '#64748b', width: 60 }),
-      text('Stock', { fontSize: 12, fontWeight: 700, color: '#64748b', width: 100 }),
-      text('Status', { fontSize: 12, fontWeight: 700, color: '#64748b', width: 80 }),
-    ],
-  });
-}
-
-function tableRow(item: string, sku: string, category: string, qty: number, max: number, status: string) {
+function stockRow(sku: string, name: string, category: string, catColor: string, qty: number, max: number, status: string) {
   const pct = Math.round((qty / max) * 100);
+  const barWidth = Math.round((qty / max) * 180);
   const statusColor = status === 'In Stock' ? '#16a34a' : status === 'Low Stock' ? '#f59e0b' : '#dc2626';
-  return frame(`Row: ${item}`, {
-    autoLayout: horizontal({ spacing: 0, padX: 18, padY: 14, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
-    fills: [solid('#ffffff')],
+  return frame(`Item: ${sku}`, {
+    autoLayout: horizontal({ spacing: 0, padX: 16, padY: 12, counterAlign: 'CENTER' }),
     layoutSizingHorizontal: 'FILL',
+    fills: [solid('#ffffff')],
     strokes: [{ color: { r: 0.95, g: 0.95, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      text(item, { fontSize: 14, fontWeight: 500, color: '#1e293b', width: 200 }),
-      text(sku, { fontSize: 13, fontWeight: 400, color: '#64748b', width: 100 }),
-      text(category, { fontSize: 13, fontWeight: 400, color: '#64748b', width: 100 }),
-      text(String(qty), { fontSize: 14, fontWeight: 600, color: '#1e293b', width: 60 }),
-      frame(`${item}StockCol`, {
-        autoLayout: vertical({ spacing: 4 }),
+      text(sku, { fontSize: 12, fontWeight: 500, color: '#6b7280', size: { x: 90 } }),
+      text(name, { fontSize: 13, fontWeight: 600, color: '#111827', size: { x: 220 } }),
+      frame('CatBadge', {
+        autoLayout: horizontal({ spacing: 0, padX: 8, padY: 3 }),
+        fills: [solid(catColor + '1a')], cornerRadius: 6,
         size: { x: 100 },
-        children: [stockBar(pct)],
+        children: [text(category, { fontSize: 11, fontWeight: 600, color: catColor })],
       }),
-      frame(`${item}StatusBadge`, {
-        autoLayout: horizontal({ padX: 10, padY: 4 }),
-        fills: [solid(statusColor + '14')],
-        cornerRadius: 9999,
-        size: { x: 80 },
+      frame('StockBar', {
+        size: { x: 180, y: 6 }, fills: [solid('#f3f4f6')], cornerRadius: 3, clipContent: true,
+        children: [rectangle('Fill', { size: { x: barWidth, y: 6 }, fills: [solid(statusColor)], cornerRadius: 3 })],
+      }),
+      text(`${qty}/${max}`, { fontSize: 12, fontWeight: 500, color: '#374151', size: { x: 80 }, textAlignHorizontal: 'CENTER' }),
+      frame('StatusBadge', {
+        autoLayout: horizontal({ spacing: 4, padX: 8, padY: 3, counterAlign: 'CENTER' }),
+        fills: [solid(statusColor + '1a')], cornerRadius: 9999,
         children: [
+          ellipse('Dot', { size: { x: 6, y: 6 }, fills: [solid(statusColor)] }),
           text(status, { fontSize: 11, fontWeight: 600, color: statusColor }),
         ],
       }),
@@ -95,98 +39,70 @@ function tableRow(item: string, sku: string, category: string, qty: number, max:
   });
 }
 
-function summaryCard(label: string, value: string, color: string) {
-  return frame(`Sum: ${label}`, {
-    autoLayout: vertical({ spacing: 4, padX: 20, padY: 18 }),
-    fills: [solid('#ffffff')],
-    cornerRadius: 12,
-    layoutSizingHorizontal: 'FILL',
-    strokes: [{ color: { r: 0.93, g: 0.93, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+function statCard(label: string, value: string, change: string, up: boolean) {
+  return frame(`Stat: ${label}`, {
+    autoLayout: vertical({ spacing: 4, padX: 18, padY: 14 }),
+    fills: [solid('#ffffff')], cornerRadius: 12, layoutSizingHorizontal: 'FILL',
+    strokes: [{ color: { r: 0.92, g: 0.93, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
       text(label, { fontSize: 12, fontWeight: 500, color: '#6b7280' }),
-      text(value, { fontSize: 26, fontWeight: 800, color }),
+      text(value, { fontSize: 24, fontWeight: 800, color: '#111827' }),
+      text(`${up ? '+' : ''}${change}`, { fontSize: 11, fontWeight: 600, color: up ? '#16a34a' : '#dc2626' }),
     ],
   });
 }
 
+function tableHeader(label: string, width: number) {
+  return text(label, { fontSize: 10, fontWeight: 700, color: '#9ca3af', size: { x: width }, letterSpacing: { value: 8, unit: 'PERCENT' } });
+}
+
 export default frame('WarehousePage', {
-  size: { x: 1100 },
+  size: { x: 1200 },
   autoLayout: vertical({ spacing: 0 }),
-  fills: [solid('#f1f5f9')],
+  fills: [solid('#f8fafc')],
   children: [
-    // Header
     frame('Header', {
-      autoLayout: horizontal({ spacing: 0, padX: 36, padY: 18, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
-      layoutSizingHorizontal: 'FILL',
-      fills: [solid('#ffffff')],
-      strokes: [{ color: { r: 0.91, g: 0.91, b: 0.91, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+      autoLayout: horizontal({ spacing: 0, padX: 32, padY: 16, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
+      layoutSizingHorizontal: 'FILL', fills: [solid('#ffffff')],
+      strokes: [{ color: { r: 0.92, g: 0.93, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
       children: [
-        text('StockVault', { fontSize: 22, fontWeight: 800, color: '#1e293b' }),
-        frame('HeaderActions', {
-          autoLayout: horizontal({ spacing: 12 }),
-          children: [
-            frame('ExportBtn', {
-              autoLayout: horizontal({ padX: 16, padY: 8 }),
-              fills: [solid('#f1f5f9')],
-              cornerRadius: 8,
-              children: [text('Export', { fontSize: 13, fontWeight: 600, color: '#374151' })],
-            }),
-            frame('AddBtn', {
-              autoLayout: horizontal({ padX: 16, padY: 8 }),
-              fills: [solid('#1e293b')],
-              cornerRadius: 8,
-              children: [text('+ Add Item', { fontSize: 13, fontWeight: 600, color: '#ffffff' })],
-            }),
-          ],
+        text('StockHub', { fontSize: 22, fontWeight: 800, color: '#111827' }),
+        frame('Search', {
+          autoLayout: horizontal({ spacing: 0, padX: 16, padY: 8 }),
+          fills: [solid('#f3f4f6')], cornerRadius: 8,
+          children: [text('Search inventory...', { fontSize: 13, fontWeight: 400, color: '#9ca3af' })],
         }),
       ],
     }),
-
-    // Summary Cards
-    frame('Summary', {
-      autoLayout: horizontal({ spacing: 16, padX: 36, padY: 24 }),
-      layoutSizingHorizontal: 'FILL',
+    frame('Stats', {
+      autoLayout: horizontal({ spacing: 14, padX: 32, padY: 16 }), layoutSizingHorizontal: 'FILL',
       children: [
-        summaryCard('Total Items', '2,847', '#1e293b'),
-        summaryCard('In Stock', '2,104', '#16a34a'),
-        summaryCard('Low Stock', '512', '#f59e0b'),
-        summaryCard('Out of Stock', '231', '#dc2626'),
+        statCard('Total SKUs', '1,847', '+32 this week', true),
+        statCard('In Stock', '1,592', '+18', true),
+        statCard('Low Stock', '189', '+24', false),
+        statCard('Out of Stock', '66', '-8', true),
+        statCard('Total Value', '$2.4M', '+3.2%', true),
       ],
     }),
-
-    // Filters
-    frame('Filters', {
-      autoLayout: horizontal({ spacing: 10, padX: 36, padY: 8 }),
-      layoutSizingHorizontal: 'FILL',
+    frame('TableSection', {
+      autoLayout: vertical({ spacing: 0, padX: 32, padY: 8 }), layoutSizingHorizontal: 'FILL',
       children: [
-        filterPill('All Items', true, '2,847'),
-        filterPill('Electronics', false, '843'),
-        filterPill('Furniture', false, '612'),
-        filterPill('Clothing', false, '1,392'),
-      ],
-    }),
-
-    // Table
-    frame('DataTable', {
-      autoLayout: vertical({ spacing: 0, padX: 36, padY: 16 }),
-      layoutSizingHorizontal: 'FILL',
-      children: [
-        frame('TableContainer', {
-          autoLayout: vertical({ spacing: 0 }),
-          fills: [solid('#ffffff')],
-          cornerRadius: 12,
-          layoutSizingHorizontal: 'FILL',
-          clipContent: true,
+        frame('TableHead', {
+          autoLayout: horizontal({ spacing: 0, padX: 16, padY: 10 }),
+          layoutSizingHorizontal: 'FILL', fills: [solid('#f9fafb')], cornerRadius: 8,
           children: [
-            tableHeader(),
-            tableRow('Wireless Keyboard', 'WK-4021', 'Electronics', 342, 500, 'In Stock'),
-            tableRow('Ergonomic Chair', 'EC-1187', 'Furniture', 28, 200, 'Low Stock'),
-            tableRow('Cotton T-Shirt (L)', 'CT-3302', 'Clothing', 0, 400, 'Out of Stock'),
-            tableRow('USB-C Hub', 'UH-7744', 'Electronics', 567, 600, 'In Stock'),
-            tableRow('Standing Desk', 'SD-9910', 'Furniture', 89, 150, 'In Stock'),
-            tableRow('Denim Jacket (M)', 'DJ-2205', 'Clothing', 15, 300, 'Low Stock'),
+            tableHeader('SKU', 90), tableHeader('PRODUCT', 220), tableHeader('CATEGORY', 100),
+            tableHeader('STOCK LEVEL', 180), tableHeader('QTY', 80), tableHeader('STATUS', 120),
           ],
         }),
+        stockRow('WH-001', 'Wireless Bluetooth Headphones', 'Electronics', '#3b82f6', 234, 300, 'In Stock'),
+        stockRow('WH-015', 'Ergonomic Office Chair', 'Furniture', '#8b5cf6', 18, 100, 'Low Stock'),
+        stockRow('WH-042', 'Organic Cotton T-Shirt (M)', 'Apparel', '#ec4899', 456, 500, 'In Stock'),
+        stockRow('WH-078', 'Stainless Steel Water Bottle', 'Kitchen', '#f59e0b', 0, 200, 'Out of Stock'),
+        stockRow('WH-103', 'USB-C Charging Cable (6ft)', 'Electronics', '#3b82f6', 89, 400, 'Low Stock'),
+        stockRow('WH-156', 'Standing Desk Converter', 'Furniture', '#8b5cf6', 67, 80, 'In Stock'),
+        stockRow('WH-201', 'Ceramic Coffee Mug Set', 'Kitchen', '#f59e0b', 312, 350, 'In Stock'),
+        stockRow('WH-245', 'Running Shoes (Size 10)', 'Apparel', '#ec4899', 5, 150, 'Low Stock'),
       ],
     }),
   ],
