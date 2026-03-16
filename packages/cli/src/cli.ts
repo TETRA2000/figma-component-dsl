@@ -5,7 +5,7 @@ import { pathToFileURL } from 'url';
 import { compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
 import type { CompileResult } from '@figma-dsl/compiler';
 import type { DslNode } from '@figma-dsl/core';
-import { renderToFile, initializeRenderer, collectImageSources, preloadImages } from '@figma-dsl/renderer';
+import { renderToFile, initializeRenderer, collectImageSources, preloadImages, renderCanvasNodes } from '@figma-dsl/renderer';
 import { compareFiles } from '@figma-dsl/comparator';
 import { captureUrl } from '@figma-dsl/capturer';
 import { generatePluginInput, ComponentRegistry, deduplicateNodes } from '@figma-dsl/exporter';
@@ -117,6 +117,7 @@ async function cmdRender(args: string[]): Promise<number> {
       background: { type: 'string', short: 'b' },
       'debug-layout': { type: 'boolean' },
       'asset-dir': { type: 'string' },
+      'no-canvas': { type: 'boolean' },
       help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
@@ -136,6 +137,7 @@ Options:
   -b, --background     Background color
   --debug-layout       Overlay layout debug visualization
   --asset-dir <path>   Base directory for resolving image paths (default: input file's directory)
+  --no-canvas          Skip per-canvas PNG extraction
   -h, --help           Show this help message`);
     return 0;
   }
@@ -169,6 +171,20 @@ Options:
 
     const result = renderToFile(compiled.root, resolve(values.output), { scale, debugLayout, imageCache });
     console.log(`Rendered: ${values.output} (${result.width}×${result.height})`);
+
+    // Per-canvas PNG extraction
+    if (!values['no-canvas']) {
+      const canvasResults = renderCanvasNodes(compiled.root, { scale, imageCache });
+      if (canvasResults.size > 0) {
+        const outputDir = dirname(resolve(values.output));
+        for (const [canvasName, canvasResult] of canvasResults) {
+          const canvasPath = join(outputDir, `${canvasName}.png`);
+          writeFileSync(canvasPath, canvasResult.pngBuffer);
+          console.log(`Canvas: ${canvasPath} (${canvasResult.width}×${canvasResult.height})`);
+        }
+      }
+    }
+
     return 0;
   } catch (err) {
     console.error(`Render error: ${err instanceof Error ? err.message : String(err)}`);

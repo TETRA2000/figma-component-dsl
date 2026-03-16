@@ -174,6 +174,16 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
     result.slotPropertyName = node.slotName;
   }
 
+  // Canvas metadata (also set isSlot for Figma slot behavior)
+  if (node.isCanvas) {
+    result.isCanvas = true;
+    result.canvasName = node.canvasName;
+    if (!node.isSlot) {
+      result.isSlot = true;
+      result.slotPropertyName = node.canvasName;
+    }
+  }
+
   // Component-level slot properties map
   if ((node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') && node.children.length > 0) {
     const slotProperties: Record<string, { defaultContentNodeIndex?: number; preferredInstances?: string[] }> = {};

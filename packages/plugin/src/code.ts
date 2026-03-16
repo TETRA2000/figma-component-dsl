@@ -32,6 +32,7 @@ import uiHtml from './ui.html';
 const componentMap = new Map<string, ComponentNode>();
 const fileScannedComponents = new Map<string, ComponentNode>();
 const PLUGIN_DATA_SLOT = 'dsl-slot';
+const PLUGIN_DATA_CANVAS = 'dsl-canvas';
 const errors: string[] = [];
 
 // --- Edit Tracker State ---
@@ -303,9 +304,17 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
             def.slotProperties?.[def.slotPropertyName]?.preferredInstances as string[] | undefined,
           );
           frame.setPluginData(PLUGIN_DATA_SLOT, JSON.stringify(slotData));
+          // Store canvas metadata if this is a canvas-slot
+          if (def.isCanvas && def.canvasName) {
+            frame.setPluginData(PLUGIN_DATA_CANVAS, JSON.stringify({ isCanvas: true, canvasName: def.canvasName }));
+          }
           console.log(`[DSL] Slot "${def.slotPropertyName}" created as frame. Manual conversion to slot property may be needed (Figma API lacks SLOT support).`);
         } else {
           frame.name = def.name;
+          // Standalone canvas frame (not inside a component as slot)
+          if (def.isCanvas && def.canvasName) {
+            frame.setPluginData(PLUGIN_DATA_CANVAS, JSON.stringify({ isCanvas: true, canvasName: def.canvasName }));
+          }
         }
         frame.resize(def.size.x, def.size.y);
         await applyFillsWithImages(frame, def.fills);

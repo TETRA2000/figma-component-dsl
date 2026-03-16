@@ -1,7 +1,7 @@
 import type {
   DslNode, FrameProps, RectangleProps, EllipseProps,
   ComponentProps, ComponentSetProps, TextStyle, ChildLayoutProps,
-  ImageProps, SlotProps,
+  ImageProps, SlotProps, CanvasProps,
   LineProps, SectionProps, PolygonProps, StarProps, BooleanOperationProps,
   BooleanOperationType,
 } from './types.js';
@@ -203,6 +203,28 @@ export function slot(name: string, props?: SlotProps): DslNode {
     layoutSizingVertical: props?.layoutSizingVertical,
     children: props?.defaultChildren ? [...props.defaultChildren] : undefined,
     preferredInstances: props?.preferredInstances ? [...props.preferredInstances] : undefined,
+  };
+}
+
+export function canvas(name: string, props?: CanvasProps): DslNode {
+  if (!name) {
+    throw new Error('Canvas name must be a non-empty string.');
+  }
+  return {
+    type: 'FRAME',
+    name,
+    isCanvas: true,
+    canvasName: name,
+    canvasScale: props?.scale,
+    visible: true,
+    opacity: 1,
+    size: props?.size,
+    fills: props?.fills ? [...props.fills] : undefined,
+    cornerRadius: props?.cornerRadius,
+    autoLayout: props?.autoLayout,
+    layoutSizingHorizontal: props?.layoutSizingHorizontal,
+    layoutSizingVertical: props?.layoutSizingVertical,
+    children: props?.children ? [...props.children] : undefined,
   };
 }
 

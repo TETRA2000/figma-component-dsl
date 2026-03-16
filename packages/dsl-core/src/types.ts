@@ -155,6 +155,11 @@ export interface DslNode {
   slotName?: string;
   preferredInstances?: string[];
 
+  // Canvas (FRAME with canvas semantics, renders as image)
+  isCanvas?: boolean;
+  canvasName?: string;
+  canvasScale?: number;
+
   // Instance (INSTANCE only)
   componentRef?: string;
   propertyOverrides?: Record<string, string | boolean>;
@@ -297,6 +302,17 @@ export interface SlotProps {
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
   defaultChildren?: DslNode[];
   preferredInstances?: string[];
+}
+
+export interface CanvasProps {
+  size?: { x: number; y: number };
+  autoLayout?: AutoLayoutConfig;
+  fills?: Fill[];
+  cornerRadius?: number;
+  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+  scale?: number;
+  children?: DslNode[];
 }
 
 export interface BooleanOperationProps {

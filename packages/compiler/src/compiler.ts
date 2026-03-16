@@ -257,6 +257,15 @@ function compileNode(
       : undefined,
   };
 
+  // Mutual exclusivity: canvas and slot
+  if (node.isSlot && node.isCanvas) {
+    errors.push({
+      message: `Node "${node.name}" cannot be both a slot and a canvas. Found at "${path}".`,
+      nodePath: path,
+      nodeType: node.type,
+    });
+  }
+
   // Slot validation and passthrough
   if (node.isSlot) {
     if (!insideComponent) {
@@ -270,6 +279,15 @@ function compileNode(
     result.slotName = node.slotName ?? node.name;
     if (node.preferredInstances?.length) {
       result.preferredInstances = [...node.preferredInstances];
+    }
+  }
+
+  // Canvas passthrough (no component context restriction)
+  if (node.isCanvas) {
+    result.isCanvas = true;
+    result.canvasName = node.canvasName ?? node.name;
+    if (node.canvasScale !== undefined) {
+      result.canvasScale = node.canvasScale;
     }
   }
 

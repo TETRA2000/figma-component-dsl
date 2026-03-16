@@ -68,6 +68,10 @@ export interface PluginNodeDef {
   // Slot
   readonly isSlot?: boolean;
   readonly slotPropertyName?: string;
+
+  // Canvas
+  readonly isCanvas?: boolean;
+  readonly canvasName?: string;
   readonly slotProperties?: Record<string, {
     readonly defaultContentNodeIndex?: number;
     readonly preferredInstances?: ReadonlyArray<string>;

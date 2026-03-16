@@ -106,6 +106,11 @@ export interface FigmaNodeDict {
   slotName?: string;
   preferredInstances?: string[];
 
+  // Canvas
+  isCanvas?: boolean;
+  canvasName?: string;
+  canvasScale?: number;
+
   // Instance slot overrides
   slotOverrides?: Record<string, FigmaNodeDict[]>;
 }
