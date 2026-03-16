@@ -1,204 +1,114 @@
 /**
- * Gardening Tracker — Plant cards with water schedule, growth progress
- *
- * DSL features stressed: gradient plant images, progress bars,
- * clipContent, cornerRadius cards, FILL sizing, ellipse indicators
+ * Gardening App — Plant cards, watering schedule, care tips (mobile 500px)
+ * DSL features: mobile width, gradient plant cards, schedule timeline, tip cards
  */
-import {
-  frame, text, rectangle, ellipse,
-  solid, gradient,
-  horizontal, vertical,
-} from '@figma-dsl/core';
+import { frame, text, rectangle, ellipse, solid, gradient, horizontal, vertical } from '@figma-dsl/core';
 
-function waterLevel(pct: number) {
-  return frame('WaterBar', {
-    size: { x: 1, y: 8 },
-    fills: [solid('#e0f2fe')],
-    cornerRadius: 4,
-    layoutSizingHorizontal: 'FILL',
-    clipContent: true,
-    children: [
-      rectangle('WaterFill', {
-        size: { x: Math.round(pct * 2), y: 8 },
-        fills: [gradient([{ hex: '#0ea5e9', position: 0 }, { hex: '#38bdf8', position: 1 }], 90)],
-        cornerRadius: 4,
-      }),
-    ],
-  });
-}
-
-function growthBar(pct: number) {
-  return frame('GrowthBar', {
-    size: { x: 1, y: 8 },
-    fills: [solid('#dcfce7')],
-    cornerRadius: 4,
-    layoutSizingHorizontal: 'FILL',
-    clipContent: true,
-    children: [
-      rectangle('GrowthFill', {
-        size: { x: Math.round(pct * 2), y: 8 },
-        fills: [gradient([{ hex: '#16a34a', position: 0 }, { hex: '#4ade80', position: 1 }], 90)],
-        cornerRadius: 4,
-      }),
-    ],
-  });
-}
-
-function plantCard(
-  name: string, species: string, waterPct: number, growPct: number,
-  nextWater: string, grad1: string, grad2: string, status: string,
-) {
+function plantCard(name: string, species: string, lastWatered: string, needsWater: boolean, color: string) {
   return frame(`Plant: ${name}`, {
-    autoLayout: vertical({ spacing: 0 }),
-    fills: [solid('#ffffff')],
-    cornerRadius: 16,
-    layoutSizingHorizontal: 'FILL',
-    clipContent: true,
+    autoLayout: horizontal({ spacing: 12, padX: 14, padY: 12, counterAlign: 'CENTER' }),
+    fills: [solid('#ffffff')], cornerRadius: 14, layoutSizingHorizontal: 'FILL',
+    strokes: [{ color: { r: 0.92, g: 0.93, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      rectangle(`${name}Image`, {
-        size: { x: 1, y: 140 },
-        fills: [gradient([{ hex: grad1, position: 0 }, { hex: grad2, position: 1 }], 150)],
-        layoutSizingHorizontal: 'FILL',
+      frame('PlantIcon', {
+        size: { x: 48, y: 48 },
+        autoLayout: horizontal({ align: 'CENTER', counterAlign: 'CENTER' }),
+        fills: [solid(color + '1a')], cornerRadius: 12,
+        children: [text('🌿', { fontSize: 22, fontWeight: 400, color })],
       }),
-      frame(`${name}Info`, {
-        autoLayout: vertical({ spacing: 12, padX: 16, padY: 16 }),
-        layoutSizingHorizontal: 'FILL',
+      frame('PlantInfo', {
+        autoLayout: vertical({ spacing: 2 }), layoutSizingHorizontal: 'FILL',
         children: [
-          frame(`${name}Header`, {
-            autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
-            layoutSizingHorizontal: 'FILL',
-            children: [
-              frame(`${name}Title`, {
-                autoLayout: vertical({ spacing: 2 }),
-                children: [
-                  text(name, { fontSize: 16, fontWeight: 700, color: '#1a1a1a' }),
-                  text(species, { fontSize: 12, fontWeight: 400, color: '#94a3b8' }),
-                ],
-              }),
-              frame(`${name}Status`, {
-                autoLayout: horizontal({ padX: 10, padY: 4, spacing: 6, counterAlign: 'CENTER' }),
-                fills: [solid(status === 'Healthy' ? '#f0fdf4' : '#fef3c7')],
-                cornerRadius: 9999,
-                children: [
-                  ellipse(`${name}StatusDot`, {
-                    size: { x: 8, y: 8 },
-                    fills: [solid(status === 'Healthy' ? '#16a34a' : '#f59e0b')],
-                  }),
-                  text(status, {
-                    fontSize: 11, fontWeight: 600,
-                    color: status === 'Healthy' ? '#16a34a' : '#d97706',
-                  }),
-                ],
-              }),
-            ],
-          }),
-          // Water
-          frame(`${name}Water`, {
-            autoLayout: vertical({ spacing: 6 }),
-            layoutSizingHorizontal: 'FILL',
-            children: [
-              frame(`${name}WaterLabel`, {
-                autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN' }),
-                layoutSizingHorizontal: 'FILL',
-                children: [
-                  text('Water Level', { fontSize: 12, fontWeight: 500, color: '#64748b' }),
-                  text(`${waterPct}%`, { fontSize: 12, fontWeight: 600, color: '#0ea5e9' }),
-                ],
-              }),
-              waterLevel(waterPct),
-              text(`Next: ${nextWater}`, { fontSize: 11, fontWeight: 400, color: '#94a3b8' }),
-            ],
-          }),
-          // Growth
-          frame(`${name}Growth`, {
-            autoLayout: vertical({ spacing: 6 }),
-            layoutSizingHorizontal: 'FILL',
-            children: [
-              frame(`${name}GrowthLabel`, {
-                autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN' }),
-                layoutSizingHorizontal: 'FILL',
-                children: [
-                  text('Growth', { fontSize: 12, fontWeight: 500, color: '#64748b' }),
-                  text(`${growPct}%`, { fontSize: 12, fontWeight: 600, color: '#16a34a' }),
-                ],
-              }),
-              growthBar(growPct),
-            ],
-          }),
+          text(name, { fontSize: 15, fontWeight: 700, color: '#111827' }),
+          text(species, { fontSize: 12, fontWeight: 400, color: '#6b7280' }),
+          text(`Watered ${lastWatered}`, { fontSize: 11, fontWeight: 400, color: '#9ca3af' }),
+        ],
+      }),
+      ...(needsWater ? [frame('WaterBadge', {
+        autoLayout: horizontal({ spacing: 4, padX: 8, padY: 4 }),
+        fills: [solid('#dbeafe')], cornerRadius: 9999,
+        children: [text('💧', { fontSize: 11, fontWeight: 400, color: '#2563eb' }), text('Water', { fontSize: 10, fontWeight: 600, color: '#2563eb' })],
+      })] : []),
+    ],
+  });
+}
+
+function scheduleItem(time: string, task: string, plant: string, done: boolean) {
+  return frame(`Task: ${task}`, {
+    autoLayout: horizontal({ spacing: 10, padY: 8, counterAlign: 'CENTER' }),
+    layoutSizingHorizontal: 'FILL',
+    children: [
+      text(time, { fontSize: 11, fontWeight: 600, color: '#9ca3af', size: { x: 50 } }),
+      ellipse('Dot', { size: { x: 8, y: 8 }, fills: [solid(done ? '#16a34a' : '#d1d5db')] }),
+      frame('TaskInfo', {
+        autoLayout: vertical({ spacing: 1 }), layoutSizingHorizontal: 'FILL',
+        children: [
+          text(task, { fontSize: 13, fontWeight: done ? 400 : 600, color: done ? '#9ca3af' : '#111827', textDecoration: done ? 'STRIKETHROUGH' : 'NONE' }),
+          text(plant, { fontSize: 11, fontWeight: 400, color: '#6b7280' }),
         ],
       }),
     ],
   });
 }
 
-function scheduleRow(day: string, task: string, active: boolean) {
-  return frame(`Sched: ${day}`, {
-    autoLayout: horizontal({ spacing: 0, padX: 14, padY: 10, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
-    layoutSizingHorizontal: 'FILL',
-    fills: [solid(active ? '#f0fdf4' : '#ffffff')],
-    strokes: [{ color: { r: 0.94, g: 0.94, b: 0.94, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+function tipCard(title: string, tip: string, color: string) {
+  return frame(`Tip: ${title}`, {
+    autoLayout: vertical({ spacing: 6, padX: 14, padY: 12 }),
+    fills: [solid(color + '0d')], cornerRadius: 12, layoutSizingHorizontal: 'FILL',
+    strokes: [{ color: { r: 0.22, g: 0.65, b: 0.36, a: 0.2 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      text(day, { fontSize: 13, fontWeight: active ? 700 : 500, color: active ? '#16a34a' : '#64748b' }),
-      text(task, { fontSize: 13, fontWeight: 400, color: '#374151' }),
+      text(title, { fontSize: 13, fontWeight: 700, color: '#16a34a' }),
+      text(tip, { fontSize: 12, fontWeight: 400, color: '#374151', lineHeight: { value: 150, unit: 'PERCENT' } }),
     ],
   });
 }
 
 export default frame('GardeningAppPage', {
-  size: { x: 1000 },
+  size: { x: 500 },
   autoLayout: vertical({ spacing: 0 }),
   fills: [solid('#f0fdf4')],
   children: [
-    // Header
     frame('Header', {
-      autoLayout: horizontal({ spacing: 0, padX: 36, padY: 18, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
+      autoLayout: horizontal({ spacing: 0, padX: 20, padY: 14, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
       layoutSizingHorizontal: 'FILL',
-      fills: [solid('#ffffff')],
-      strokes: [{ color: { r: 0.91, g: 0.95, b: 0.91, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+      fills: [gradient([{ hex: '#16a34a', position: 0 }, { hex: '#15803d', position: 1 }], 90)],
       children: [
-        text('PlantPal', { fontSize: 24, fontWeight: 800, color: '#16a34a' }),
-        text('March 16, 2026', { fontSize: 14, fontWeight: 400, color: '#6b7280' }),
-      ],
-    }),
-
-    // Plant Grid
-    frame('PlantSection', {
-      autoLayout: vertical({ spacing: 16, padX: 36, padY: 28 }),
-      layoutSizingHorizontal: 'FILL',
-      children: [
-        text('My Plants', { fontSize: 22, fontWeight: 700, color: '#0f172a' }),
-        frame('PlantGrid', {
-          autoLayout: horizontal({ spacing: 16 }),
-          layoutSizingHorizontal: 'FILL',
+        frame('Logo', {
+          autoLayout: vertical({ spacing: 1 }),
           children: [
-            plantCard('Monstera', 'Monstera deliciosa', 72, 85, 'Tomorrow', '#1a3a1a', '#2d6a2d', 'Healthy'),
-            plantCard('Fiddle Leaf', 'Ficus lyrata', 30, 60, 'Today!', '#3a2a1a', '#6a5a2d', 'Needs Water'),
-            plantCard('Snake Plant', 'Sansevieria', 90, 95, 'In 3 days', '#1a2a3a', '#2d4a6a', 'Healthy'),
+            text('PlantPal', { fontSize: 20, fontWeight: 800, color: '#ffffff' }),
+            text('4 plants, 2 need care', { fontSize: 11, fontWeight: 400, color: '#bbf7d0' }),
           ],
         }),
+        text('🌱', { fontSize: 24, fontWeight: 400, color: '#ffffff' }),
       ],
     }),
-
-    // Weekly Schedule
-    frame('ScheduleSection', {
-      autoLayout: vertical({ spacing: 12, padX: 36, padY: 24 }),
-      layoutSizingHorizontal: 'FILL',
+    frame('Plants', {
+      autoLayout: vertical({ spacing: 8, padX: 20, padY: 16 }), layoutSizingHorizontal: 'FILL',
       children: [
-        text('This Week', { fontSize: 18, fontWeight: 700, color: '#0f172a' }),
-        frame('ScheduleCard', {
-          autoLayout: vertical({ spacing: 0 }),
-          fills: [solid('#ffffff')],
-          cornerRadius: 12,
-          layoutSizingHorizontal: 'FILL',
-          clipContent: true,
-          children: [
-            scheduleRow('Monday', 'Water Fiddle Leaf, Fertilize Monstera', false),
-            scheduleRow('Tuesday', 'Check soil moisture', false),
-            scheduleRow('Wednesday', 'Water Monstera, Mist Snake Plant', true),
-            scheduleRow('Thursday', 'Rotate plants for light', false),
-            scheduleRow('Friday', 'Water Fiddle Leaf', false),
-          ],
-        }),
+        text('My Plants', { fontSize: 16, fontWeight: 700, color: '#111827' }),
+        plantCard('Monstera', 'Monstera deliciosa', '2 days ago', true, '#16a34a'),
+        plantCard('Snake Plant', 'Sansevieria', '5 days ago', false, '#65a30d'),
+        plantCard('Pothos', 'Epipremnum aureum', '1 day ago', true, '#059669'),
+        plantCard('Fiddle Leaf', 'Ficus lyrata', '3 days ago', false, '#16a34a'),
+      ],
+    }),
+    frame('Schedule', {
+      autoLayout: vertical({ spacing: 4, padX: 20, padY: 12 }), layoutSizingHorizontal: 'FILL',
+      children: [
+        text("Today's Schedule", { fontSize: 16, fontWeight: 700, color: '#111827' }),
+        scheduleItem('8:00', 'Water plants', 'Monstera, Pothos', true),
+        scheduleItem('10:00', 'Check soil moisture', 'Snake Plant', false),
+        scheduleItem('12:00', 'Mist leaves', 'Fiddle Leaf Fig', false),
+        scheduleItem('5:00', 'Move to shade', 'Pothos', false),
+      ],
+    }),
+    frame('Tips', {
+      autoLayout: vertical({ spacing: 8, padX: 20, padY: 12 }), layoutSizingHorizontal: 'FILL',
+      children: [
+        text('Care Tips', { fontSize: 16, fontWeight: 700, color: '#111827' }),
+        tipCard('Overwatering', 'Yellow leaves often mean too much water. Let soil dry between waterings.', '#16a34a'),
+        tipCard('Light Needs', 'Most houseplants prefer bright, indirect sunlight. Rotate weekly for even growth.', '#16a34a'),
       ],
     }),
   ],

@@ -1,102 +1,98 @@
 /**
- * Escape Room Booking — Room themes, difficulty ratings, team size, booking slots
- * DSL features: dark theme, gradient room images, difficulty dots (ellipses), FILL columns
+ * Escape Rooms — Room cards, difficulty ratings, and booking slots
  */
 import { frame, text, rectangle, ellipse, solid, gradient, horizontal, vertical } from '@figma-dsl/core';
 
-function difficultyDots(level: number, max: number) {
-  const dots: ReturnType<typeof ellipse>[] = [];
-  for (let i = 0; i < max; i++) {
-    dots.push(ellipse(`Dot${i}`, { size: { x: 10, y: 10 }, fills: [solid(i < level ? '#ef4444' : '#374151')] }));
-  }
-  return frame('Difficulty', {
-    autoLayout: horizontal({ spacing: 4, counterAlign: 'CENTER' }),
-    children: dots,
-  });
-}
-
-function roomCard(name: string, desc: string, difficulty: number, team: string, duration: string, colors: [string, string]) {
-  return frame(`Room:${name}`, {
-    autoLayout: vertical({ spacing: 10, padX: 14, padY: 14 }),
-    fills: [solid('#1a1a2e')],
+function roomCard(name: string, theme: string, difficulty: number, players: string, price: string, color: string) {
+  return frame(`Room: ${name}`, {
+    autoLayout: vertical({ spacing: 10, padX: 16, padY: 16 }),
+    fills: [solid('#ffffff')],
     cornerRadius: 14,
+    strokes: [{ color: { r: 0.93, g: 0.93, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     layoutSizingHorizontal: 'FILL',
     children: [
-      rectangle(`Img:${name}`, {
-        size: { x: 260, y: 160 },
-        fills: [gradient([{ hex: colors[0], position: 0 }, { hex: colors[1], position: 1 }], 135)],
-        cornerRadius: 10,
-        layoutSizingHorizontal: 'FILL',
-      }),
-      text(name, { fontSize: 16, fontWeight: 700, color: '#e0e0e0' }),
-      text(desc, { fontSize: 12, fontWeight: 400, color: '#71717a', size: { x: 240 }, textAutoResize: 'HEIGHT' }),
-      frame('RoomMeta', {
-        autoLayout: horizontal({ spacing: 12, counterAlign: 'CENTER' }),
-        children: [
-          difficultyDots(difficulty, 5),
-          text(team, { fontSize: 11, fontWeight: 500, color: '#a78bfa' }),
-          text(duration, { fontSize: 11, fontWeight: 400, color: '#71717a' }),
-        ],
-      }),
-      frame('BookBtn', {
-        autoLayout: horizontal({ spacing: 0, padX: 24, padY: 8, align: 'CENTER' }),
-        fills: [solid('#7c3aed')],
-        cornerRadius: 8,
-        layoutSizingHorizontal: 'FILL',
-        children: [text('Book Now', { fontSize: 13, fontWeight: 600, color: '#ffffff' })],
-      }),
+      rectangle('RoomImg', { size: { x: 240, y: 130 }, fills: [gradient([{ hex: color, position: 0 }, { hex: '#0f172a', position: 1 }], 150)], cornerRadius: 10, layoutSizingHorizontal: 'FILL' }),
+      text(name, { fontSize: 16, fontWeight: 700, color: '#0f172a' }),
+      text(theme, { fontSize: 12, fontWeight: 400, color: '#64748b' }),
+      frame('DiffRow', { autoLayout: horizontal({ spacing: 4 }), children: Array.from({ length: 5 }, (_, i) =>
+        ellipse(`Star${i}`, { size: { x: 10, y: 10 }, fills: [solid(i < difficulty ? '#f59e0b' : '#e2e8f0')] })
+      ) }),
+      frame('BottomRow', { autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN' }), layoutSizingHorizontal: 'FILL', children: [
+        text(players, { fontSize: 12, fontWeight: 500, color: '#64748b' }),
+        text(price, { fontSize: 16, fontWeight: 700, color: '#7c3aed' }),
+      ] }),
     ],
   });
 }
 
-function slotPill(time: string, available: boolean) {
-  return frame(`Slot:${time}`, {
-    autoLayout: horizontal({ spacing: 0, padX: 14, padY: 8 }),
-    fills: [solid(available ? '#7c3aed22' : '#1a1a2e')],
-    cornerRadius: 6,
-    strokes: [{ color: { r: 0.49, g: 0.36, b: 0.89, a: available ? 0.6 : 0.15 }, weight: 1, align: 'INSIDE' as const }],
-    children: [text(time, { fontSize: 12, fontWeight: 500, color: available ? '#a78bfa' : '#4a4a5a' })],
+function bookingSlot(time: string, available: boolean) {
+  return frame(`Slot: ${time}`, {
+    autoLayout: horizontal({ padX: 16, padY: 8, align: 'CENTER' }),
+    fills: [solid(available ? '#f5f3ff' : '#f1f5f9')],
+    cornerRadius: 8,
+    children: [text(time, { fontSize: 12, fontWeight: 600, color: available ? '#7c3aed' : '#94a3b8' })],
+  });
+}
+
+function featureChip(label: string) {
+  return frame(`Feature: ${label}`, {
+    autoLayout: horizontal({ padX: 12, padY: 5 }),
+    fills: [solid('#f5f3ff')],
+    cornerRadius: 9999,
+    children: [text(label, { fontSize: 11, fontWeight: 500, color: '#7c3aed' })],
   });
 }
 
 export default frame('EscapeRoomPage', {
-  size: { x: 1000 },
-  autoLayout: vertical({ spacing: 28, padX: 40, padY: 36 }),
-  fills: [solid('#0f0f1a')],
+  size: { x: 900 },
+  autoLayout: vertical({ spacing: 0 }),
+  fills: [solid('#0f172a')],
   children: [
-    frame('PageHeader', {
-      autoLayout: vertical({ spacing: 6 }),
-      children: [
-        text('ESCAPE ROOM', { fontSize: 36, fontWeight: 700, color: '#ffffff' }),
-        text('Challenge your mind. Beat the clock.', { fontSize: 14, fontWeight: 400, color: '#71717a' }),
-      ],
-    }),
-    frame('RoomGrid', {
-      autoLayout: horizontal({ spacing: 16 }),
+    frame('Hero', {
+      autoLayout: vertical({ spacing: 6, padX: 36, padY: 32, counterAlign: 'CENTER' }),
+      fills: [gradient([{ hex: '#0f172a', position: 0 }, { hex: '#4c1d95', position: 1 }], 160)],
       layoutSizingHorizontal: 'FILL',
       children: [
-        roomCard('Haunted Manor', 'Uncover the secrets of the cursed manor before dawn breaks.', 4, '2-6 players', '60 min', ['#581c87', '#312e81']),
-        roomCard('Cyber Heist', 'Hack into the mainframe and steal the digital vault codes.', 3, '2-4 players', '45 min', ['#164e63', '#0e7490']),
-        roomCard('Lost Temple', 'Navigate ancient traps and retrieve the golden idol.', 5, '3-6 players', '75 min', ['#713f12', '#a16207']),
+        text('Enigma Escape Rooms', { fontSize: 28, fontWeight: 800, color: '#ffffff' }),
+        text('Can you solve the puzzle and escape in 60 minutes?', { fontSize: 14, fontWeight: 400, color: '#c4b5fd' }),
       ],
     }),
-    frame('BookingSection', {
-      autoLayout: vertical({ spacing: 14, padX: 20, padY: 20 }),
-      fills: [solid('#1a1a2e')],
-      cornerRadius: 12,
+    frame('Content', {
+      autoLayout: vertical({ spacing: 24, padX: 36, padY: 28 }),
       layoutSizingHorizontal: 'FILL',
       children: [
-        text('Available Slots - Saturday, Mar 21', { fontSize: 16, fontWeight: 600, color: '#e0e0e0' }),
-        frame('SlotRow', {
+        frame('Rooms', {
+          autoLayout: vertical({ spacing: 12 }),
+          layoutSizingHorizontal: 'FILL',
+          children: [
+            text('Our Rooms', { fontSize: 20, fontWeight: 700, color: '#ffffff' }),
+            frame('RoomGrid', { autoLayout: horizontal({ spacing: 14 }), layoutSizingHorizontal: 'FILL', children: [
+              roomCard('The Vault', 'Bank heist thriller', 4, '2-6 players', '$35/person', '#ef4444'),
+              roomCard('Lost Temple', 'Ancient adventure', 3, '2-8 players', '$30/person', '#d97706'),
+              roomCard('Cyber Hack', 'Sci-fi cyberpunk', 5, '3-6 players', '$40/person', '#06b6d4'),
+            ] }),
+          ],
+        }),
+        frame('Features', {
           autoLayout: horizontal({ spacing: 8 }),
           children: [
-            slotPill('10:00 AM', true),
-            slotPill('11:30 AM', false),
-            slotPill('1:00 PM', true),
-            slotPill('2:30 PM', true),
-            slotPill('4:00 PM', false),
-            slotPill('5:30 PM', true),
-            slotPill('7:00 PM', true),
+            featureChip('Live Actors'), featureChip('Special Effects'),
+            featureChip('Themed Rooms'), featureChip('Group Discounts'),
+            featureChip('Private Events'),
+          ],
+        }),
+        frame('Booking', {
+          autoLayout: vertical({ spacing: 10, padX: 18, padY: 18 }),
+          fills: [solid('#1e293b')],
+          cornerRadius: 12,
+          layoutSizingHorizontal: 'FILL',
+          children: [
+            text('Book a Session — Today', { fontSize: 16, fontWeight: 700, color: '#ffffff' }),
+            frame('Slots', { autoLayout: horizontal({ spacing: 8 }), children: [
+              bookingSlot('10:00 AM', true), bookingSlot('12:00 PM', false),
+              bookingSlot('2:00 PM', true), bookingSlot('4:00 PM', true),
+              bookingSlot('6:00 PM', false), bookingSlot('8:00 PM', true),
+            ] }),
           ],
         }),
       ],
