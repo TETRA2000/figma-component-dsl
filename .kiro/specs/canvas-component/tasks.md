@@ -280,3 +280,21 @@
   - Run vitest across all packages to confirm no regressions
   - Verify the fflate dependency is correctly bundled by esbuild into the plugin IIFE
   - _Requirements: 9.1, 10.1, 11.1_
+
+- [ ] 15. Add user-configurable export scale with validation (gap fix)
+- [ ] 15.1 Add export scale selector to the plugin UI and wire it through the export flow
+  - Add a dropdown control to the export tab with 1x, 2x (default), 3x, and 4x scale options
+  - Pass the selected scale value in the export message to the plugin core
+  - Read the scale value in the export handler and pass it to the image capture pipeline instead of the hardcoded 2x default
+  - _Requirements: 9.3_
+
+- [ ] 15.2 Add scale range validation in the image capture service
+  - Clamp the scale value to the valid 1–4 range before calling exportAsync, rounding to the nearest integer
+  - Ensure that out-of-range or non-numeric scale values cannot produce unexpected export results
+  - _Requirements: 9.3_
+
+- [ ] 15.3 Add tests for scale configuration and validation
+  - Test that the image capture service clamps scale values outside the 1–4 range
+  - Test that the export flow passes the user-selected scale from the UI message to the capture pipeline
+  - Rebuild the plugin and run the full test suite to confirm no regressions
+  - _Requirements: 9.3_
