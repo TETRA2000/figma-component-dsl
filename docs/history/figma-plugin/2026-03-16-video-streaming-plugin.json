@@ -1,0 +1,3272 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "video-streaming",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "VideoStreamingPage",
+      "size": {
+        "x": 1200,
+        "y": 1260
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "NavBar",
+          "size": {
+            "x": 1200,
+            "y": 58.4
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "STREAMFLIX",
+              "size": {
+                "x": 141.42999267578125,
+                "y": 26.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.8980392156862745,
+                    "g": 0.03529411764705882,
+                    "b": 0.0784313725490196,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "STREAMFLIX",
+              "fontSize": 22,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 800,
+              "fontStyle": "Regular"
+            },
+            {
+              "type": "FRAME",
+              "name": "NavSpacer",
+              "size": {
+                "x": 713.5400047302246,
+                "y": 0
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "NavLinks",
+              "size": {
+                "x": 249.03000259399414,
+                "y": 16.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Home",
+                  "size": {
+                    "x": 40.15999984741211,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Home",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Series",
+                  "size": {
+                    "x": 41.4900016784668,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 0.6666666666666666
+                    }
+                  ],
+                  "characters": "Series",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Movies",
+                  "size": {
+                    "x": 47.58000183105469,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 0.6666666666666666
+                    }
+                  ],
+                  "characters": "Movies",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "My List",
+                  "size": {
+                    "x": 47.79999923706055,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 0.6666666666666666
+                    }
+                  ],
+                  "characters": "My List",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 24,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER"
+            }
+          ],
+          "fills": [
+            {
+              "type": "GRADIENT_LINEAR",
+              "opacity": 1,
+              "gradientStops": [
+                {
+                  "color": {
+                    "r": 0.050980392156862744,
+                    "g": 0.050980392156862744,
+                    "b": 0.10196078431372549,
+                    "a": 1
+                  },
+                  "position": 0
+                },
+                {
+                  "color": {
+                    "r": 0.050980392156862744,
+                    "g": 0.050980392156862744,
+                    "b": 0.10196078431372549,
+                    "a": 0.6666666666666666
+                  },
+                  "position": 1
+                }
+              ],
+              "gradientTransform": [
+                [
+                  -1,
+                  1.2246467991473532e-16,
+                  0.9999999999999999
+                ],
+                [
+                  -1.2246467991473532e-16,
+                  -1,
+                  1
+                ]
+              ]
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 16,
+          "paddingRight": 48,
+          "paddingBottom": 16,
+          "paddingLeft": 48,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "HeroBanner",
+          "size": {
+            "x": 1200,
+            "y": 420
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "HeroOverlay",
+              "size": {
+                "x": 1200,
+                "y": 420
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "GRADIENT_LINEAR",
+                  "opacity": 1,
+                  "gradientStops": [
+                    {
+                      "color": {
+                        "r": 0.050980392156862744,
+                        "g": 0.050980392156862744,
+                        "b": 0.10196078431372549,
+                        "a": 1
+                      },
+                      "position": 0
+                    },
+                    {
+                      "color": {
+                        "r": 0.050980392156862744,
+                        "g": 0.050980392156862744,
+                        "b": 0.10196078431372549,
+                        "a": 0
+                      },
+                      "position": 0.6
+                    }
+                  ],
+                  "gradientTransform": [
+                    [
+                      6.123233995736766e-17,
+                      1,
+                      -5.551115123125783e-17
+                    ],
+                    [
+                      -1,
+                      6.123233995736766e-17,
+                      1
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "FRAME",
+              "name": "HeroContent",
+              "size": {
+                "x": 500,
+                "y": 390.15
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "TopTenBadge",
+                  "size": {
+                    "x": 64.7599983215332,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "TOP 10",
+                      "size": {
+                        "x": 40.7599983215332,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "TOP 10",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 800,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.8980392156862745,
+                        "g": 0.03529411764705882,
+                        "b": 0.0784313725490196,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 4,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 6,
+                  "paddingRight": 12,
+                  "paddingBottom": 6,
+                  "paddingLeft": 12,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "The Quantum Paradox",
+                  "size": {
+                    "x": 434.2799987792969,
+                    "y": 44
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "The Quantum Paradox",
+                  "fontSize": 40,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 800,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "A physicist discovers a way to communicate across parallel universes, but each message creates catastrophic consequences in both worlds.",
+                  "size": {
+                    "x": 440,
+                    "y": 69.75
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 0.8
+                    }
+                  ],
+                  "characters": "A physicist discovers a way to communicate across parallel universes, but each message creates catastrophic consequences in both worlds.",
+                  "fontSize": 15,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "textAutoResize": "HEIGHT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "HeroButtons",
+                  "size": {
+                    "x": 208.45000076293945,
+                    "y": 42
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "PlayBtn",
+                      "size": {
+                        "x": 79.27000045776367,
+                        "y": 42
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Play",
+                          "size": {
+                            "x": 31.270000457763672,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0,
+                                "g": 0,
+                                "b": 0,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Play",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 6,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 12,
+                      "paddingRight": 24,
+                      "paddingBottom": 12,
+                      "paddingLeft": 24,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "InfoBtn",
+                      "size": {
+                        "x": 117.18000030517578,
+                        "y": 42
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "More Info",
+                          "size": {
+                            "x": 69.18000030517578,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "More Info",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 0.2
+                        }
+                      ],
+                      "cornerRadius": 6,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 12,
+                      "paddingRight": 24,
+                      "paddingBottom": 12,
+                      "paddingLeft": 24,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 16,
+              "paddingTop": 80,
+              "paddingRight": 48,
+              "paddingBottom": 80,
+              "paddingLeft": 48,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            }
+          ],
+          "fills": [
+            {
+              "type": "GRADIENT_LINEAR",
+              "opacity": 1,
+              "gradientStops": [
+                {
+                  "color": {
+                    "r": 0.10196078431372549,
+                    "g": 0.0392156862745098,
+                    "b": 0.1803921568627451,
+                    "a": 1
+                  },
+                  "position": 0
+                },
+                {
+                  "color": {
+                    "r": 0.17647058823529413,
+                    "g": 0.10588235294117647,
+                    "b": 0.4117647058823529,
+                    "a": 1
+                  },
+                  "position": 0.5
+                },
+                {
+                  "color": {
+                    "r": 0.050980392156862744,
+                    "g": 0.050980392156862744,
+                    "b": 0.10196078431372549,
+                    "a": 1
+                  },
+                  "position": 1
+                }
+              ],
+              "gradientTransform": [
+                [
+                  -0.7071067811865475,
+                  0.7071067811865476,
+                  0.49999999999999994
+                ],
+                [
+                  -0.7071067811865476,
+                  -0.7071067811865475,
+                  1.2071067811865475
+                ]
+              ]
+            }
+          ],
+          "clipContent": true
+        },
+        {
+          "type": "FRAME",
+          "name": "Section: Trending Now",
+          "size": {
+            "x": 1200,
+            "y": 390.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "Trending Now",
+              "size": {
+                "x": 136.3300018310547,
+                "y": 24
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Trending Now",
+              "fontSize": 20,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "Row",
+              "size": {
+                "x": 1104,
+                "y": 336.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Card: Neon Shadows",
+                  "size": {
+                    "x": 200,
+                    "y": 336.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Poster",
+                      "size": {
+                        "x": 200,
+                        "y": 280
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 0.4196078431372549,
+                                "b": 0.4196078431372549,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.17647058823529413,
+                                "g": 0.10588235294117647,
+                                "b": 0.4117647058823529,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.9396926207859083,
+                              0.3420201433256689,
+                              0.7988362387301198
+                            ],
+                            [
+                              -0.3420201433256689,
+                              -0.9396926207859083,
+                              1.1408563820557887
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardInfo",
+                      "size": {
+                        "x": 200,
+                        "y": 56.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Neon Shadows",
+                          "size": {
+                            "x": 101.7300033569336,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Neon Shadows",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "CardMeta",
+                          "size": {
+                            "x": 70.34000015258789,
+                            "y": 16
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "2026",
+                              "size": {
+                                "x": 27.18000030517578,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.6666666666666666
+                                }
+                              ],
+                              "characters": "2026",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RatingBadge",
+                              "size": {
+                                "x": 35.15999984741211,
+                                "y": 16
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "98%",
+                                  "size": {
+                                    "x": 23.15999984741211,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "98%",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8980392156862745,
+                                    "g": 0.03529411764705882,
+                                    "b": 0.0784313725490196,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 2,
+                              "paddingRight": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 10,
+                      "paddingRight": 12,
+                      "paddingBottom": 10,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Card: Arctic Code",
+                  "size": {
+                    "x": 200,
+                    "y": 336.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Poster",
+                      "size": {
+                        "x": 200,
+                        "y": 280
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.3058823529411765,
+                                "g": 0.803921568627451,
+                                "b": 0.7686274509803922,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.10196078431372549,
+                                "g": 0.10196078431372549,
+                                "b": 0.1803921568627451,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.9396926207859083,
+                              0.3420201433256689,
+                              0.7988362387301198
+                            ],
+                            [
+                              -0.3420201433256689,
+                              -0.9396926207859083,
+                              1.1408563820557887
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardInfo",
+                      "size": {
+                        "x": 200,
+                        "y": 56.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Arctic Code",
+                          "size": {
+                            "x": 79.7300033569336,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Arctic Code",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "CardMeta",
+                          "size": {
+                            "x": 69.75,
+                            "y": 16
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "2025",
+                              "size": {
+                                "x": 26.8799991607666,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.6666666666666666
+                                }
+                              ],
+                              "characters": "2025",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RatingBadge",
+                              "size": {
+                                "x": 34.8700008392334,
+                                "y": 16
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "95%",
+                                  "size": {
+                                    "x": 22.8700008392334,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "95%",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8980392156862745,
+                                    "g": 0.03529411764705882,
+                                    "b": 0.0784313725490196,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 2,
+                              "paddingRight": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 10,
+                      "paddingRight": 12,
+                      "paddingBottom": 10,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Card: Last Signal",
+                  "size": {
+                    "x": 200,
+                    "y": 336.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Poster",
+                      "size": {
+                        "x": 200,
+                        "y": 280
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.9686274509803922,
+                                "g": 0.8627450980392157,
+                                "b": 0.43529411764705883,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.10196078431372549,
+                                "g": 0.0392156862745098,
+                                "b": 0.1803921568627451,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.9396926207859083,
+                              0.3420201433256689,
+                              0.7988362387301198
+                            ],
+                            [
+                              -0.3420201433256689,
+                              -0.9396926207859083,
+                              1.1408563820557887
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardInfo",
+                      "size": {
+                        "x": 200,
+                        "y": 56.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Last Signal",
+                          "size": {
+                            "x": 73.91000366210938,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Last Signal",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "CardMeta",
+                          "size": {
+                            "x": 68.13999938964844,
+                            "y": 16
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "2026",
+                              "size": {
+                                "x": 27.18000030517578,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.6666666666666666
+                                }
+                              ],
+                              "characters": "2026",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RatingBadge",
+                              "size": {
+                                "x": 32.959999084472656,
+                                "y": 16
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "91%",
+                                  "size": {
+                                    "x": 20.959999084472656,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "91%",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8980392156862745,
+                                    "g": 0.03529411764705882,
+                                    "b": 0.0784313725490196,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 2,
+                              "paddingRight": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 10,
+                      "paddingRight": 12,
+                      "paddingBottom": 10,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Card: Deep State",
+                  "size": {
+                    "x": 200,
+                    "y": 336.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Poster",
+                      "size": {
+                        "x": 200,
+                        "y": 280
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.9058823529411765,
+                                "g": 0.2980392156862745,
+                                "b": 0.23529411764705882,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.050980392156862744,
+                                "g": 0.050980392156862744,
+                                "b": 0.10196078431372549,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.9396926207859083,
+                              0.3420201433256689,
+                              0.7988362387301198
+                            ],
+                            [
+                              -0.3420201433256689,
+                              -0.9396926207859083,
+                              1.1408563820557887
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardInfo",
+                      "size": {
+                        "x": 200,
+                        "y": 56.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Deep State",
+                          "size": {
+                            "x": 74.16999816894531,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Deep State",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "CardMeta",
+                          "size": {
+                            "x": 70.46000099182129,
+                            "y": 16
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "2024",
+                              "size": {
+                                "x": 27.290000915527344,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.6666666666666666
+                                }
+                              ],
+                              "characters": "2024",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RatingBadge",
+                              "size": {
+                                "x": 35.170000076293945,
+                                "y": 16
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "88%",
+                                  "size": {
+                                    "x": 23.170000076293945,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "88%",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8980392156862745,
+                                    "g": 0.03529411764705882,
+                                    "b": 0.0784313725490196,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 2,
+                              "paddingRight": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 10,
+                      "paddingRight": 12,
+                      "paddingBottom": 10,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Card: Echoes",
+                  "size": {
+                    "x": 200,
+                    "y": 336.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Poster",
+                      "size": {
+                        "x": 200,
+                        "y": 280
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.6078431372549019,
+                                "g": 0.34901960784313724,
+                                "b": 0.7137254901960784,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.10196078431372549,
+                                "g": 0.10196078431372549,
+                                "b": 0.1803921568627451,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.9396926207859083,
+                              0.3420201433256689,
+                              0.7988362387301198
+                            ],
+                            [
+                              -0.3420201433256689,
+                              -0.9396926207859083,
+                              1.1408563820557887
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardInfo",
+                      "size": {
+                        "x": 200,
+                        "y": 56.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Echoes",
+                          "size": {
+                            "x": 49.70000076293945,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Echoes",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "CardMeta",
+                          "size": {
+                            "x": 70.59000015258789,
+                            "y": 16
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "2026",
+                              "size": {
+                                "x": 27.18000030517578,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.6666666666666666
+                                }
+                              ],
+                              "characters": "2026",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RatingBadge",
+                              "size": {
+                                "x": 35.40999984741211,
+                                "y": 16
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "94%",
+                                  "size": {
+                                    "x": 23.40999984741211,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "94%",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8980392156862745,
+                                    "g": 0.03529411764705882,
+                                    "b": 0.0784313725490196,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 2,
+                              "paddingRight": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 10,
+                      "paddingRight": 12,
+                      "paddingBottom": 10,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                }
+              ],
+              "clipContent": true,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 16,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 14,
+          "paddingTop": 8,
+          "paddingRight": 48,
+          "paddingBottom": 8,
+          "paddingLeft": 48,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "Section: New Releases",
+          "size": {
+            "x": 1200,
+            "y": 390.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "New Releases",
+              "size": {
+                "x": 136.8800048828125,
+                "y": 24
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "New Releases",
+              "fontSize": 20,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "Row",
+              "size": {
+                "x": 1104,
+                "y": 336.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Card: Solar Wind",
+                  "size": {
+                    "x": 200,
+                    "y": 336.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Poster",
+                      "size": {
+                        "x": 200,
+                        "y": 280
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.20392156862745098,
+                                "g": 0.596078431372549,
+                                "b": 0.8588235294117647,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.050980392156862744,
+                                "g": 0.050980392156862744,
+                                "b": 0.10196078431372549,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.9396926207859083,
+                              0.3420201433256689,
+                              0.7988362387301198
+                            ],
+                            [
+                              -0.3420201433256689,
+                              -0.9396926207859083,
+                              1.1408563820557887
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardInfo",
+                      "size": {
+                        "x": 200,
+                        "y": 56.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Solar Wind",
+                          "size": {
+                            "x": 73.66000366210938,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Solar Wind",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "CardMeta",
+                          "size": {
+                            "x": 70.13000106811523,
+                            "y": 16
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "2026",
+                              "size": {
+                                "x": 27.18000030517578,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.6666666666666666
+                                }
+                              ],
+                              "characters": "2026",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RatingBadge",
+                              "size": {
+                                "x": 34.95000076293945,
+                                "y": 16
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "92%",
+                                  "size": {
+                                    "x": 22.950000762939453,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "92%",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8980392156862745,
+                                    "g": 0.03529411764705882,
+                                    "b": 0.0784313725490196,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 2,
+                              "paddingRight": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 10,
+                      "paddingRight": 12,
+                      "paddingBottom": 10,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Card: The Vault",
+                  "size": {
+                    "x": 200,
+                    "y": 336.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Poster",
+                      "size": {
+                        "x": 200,
+                        "y": 280
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.9019607843137255,
+                                "g": 0.49411764705882355,
+                                "b": 0.13333333333333333,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.10196078431372549,
+                                "g": 0.0392156862745098,
+                                "b": 0.1803921568627451,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.9396926207859083,
+                              0.3420201433256689,
+                              0.7988362387301198
+                            ],
+                            [
+                              -0.3420201433256689,
+                              -0.9396926207859083,
+                              1.1408563820557887
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardInfo",
+                      "size": {
+                        "x": 200,
+                        "y": 56.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "The Vault",
+                          "size": {
+                            "x": 64.44000244140625,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "The Vault",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "CardMeta",
+                          "size": {
+                            "x": 70.34000015258789,
+                            "y": 16
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "2026",
+                              "size": {
+                                "x": 27.18000030517578,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.6666666666666666
+                                }
+                              ],
+                              "characters": "2026",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RatingBadge",
+                              "size": {
+                                "x": 35.15999984741211,
+                                "y": 16
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "89%",
+                                  "size": {
+                                    "x": 23.15999984741211,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "89%",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8980392156862745,
+                                    "g": 0.03529411764705882,
+                                    "b": 0.0784313725490196,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 2,
+                              "paddingRight": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 10,
+                      "paddingRight": 12,
+                      "paddingBottom": 10,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Card: Midnight Run",
+                  "size": {
+                    "x": 200,
+                    "y": 336.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Poster",
+                      "size": {
+                        "x": 200,
+                        "y": 280
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.10196078431372549,
+                                "g": 0.7372549019607844,
+                                "b": 0.611764705882353,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.17647058823529413,
+                                "g": 0.10588235294117647,
+                                "b": 0.4117647058823529,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.9396926207859083,
+                              0.3420201433256689,
+                              0.7988362387301198
+                            ],
+                            [
+                              -0.3420201433256689,
+                              -0.9396926207859083,
+                              1.1408563820557887
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardInfo",
+                      "size": {
+                        "x": 200,
+                        "y": 56.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Midnight Run",
+                          "size": {
+                            "x": 89.61000061035156,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Midnight Run",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "CardMeta",
+                          "size": {
+                            "x": 70.31999969482422,
+                            "y": 16
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "2026",
+                              "size": {
+                                "x": 27.18000030517578,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.6666666666666666
+                                }
+                              ],
+                              "characters": "2026",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RatingBadge",
+                              "size": {
+                                "x": 35.13999938964844,
+                                "y": 16
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "96%",
+                                  "size": {
+                                    "x": 23.139999389648438,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "96%",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8980392156862745,
+                                    "g": 0.03529411764705882,
+                                    "b": 0.0784313725490196,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 2,
+                              "paddingRight": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 10,
+                      "paddingRight": 12,
+                      "paddingBottom": 10,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Card: Binary Star",
+                  "size": {
+                    "x": 200,
+                    "y": 336.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Poster",
+                      "size": {
+                        "x": 200,
+                        "y": 280
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.9098039215686274,
+                                "g": 0.2627450980392157,
+                                "b": 0.5764705882352941,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.10196078431372549,
+                                "g": 0.10196078431372549,
+                                "b": 0.1803921568627451,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.9396926207859083,
+                              0.3420201433256689,
+                              0.7988362387301198
+                            ],
+                            [
+                              -0.3420201433256689,
+                              -0.9396926207859083,
+                              1.1408563820557887
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardInfo",
+                      "size": {
+                        "x": 200,
+                        "y": 56.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Binary Star",
+                          "size": {
+                            "x": 74.75,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Binary Star",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "CardMeta",
+                          "size": {
+                            "x": 69.35999870300293,
+                            "y": 16
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "2025",
+                              "size": {
+                                "x": 26.8799991607666,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.6666666666666666
+                                }
+                              ],
+                              "characters": "2025",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RatingBadge",
+                              "size": {
+                                "x": 34.47999954223633,
+                                "y": 16
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "87%",
+                                  "size": {
+                                    "x": 22.479999542236328,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "87%",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8980392156862745,
+                                    "g": 0.03529411764705882,
+                                    "b": 0.0784313725490196,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 2,
+                              "paddingRight": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 10,
+                      "paddingRight": 12,
+                      "paddingBottom": 10,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Card: Code Zero",
+                  "size": {
+                    "x": 200,
+                    "y": 336.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "Poster",
+                      "size": {
+                        "x": 200,
+                        "y": 280
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.4235294117647059,
+                                "g": 0.3607843137254902,
+                                "b": 0.9058823529411765,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.050980392156862744,
+                                "g": 0.050980392156862744,
+                                "b": 0.10196078431372549,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.9396926207859083,
+                              0.3420201433256689,
+                              0.7988362387301198
+                            ],
+                            [
+                              -0.3420201433256689,
+                              -0.9396926207859083,
+                              1.1408563820557887
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "CardInfo",
+                      "size": {
+                        "x": 200,
+                        "y": 56.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Code Zero",
+                          "size": {
+                            "x": 70.56999969482422,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Code Zero",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "CardMeta",
+                          "size": {
+                            "x": 70.29000091552734,
+                            "y": 16
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "2026",
+                              "size": {
+                                "x": 27.18000030517578,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.6666666666666666
+                                }
+                              ],
+                              "characters": "2026",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RatingBadge",
+                              "size": {
+                                "x": 35.11000061035156,
+                                "y": 16
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "93%",
+                                  "size": {
+                                    "x": 23.110000610351562,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "93%",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8980392156862745,
+                                    "g": 0.03529411764705882,
+                                    "b": 0.0784313725490196,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 4,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 2,
+                              "paddingRight": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 10,
+                      "paddingRight": 12,
+                      "paddingBottom": 10,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "clipContent": true,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FIXED"
+                }
+              ],
+              "clipContent": true,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 16,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 14,
+          "paddingTop": 8,
+          "paddingRight": 48,
+          "paddingBottom": 8,
+          "paddingLeft": 48,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.050980392156862744,
+            "g": 0.050980392156862744,
+            "b": 0.10196078431372549,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

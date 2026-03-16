@@ -1,0 +1,2844 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "email-client",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "EmailClientPage",
+      "size": {
+        "x": 1100,
+        "y": 512.8000000000001
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "FolderSidebar",
+          "size": {
+            "x": 200,
+            "y": 409.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "Mailbox",
+              "size": {
+                "x": 42.439998626708984,
+                "y": 13.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.611764705882353,
+                    "g": 0.6392156862745098,
+                    "b": 0.6862745098039216,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Mailbox",
+              "fontSize": 11,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "Folder: Inbox",
+              "size": {
+                "x": 184,
+                "y": 37.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Inbox",
+                  "size": {
+                    "x": 34.70000076293945,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11372549019607843,
+                        "g": 0.3058823529411765,
+                        "b": 0.8470588235294118,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Inbox",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Count",
+                  "size": {
+                    "x": 27.5,
+                    "y": 17.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "12",
+                      "size": {
+                        "x": 11.5,
+                        "y": 13.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "12",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11372549019607843,
+                        "g": 0.3058823529411765,
+                        "b": 0.8470588235294118,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8.6,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 2,
+                  "paddingRight": 8,
+                  "paddingBottom": 2,
+                  "paddingLeft": 8,
+                  "primaryAxisAlignItems": "CENTER",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.8784313725490196,
+                    "g": 0.9294117647058824,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 6,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Folder: Starred",
+              "size": {
+                "x": 184,
+                "y": 37.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Starred",
+                  "size": {
+                    "x": 45.27000045776367,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Starred",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Count",
+                  "size": {
+                    "x": 23,
+                    "y": 17.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "3",
+                      "size": {
+                        "x": 7,
+                        "y": 13.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "3",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.8980392156862745,
+                        "g": 0.9058823529411765,
+                        "b": 0.9215686274509803,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8.6,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 2,
+                  "paddingRight": 8,
+                  "paddingBottom": 2,
+                  "paddingLeft": 8,
+                  "primaryAxisAlignItems": "CENTER",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 6,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Folder: Sent",
+              "size": {
+                "x": 184,
+                "y": 35.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Sent",
+                  "size": {
+                    "x": 27.850000381469727,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Sent",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 6,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Folder: Drafts",
+              "size": {
+                "x": 184,
+                "y": 37.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Drafts",
+                  "size": {
+                    "x": 36.93000030517578,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Drafts",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Count",
+                  "size": {
+                    "x": 20.65000009536743,
+                    "y": 17.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "1",
+                      "size": {
+                        "x": 4.650000095367432,
+                        "y": 13.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "1",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.8980392156862745,
+                        "g": 0.9058823529411765,
+                        "b": 0.9215686274509803,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8.6,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 2,
+                  "paddingRight": 8,
+                  "paddingBottom": 2,
+                  "paddingLeft": 8,
+                  "primaryAxisAlignItems": "CENTER",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 6,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Folder: Spam",
+              "size": {
+                "x": 184,
+                "y": 35.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Spam",
+                  "size": {
+                    "x": 35.119998931884766,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Spam",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 6,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Folder: Trash",
+              "size": {
+                "x": 184,
+                "y": 35.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Trash",
+                  "size": {
+                    "x": 34.400001525878906,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Trash",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 6,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "RECTANGLE",
+              "name": "FolderDivider",
+              "size": {
+                "x": 180,
+                "y": 1
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.8980392156862745,
+                    "g": 0.9058823529411765,
+                    "b": 0.9215686274509803,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "Labels",
+              "size": {
+                "x": 35.22999954223633,
+                "y": 13.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.611764705882353,
+                    "g": 0.6392156862745098,
+                    "b": 0.6862745098039216,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Labels",
+              "fontSize": 11,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "Folder: Work",
+              "size": {
+                "x": 184,
+                "y": 37.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Work",
+                  "size": {
+                    "x": 32.18000030517578,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Work",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Count",
+                  "size": {
+                    "x": 22.739999771118164,
+                    "y": 17.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "5",
+                      "size": {
+                        "x": 6.739999771118164,
+                        "y": 13.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "5",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.8980392156862745,
+                        "g": 0.9058823529411765,
+                        "b": 0.9215686274509803,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8.6,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 2,
+                  "paddingRight": 8,
+                  "paddingBottom": 2,
+                  "paddingLeft": 8,
+                  "primaryAxisAlignItems": "CENTER",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 6,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Folder: Personal",
+              "size": {
+                "x": 184,
+                "y": 37.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Personal",
+                  "size": {
+                    "x": 53.4900016784668,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Personal",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Count",
+                  "size": {
+                    "x": 22.84999990463257,
+                    "y": 17.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "2",
+                      "size": {
+                        "x": 6.849999904632568,
+                        "y": 13.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "2",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.8980392156862745,
+                        "g": 0.9058823529411765,
+                        "b": 0.9215686274509803,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8.6,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 2,
+                  "paddingRight": 8,
+                  "paddingBottom": 2,
+                  "paddingLeft": 8,
+                  "primaryAxisAlignItems": "CENTER",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 6,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Folder: Finance",
+              "size": {
+                "x": 184,
+                "y": 35.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Finance",
+                  "size": {
+                    "x": 48.4900016784668,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Finance",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 6,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.9764705882352941,
+                "g": 0.9803921568627451,
+                "b": 0.984313725490196,
+                "a": 1
+              },
+              "opacity": 1
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 0.92,
+                "g": 0.93,
+                "b": 0.95,
+                "a": 1
+              },
+              "weight": 1,
+              "align": "INSIDE"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 2,
+          "paddingTop": 16,
+          "paddingRight": 8,
+          "paddingBottom": 16,
+          "paddingLeft": 8,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FIXED"
+        },
+        {
+          "type": "FRAME",
+          "name": "MessageList",
+          "size": {
+            "x": 380,
+            "y": 512.8000000000001
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "ListHeader",
+              "size": {
+                "x": 380,
+                "y": 47.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Inbox",
+                  "size": {
+                    "x": 43.310001373291016,
+                    "y": 19.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.06666666666666667,
+                        "g": 0.09411764705882353,
+                        "b": 0.15294117647058825,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Inbox",
+                  "fontSize": 16,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Email: Sarah Chen",
+              "size": {
+                "x": 380,
+                "y": 77.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ELLIPSE",
+                  "name": "Av:Sarah Chen",
+                  "size": {
+                    "x": 36,
+                    "y": 36
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.23137254901960785,
+                        "g": 0.5098039215686274,
+                        "b": 0.9647058823529412,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "FRAME",
+                  "name": "EmailInfo",
+                  "size": {
+                    "x": 300,
+                    "y": 49.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "EmailTopRow",
+                      "size": {
+                        "x": 300,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Sarah Chen",
+                          "size": {
+                            "x": 250.9000015258789,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "layoutSizingHorizontal": "FILL",
+                          "characters": "Sarah Chen",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "10:34 AM",
+                          "size": {
+                            "x": 49.099998474121094,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "10:34 AM",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Project Update: Q1 Sprint Review",
+                      "size": {
+                        "x": 205.5800018310547,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.12156862745098039,
+                            "g": 0.1607843137254902,
+                            "b": 0.21568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Project Update: Q1 Sprint Review",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Hi team, here is a summary of our progress...",
+                      "size": {
+                        "x": 255.5,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Hi team, here is a summary of our progress...",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 2,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9411764705882353,
+                    "g": 0.9686274509803922,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 12,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Email: Alex Rivera",
+              "size": {
+                "x": 380,
+                "y": 77.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ELLIPSE",
+                  "name": "Av:Alex Rivera",
+                  "size": {
+                    "x": 36,
+                    "y": 36
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.06274509803921569,
+                        "g": 0.7254901960784313,
+                        "b": 0.5058823529411764,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "FRAME",
+                  "name": "EmailInfo",
+                  "size": {
+                    "x": 300,
+                    "y": 49.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "EmailTopRow",
+                      "size": {
+                        "x": 300,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Alex Rivera",
+                          "size": {
+                            "x": 258.38999938964844,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "layoutSizingHorizontal": "FILL",
+                          "characters": "Alex Rivera",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "9:15 AM",
+                          "size": {
+                            "x": 41.61000061035156,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "9:15 AM",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Design System v2 Feedback",
+                      "size": {
+                        "x": 177.75,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.12156862745098039,
+                            "g": 0.1607843137254902,
+                            "b": 0.21568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Design System v2 Feedback",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "I reviewed the components and have a few...",
+                      "size": {
+                        "x": 252,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "I reviewed the components and have a few...",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 2,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9411764705882353,
+                    "g": 0.9686274509803922,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 12,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Email: Jordan Lee",
+              "size": {
+                "x": 380,
+                "y": 77.6
+              },
+              "opacity": 0.85,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ELLIPSE",
+                  "name": "Av:Jordan Lee",
+                  "size": {
+                    "x": 36,
+                    "y": 36
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9607843137254902,
+                        "g": 0.6196078431372549,
+                        "b": 0.043137254901960784,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "FRAME",
+                  "name": "EmailInfo",
+                  "size": {
+                    "x": 300,
+                    "y": 49.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "EmailTopRow",
+                      "size": {
+                        "x": 300,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Jordan Lee",
+                          "size": {
+                            "x": 248.36000061035156,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "layoutSizingHorizontal": "FILL",
+                          "characters": "Jordan Lee",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Yesterday",
+                          "size": {
+                            "x": 51.63999938964844,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Yesterday",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Meeting Notes: Product Sync",
+                      "size": {
+                        "x": 179.67999267578125,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.12156862745098039,
+                            "g": 0.1607843137254902,
+                            "b": 0.21568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Meeting Notes: Product Sync",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Attached are the notes from yesterday...",
+                      "size": {
+                        "x": 227.2899932861328,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Attached are the notes from yesterday...",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 2,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 12,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Email: Priya Patel",
+              "size": {
+                "x": 380,
+                "y": 77.6
+              },
+              "opacity": 0.85,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ELLIPSE",
+                  "name": "Av:Priya Patel",
+                  "size": {
+                    "x": 36,
+                    "y": 36
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5450980392156862,
+                        "g": 0.3607843137254902,
+                        "b": 0.9647058823529412,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "FRAME",
+                  "name": "EmailInfo",
+                  "size": {
+                    "x": 300,
+                    "y": 49.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "EmailTopRow",
+                      "size": {
+                        "x": 300,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Priya Patel",
+                          "size": {
+                            "x": 248.36000061035156,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "layoutSizingHorizontal": "FILL",
+                          "characters": "Priya Patel",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Yesterday",
+                          "size": {
+                            "x": 51.63999938964844,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Yesterday",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Invoice #1042 Approved",
+                      "size": {
+                        "x": 149.0399932861328,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.12156862745098039,
+                            "g": 0.1607843137254902,
+                            "b": 0.21568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Invoice #1042 Approved",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "The finance team has approved your...",
+                      "size": {
+                        "x": 217.67999267578125,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "The finance team has approved your...",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 2,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 12,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Email: Dev Team",
+              "size": {
+                "x": 380,
+                "y": 77.6
+              },
+              "opacity": 0.85,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ELLIPSE",
+                  "name": "Av:Dev Team",
+                  "size": {
+                    "x": 36,
+                    "y": 36
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9372549019607843,
+                        "g": 0.26666666666666666,
+                        "b": 0.26666666666666666,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "FRAME",
+                  "name": "EmailInfo",
+                  "size": {
+                    "x": 300,
+                    "y": 49.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "EmailTopRow",
+                      "size": {
+                        "x": 300,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Dev Team",
+                          "size": {
+                            "x": 265.4700012207031,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "layoutSizingHorizontal": "FILL",
+                          "characters": "Dev Team",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Mar 12",
+                          "size": {
+                            "x": 34.529998779296875,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Mar 12",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "CI/CD Pipeline Fixed",
+                      "size": {
+                        "x": 125.58000183105469,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.12156862745098039,
+                            "g": 0.1607843137254902,
+                            "b": 0.21568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "CI/CD Pipeline Fixed",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "The build issue has been resolved...",
+                      "size": {
+                        "x": 203.61000061035156,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "The build issue has been resolved...",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 2,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 12,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Email: Lisa Wong",
+              "size": {
+                "x": 380,
+                "y": 77.6
+              },
+              "opacity": 0.85,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ELLIPSE",
+                  "name": "Av:Lisa Wong",
+                  "size": {
+                    "x": 36,
+                    "y": 36
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9254901960784314,
+                        "g": 0.2823529411764706,
+                        "b": 0.6,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "FRAME",
+                  "name": "EmailInfo",
+                  "size": {
+                    "x": 300,
+                    "y": 49.599999999999994
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "EmailTopRow",
+                      "size": {
+                        "x": 300,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Lisa Wong",
+                          "size": {
+                            "x": 267.70000076293945,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "layoutSizingHorizontal": "FILL",
+                          "characters": "Lisa Wong",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Mar 11",
+                          "size": {
+                            "x": 32.29999923706055,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Mar 11",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Conference Talk Proposal",
+                      "size": {
+                        "x": 158.10000610351562,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.12156862745098039,
+                            "g": 0.1607843137254902,
+                            "b": 0.21568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Conference Talk Proposal",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Would you be interested in presenting...",
+                      "size": {
+                        "x": 225.11000061035156,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Would you be interested in presenting...",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 2,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 12,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 0.92,
+                "g": 0.93,
+                "b": 0.95,
+                "a": 1
+              },
+              "weight": 1,
+              "align": "INSIDE"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 0,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FIXED"
+        },
+        {
+          "type": "FRAME",
+          "name": "PreviewPanel",
+          "size": {
+            "x": 520,
+            "y": 439.69999999999993
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "PreviewHeader",
+              "size": {
+                "x": 520,
+                "y": 113.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Project Update: Q1 Sprint Review",
+                  "size": {
+                    "x": 287.30999755859375,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.06666666666666667,
+                        "g": 0.09411764705882353,
+                        "b": 0.15294117647058825,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Project Update: Q1 Sprint Review",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "SenderInfo",
+                  "size": {
+                    "x": 472,
+                    "y": 40
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "SenderAv",
+                      "size": {
+                        "x": 40,
+                        "y": 40
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.23137254901960785,
+                            "g": 0.5098039215686274,
+                            "b": 0.9647058823529412,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "SenderMeta",
+                      "size": {
+                        "x": 280.8800048828125,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Sarah Chen",
+                          "size": {
+                            "x": 78.44000244140625,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Sarah Chen",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "<sarah.chen@company.com>",
+                          "size": {
+                            "x": 170.3000030517578,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "<sarah.chen@company.com>",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Mar 14, 2026 10:34 AM",
+                      "size": {
+                        "x": 131.1199951171875,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.611764705882353,
+                            "g": 0.6392156862745098,
+                            "b": 0.6862745098039216,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Mar 14, 2026 10:34 AM",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 10,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 20,
+              "paddingRight": 24,
+              "paddingBottom": 20,
+              "paddingLeft": 24,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "PreviewBody",
+              "size": {
+                "x": 520,
+                "y": 326.09999999999997
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Hi team,\n\nHere is a summary of our progress from the Q1 sprint. We completed 34 out of 38 planned story points, which puts us at 89% completion rate.",
+                  "size": {
+                    "x": 460,
+                    "y": 115.49999999999999
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Hi team,\n\nHere is a summary of our progress from the Q1 sprint. We completed 34 out of 38 planned story points, which puts us at 89% completion rate.",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "textAutoResize": "HEIGHT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Key highlights:\n- Component library shipped with 42 components\n- Performance improved by 23% on core metrics\n- Two new integrations completed ahead of schedule",
+                  "size": {
+                    "x": 460,
+                    "y": 92.39999999999999
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Key highlights:\n- Component library shipped with 42 components\n- Performance improved by 23% on core metrics\n- Two new integrations completed ahead of schedule",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "textAutoResize": "HEIGHT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Best regards,\nSarah",
+                  "size": {
+                    "x": 87.91000366210938,
+                    "y": 46.199999999999996
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Best regards,\nSarah",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 16,
+              "paddingTop": 20,
+              "paddingRight": 24,
+              "paddingBottom": 20,
+              "paddingLeft": 24,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 0,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "HORIZONTAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

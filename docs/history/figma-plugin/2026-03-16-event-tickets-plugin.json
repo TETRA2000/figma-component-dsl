@@ -1,0 +1,2810 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "event-tickets",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "EventTicketsPage",
+      "size": {
+        "x": 900,
+        "y": 995.2
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "Hero",
+          "size": {
+            "x": 900,
+            "y": 233.2
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "Find Your Next Experience",
+              "size": {
+                "x": 412.25,
+                "y": 38.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Find Your Next Experience",
+              "fontSize": 32,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "CENTER",
+              "fontWeight": 800,
+              "fontStyle": "Regular"
+            },
+            {
+              "type": "TEXT",
+              "name": "Concerts, festivals, sports, theater and more",
+              "size": {
+                "x": 336.0400085449219,
+                "y": 19.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 0.8
+                }
+              ],
+              "characters": "Concerts, festivals, sports, theater and more",
+              "fontSize": 16,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "CENTER",
+              "fontWeight": 400,
+              "fontStyle": "Regular"
+            },
+            {
+              "type": "FRAME",
+              "name": "SearchBox",
+              "size": {
+                "x": 500,
+                "y": 55.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Search events, artists, venues...",
+                  "size": {
+                    "x": 391.86000061035156,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.611764705882353,
+                        "g": 0.6392156862745098,
+                        "b": 0.6862745098039216,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "layoutSizingHorizontal": "FILL",
+                  "characters": "Search events, artists, venues...",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "SearchBtn",
+                  "size": {
+                    "x": 76.13999938964844,
+                    "y": 31.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Search",
+                      "size": {
+                        "x": 44.13999938964844,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Search",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.48627450980392156,
+                        "g": 0.22745098039215686,
+                        "b": 0.9294117647058824,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 8,
+                  "paddingRight": 16,
+                  "paddingBottom": 8,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "CENTER",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 12,
+              "paddingRight": 16,
+              "paddingBottom": 12,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FIXED"
+            }
+          ],
+          "fills": [
+            {
+              "type": "GRADIENT_LINEAR",
+              "opacity": 1,
+              "gradientStops": [
+                {
+                  "color": {
+                    "r": 0.2980392156862745,
+                    "g": 0.11372549019607843,
+                    "b": 0.5843137254901961,
+                    "a": 1
+                  },
+                  "position": 0
+                },
+                {
+                  "color": {
+                    "r": 0.48627450980392156,
+                    "g": 0.22745098039215686,
+                    "b": 0.9294117647058824,
+                    "a": 1
+                  },
+                  "position": 0.5
+                },
+                {
+                  "color": {
+                    "r": 0.6549019607843137,
+                    "g": 0.5450980392156862,
+                    "b": 0.9803921568627451,
+                    "a": 1
+                  },
+                  "position": 1
+                }
+              ],
+              "gradientTransform": [
+                [
+                  -0.7071067811865475,
+                  0.7071067811865476,
+                  0.49999999999999994
+                ],
+                [
+                  -0.7071067811865476,
+                  -0.7071067811865475,
+                  1.2071067811865475
+                ]
+              ]
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 12,
+          "paddingTop": 48,
+          "paddingRight": 40,
+          "paddingBottom": 48,
+          "paddingLeft": 40,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "Filters",
+          "size": {
+            "x": 900,
+            "y": 63.6
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Filter: All Events",
+              "size": {
+                "x": 94.06000137329102,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "All Events",
+                  "size": {
+                    "x": 62.060001373291016,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "All Events",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.48627450980392156,
+                    "g": 0.22745098039215686,
+                    "b": 0.9294117647058824,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Filter: Concerts",
+              "size": {
+                "x": 88.06000137329102,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Concerts",
+                  "size": {
+                    "x": 56.060001373291016,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Concerts",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9529411764705882,
+                    "g": 0.9568627450980393,
+                    "b": 0.9647058823529412,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Filter: Sports",
+              "size": {
+                "x": 72.18000030517578,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Sports",
+                  "size": {
+                    "x": 40.18000030517578,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Sports",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9529411764705882,
+                    "g": 0.9568627450980393,
+                    "b": 0.9647058823529412,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Filter: Theater",
+              "size": {
+                "x": 79.68000030517578,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Theater",
+                  "size": {
+                    "x": 47.68000030517578,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Theater",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9529411764705882,
+                    "g": 0.9568627450980393,
+                    "b": 0.9647058823529412,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Filter: Festivals",
+              "size": {
+                "x": 85.56000137329102,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Festivals",
+                  "size": {
+                    "x": 53.560001373291016,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Festivals",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9529411764705882,
+                    "g": 0.9568627450980393,
+                    "b": 0.9647058823529412,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Filter: Comedy",
+              "size": {
+                "x": 83.59000015258789,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Comedy",
+                  "size": {
+                    "x": 51.59000015258789,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.21568627450980393,
+                        "g": 0.2549019607843137,
+                        "b": 0.3176470588235294,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Comedy",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9529411764705882,
+                    "g": 0.9568627450980393,
+                    "b": 0.9647058823529412,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 10,
+          "paddingTop": 16,
+          "paddingRight": 40,
+          "paddingBottom": 16,
+          "paddingLeft": 40,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "EventsList",
+          "size": {
+            "x": 900,
+            "y": 698.4
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "Upcoming Events",
+              "size": {
+                "x": 188.42999267578125,
+                "y": 26.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.06666666666666667,
+                    "g": 0.09411764705882353,
+                    "b": 0.15294117647058825,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Upcoming Events",
+              "fontSize": 22,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "Event: Taylor Swift - Eras Tour",
+              "size": {
+                "x": 820,
+                "y": 152
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ROUNDED_RECTANGLE",
+                  "name": "EventImage",
+                  "size": {
+                    "x": 120,
+                    "y": 120
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 0.9254901960784314,
+                            "g": 0.2823529411764706,
+                            "b": 0.6,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 0.5450980392156862,
+                            "g": 0.3607843137254902,
+                            "b": 0.9647058823529412,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ],
+                  "cornerRadius": 10
+                },
+                {
+                  "type": "FRAME",
+                  "name": "EventInfo",
+                  "size": {
+                    "x": 584,
+                    "y": 90
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Taylor Swift - Eras Tour",
+                      "size": {
+                        "x": 204.17999267578125,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Taylor Swift - Eras Tour",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "VenueRow",
+                      "size": {
+                        "x": 251.21999406814575,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Madison Square Garden",
+                          "size": {
+                            "x": 149.58999633789062,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.48627450980392156,
+                                "g": 0.22745098039215686,
+                                "b": 0.9294117647058824,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Madison Square Garden",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "|",
+                          "size": {
+                            "x": 4.320000171661377,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8196078431372549,
+                                "g": 0.8352941176470589,
+                                "b": 0.8588235294117647,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "|",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "New York, NY",
+                          "size": {
+                            "x": 85.30999755859375,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "New York, NY",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Sat, Apr 12 at 7:00 PM",
+                      "size": {
+                        "x": 135.6199951171875,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Sat, Apr 12 at 7:00 PM",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "PriceRow",
+                      "size": {
+                        "x": 71.35000038146973,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "From",
+                          "size": {
+                            "x": 28.760000228881836,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "From",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "$149",
+                          "size": {
+                            "x": 38.59000015258789,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$149",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "DateBadge",
+                  "size": {
+                    "x": 52,
+                    "y": 56
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "MonthBar",
+                      "size": {
+                        "x": 52,
+                        "y": 20
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "APR",
+                          "size": {
+                            "x": 20.510000228881836,
+                            "y": 12
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "APR",
+                          "fontSize": 10,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.48627450980392156,
+                            "g": 0.22745098039215686,
+                            "b": 0.9294117647058824,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 4,
+                      "paddingRight": 0,
+                      "paddingBottom": 4,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "DayArea",
+                      "size": {
+                        "x": 52,
+                        "y": 38.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "12",
+                          "size": {
+                            "x": 23.34000015258789,
+                            "y": 26.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "12",
+                          "fontSize": 22,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 800,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.92,
+                        "g": 0.93,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 10,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FIXED",
+                  "layoutSizingVertical": "FIXED"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 14,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 16,
+              "paddingTop": 16,
+              "paddingRight": 16,
+              "paddingBottom": 16,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Event: NBA Finals Game 3",
+              "size": {
+                "x": 820,
+                "y": 152
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ROUNDED_RECTANGLE",
+                  "name": "EventImage",
+                  "size": {
+                    "x": 120,
+                    "y": 120
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 0.9764705882352941,
+                            "g": 0.45098039215686275,
+                            "b": 0.08627450980392157,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 0.9372549019607843,
+                            "g": 0.26666666666666666,
+                            "b": 0.26666666666666666,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ],
+                  "cornerRadius": 10
+                },
+                {
+                  "type": "FRAME",
+                  "name": "EventInfo",
+                  "size": {
+                    "x": 584,
+                    "y": 90
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "NBA Finals Game 3",
+                      "size": {
+                        "x": 166.63999938964844,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "NBA Finals Game 3",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "VenueRow",
+                      "size": {
+                        "x": 230.95999956130981,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Crypto.com Arena",
+                          "size": {
+                            "x": 113.56999969482422,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.48627450980392156,
+                                "g": 0.22745098039215686,
+                                "b": 0.9294117647058824,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Crypto.com Arena",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "|",
+                          "size": {
+                            "x": 4.320000171661377,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8196078431372549,
+                                "g": 0.8352941176470589,
+                                "b": 0.8588235294117647,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "|",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Los Angeles, CA",
+                          "size": {
+                            "x": 101.06999969482422,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Los Angeles, CA",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Sun, Jun 8 at 8:30 PM",
+                      "size": {
+                        "x": 136.17999267578125,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Sun, Jun 8 at 8:30 PM",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "PriceRow",
+                      "size": {
+                        "x": 73.67999839782715,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "From",
+                          "size": {
+                            "x": 28.760000228881836,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "From",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "$285",
+                          "size": {
+                            "x": 40.91999816894531,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$285",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "DateBadge",
+                  "size": {
+                    "x": 52,
+                    "y": 56
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "MonthBar",
+                      "size": {
+                        "x": 52,
+                        "y": 20
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "JUN",
+                          "size": {
+                            "x": 20.790000915527344,
+                            "y": 12
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "JUN",
+                          "fontSize": 10,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.48627450980392156,
+                            "g": 0.22745098039215686,
+                            "b": 0.9294117647058824,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 4,
+                      "paddingRight": 0,
+                      "paddingBottom": 4,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "DayArea",
+                      "size": {
+                        "x": 52,
+                        "y": 38.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "08",
+                          "size": {
+                            "x": 29.149999618530273,
+                            "y": 26.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "08",
+                          "fontSize": 22,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 800,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.92,
+                        "g": 0.93,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 10,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FIXED",
+                  "layoutSizingVertical": "FIXED"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 14,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 16,
+              "paddingTop": 16,
+              "paddingRight": 16,
+              "paddingBottom": 16,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Event: Hamilton - Broadway",
+              "size": {
+                "x": 820,
+                "y": 152
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ROUNDED_RECTANGLE",
+                  "name": "EventImage",
+                  "size": {
+                    "x": 120,
+                    "y": 120
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 0.23137254901960785,
+                            "g": 0.5098039215686274,
+                            "b": 0.9647058823529412,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ],
+                  "cornerRadius": 10
+                },
+                {
+                  "type": "FRAME",
+                  "name": "EventInfo",
+                  "size": {
+                    "x": 584,
+                    "y": 90
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Hamilton - Broadway",
+                      "size": {
+                        "x": 184,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Hamilton - Broadway",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "VenueRow",
+                      "size": {
+                        "x": 255.93000078201294,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Richard Rodgers Theatre",
+                          "size": {
+                            "x": 154.3000030517578,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.48627450980392156,
+                                "g": 0.22745098039215686,
+                                "b": 0.9294117647058824,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Richard Rodgers Theatre",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "|",
+                          "size": {
+                            "x": 4.320000171661377,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8196078431372549,
+                                "g": 0.8352941176470589,
+                                "b": 0.8588235294117647,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "|",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "New York, NY",
+                          "size": {
+                            "x": 85.30999755859375,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "New York, NY",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Thu, May 22 at 7:30 PM",
+                      "size": {
+                        "x": 146.3000030517578,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Thu, May 22 at 7:30 PM",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "PriceRow",
+                      "size": {
+                        "x": 64.04000091552734,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "From",
+                          "size": {
+                            "x": 28.760000228881836,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "From",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "$89",
+                          "size": {
+                            "x": 31.280000686645508,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$89",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "DateBadge",
+                  "size": {
+                    "x": 52,
+                    "y": 56
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "MonthBar",
+                      "size": {
+                        "x": 52,
+                        "y": 20
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "MAY",
+                          "size": {
+                            "x": 23.309999465942383,
+                            "y": 12
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "MAY",
+                          "fontSize": 10,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.48627450980392156,
+                            "g": 0.22745098039215686,
+                            "b": 0.9294117647058824,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 4,
+                      "paddingRight": 0,
+                      "paddingBottom": 4,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "DayArea",
+                      "size": {
+                        "x": 52,
+                        "y": 38.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "22",
+                          "size": {
+                            "x": 27.709999084472656,
+                            "y": 26.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "22",
+                          "fontSize": 22,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 800,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.92,
+                        "g": 0.93,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 10,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FIXED",
+                  "layoutSizingVertical": "FIXED"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 14,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 16,
+              "paddingTop": 16,
+              "paddingRight": 16,
+              "paddingBottom": 16,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Event: Coldplay - Music of the Spheres",
+              "size": {
+                "x": 820,
+                "y": 152
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ROUNDED_RECTANGLE",
+                  "name": "EventImage",
+                  "size": {
+                    "x": 120,
+                    "y": 120
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 0.38823529411764707,
+                            "g": 0.4,
+                            "b": 0.9450980392156862,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 0.6549019607843137,
+                            "g": 0.5450980392156862,
+                            "b": 0.9803921568627451,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ],
+                  "cornerRadius": 10
+                },
+                {
+                  "type": "FRAME",
+                  "name": "EventInfo",
+                  "size": {
+                    "x": 584,
+                    "y": 90
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Coldplay - Music of the Spheres",
+                      "size": {
+                        "x": 280.55999755859375,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Coldplay - Music of the Spheres",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "VenueRow",
+                      "size": {
+                        "x": 200.55000352859497,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Wembley Stadium",
+                          "size": {
+                            "x": 112.16000366210938,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.48627450980392156,
+                                "g": 0.22745098039215686,
+                                "b": 0.9294117647058824,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Wembley Stadium",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "|",
+                          "size": {
+                            "x": 4.320000171661377,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.8196078431372549,
+                                "g": 0.8352941176470589,
+                                "b": 0.8588235294117647,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "|",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "London, UK",
+                          "size": {
+                            "x": 72.06999969482422,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "London, UK",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Sat, Jul 5 at 6:00 PM",
+                      "size": {
+                        "x": 127.69999694824219,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Sat, Jul 5 at 6:00 PM",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "PriceRow",
+                      "size": {
+                        "x": 63.579999923706055,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "From",
+                          "size": {
+                            "x": 28.760000228881836,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "From",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "$95",
+                          "size": {
+                            "x": 30.81999969482422,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$95",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "DateBadge",
+                  "size": {
+                    "x": 52,
+                    "y": 56
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "MonthBar",
+                      "size": {
+                        "x": 52,
+                        "y": 20
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "JUL",
+                          "size": {
+                            "x": 18.81999969482422,
+                            "y": 12
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "JUL",
+                          "fontSize": 10,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.48627450980392156,
+                            "g": 0.22745098039215686,
+                            "b": 0.9294117647058824,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 4,
+                      "paddingRight": 0,
+                      "paddingBottom": 4,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "DayArea",
+                      "size": {
+                        "x": 52,
+                        "y": 38.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "05",
+                          "size": {
+                            "x": 28.520000457763672,
+                            "y": 26.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "05",
+                          "fontSize": 22,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 800,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.92,
+                        "g": 0.93,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 10,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FIXED",
+                  "layoutSizingVertical": "FIXED"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.92,
+                    "g": 0.93,
+                    "b": 0.95,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 14,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 16,
+              "paddingTop": 16,
+              "paddingRight": 16,
+              "paddingBottom": 16,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 12,
+          "paddingTop": 8,
+          "paddingRight": 40,
+          "paddingBottom": 8,
+          "paddingLeft": 40,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.9764705882352941,
+            "g": 0.9803921568627451,
+            "b": 0.984313725490196,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

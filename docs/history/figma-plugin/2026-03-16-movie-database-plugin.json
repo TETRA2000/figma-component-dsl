@@ -1,0 +1,3985 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "movie-database",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "MovieDatabasePage",
+      "size": {
+        "x": 1100,
+        "y": 1045.1999999999998
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "NavBar",
+          "size": {
+            "x": 1100,
+            "y": 67.6
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "CineDB",
+              "size": {
+                "x": 79.4800033569336,
+                "y": 26.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9607843137254902,
+                    "g": 0.6196078431372549,
+                    "b": 0.043137254901960784,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "CineDB",
+              "fontSize": 22,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 800,
+              "fontStyle": "Regular"
+            },
+            {
+              "type": "FRAME",
+              "name": "SearchBar",
+              "size": {
+                "x": 360,
+                "y": 35.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Search movies, actors, directors...",
+                  "size": {
+                    "x": 209.52999877929688,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.39215686274509803,
+                        "g": 0.4549019607843137,
+                        "b": 0.5450980392156862,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Search movies, actors, directors...",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 0.050980392156862744
+                }
+              ],
+              "cornerRadius": 8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            },
+            {
+              "type": "FRAME",
+              "name": "NavLinks",
+              "size": {
+                "x": 202.63999557495117,
+                "y": 16.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Movies",
+                  "size": {
+                    "x": 49.029998779296875,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9607843137254902,
+                        "g": 0.6196078431372549,
+                        "b": 0.043137254901960784,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Movies",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "TV Shows",
+                  "size": {
+                    "x": 67.62999725341797,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "TV Shows",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "People",
+                  "size": {
+                    "x": 45.97999954223633,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "People",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 20,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            }
+          ],
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.10196078431372549,
+                "g": 0.10196078431372549,
+                "b": 0.1803921568627451,
+                "a": 1
+              },
+              "opacity": 1
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 0.06
+              },
+              "weight": 1,
+              "align": "INSIDE"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 16,
+          "paddingRight": 36,
+          "paddingBottom": 16,
+          "paddingLeft": 36,
+          "primaryAxisAlignItems": "SPACE_BETWEEN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "Content",
+          "size": {
+            "x": 1100,
+            "y": 977.5999999999999
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "FeaturedHero",
+              "size": {
+                "x": 1028,
+                "y": 336
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ROUNDED_RECTANGLE",
+                  "name": "HeroPoster",
+                  "size": {
+                    "x": 200,
+                    "y": 280
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 0.38823529411764707,
+                            "g": 0.4,
+                            "b": 0.9450980392156862,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 0.6588235294117647,
+                            "g": 0.3333333333333333,
+                            "b": 0.9686274509803922,
+                            "a": 1
+                          },
+                          "position": 0.5
+                        },
+                        {
+                          "color": {
+                            "r": 0.9254901960784314,
+                            "g": 0.2823529411764706,
+                            "b": 0.6,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ],
+                  "cornerRadius": 12
+                },
+                {
+                  "type": "FRAME",
+                  "name": "HeroInfo",
+                  "size": {
+                    "x": 744,
+                    "y": 241.20000000000002
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "FeaturedLabel",
+                      "size": {
+                        "x": 72.38000106811523,
+                        "y": 20
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "FEATURED",
+                          "size": {
+                            "x": 52.380001068115234,
+                            "y": 12
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.09019607843137255,
+                                "b": 0.16470588235294117,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "FEATURED",
+                          "fontSize": 10,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9607843137254902,
+                            "g": 0.6196078431372549,
+                            "b": 0.043137254901960784,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 6,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 4,
+                      "paddingRight": 10,
+                      "paddingBottom": 4,
+                      "paddingLeft": 10,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "The Last Horizon",
+                      "size": {
+                        "x": 231.3699951171875,
+                        "y": 33.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9450980392156862,
+                            "g": 0.9607843137254902,
+                            "b": 0.9764705882352941,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "The Last Horizon",
+                      "fontSize": 28,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 800,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "HeroMeta",
+                      "size": {
+                        "x": 227.82999801635742,
+                        "y": 23.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "2026",
+                          "size": {
+                            "x": 35.11000061035156,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "2026",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "2h 18min",
+                          "size": {
+                            "x": 59.790000915527344,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "2h 18min",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "PG-13",
+                          "size": {
+                            "x": 40.5099983215332,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "PG-13",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "HeroRating",
+                          "size": {
+                            "x": 56.41999816894531,
+                            "y": 23.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "★ 8.7",
+                              "size": {
+                                "x": 36.41999816894531,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9607843137254902,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.043137254901960784,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "★ 8.7",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.6196078431372549,
+                                "b": 0.043137254901960784,
+                                "a": 1
+                              },
+                              "opacity": 0.10196078431372549
+                            }
+                          ],
+                          "cornerRadius": 6,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 4,
+                          "paddingTop": 4,
+                          "paddingRight": 10,
+                          "paddingBottom": 4,
+                          "paddingLeft": 10,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 12,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "In a world where time itself is unraveling, a lone astronaut must journey beyond the edge of known space to find the key to humanity's survival. A visually stunning epic that blends hard science fiction with deeply human storytelling.",
+                      "size": {
+                        "x": 500,
+                        "y": 89.60000000000001
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.5803921568627451,
+                            "g": 0.6392156862745098,
+                            "b": 0.7215686274509804,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "In a world where time itself is unraveling, a lone astronaut must journey beyond the edge of known space to find the key to humanity's survival. A visually stunning epic that blends hard science fiction with deeply human storytelling.",
+                      "fontSize": 14,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "textAutoResize": "HEIGHT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "HeroGenres",
+                      "size": {
+                        "x": 232.18000030517578,
+                        "y": 26.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Genre: Sci-Fi",
+                          "size": {
+                            "x": 61.709999084472656,
+                            "y": 26.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Sci-Fi",
+                              "size": {
+                                "x": 33.709999084472656,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.058823529411764705,
+                                    "g": 0.09019607843137255,
+                                    "b": 0.16470588235294117,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Sci-Fi",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.6196078431372549,
+                                "b": 0.043137254901960784,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 13.2,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 6,
+                          "paddingRight": 14,
+                          "paddingBottom": 6,
+                          "paddingLeft": 14,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Genre: Drama",
+                          "size": {
+                            "x": 65.9000015258789,
+                            "y": 26.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Drama",
+                              "size": {
+                                "x": 37.900001525878906,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.5803921568627451,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.7215686274509804,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Drama",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.050980392156862744
+                            }
+                          ],
+                          "cornerRadius": 13.2,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 6,
+                          "paddingRight": 14,
+                          "paddingBottom": 6,
+                          "paddingLeft": 14,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Genre: Adventure",
+                          "size": {
+                            "x": 88.56999969482422,
+                            "y": 26.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Adventure",
+                              "size": {
+                                "x": 60.56999969482422,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.5803921568627451,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.7215686274509804,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Adventure",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.050980392156862744
+                            }
+                          ],
+                          "cornerRadius": 13.2,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 6,
+                          "paddingRight": 14,
+                          "paddingBottom": 6,
+                          "paddingLeft": 14,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "GRADIENT_LINEAR",
+                  "opacity": 1,
+                  "gradientStops": [
+                    {
+                      "color": {
+                        "r": 0.11764705882352941,
+                        "g": 0.1607843137254902,
+                        "b": 0.23137254901960785,
+                        "a": 1
+                      },
+                      "position": 0
+                    },
+                    {
+                      "color": {
+                        "r": 0.058823529411764705,
+                        "g": 0.09019607843137255,
+                        "b": 0.16470588235294117,
+                        "a": 1
+                      },
+                      "position": 1
+                    }
+                  ],
+                  "gradientTransform": [
+                    [
+                      -0.7071067811865475,
+                      0.7071067811865476,
+                      0.49999999999999994
+                    ],
+                    [
+                      -0.7071067811865476,
+                      -0.7071067811865475,
+                      1.2071067811865475
+                    ]
+                  ]
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 0.06
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 16,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 28,
+              "paddingTop": 28,
+              "paddingRight": 28,
+              "paddingBottom": 28,
+              "paddingLeft": 28,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "CastSection",
+              "size": {
+                "x": 1028,
+                "y": 139.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Top Cast",
+                  "size": {
+                    "x": 77.69999694824219,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9450980392156862,
+                        "g": 0.9607843137254902,
+                        "b": 0.9764705882352941,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Top Cast",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "CastRow",
+                  "size": {
+                    "x": 496.95999908447266,
+                    "y": 103.60000000000001
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Cast: Elena Voss",
+                      "size": {
+                        "x": 64,
+                        "y": 103.60000000000001
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "CastAvatar",
+                          "size": {
+                            "x": 64,
+                            "y": 64
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.38823529411764707,
+                                    "g": 0.4,
+                                    "b": 0.9450980392156862,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.058823529411764705,
+                                    "g": 0.09019607843137255,
+                                    "b": 0.16470588235294117,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -1,
+                                  1.2246467991473532e-16,
+                                  0.9999999999999999
+                                ],
+                                [
+                                  -1.2246467991473532e-16,
+                                  -1,
+                                  1
+                                ]
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Elena Voss",
+                          "size": {
+                            "x": 63.290000915527344,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Elena Voss",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Captain Aria",
+                          "size": {
+                            "x": 63.709999084472656,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.39215686274509803,
+                                "g": 0.4549019607843137,
+                                "b": 0.5450980392156862,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Captain Aria",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Cast: Marcus Cole",
+                      "size": {
+                        "x": 72.80000305175781,
+                        "y": 103.60000000000001
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "CastAvatar",
+                          "size": {
+                            "x": 64,
+                            "y": 64
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.058823529411764705,
+                                    "g": 0.09019607843137255,
+                                    "b": 0.16470588235294117,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -1,
+                                  1.2246467991473532e-16,
+                                  0.9999999999999999
+                                ],
+                                [
+                                  -1.2246467991473532e-16,
+                                  -1,
+                                  1
+                                ]
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Marcus Cole",
+                          "size": {
+                            "x": 72.80000305175781,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Marcus Cole",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Dr. Reeves",
+                          "size": {
+                            "x": 55.369998931884766,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.39215686274509803,
+                                "g": 0.4549019607843137,
+                                "b": 0.5450980392156862,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Dr. Reeves",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Cast: Lin Zhao",
+                      "size": {
+                        "x": 64,
+                        "y": 103.60000000000001
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "CastAvatar",
+                          "size": {
+                            "x": 64,
+                            "y": 64
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.9607843137254902,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.043137254901960784,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.058823529411764705,
+                                    "g": 0.09019607843137255,
+                                    "b": 0.16470588235294117,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -1,
+                                  1.2246467991473532e-16,
+                                  0.9999999999999999
+                                ],
+                                [
+                                  -1.2246467991473532e-16,
+                                  -1,
+                                  1
+                                ]
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Lin Zhao",
+                          "size": {
+                            "x": 49.65999984741211,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Lin Zhao",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Navigator",
+                          "size": {
+                            "x": 50.29999923706055,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.39215686274509803,
+                                "g": 0.4549019607843137,
+                                "b": 0.5450980392156862,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Navigator",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Cast: James Park",
+                      "size": {
+                        "x": 67.66999816894531,
+                        "y": 103.60000000000001
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "CastAvatar",
+                          "size": {
+                            "x": 64,
+                            "y": 64
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.9372549019607843,
+                                    "g": 0.26666666666666666,
+                                    "b": 0.26666666666666666,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.058823529411764705,
+                                    "g": 0.09019607843137255,
+                                    "b": 0.16470588235294117,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -1,
+                                  1.2246467991473532e-16,
+                                  0.9999999999999999
+                                ],
+                                [
+                                  -1.2246467991473532e-16,
+                                  -1,
+                                  1
+                                ]
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "James Park",
+                          "size": {
+                            "x": 67.66999816894531,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "James Park",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Engineer",
+                          "size": {
+                            "x": 45.9900016784668,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.39215686274509803,
+                                "g": 0.4549019607843137,
+                                "b": 0.5450980392156862,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Engineer",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Cast: Sophie Bell",
+                      "size": {
+                        "x": 64.48999786376953,
+                        "y": 103.60000000000001
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "CastAvatar",
+                          "size": {
+                            "x": 64,
+                            "y": 64
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.9254901960784314,
+                                    "g": 0.2823529411764706,
+                                    "b": 0.6,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.058823529411764705,
+                                    "g": 0.09019607843137255,
+                                    "b": 0.16470588235294117,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -1,
+                                  1.2246467991473532e-16,
+                                  0.9999999999999999
+                                ],
+                                [
+                                  -1.2246467991473532e-16,
+                                  -1,
+                                  1
+                                ]
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Sophie Bell",
+                          "size": {
+                            "x": 64.48999786376953,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Sophie Bell",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "AI Voice",
+                          "size": {
+                            "x": 42.630001068115234,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.39215686274509803,
+                                "g": 0.4549019607843137,
+                                "b": 0.5450980392156862,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "AI Voice",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Cast: Omar Diaz",
+                      "size": {
+                        "x": 64,
+                        "y": 103.60000000000001
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "CastAvatar",
+                          "size": {
+                            "x": 64,
+                            "y": 64
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.023529411764705882,
+                                    "g": 0.7137254901960784,
+                                    "b": 0.8313725490196079,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.058823529411764705,
+                                    "g": 0.09019607843137255,
+                                    "b": 0.16470588235294117,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -1,
+                                  1.2246467991473532e-16,
+                                  0.9999999999999999
+                                ],
+                                [
+                                  -1.2246467991473532e-16,
+                                  -1,
+                                  1
+                                ]
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Omar Diaz",
+                          "size": {
+                            "x": 60.189998626708984,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Omar Diaz",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Commander",
+                          "size": {
+                            "x": 63.869998931884766,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.39215686274509803,
+                                "g": 0.4549019607843137,
+                                "b": 0.5450980392156862,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Commander",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 20,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 14,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "BrowseSection",
+              "size": {
+                "x": 1028,
+                "y": 390.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Browse Movies",
+                  "size": {
+                    "x": 133.9199981689453,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9450980392156862,
+                        "g": 0.9607843137254902,
+                        "b": 0.9764705882352941,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Browse Movies",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "GenreFilters",
+                  "size": {
+                    "x": 495.98000144958496,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Genre: All",
+                      "size": {
+                        "x": 43.010000228881836,
+                        "y": 26.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "All",
+                          "size": {
+                            "x": 15.010000228881836,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.09019607843137255,
+                                "b": 0.16470588235294117,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "All",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9607843137254902,
+                            "g": 0.6196078431372549,
+                            "b": 0.043137254901960784,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 13.2,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 6,
+                      "paddingRight": 14,
+                      "paddingBottom": 6,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Genre: Action",
+                      "size": {
+                        "x": 65.56000137329102,
+                        "y": 26.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Action",
+                          "size": {
+                            "x": 37.560001373291016,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Action",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 0.050980392156862744
+                        }
+                      ],
+                      "cornerRadius": 13.2,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 6,
+                      "paddingRight": 14,
+                      "paddingBottom": 6,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Genre: Comedy",
+                      "size": {
+                        "x": 76.70000076293945,
+                        "y": 26.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Comedy",
+                          "size": {
+                            "x": 48.70000076293945,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Comedy",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 0.050980392156862744
+                        }
+                      ],
+                      "cornerRadius": 13.2,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 6,
+                      "paddingRight": 14,
+                      "paddingBottom": 6,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Genre: Drama",
+                      "size": {
+                        "x": 65.9000015258789,
+                        "y": 26.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Drama",
+                          "size": {
+                            "x": 37.900001525878906,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Drama",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 0.050980392156862744
+                        }
+                      ],
+                      "cornerRadius": 13.2,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 6,
+                      "paddingRight": 14,
+                      "paddingBottom": 6,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Genre: Horror",
+                      "size": {
+                        "x": 65.70999908447266,
+                        "y": 26.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Horror",
+                          "size": {
+                            "x": 37.709999084472656,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Horror",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 0.050980392156862744
+                        }
+                      ],
+                      "cornerRadius": 13.2,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 6,
+                      "paddingRight": 14,
+                      "paddingBottom": 6,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Genre: Sci-Fi",
+                      "size": {
+                        "x": 61.709999084472656,
+                        "y": 26.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Sci-Fi",
+                          "size": {
+                            "x": 33.709999084472656,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Sci-Fi",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 0.050980392156862744
+                        }
+                      ],
+                      "cornerRadius": 13.2,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 6,
+                      "paddingRight": 14,
+                      "paddingBottom": 6,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Genre: Thriller",
+                      "size": {
+                        "x": 69.38999938964844,
+                        "y": 26.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Thriller",
+                          "size": {
+                            "x": 41.38999938964844,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5803921568627451,
+                                "g": 0.6392156862745098,
+                                "b": 0.7215686274509804,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Thriller",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 0.050980392156862744
+                        }
+                      ],
+                      "cornerRadius": 13.2,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 6,
+                      "paddingRight": 14,
+                      "paddingBottom": 6,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "MovieGrid",
+                  "size": {
+                    "x": 1028,
+                    "y": 310.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Movie: Neon Requiem",
+                      "size": {
+                        "x": 246.5,
+                        "y": 310.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "RECTANGLE",
+                          "name": "Poster",
+                          "size": {
+                            "x": 246.5,
+                            "y": 200
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.9372549019607843,
+                                    "g": 0.26666666666666666,
+                                    "b": 0.26666666666666666,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.48627450980392156,
+                                    "g": 0.22745098039215686,
+                                    "b": 0.9294117647058824,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.7071067811865475,
+                                  0.7071067811865476,
+                                  0.49999999999999994
+                                ],
+                                [
+                                  -0.7071067811865476,
+                                  -0.7071067811865475,
+                                  1.2071067811865475
+                                ]
+                              ]
+                            }
+                          ],
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MovieInfo",
+                          "size": {
+                            "x": 246.5,
+                            "y": 100.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Neon Requiem",
+                              "size": {
+                                "x": 106.55000305175781,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Neon Requiem",
+                              "fontSize": 15,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "YearRating",
+                              "size": {
+                                "x": 85.61000061035156,
+                                "y": 20.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "2025",
+                                  "size": {
+                                    "x": 29.329999923706055,
+                                    "y": 14.399999999999999
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5803921568627451,
+                                        "g": 0.6392156862745098,
+                                        "b": 0.7215686274509804,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "2025",
+                                  "fontSize": 12,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "RatingBadge",
+                                  "size": {
+                                    "x": 48.28000068664551,
+                                    "y": 20.4
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "★",
+                                      "size": {
+                                        "x": 11.489999771118164,
+                                        "y": 13.2
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.9607843137254902,
+                                            "g": 0.6196078431372549,
+                                            "b": 0.043137254901960784,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "★",
+                                      "fontSize": 11,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 700,
+                                      "fontStyle": "Bold"
+                                    },
+                                    {
+                                      "type": "TEXT",
+                                      "name": "7.9",
+                                      "size": {
+                                        "x": 16.790000915527344,
+                                        "y": 14.399999999999999
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.9607843137254902,
+                                            "g": 0.6196078431372549,
+                                            "b": 0.043137254901960784,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "7.9",
+                                      "fontSize": 12,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9607843137254902,
+                                        "g": 0.6196078431372549,
+                                        "b": 0.043137254901960784,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.10196078431372549
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 4,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 8,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "GenreTags",
+                              "size": {
+                                "x": 102.55000114440918,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Action",
+                                  "size": {
+                                    "x": 46.760000228881836,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Action",
+                                      "size": {
+                                        "x": 30.760000228881836,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.5803921568627451,
+                                            "g": 0.6392156862745098,
+                                            "b": 0.7215686274509804,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Action",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 500,
+                                      "fontStyle": "Medium"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Thriller",
+                                  "size": {
+                                    "x": 49.790000915527344,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Thriller",
+                                      "size": {
+                                        "x": 33.790000915527344,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.5803921568627451,
+                                            "g": 0.6392156862745098,
+                                            "b": 0.7215686274509804,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Thriller",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 500,
+                                      "fontStyle": "Medium"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 14,
+                          "paddingRight": 14,
+                          "paddingBottom": 14,
+                          "paddingLeft": 14,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 12,
+                      "clipContent": true,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Movie: Whispers in Rain",
+                      "size": {
+                        "x": 246.5,
+                        "y": 310.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "RECTANGLE",
+                          "name": "Poster",
+                          "size": {
+                            "x": 246.5,
+                            "y": 200
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.023529411764705882,
+                                    "g": 0.7137254901960784,
+                                    "b": 0.8313725490196079,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.054901960784313725,
+                                    "g": 0.6470588235294118,
+                                    "b": 0.9137254901960784,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.7071067811865475,
+                                  0.7071067811865476,
+                                  0.49999999999999994
+                                ],
+                                [
+                                  -0.7071067811865476,
+                                  -0.7071067811865475,
+                                  1.2071067811865475
+                                ]
+                              ]
+                            }
+                          ],
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MovieInfo",
+                          "size": {
+                            "x": 246.5,
+                            "y": 100.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Whispers in Rain",
+                              "size": {
+                                "x": 122.66999816894531,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Whispers in Rain",
+                              "fontSize": 15,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "YearRating",
+                              "size": {
+                                "x": 87.72999954223633,
+                                "y": 20.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "2026",
+                                  "size": {
+                                    "x": 29.649999618530273,
+                                    "y": 14.399999999999999
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5803921568627451,
+                                        "g": 0.6392156862745098,
+                                        "b": 0.7215686274509804,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "2026",
+                                  "fontSize": 12,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "RatingBadge",
+                                  "size": {
+                                    "x": 50.079999923706055,
+                                    "y": 20.4
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "★",
+                                      "size": {
+                                        "x": 11.489999771118164,
+                                        "y": 13.2
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.9607843137254902,
+                                            "g": 0.6196078431372549,
+                                            "b": 0.043137254901960784,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "★",
+                                      "fontSize": 11,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 700,
+                                      "fontStyle": "Bold"
+                                    },
+                                    {
+                                      "type": "TEXT",
+                                      "name": "8.3",
+                                      "size": {
+                                        "x": 18.59000015258789,
+                                        "y": 14.399999999999999
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.9607843137254902,
+                                            "g": 0.6196078431372549,
+                                            "b": 0.043137254901960784,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "8.3",
+                                      "fontSize": 12,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9607843137254902,
+                                        "g": 0.6196078431372549,
+                                        "b": 0.043137254901960784,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.10196078431372549
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 4,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 8,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "GenreTags",
+                              "size": {
+                                "x": 113.8799991607666,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Drama",
+                                  "size": {
+                                    "x": 47.28000068664551,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Drama",
+                                      "size": {
+                                        "x": 31.280000686645508,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.5803921568627451,
+                                            "g": 0.6392156862745098,
+                                            "b": 0.7215686274509804,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Drama",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 500,
+                                      "fontStyle": "Medium"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Romance",
+                                  "size": {
+                                    "x": 60.599998474121094,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Romance",
+                                      "size": {
+                                        "x": 44.599998474121094,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.5803921568627451,
+                                            "g": 0.6392156862745098,
+                                            "b": 0.7215686274509804,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Romance",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 500,
+                                      "fontStyle": "Medium"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 14,
+                          "paddingRight": 14,
+                          "paddingBottom": 14,
+                          "paddingLeft": 14,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 12,
+                      "clipContent": true,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Movie: Shadow Protocol",
+                      "size": {
+                        "x": 246.5,
+                        "y": 310.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "RECTANGLE",
+                          "name": "Poster",
+                          "size": {
+                            "x": 246.5,
+                            "y": 200
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.11764705882352941,
+                                    "g": 0.1607843137254902,
+                                    "b": 0.23137254901960785,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.2784313725490196,
+                                    "g": 0.3333333333333333,
+                                    "b": 0.4117647058823529,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.7071067811865475,
+                                  0.7071067811865476,
+                                  0.49999999999999994
+                                ],
+                                [
+                                  -0.7071067811865476,
+                                  -0.7071067811865475,
+                                  1.2071067811865475
+                                ]
+                              ]
+                            }
+                          ],
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MovieInfo",
+                          "size": {
+                            "x": 246.5,
+                            "y": 100.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Shadow Protocol",
+                              "size": {
+                                "x": 123.91999816894531,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Shadow Protocol",
+                              "fontSize": 15,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "YearRating",
+                              "size": {
+                                "x": 86.04999923706055,
+                                "y": 20.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "2025",
+                                  "size": {
+                                    "x": 29.329999923706055,
+                                    "y": 14.399999999999999
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5803921568627451,
+                                        "g": 0.6392156862745098,
+                                        "b": 0.7215686274509804,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "2025",
+                                  "fontSize": 12,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "RatingBadge",
+                                  "size": {
+                                    "x": 48.71999931335449,
+                                    "y": 20.4
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "★",
+                                      "size": {
+                                        "x": 11.489999771118164,
+                                        "y": 13.2
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.9607843137254902,
+                                            "g": 0.6196078431372549,
+                                            "b": 0.043137254901960784,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "★",
+                                      "fontSize": 11,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 700,
+                                      "fontStyle": "Bold"
+                                    },
+                                    {
+                                      "type": "TEXT",
+                                      "name": "7.4",
+                                      "size": {
+                                        "x": 17.229999542236328,
+                                        "y": 14.399999999999999
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.9607843137254902,
+                                            "g": 0.6196078431372549,
+                                            "b": 0.043137254901960784,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "7.4",
+                                      "fontSize": 12,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9607843137254902,
+                                        "g": 0.6196078431372549,
+                                        "b": 0.043137254901960784,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.10196078431372549
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 4,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 8,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "GenreTags",
+                              "size": {
+                                "x": 86.96000099182129,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Action",
+                                  "size": {
+                                    "x": 46.760000228881836,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Action",
+                                      "size": {
+                                        "x": 30.760000228881836,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.5803921568627451,
+                                            "g": 0.6392156862745098,
+                                            "b": 0.7215686274509804,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Action",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 500,
+                                      "fontStyle": "Medium"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Spy",
+                                  "size": {
+                                    "x": 34.20000076293945,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Spy",
+                                      "size": {
+                                        "x": 18.200000762939453,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.5803921568627451,
+                                            "g": 0.6392156862745098,
+                                            "b": 0.7215686274509804,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Spy",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 500,
+                                      "fontStyle": "Medium"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 14,
+                          "paddingRight": 14,
+                          "paddingBottom": 14,
+                          "paddingLeft": 14,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 12,
+                      "clipContent": true,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Movie: Garden of Stars",
+                      "size": {
+                        "x": 246.5,
+                        "y": 310.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "RECTANGLE",
+                          "name": "Poster",
+                          "size": {
+                            "x": 246.5,
+                            "y": 200
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.0784313725490196,
+                                    "g": 0.7215686274509804,
+                                    "b": 0.6509803921568628,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.7071067811865475,
+                                  0.7071067811865476,
+                                  0.49999999999999994
+                                ],
+                                [
+                                  -0.7071067811865476,
+                                  -0.7071067811865475,
+                                  1.2071067811865475
+                                ]
+                              ]
+                            }
+                          ],
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "MovieInfo",
+                          "size": {
+                            "x": 246.5,
+                            "y": 100.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Garden of Stars",
+                              "size": {
+                                "x": 114.31999969482422,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Garden of Stars",
+                              "fontSize": 15,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "YearRating",
+                              "size": {
+                                "x": 87.76000022888184,
+                                "y": 20.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "2026",
+                                  "size": {
+                                    "x": 29.649999618530273,
+                                    "y": 14.399999999999999
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5803921568627451,
+                                        "g": 0.6392156862745098,
+                                        "b": 0.7215686274509804,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "2026",
+                                  "fontSize": 12,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "RatingBadge",
+                                  "size": {
+                                    "x": 50.11000061035156,
+                                    "y": 20.4
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "★",
+                                      "size": {
+                                        "x": 11.489999771118164,
+                                        "y": 13.2
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.9607843137254902,
+                                            "g": 0.6196078431372549,
+                                            "b": 0.043137254901960784,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "★",
+                                      "fontSize": 11,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 700,
+                                      "fontStyle": "Bold"
+                                    },
+                                    {
+                                      "type": "TEXT",
+                                      "name": "8.8",
+                                      "size": {
+                                        "x": 18.6200008392334,
+                                        "y": 14.399999999999999
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.9607843137254902,
+                                            "g": 0.6196078431372549,
+                                            "b": 0.043137254901960784,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "8.8",
+                                      "fontSize": 12,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9607843137254902,
+                                        "g": 0.6196078431372549,
+                                        "b": 0.043137254901960784,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.10196078431372549
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 4,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 8,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "GenreTags",
+                              "size": {
+                                "x": 103.43000030517578,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Sci-Fi",
+                                  "size": {
+                                    "x": 43.790000915527344,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Sci-Fi",
+                                      "size": {
+                                        "x": 27.790000915527344,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.5803921568627451,
+                                            "g": 0.6392156862745098,
+                                            "b": 0.7215686274509804,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Sci-Fi",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 500,
+                                      "fontStyle": "Medium"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Fantasy",
+                                  "size": {
+                                    "x": 53.63999938964844,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Fantasy",
+                                      "size": {
+                                        "x": 37.63999938964844,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.5803921568627451,
+                                            "g": 0.6392156862745098,
+                                            "b": 0.7215686274509804,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Fantasy",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 500,
+                                      "fontStyle": "Medium"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 6,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 14,
+                          "paddingRight": 14,
+                          "paddingBottom": 14,
+                          "paddingLeft": 14,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 12,
+                      "clipContent": true,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 14,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 16,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 28,
+          "paddingTop": 28,
+          "paddingRight": 36,
+          "paddingBottom": 28,
+          "paddingLeft": 36,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.058823529411764705,
+            "g": 0.09019607843137255,
+            "b": 0.16470588235294117,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

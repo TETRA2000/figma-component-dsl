@@ -1,0 +1,1593 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "meditation-app",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "MeditationAppPage",
+      "size": {
+        "x": 420,
+        "y": 979.1999999999999
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "MedHeader",
+          "size": {
+            "x": 372,
+            "y": 44
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Greeting",
+              "size": {
+                "x": 85.33999633789062,
+                "y": 44
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Good evening",
+                  "size": {
+                    "x": 85.33999633789062,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Good evening",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Sarah",
+                  "size": {
+                    "x": 62.29999923706055,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11764705882352941,
+                        "g": 0.1607843137254902,
+                        "b": 0.23137254901960785,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Sarah",
+                  "fontSize": 22,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 2,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "ELLIPSE",
+              "name": "Avatar",
+              "size": {
+                "x": 40,
+                "y": 40
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "GRADIENT_LINEAR",
+                  "opacity": 1,
+                  "gradientStops": [
+                    {
+                      "color": {
+                        "r": 0.48627450980392156,
+                        "g": 0.22745098039215686,
+                        "b": 0.9294117647058824,
+                        "a": 1
+                      },
+                      "position": 0
+                    },
+                    {
+                      "color": {
+                        "r": 0.9254901960784314,
+                        "g": 0.2823529411764706,
+                        "b": 0.6,
+                        "a": 1
+                      },
+                      "position": 1
+                    }
+                  ],
+                  "gradientTransform": [
+                    [
+                      -0.7071067811865475,
+                      0.7071067811865476,
+                      0.49999999999999994
+                    ],
+                    [
+                      -0.7071067811865476,
+                      -0.7071067811865475,
+                      1.2071067811865475
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "SPACE_BETWEEN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "Timer",
+          "size": {
+            "x": 372,
+            "y": 324.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "ELLIPSE",
+              "name": "TimerRing",
+              "size": {
+                "x": 180,
+                "y": 180
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9294117647058824,
+                    "g": 0.9137254901960784,
+                    "b": 0.996078431372549,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "15:00",
+              "size": {
+                "x": 92.5999984741211,
+                "y": 48
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.48627450980392156,
+                    "g": 0.22745098039215686,
+                    "b": 0.9294117647058824,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "15:00",
+              "fontSize": 40,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "CENTER",
+              "fontWeight": 300,
+              "fontStyle": "Regular"
+            },
+            {
+              "type": "TEXT",
+              "name": "Breathe deeply",
+              "size": {
+                "x": 100.11000061035156,
+                "y": 16.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.6549019607843137,
+                    "g": 0.5450980392156862,
+                    "b": 0.9803921568627451,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Breathe deeply",
+              "fontSize": 14,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "CENTER",
+              "fontWeight": 400,
+              "fontStyle": "Regular"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 8,
+          "paddingTop": 32,
+          "paddingRight": 0,
+          "paddingBottom": 32,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "Stats",
+          "size": {
+            "x": 372,
+            "y": 71.6
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Stat: Day Streak",
+              "size": {
+                "x": 117.33333333333333,
+                "y": 71.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "7",
+                  "size": {
+                    "x": 12.789999961853027,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.48627450980392156,
+                        "g": 0.22745098039215686,
+                        "b": 0.9294117647058824,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "7",
+                  "fontSize": 22,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "CENTER",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Day Streak",
+                  "size": {
+                    "x": 57.130001068115234,
+                    "y": 13.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.4196078431372549,
+                        "g": 0.4470588235294118,
+                        "b": 0.5019607843137255,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Day Streak",
+                  "fontSize": 11,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "CENTER",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.48627450980392156,
+                    "g": 0.22745098039215686,
+                    "b": 0.9294117647058824,
+                    "a": 1
+                  },
+                  "opacity": 0.050980392156862744
+                }
+              ],
+              "cornerRadius": 14,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 4,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Stat: Sessions",
+              "size": {
+                "x": 117.33333333333333,
+                "y": 71.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "42",
+                  "size": {
+                    "x": 28.739999771118164,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9254901960784314,
+                        "g": 0.2823529411764706,
+                        "b": 0.6,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "42",
+                  "fontSize": 22,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "CENTER",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Sessions",
+                  "size": {
+                    "x": 47.369998931884766,
+                    "y": 13.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.4196078431372549,
+                        "g": 0.4470588235294118,
+                        "b": 0.5019607843137255,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Sessions",
+                  "fontSize": 11,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "CENTER",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9254901960784314,
+                    "g": 0.2823529411764706,
+                    "b": 0.6,
+                    "a": 1
+                  },
+                  "opacity": 0.050980392156862744
+                }
+              ],
+              "cornerRadius": 14,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 4,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Stat: Total",
+              "size": {
+                "x": 117.33333333333333,
+                "y": 71.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "8.5h",
+                  "size": {
+                    "x": 48.45000076293945,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.054901960784313725,
+                        "g": 0.6470588235294118,
+                        "b": 0.9137254901960784,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "8.5h",
+                  "fontSize": 22,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "CENTER",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Total",
+                  "size": {
+                    "x": 25.780000686645508,
+                    "y": 13.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.4196078431372549,
+                        "g": 0.4470588235294118,
+                        "b": 0.5019607843137255,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Total",
+                  "fontSize": 11,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "CENTER",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.054901960784313725,
+                    "g": 0.6470588235294118,
+                    "b": 0.9137254901960784,
+                    "a": 1
+                  },
+                  "opacity": 0.050980392156862744
+                }
+              ],
+              "cornerRadius": 14,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 4,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 10,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "MoodSection",
+          "size": {
+            "x": 372,
+            "y": 78.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "How are you feeling?",
+              "size": {
+                "x": 151.77000427246094,
+                "y": 18
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11764705882352941,
+                    "g": 0.1607843137254902,
+                    "b": 0.23137254901960785,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "How are you feeling?",
+              "fontSize": 15,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 600,
+              "fontStyle": "Semi Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "MoodRow",
+              "size": {
+                "x": 372,
+                "y": 48.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Mood: Calm",
+                  "size": {
+                    "x": 81.84000015258789,
+                    "y": 48.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Calm",
+                      "size": {
+                        "x": 57.84000015258789,
+                        "y": 28.799999999999997
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.11764705882352941,
+                            "g": 0.1607843137254902,
+                            "b": 0.23137254901960785,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Calm",
+                      "fontSize": 24,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "CENTER",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.93,
+                        "g": 0.93,
+                        "b": 0.93,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 10,
+                  "paddingRight": 12,
+                  "paddingBottom": 10,
+                  "paddingLeft": 12,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Mood: Happy",
+                  "size": {
+                    "x": 97.72000122070312,
+                    "y": 48.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Happy",
+                      "size": {
+                        "x": 73.72000122070312,
+                        "y": 28.799999999999997
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.11764705882352941,
+                            "g": 0.1607843137254902,
+                            "b": 0.23137254901960785,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Happy",
+                      "fontSize": 24,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "CENTER",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9294117647058824,
+                        "g": 0.9137254901960784,
+                        "b": 0.996078431372549,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 10,
+                  "paddingRight": 12,
+                  "paddingBottom": 10,
+                  "paddingLeft": 12,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Mood: Tired",
+                  "size": {
+                    "x": 82.63000106811523,
+                    "y": 48.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Tired",
+                      "size": {
+                        "x": 58.630001068115234,
+                        "y": 28.799999999999997
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.11764705882352941,
+                            "g": 0.1607843137254902,
+                            "b": 0.23137254901960785,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Tired",
+                      "fontSize": 24,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "CENTER",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.93,
+                        "g": 0.93,
+                        "b": 0.93,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 10,
+                  "paddingRight": 12,
+                  "paddingBottom": 10,
+                  "paddingLeft": 12,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Mood: Anxious",
+                  "size": {
+                    "x": 114.9000015258789,
+                    "y": 48.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Anxious",
+                      "size": {
+                        "x": 90.9000015258789,
+                        "y": 28.799999999999997
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.11764705882352941,
+                            "g": 0.1607843137254902,
+                            "b": 0.23137254901960785,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Anxious",
+                      "fontSize": 24,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "CENTER",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.93,
+                        "g": 0.93,
+                        "b": 0.93,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 10,
+                  "paddingRight": 12,
+                  "paddingBottom": 10,
+                  "paddingLeft": 12,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "SPACE_BETWEEN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 12,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "SessionSection",
+          "size": {
+            "x": 372,
+            "y": 300
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "Recommended",
+              "size": {
+                "x": 108.9800033569336,
+                "y": 18
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11764705882352941,
+                    "g": 0.1607843137254902,
+                    "b": 0.23137254901960785,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Recommended",
+              "fontSize": 15,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 600,
+              "fontStyle": "Semi Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "Session: Deep Sleep",
+              "size": {
+                "x": 372,
+                "y": 84
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ROUNDED_RECTANGLE",
+                  "name": "SessionArt",
+                  "size": {
+                    "x": 56,
+                    "y": 56
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 0.48627450980392156,
+                            "g": 0.22745098039215686,
+                            "b": 0.9294117647058824,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 0.30980392156862746,
+                            "g": 0.27450980392156865,
+                            "b": 0.8980392156862745,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ],
+                  "cornerRadius": 14
+                },
+                {
+                  "type": "FRAME",
+                  "name": "SessionInfo",
+                  "size": {
+                    "x": 229.30999946594238,
+                    "y": 36.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Deep Sleep",
+                      "size": {
+                        "x": 82.48999786376953,
+                        "y": 18
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.11764705882352941,
+                            "g": 0.1607843137254902,
+                            "b": 0.23137254901960785,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Deep Sleep",
+                      "fontSize": 15,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "20 min - Sleep",
+                      "size": {
+                        "x": 82.98999786376953,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.5803921568627451,
+                            "g": 0.6392156862745098,
+                            "b": 0.7215686274509804,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "20 min - Sleep",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Play",
+                  "size": {
+                    "x": 26.690000534057617,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.48627450980392156,
+                        "g": 0.22745098039215686,
+                        "b": 0.9294117647058824,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Play",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 16,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 14,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Session: Morning Calm",
+              "size": {
+                "x": 372,
+                "y": 84
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ROUNDED_RECTANGLE",
+                  "name": "SessionArt",
+                  "size": {
+                    "x": 56,
+                    "y": 56
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 0.054901960784313725,
+                            "g": 0.6470588235294118,
+                            "b": 0.9137254901960784,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 0.023529411764705882,
+                            "g": 0.7137254901960784,
+                            "b": 0.8313725490196079,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ],
+                  "cornerRadius": 14
+                },
+                {
+                  "type": "FRAME",
+                  "name": "SessionInfo",
+                  "size": {
+                    "x": 229.30999946594238,
+                    "y": 36.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Morning Calm",
+                      "size": {
+                        "x": 101.61000061035156,
+                        "y": 18
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.11764705882352941,
+                            "g": 0.1607843137254902,
+                            "b": 0.23137254901960785,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Morning Calm",
+                      "fontSize": 15,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "10 min - Focus",
+                      "size": {
+                        "x": 82.69000244140625,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.5803921568627451,
+                            "g": 0.6392156862745098,
+                            "b": 0.7215686274509804,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "10 min - Focus",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Play",
+                  "size": {
+                    "x": 26.690000534057617,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.48627450980392156,
+                        "g": 0.22745098039215686,
+                        "b": 0.9294117647058824,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Play",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 16,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 14,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Session: Stress Relief",
+              "size": {
+                "x": 372,
+                "y": 84
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ROUNDED_RECTANGLE",
+                  "name": "SessionArt",
+                  "size": {
+                    "x": 56,
+                    "y": 56
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 0.9254901960784314,
+                            "g": 0.2823529411764706,
+                            "b": 0.6,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 0.9568627450980393,
+                            "g": 0.24705882352941178,
+                            "b": 0.3686274509803922,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ],
+                  "cornerRadius": 14
+                },
+                {
+                  "type": "FRAME",
+                  "name": "SessionInfo",
+                  "size": {
+                    "x": 229.30999946594238,
+                    "y": 36.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Stress Relief",
+                      "size": {
+                        "x": 90.81999969482422,
+                        "y": 18
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.11764705882352941,
+                            "g": 0.1607843137254902,
+                            "b": 0.23137254901960785,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Stress Relief",
+                      "fontSize": 15,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "15 min - Relax",
+                      "size": {
+                        "x": 78.88999938964844,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.5803921568627451,
+                            "g": 0.6392156862745098,
+                            "b": 0.7215686274509804,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "15 min - Relax",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Play",
+                  "size": {
+                    "x": 26.690000534057617,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.48627450980392156,
+                        "g": 0.22745098039215686,
+                        "b": 0.9294117647058824,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Play",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 16,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 14,
+              "paddingTop": 14,
+              "paddingRight": 16,
+              "paddingBottom": 14,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 10,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "opacity": 1,
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.9607843137254902,
+                "g": 0.9529411764705882,
+                "b": 1,
+                "a": 1
+              },
+              "position": 0
+            },
+            {
+              "color": {
+                "r": 0.9921568627450981,
+                "g": 0.9490196078431372,
+                "b": 0.9725490196078431,
+                "a": 1
+              },
+              "position": 1
+            }
+          ],
+          "gradientTransform": [
+            [
+              -1,
+              1.2246467991473532e-16,
+              0.9999999999999999
+            ],
+            [
+              -1.2246467991473532e-16,
+              -1,
+              1
+            ]
+          ]
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 24,
+      "paddingTop": 32,
+      "paddingRight": 24,
+      "paddingBottom": 32,
+      "paddingLeft": 24,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

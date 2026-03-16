@@ -1,0 +1,2007 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "wedding-planner",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "WeddingPlannerPage",
+      "size": {
+        "x": 1000,
+        "y": 700.4
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "WedHeader",
+          "size": {
+            "x": 904,
+            "y": 66.39999999999999
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "Sarah & James",
+              "size": {
+                "x": 259.5899963378906,
+                "y": 43.199999999999996
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.5137254901960784,
+                    "g": 0.09411764705882353,
+                    "b": 0.2627450980392157,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Sarah & James",
+              "fontSize": 36,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "TEXT",
+              "name": "June 15, 2026 - The Grand Estate",
+              "size": {
+                "x": 253.52000427246094,
+                "y": 19.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.611764705882353,
+                    "g": 0.6392156862745098,
+                    "b": 0.6862745098039216,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "June 15, 2026 - The Grand Estate",
+              "fontSize": 16,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 400,
+              "fontStyle": "Regular"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 4,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "MainContent",
+          "size": {
+            "x": 904,
+            "y": 530
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "LeftCol",
+              "size": {
+                "x": 440,
+                "y": 460.79999999999995
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Day Timeline",
+                  "size": {
+                    "x": 112.68000030517578,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.06666666666666667,
+                        "g": 0.09411764705882353,
+                        "b": 0.15294117647058825,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Day Timeline",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "TL: Guest Arrival",
+                  "size": {
+                    "x": 440,
+                    "y": 53.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "Dot",
+                      "size": {
+                        "x": 12,
+                        "y": 12
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9254901960784314,
+                            "g": 0.2823529411764706,
+                            "b": 0.6,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "TLInfo",
+                      "size": {
+                        "x": 416,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Guest Arrival",
+                          "size": {
+                            "x": 88.48999786376953,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Guest Arrival",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "2:00 PM - Grand Entrance",
+                          "size": {
+                            "x": 148.50999450683594,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "2:00 PM - Grand Entrance",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 10,
+                  "paddingRight": 0,
+                  "paddingBottom": 10,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "TL: Ceremony",
+                  "size": {
+                    "x": 440,
+                    "y": 53.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "Dot",
+                      "size": {
+                        "x": 12,
+                        "y": 12
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9254901960784314,
+                            "g": 0.2823529411764706,
+                            "b": 0.6,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "TLInfo",
+                      "size": {
+                        "x": 416,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Ceremony",
+                          "size": {
+                            "x": 69.81999969482422,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Ceremony",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "3:00 PM - Garden Chapel",
+                          "size": {
+                            "x": 144.8300018310547,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "3:00 PM - Garden Chapel",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 10,
+                  "paddingRight": 0,
+                  "paddingBottom": 10,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "TL: Cocktail Hour",
+                  "size": {
+                    "x": 440,
+                    "y": 53.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "Dot",
+                      "size": {
+                        "x": 12,
+                        "y": 12
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.8980392156862745,
+                            "g": 0.9058823529411765,
+                            "b": 0.9215686274509803,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "TLInfo",
+                      "size": {
+                        "x": 416,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Cocktail Hour",
+                          "size": {
+                            "x": 91.95999908447266,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Cocktail Hour",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "4:00 PM - Terrace",
+                          "size": {
+                            "x": 104.12000274658203,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "4:00 PM - Terrace",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 10,
+                  "paddingRight": 0,
+                  "paddingBottom": 10,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "TL: Reception & Dinner",
+                  "size": {
+                    "x": 440,
+                    "y": 53.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "Dot",
+                      "size": {
+                        "x": 12,
+                        "y": 12
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.8980392156862745,
+                            "g": 0.9058823529411765,
+                            "b": 0.9215686274509803,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "TLInfo",
+                      "size": {
+                        "x": 416,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Reception & Dinner",
+                          "size": {
+                            "x": 129.1699981689453,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Reception & Dinner",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "5:30 PM - Grand Ballroom",
+                          "size": {
+                            "x": 147.35000610351562,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "5:30 PM - Grand Ballroom",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 10,
+                  "paddingRight": 0,
+                  "paddingBottom": 10,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "TL: First Dance",
+                  "size": {
+                    "x": 440,
+                    "y": 53.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "Dot",
+                      "size": {
+                        "x": 12,
+                        "y": 12
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.8980392156862745,
+                            "g": 0.9058823529411765,
+                            "b": 0.9215686274509803,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "TLInfo",
+                      "size": {
+                        "x": 416,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "First Dance",
+                          "size": {
+                            "x": 76.76000213623047,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "First Dance",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "8:00 PM - Grand Ballroom",
+                          "size": {
+                            "x": 147.80999755859375,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "8:00 PM - Grand Ballroom",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 10,
+                  "paddingRight": 0,
+                  "paddingBottom": 10,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "TL: Send-off",
+                  "size": {
+                    "x": 440,
+                    "y": 53.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "Dot",
+                      "size": {
+                        "x": 12,
+                        "y": 12
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.8980392156862745,
+                            "g": 0.9058823529411765,
+                            "b": 0.9215686274509803,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "TLInfo",
+                      "size": {
+                        "x": 416,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Send-off",
+                          "size": {
+                            "x": 60.029998779296875,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Send-off",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "11:00 PM - Main Drive",
+                          "size": {
+                            "x": 123.16000366210938,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "11:00 PM - Main Drive",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 10,
+                  "paddingRight": 0,
+                  "paddingBottom": 10,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 20,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "RightCol",
+              "size": {
+                "x": 440,
+                "y": 530
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Vendors",
+                  "size": {
+                    "x": 72.94000244140625,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.06666666666666667,
+                        "g": 0.09411764705882353,
+                        "b": 0.15294117647058825,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Vendors",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "VendorGrid",
+                  "size": {
+                    "x": 440,
+                    "y": 210
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Vendor: Bloom Studio",
+                      "size": {
+                        "x": 214,
+                        "y": 210
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "VendorImg",
+                          "size": {
+                            "x": 182,
+                            "y": 100
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.9254901960784314,
+                                    "g": 0.2823529411764706,
+                                    "b": 0.6,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.9921568627450981,
+                                    "g": 0.9490196078431372,
+                                    "b": 0.9725490196078431,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.7071067811865475,
+                                  0.7071067811865476,
+                                  0.49999999999999994
+                                ],
+                                [
+                                  -0.7071067811865476,
+                                  -0.7071067811865475,
+                                  1.2071067811865475
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 8,
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Bloom Studio",
+                          "size": {
+                            "x": 89.62000274658203,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Bloom Studio",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Florist",
+                          "size": {
+                            "x": 34.9900016784668,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Florist",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "$3,200",
+                          "size": {
+                            "x": 50.290000915527344,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9254901960784314,
+                                "g": 0.2823529411764706,
+                                "b": 0.6,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$3,200",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.93,
+                            "g": 0.93,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 12,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 16,
+                      "paddingRight": 16,
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Vendor: Lens & Light",
+                      "size": {
+                        "x": 214,
+                        "y": 210
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "VendorImg",
+                          "size": {
+                            "x": 182,
+                            "y": 100
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.5450980392156862,
+                                    "g": 0.3607843137254902,
+                                    "b": 0.9647058823529412,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.9921568627450981,
+                                    "g": 0.9490196078431372,
+                                    "b": 0.9725490196078431,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.7071067811865475,
+                                  0.7071067811865476,
+                                  0.49999999999999994
+                                ],
+                                [
+                                  -0.7071067811865476,
+                                  -0.7071067811865475,
+                                  1.2071067811865475
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 8,
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Lens & Light",
+                          "size": {
+                            "x": 82.62999725341797,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Lens & Light",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Photography",
+                          "size": {
+                            "x": 72.58999633789062,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Photography",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "$4,500",
+                          "size": {
+                            "x": 50.34000015258789,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9254901960784314,
+                                "g": 0.2823529411764706,
+                                "b": 0.6,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$4,500",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.93,
+                            "g": 0.93,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 12,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 16,
+                      "paddingRight": 16,
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "RSVP Tracker",
+                  "size": {
+                    "x": 118.98999786376953,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.06666666666666667,
+                        "g": 0.09411764705882353,
+                        "b": 0.15294117647058825,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "RSVP Tracker",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "RSVP: Emma Wilson",
+                  "size": {
+                    "x": 440,
+                    "y": 39.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Emma Wilson",
+                      "size": {
+                        "x": 84.04000091552734,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Emma Wilson",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "StatusBadge",
+                      "size": {
+                        "x": 67.16999816894531,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Accepted",
+                          "size": {
+                            "x": 51.16999816894531,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06274509803921569,
+                                "g": 0.7254901960784313,
+                                "b": 0.5058823529411764,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Accepted",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 0.10196078431372549
+                        }
+                      ],
+                      "cornerRadius": 4,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 3,
+                      "paddingRight": 8,
+                      "paddingBottom": 3,
+                      "paddingLeft": 8,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "2 guests",
+                      "size": {
+                        "x": 48.619998931884766,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "2 guests",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.95,
+                        "g": 0.95,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 10,
+                  "paddingRight": 12,
+                  "paddingBottom": 10,
+                  "paddingLeft": 12,
+                  "primaryAxisAlignItems": "SPACE_BETWEEN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "RSVP: Michael Brown",
+                  "size": {
+                    "x": 440,
+                    "y": 39.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Michael Brown",
+                      "size": {
+                        "x": 91.7699966430664,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Michael Brown",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "StatusBadge",
+                      "size": {
+                        "x": 67.16999816894531,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Accepted",
+                          "size": {
+                            "x": 51.16999816894531,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06274509803921569,
+                                "g": 0.7254901960784313,
+                                "b": 0.5058823529411764,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Accepted",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 0.10196078431372549
+                        }
+                      ],
+                      "cornerRadius": 4,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 3,
+                      "paddingRight": 8,
+                      "paddingBottom": 3,
+                      "paddingLeft": 8,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "1 guest",
+                      "size": {
+                        "x": 39.970001220703125,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "1 guest",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.95,
+                        "g": 0.95,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 10,
+                  "paddingRight": 12,
+                  "paddingBottom": 10,
+                  "paddingLeft": 12,
+                  "primaryAxisAlignItems": "SPACE_BETWEEN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "RSVP: Lisa Anderson",
+                  "size": {
+                    "x": 440,
+                    "y": 39.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Lisa Anderson",
+                      "size": {
+                        "x": 88.88999938964844,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Lisa Anderson",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "StatusBadge",
+                      "size": {
+                        "x": 59.599998474121094,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Pending",
+                          "size": {
+                            "x": 43.599998474121094,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.6196078431372549,
+                                "b": 0.043137254901960784,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Pending",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9607843137254902,
+                            "g": 0.6196078431372549,
+                            "b": 0.043137254901960784,
+                            "a": 1
+                          },
+                          "opacity": 0.10196078431372549
+                        }
+                      ],
+                      "cornerRadius": 4,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 3,
+                      "paddingRight": 8,
+                      "paddingBottom": 3,
+                      "paddingLeft": 8,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "3 guests",
+                      "size": {
+                        "x": 48.709999084472656,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "3 guests",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.95,
+                        "g": 0.95,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 10,
+                  "paddingRight": 12,
+                  "paddingBottom": 10,
+                  "paddingLeft": 12,
+                  "primaryAxisAlignItems": "SPACE_BETWEEN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "RSVP: David Martinez",
+                  "size": {
+                    "x": 440,
+                    "y": 39.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "David Martinez",
+                      "size": {
+                        "x": 93.51000213623047,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "David Martinez",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "StatusBadge",
+                      "size": {
+                        "x": 62.709999084472656,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Declined",
+                          "size": {
+                            "x": 46.709999084472656,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9372549019607843,
+                                "g": 0.26666666666666666,
+                                "b": 0.26666666666666666,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Declined",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9372549019607843,
+                            "g": 0.26666666666666666,
+                            "b": 0.26666666666666666,
+                            "a": 1
+                          },
+                          "opacity": 0.10196078431372549
+                        }
+                      ],
+                      "cornerRadius": 4,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 3,
+                      "paddingRight": 8,
+                      "paddingBottom": 3,
+                      "paddingLeft": 8,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "0 guests",
+                      "size": {
+                        "x": 48.869998931884766,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "0 guests",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.95,
+                        "g": 0.95,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 10,
+                  "paddingRight": 12,
+                  "paddingBottom": 10,
+                  "paddingLeft": 12,
+                  "primaryAxisAlignItems": "SPACE_BETWEEN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 20,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 24,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.9921568627450981,
+            "g": 0.9490196078431372,
+            "b": 0.9725490196078431,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 24,
+      "paddingTop": 40,
+      "paddingRight": 48,
+      "paddingBottom": 40,
+      "paddingLeft": 48,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}
