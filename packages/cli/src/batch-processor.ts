@@ -3,7 +3,7 @@ import { mkdirSync, writeFileSync } from 'fs';
 import { pathToFileURL } from 'url';
 import { compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
 import type { DslNode } from '@figma-dsl/core';
-import { renderToFile, collectImageSources, preloadImages } from '@figma-dsl/renderer';
+import { renderToFile, collectImageSources, preloadImages, renderCanvasNodes } from '@figma-dsl/renderer';
 import { generatePluginInput } from '@figma-dsl/exporter';
 import type { PluginInput, PluginNodeDef } from '@figma-dsl/exporter';
 import { glob } from './glob-util.js';
@@ -90,10 +90,19 @@ export async function processBatch(options: BatchOptions): Promise<BatchResult> 
 
       // Render to PNG
       const pngPath = join(dslDir, `${name}.png`);
+      const scale = options.scale ?? 1;
       const renderResult = renderToFile(compiled.root, pngPath, {
-        scale: options.scale ?? 1,
+        scale,
         imageCache,
       });
+
+      // Per-canvas PNG extraction
+      const canvasResults = renderCanvasNodes(compiled.root, { scale, imageCache });
+      for (const [canvasName, canvasResult] of canvasResults) {
+        const canvasPath = join(dslDir, `${canvasName}.png`);
+        writeFileSync(canvasPath, canvasResult.pngBuffer);
+        console.log(`  [batch] Canvas: ${canvasName} (${canvasResult.width}×${canvasResult.height})`);
+      }
 
       // Generate plugin input and collect nodes
       const pluginInput = generatePluginInput(compiled, options.pageName, { assetDir });

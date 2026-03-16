@@ -50,6 +50,8 @@ export interface SerializableNode {
   readonly booleanOperation?: string;
   // Section
   readonly sectionContentsHidden?: boolean;
+  // Plugin data accessor (for canvas metadata round-trip)
+  getPluginData?(key: string): string;
   // Children
   readonly children?: ReadonlyArray<SerializableNode>;
 }
@@ -201,6 +203,22 @@ export function serializeNode(node: SerializableNode): PluginNodeDef {
   if (node.strokeCap) result.strokeCap = node.strokeCap;
   if (node.booleanOperation) result.booleanOperation = node.booleanOperation;
   if (node.sectionContentsHidden !== undefined) result.sectionContentsHidden = node.sectionContentsHidden;
+
+  // Canvas metadata (round-trip from Figma plugin data)
+  if (node.getPluginData) {
+    const canvasData = node.getPluginData('dsl-canvas');
+    if (canvasData) {
+      try {
+        const parsed = JSON.parse(canvasData) as { isCanvas?: boolean; canvasName?: string };
+        if (parsed.isCanvas) {
+          result.isCanvas = true;
+          if (parsed.canvasName) result.canvasName = parsed.canvasName;
+        }
+      } catch {
+        // Ignore malformed plugin data
+      }
+    }
+  }
 
   // Children
   if (node.children) {

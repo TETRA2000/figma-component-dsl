@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { run } from './cli.js';
 
 describe('CLI — help', () => {
@@ -64,5 +64,25 @@ describe('CLI — validate usage errors', () => {
   it('returns 2 when no path specified', async () => {
     const code = await run(['validate']);
     expect(code).toBe(2);
+  });
+});
+
+describe('CLI — render canvas support', () => {
+  it('render help mentions --no-canvas flag', async () => {
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const code = await run(['render', '--help']);
+    expect(code).toBe(0);
+    const output = consoleSpy.mock.calls.map(c => c[0]).join('\n');
+    expect(output).toContain('--no-canvas');
+    consoleSpy.mockRestore();
+  });
+
+  it('render help mentions per-canvas PNG extraction', async () => {
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const code = await run(['render', '--help']);
+    expect(code).toBe(0);
+    const output = consoleSpy.mock.calls.map(c => c[0]).join('\n');
+    expect(output).toContain('canvas');
+    consoleSpy.mockRestore();
   });
 });

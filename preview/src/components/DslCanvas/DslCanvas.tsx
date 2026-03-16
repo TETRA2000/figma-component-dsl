@@ -12,6 +12,8 @@ interface FigmaNodeDict {
 export interface DslCanvasProps {
   /** Compiled DSL JSON to render */
   dsl: FigmaNodeDict;
+  /** Slot override content keyed by slot name — compiled node arrays merged into DSL children before rendering */
+  slotOverrides?: Record<string, FigmaNodeDict[]>;
   /** Display width in pixels; height auto-calculated from aspect ratio */
   width?: number;
   /** Render scale factor for high-DPI (default: 1) */
@@ -24,8 +26,27 @@ export interface DslCanvasProps {
   alt?: string;
 }
 
+/**
+ * Apply slot overrides by replacing slot placeholder children with override content.
+ * Walks the DSL tree and replaces children of nodes whose name matches a slot key.
+ */
+function applySlotOverrides(
+  node: FigmaNodeDict,
+  overrides: Record<string, FigmaNodeDict[]>,
+): FigmaNodeDict {
+  const children = (node as { children?: FigmaNodeDict[] }).children;
+  const newChildren = children?.map((child) => {
+    if (child.name && overrides[child.name]) {
+      return { ...child, children: overrides[child.name] };
+    }
+    return applySlotOverrides(child, overrides);
+  });
+  return newChildren ? { ...node, children: newChildren } : node;
+}
+
 export function DslCanvas({
   dsl,
+  slotOverrides,
   width,
   scale = 1,
   className,
@@ -46,6 +67,11 @@ export function DslCanvas({
       return;
     }
 
+    // Merge slot overrides into DSL tree if provided
+    const resolvedDsl = slotOverrides && Object.keys(slotOverrides).length > 0
+      ? applySlotOverrides(dsl, slotOverrides)
+      : dsl;
+
     // Cancel previous request
     abortRef.current?.abort();
     const controller = new AbortController();
@@ -57,7 +83,7 @@ export function DslCanvas({
     fetch('/api/dsl-canvas/render', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dsl, scale }),
+      body: JSON.stringify({ dsl: resolvedDsl, scale }),
       signal: controller.signal,
     })
       .then(res => {
@@ -78,7 +104,7 @@ export function DslCanvas({
       });
 
     return () => { controller.abort(); };
-  }, [dsl, scale]);
+  }, [dsl, slotOverrides, scale]);
 
   const aspectRatio = dimensions ? dimensions.width / dimensions.height : undefined;
 

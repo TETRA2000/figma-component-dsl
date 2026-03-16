@@ -18,6 +18,7 @@ vi.mock('@figma-dsl/compiler', () => ({
 
 vi.mock('@figma-dsl/renderer', () => ({
   renderToFile: vi.fn(() => ({ width: 100, height: 100, pngBuffer: Buffer.from('') })),
+  renderCanvasNodes: vi.fn(() => new Map()),
   collectImageSources: vi.fn(() => new Set<string>()),
   preloadImages: vi.fn(async () => new Map()),
 }));
