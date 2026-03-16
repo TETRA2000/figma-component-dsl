@@ -26,6 +26,10 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-16 — Portfolio Showcase](2026-03-16-portfolio-showcase.md) — 0 issues, 0 fixes | Features: large typography 72px, gradient overlays, SPACE_BETWEEN nav, gradient CTAs
+- [2026-03-16 — Social Feed](2026-03-16-social-feed.md) — 0 issues, 0 fixes | Features: ellipse avatars, SPACE_BETWEEN actions, nested layouts, text wrapping
+- [2026-03-16 — SaaS Pricing](2026-03-16-saas-pricing.md) — 0 issues, 0 fixes | Features: equal-width FILL columns, gradient buttons, SPACE_BETWEEN, strokes
+- [2026-03-16 — Recipe Cookbook](2026-03-16-recipe-cookbook.md) — 0 issues, 0 fixes | Features: cornerRadii, nested auto-layout, text wrapping, clipContent
 - [2026-03-16 — Banking App](2026-03-16-banking-app.md) — 0 issues found, 0 pipeline fixes | Features: FIXED sizing, FILL width, SPACE_BETWEEN, ellipse, opacity fills, stroke alignment
 - [2026-03-16 — Neon Gaming](2026-03-16-neon-gaming.md) — 0 issues found, 0 pipeline fixes | Features: multi-stop gradients, 8-digit hex alpha, thick strokes, clipContent, high cornerRadius
 - [2026-03-16 — Minimal Blog](2026-03-16-minimal-blog.md) — 0 issues found, 0 pipeline fixes | Features: typography variety, CENTER alignment, lineHeight, letterSpacing, textAutoResize:HEIGHT

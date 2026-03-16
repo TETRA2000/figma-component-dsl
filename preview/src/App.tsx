@@ -1,7 +1,7 @@
-import { BankingAppShowcase } from './pages/_generated/BankingAppShowcase';
+import { PortfolioShowcaseShowcase } from './pages/_generated/PortfolioShowcaseShowcase';
 
 function App() {
-  return <BankingAppShowcase />;
+  return <PortfolioShowcaseShowcase />;
 }
 
 export default App;

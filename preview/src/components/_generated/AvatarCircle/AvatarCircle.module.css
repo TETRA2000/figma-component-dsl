@@ -1,0 +1,33 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.circle {
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1d9bf0, #1a8cd8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.initials {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+  user-select: none;
+}
+
+.onlineDot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-radius: 50%;
+  background: #00ba7c;
+  border-style: solid;
+  border-color: #ffffff;
+  box-sizing: border-box;
+}

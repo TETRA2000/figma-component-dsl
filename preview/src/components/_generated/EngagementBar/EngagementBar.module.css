@@ -1,0 +1,35 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 9999px;
+  cursor: pointer;
+  color: #536471;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.action:hover {
+  color: #1d9bf0;
+  background: rgba(29, 155, 240, 0.1);
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.count {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+}
