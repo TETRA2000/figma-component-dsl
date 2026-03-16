@@ -1,108 +1,169 @@
 /**
- * Grocery List — Shopping list with category sections, checkbox items, totals
- * DSL features: mobile width (500px), checkbox items, category headers, running total
+ * Grocery List App — Categorized items, checkboxes as rectangles, total price
+ *
+ * DSL features stressed: nested sections, small rectangles as checkboxes,
+ * SPACE_BETWEEN, strokes for separators, FILL sizing
  */
-import { frame, text, rectangle, ellipse, solid, gradient, horizontal, vertical } from '@figma-dsl/core';
+import {
+  frame, text, rectangle, ellipse,
+  solid, gradient,
+  horizontal, vertical,
+} from '@figma-dsl/core';
 
-function checkItem(name: string, qty: string, price: string, checked: boolean) {
+function groceryItem(name: string, qty: string, price: string, checked: boolean) {
   return frame(`Item: ${name}`, {
-    autoLayout: horizontal({ spacing: 10, padX: 4, padY: 8, counterAlign: 'CENTER' }),
+    autoLayout: horizontal({ spacing: 0, padX: 14, padY: 12, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
     layoutSizingHorizontal: 'FILL',
-    strokes: [{ color: { r: 0.95, g: 0.95, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+    strokes: [{ color: { r: 0.94, g: 0.94, b: 0.94, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      frame('Checkbox', {
-        size: { x: 20, y: 20 },
-        fills: [solid(checked ? '#16a34a' : '#ffffff')], cornerRadius: 5,
-        strokes: checked ? [] : [{ color: { r: 0.8, g: 0.82, b: 0.84, a: 1 }, weight: 1.5, align: 'INSIDE' as const }],
-        children: checked ? [text('✓', { fontSize: 12, fontWeight: 700, color: '#ffffff', textAlignHorizontal: 'CENTER' })] : [],
-      }),
-      text(name, {
-        fontSize: 14, fontWeight: 400, color: checked ? '#9ca3af' : '#374151',
-        textDecoration: checked ? 'STRIKETHROUGH' : 'NONE', layoutSizingHorizontal: 'FILL',
-      }),
-      text(qty, { fontSize: 12, fontWeight: 500, color: '#6b7280', size: { x: 36 }, textAlignHorizontal: 'CENTER' }),
-      text(price, { fontSize: 13, fontWeight: 600, color: checked ? '#9ca3af' : '#111827', size: { x: 50 }, textAlignHorizontal: 'RIGHT' }),
-    ],
-  });
-}
-
-function categorySection(title: string, icon: string, items: ReturnType<typeof checkItem>[]) {
-  return frame(`Category: ${title}`, {
-    autoLayout: vertical({ spacing: 0 }),
-    layoutSizingHorizontal: 'FILL',
-    children: [
-      frame('CatHeader', {
-        autoLayout: horizontal({ spacing: 6, padX: 4, padY: 8, counterAlign: 'CENTER' }),
-        layoutSizingHorizontal: 'FILL',
+      frame(`${name}Left`, {
+        autoLayout: horizontal({ spacing: 12, counterAlign: 'CENTER' }),
         children: [
-          text(icon, { fontSize: 14, fontWeight: 400, color: '#6b7280' }),
-          text(title, { fontSize: 13, fontWeight: 700, color: '#111827', letterSpacing: { value: 4, unit: 'PERCENT' } }),
+          rectangle(`${name}Check`, {
+            size: { x: 20, y: 20 },
+            fills: [solid(checked ? '#16a34a' : '#ffffff')],
+            cornerRadius: 4,
+            strokes: [{ color: { r: checked ? 0.09 : 0.80, g: checked ? 0.64 : 0.80, b: checked ? 0.29 : 0.80, a: 1 }, weight: 2, align: 'INSIDE' as const }],
+          }),
+          frame(`${name}Info`, {
+            autoLayout: vertical({ spacing: 2 }),
+            children: [
+              text(name, {
+                fontSize: 14, fontWeight: 500,
+                color: checked ? '#9ca3af' : '#1f2937',
+              }),
+              text(qty, { fontSize: 12, fontWeight: 400, color: '#9ca3af' }),
+            ],
+          }),
         ],
       }),
-      ...items,
+      text(price, { fontSize: 14, fontWeight: 600, color: checked ? '#9ca3af' : '#374151' }),
     ],
   });
 }
 
-function summaryRow(label: string, value: string, bold: boolean) {
-  return frame(`Sum: ${label}`, {
-    autoLayout: horizontal({ spacing: 0, padY: 4 }), layoutSizingHorizontal: 'FILL',
+function categorySection(title: string, color: string, items: { name: string; qty: string; price: string; checked: boolean }[]) {
+  return frame(`Cat: ${title}`, {
+    autoLayout: vertical({ spacing: 0 }),
+    fills: [solid('#ffffff')],
+    cornerRadius: 12,
+    layoutSizingHorizontal: 'FILL',
+    strokes: [{ color: { r: 0.93, g: 0.93, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      text(label, { fontSize: bold ? 15 : 13, fontWeight: bold ? 700 : 400, color: '#374151', layoutSizingHorizontal: 'FILL' }),
-      text(value, { fontSize: bold ? 15 : 13, fontWeight: bold ? 800 : 500, color: bold ? '#16a34a' : '#374151' }),
+      frame(`${title}Header`, {
+        autoLayout: horizontal({ spacing: 10, padX: 14, padY: 10, counterAlign: 'CENTER' }),
+        layoutSizingHorizontal: 'FILL',
+        fills: [solid('#fafafa')],
+        children: [
+          ellipse(`${title}Dot`, { size: { x: 10, y: 10 }, fills: [solid(color)] }),
+          text(title, { fontSize: 14, fontWeight: 700, color: '#374151' }),
+          text(`${items.length} items`, { fontSize: 12, fontWeight: 400, color: '#9ca3af' }),
+        ],
+      }),
+      ...items.map(i => groceryItem(i.name, i.qty, i.price, i.checked)),
     ],
   });
 }
 
 export default frame('GroceryListPage', {
-  size: { x: 500 },
+  size: { x: 900 },
   autoLayout: vertical({ spacing: 0 }),
-  fills: [solid('#ffffff')],
+  fills: [solid('#f3f4f6')],
   children: [
+    // Header
     frame('Header', {
-      autoLayout: horizontal({ spacing: 0, padX: 20, padY: 14, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
+      autoLayout: horizontal({ spacing: 0, padX: 32, padY: 18, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
       layoutSizingHorizontal: 'FILL',
-      fills: [solid('#16a34a')],
+      fills: [solid('#ffffff')],
+      strokes: [{ color: { r: 0.93, g: 0.93, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
       children: [
-        text('My Grocery List', { fontSize: 18, fontWeight: 800, color: '#ffffff' }),
-        text('12 items', { fontSize: 13, fontWeight: 500, color: '#ffffffcc' }),
+        text('GroceryGo', { fontSize: 22, fontWeight: 800, color: '#16a34a' }),
+        frame('HeaderRight', {
+          autoLayout: horizontal({ spacing: 16, counterAlign: 'CENTER' }),
+          children: [
+            text('My Lists', { fontSize: 14, fontWeight: 500, color: '#374151' }),
+            frame('CartBadge', {
+              autoLayout: horizontal({ padX: 14, padY: 6, spacing: 6, counterAlign: 'CENTER' }),
+              fills: [solid('#16a34a')],
+              cornerRadius: 9999,
+              children: [
+                text('12 items', { fontSize: 12, fontWeight: 600, color: '#ffffff' }),
+              ],
+            }),
+          ],
+        }),
       ],
     }),
-    frame('ListBody', {
-      autoLayout: vertical({ spacing: 16, padX: 20, padY: 16 }),
+
+    // List Header
+    frame('ListHeader', {
+      autoLayout: horizontal({ spacing: 0, padX: 32, padY: 20, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
       layoutSizingHorizontal: 'FILL',
       children: [
-        categorySection('Produce', '🥬', [
-          checkItem('Avocados', 'x3', '$4.50', true),
-          checkItem('Cherry Tomatoes', 'x1', '$3.99', true),
-          checkItem('Baby Spinach', 'x1', '$2.99', false),
-          checkItem('Bananas', 'x1', '$1.29', false),
+        frame('ListTitle', {
+          autoLayout: vertical({ spacing: 4 }),
+          children: [
+            text('Weekly Groceries', { fontSize: 24, fontWeight: 700, color: '#111827' }),
+            text('March 16, 2026', { fontSize: 13, fontWeight: 400, color: '#6b7280' }),
+          ],
+        }),
+        frame('AddBtn', {
+          autoLayout: horizontal({ padX: 20, padY: 10, spacing: 6 }),
+          fills: [solid('#16a34a')],
+          cornerRadius: 10,
+          children: [
+            text('+ Add Item', { fontSize: 14, fontWeight: 600, color: '#ffffff' }),
+          ],
+        }),
+      ],
+    }),
+
+    // Categories
+    frame('CategoriesSection', {
+      autoLayout: vertical({ spacing: 16, padX: 32, padY: 8 }),
+      layoutSizingHorizontal: 'FILL',
+      children: [
+        categorySection('Fruits & Vegetables', '#22c55e', [
+          { name: 'Bananas', qty: '1 bunch', price: '$1.29', checked: true },
+          { name: 'Avocados', qty: '3 pcs', price: '$4.50', checked: false },
+          { name: 'Spinach', qty: '1 bag', price: '$2.99', checked: false },
+          { name: 'Tomatoes', qty: '6 pcs', price: '$3.49', checked: true },
         ]),
-        categorySection('Dairy', '🧀', [
-          checkItem('Whole Milk', '1 gal', '$4.79', false),
-          checkItem('Greek Yogurt', 'x2', '$6.98', false),
-          checkItem('Cheddar Cheese', 'x1', '$3.49', true),
+        categorySection('Dairy & Eggs', '#3b82f6', [
+          { name: 'Whole Milk', qty: '1 gallon', price: '$4.29', checked: false },
+          { name: 'Greek Yogurt', qty: '4 cups', price: '$5.99', checked: false },
+          { name: 'Eggs (dozen)', qty: '1 pk', price: '$3.49', checked: true },
         ]),
-        categorySection('Proteins', '🥩', [
-          checkItem('Chicken Breast', '2 lbs', '$9.98', false),
-          checkItem('Atlantic Salmon', '1 lb', '$11.99', false),
-        ]),
-        categorySection('Pantry', '🏪', [
-          checkItem('Olive Oil', 'x1', '$7.99', false),
-          checkItem('Brown Rice', '2 lbs', '$3.49', false),
-          checkItem('Pasta Sauce', 'x1', '$4.29', false),
+        categorySection('Pantry', '#f59e0b', [
+          { name: 'Pasta', qty: '2 boxes', price: '$3.98', checked: false },
+          { name: 'Olive Oil', qty: '1 bottle', price: '$7.99', checked: false },
+          { name: 'Rice', qty: '2 lb bag', price: '$4.49', checked: true },
         ]),
       ],
     }),
-    rectangle('Divider', { size: { x: 460, y: 1 }, fills: [solid('#e5e7eb')] }),
-    frame('Summary', {
-      autoLayout: vertical({ spacing: 4, padX: 20, padY: 14 }),
+
+    // Total
+    frame('TotalSection', {
+      autoLayout: horizontal({ spacing: 0, padX: 32, padY: 24, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
       layoutSizingHorizontal: 'FILL',
+      fills: [solid('#ffffff')],
+      strokes: [{ color: { r: 0.93, g: 0.93, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
       children: [
-        summaryRow('Subtotal (12 items)', '$65.77', false),
-        summaryRow('Checked off (3)', '-$11.98', false),
-        rectangle('SumDiv', { size: { x: 460, y: 1 }, fills: [solid('#e5e7eb')] }),
-        summaryRow('Remaining', '$53.79', true),
+        frame('TotalInfo', {
+          autoLayout: vertical({ spacing: 2 }),
+          children: [
+            text('Estimated Total', { fontSize: 13, fontWeight: 400, color: '#6b7280' }),
+            text('$42.50', { fontSize: 28, fontWeight: 800, color: '#111827' }),
+          ],
+        }),
+        frame('CheckoutBtn', {
+          autoLayout: horizontal({ padX: 28, padY: 14 }),
+          fills: [gradient([{ hex: '#16a34a', position: 0 }, { hex: '#22c55e', position: 1 }], 90)],
+          cornerRadius: 12,
+          children: [
+            text('Checkout', { fontSize: 16, fontWeight: 700, color: '#ffffff' }),
+          ],
+        }),
       ],
     }),
   ],
