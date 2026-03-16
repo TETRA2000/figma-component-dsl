@@ -36,6 +36,15 @@
         <option value="complete">Complete DSL JSON</option>
       </select>
     </div>
+    <div style="margin-bottom:8px">
+      <label><strong>Scale:</strong></label>
+      <select id="exportScale" style="margin-left:8px">
+        <option value="1">1x</option>
+        <option value="2" selected>2x</option>
+        <option value="3">3x</option>
+        <option value="4">4x</option>
+      </select>
+    </div>
     <div style="margin-bottom:12px">
       <label><strong>Scope:</strong></label>
       <select id="exportScope" style="margin-left:8px">
@@ -85,7 +94,8 @@
       document.getElementById('exportProgressBar').style.width = '0';
       document.getElementById('downloadBtn').style.display = 'none';
       lastZipBytes = null;
-      parent.postMessage({ pluginMessage: { type: 'export-' + mode, scope: scope } }, '*');
+      var scale = parseInt(document.getElementById('exportScale').value, 10) || 2;
+      parent.postMessage({ pluginMessage: { type: 'export-' + mode, scope: scope, scale: scale } }, '*');
     };
     document.getElementById('cancelExportBtn').onclick = () => {
       parent.postMessage({ pluginMessage: { type: 'export-cancel' } }, '*');

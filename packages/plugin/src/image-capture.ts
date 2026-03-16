@@ -34,6 +34,13 @@ export interface ExportableNode {
   exportAsync(settings: { format: 'PNG'; constraint: { type: 'SCALE'; value: number } }): Promise<Uint8Array>;
 }
 
+// --- Scale Validation ---
+
+/** Clamp and round scale to integer within 1–4 range */
+function clampScale(value: number): number {
+  return Math.min(4, Math.max(1, Math.round(value)));
+}
+
 // --- Capture ---
 
 /**
@@ -44,7 +51,7 @@ export async function captureSlotImages(
   detectedSlots: SlotDetectionResult[],
   options?: CaptureOptions,
 ): Promise<Map<string, CapturedSlotImage>> {
-  const scale = options?.scale ?? 2;
+  const scale = clampScale(options?.scale ?? 2);
   const total = detectedSlots.length;
   const results = new Map<string, CapturedSlotImage>();
 

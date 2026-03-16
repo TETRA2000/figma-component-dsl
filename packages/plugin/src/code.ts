@@ -1000,6 +1000,7 @@ let exportAbortController: AbortController | null = null;
 async function runImageBundlePipeline(
   nodeIds: ReadonlyArray<string>,
   exportJson: Record<string, unknown>,
+  scale: number = 2,
 ): Promise<BundledExport> {
   exportAbortController = new AbortController();
 
@@ -1037,7 +1038,7 @@ async function runImageBundlePipeline(
   figma.ui.postMessage({ type: 'export-progress', current: 0, total: allDetected.length, slotName: '' });
 
   const captured = await captureSlotImages(allDetected, {
-    scale: 2,
+    scale,
     signal: exportAbortController.signal,
     onProgress: (current, total, slotName) => {
       figma.ui.postMessage({ type: 'export-progress', current, total, slotName });
@@ -1339,7 +1340,7 @@ function filterTrackedByNames(names: string[]): string[] {
   return result;
 }
 
-figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean; scope?: string; payload?: Record<string, unknown> }) => {
+figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean; scope?: string; scale?: number; payload?: Record<string, unknown> }) => {
   // Handle WebSocket messages relayed from UI
   if (msg.type === 'ws-connected') {
     // Send handshake with file key
@@ -1410,7 +1411,8 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
 
       // Run image bundle pipeline (slot detection + image capture + bundling)
       figma.ui.postMessage({ type: 'progress', text: 'Capturing slot images...' });
-      const bundled = await runImageBundlePipeline(nodeIds, exportJson);
+      const exportScale = typeof msg.scale === 'number' ? msg.scale : 2;
+      const bundled = await runImageBundlePipeline(nodeIds, exportJson, exportScale);
 
       const imageSummary = bundled.imageCount > 0
         ? ` | ${bundled.imageCount} images (${bundled.format})`

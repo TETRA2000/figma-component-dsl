@@ -150,6 +150,54 @@ describe('captureSlotImages', () => {
     expect(results.size).toBe(0);
   });
 
+  it('clamps scale below minimum to 1', async () => {
+    const slot = makeExportableSlot('header');
+    const exportAsync = (slot.node as unknown as ExportableNode).exportAsync as ReturnType<typeof vi.fn>;
+
+    await captureSlotImages([slot], { scale: 0 });
+
+    expect(exportAsync).toHaveBeenCalledWith({
+      format: 'PNG',
+      constraint: { type: 'SCALE', value: 1 },
+    });
+  });
+
+  it('clamps scale above maximum to 4', async () => {
+    const slot = makeExportableSlot('header');
+    const exportAsync = (slot.node as unknown as ExportableNode).exportAsync as ReturnType<typeof vi.fn>;
+
+    await captureSlotImages([slot], { scale: 10 });
+
+    expect(exportAsync).toHaveBeenCalledWith({
+      format: 'PNG',
+      constraint: { type: 'SCALE', value: 4 },
+    });
+  });
+
+  it('rounds fractional scale to nearest integer within range', async () => {
+    const slot = makeExportableSlot('header');
+    const exportAsync = (slot.node as unknown as ExportableNode).exportAsync as ReturnType<typeof vi.fn>;
+
+    await captureSlotImages([slot], { scale: 2.7 });
+
+    expect(exportAsync).toHaveBeenCalledWith({
+      format: 'PNG',
+      constraint: { type: 'SCALE', value: 3 },
+    });
+  });
+
+  it('clamps negative scale to 1', async () => {
+    const slot = makeExportableSlot('header');
+    const exportAsync = (slot.node as unknown as ExportableNode).exportAsync as ReturnType<typeof vi.fn>;
+
+    await captureSlotImages([slot], { scale: -2 });
+
+    expect(exportAsync).toHaveBeenCalledWith({
+      format: 'PNG',
+      constraint: { type: 'SCALE', value: 1 },
+    });
+  });
+
   it('preserves source type from detection result', async () => {
     const dslSlot = makeExportableSlot('canvas-slot', { sourceType: 'dslCanvas' });
     const nativeSlot = makeExportableSlot('native-slot', { sourceType: 'nativeSlot' });
