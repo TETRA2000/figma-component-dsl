@@ -6,7 +6,7 @@ The DslCanvas component extends the existing Slots feature by introducing a new 
 
 This approach creates a class of "image-rendered" UI regions where visual fidelity is guaranteed, complementing traditional HTML/CSS components for interactive content.
 
-Additionally, the system supports exporting slot and canvas contents using Figma's native Plugin API (`exportAsync`), providing designers with the ability to export slot content as raster images (PNG, JPG) or vector (SVG, PDF) at configurable pixel densities. This Figma-native export path complements the existing `@figma-dsl/renderer`-based rendering pipeline and gives designers a one-click workflow to extract slot content in publication-ready formats directly from within Figma.
+Additionally, the Figma plugin's export action automatically bundles rendered slot and canvas images alongside the DSL JSON in a single export step. For small payloads, slot images are embedded as base64 data URIs directly in the JSON; for larger exports, the plugin packages everything as a ZIP archive. This unified export path complements the existing `@figma-dsl/renderer`-based rendering pipeline and gives designers a complete, self-contained export without requiring a separate image extraction workflow.
 
 ## Requirements
 
@@ -99,28 +99,28 @@ Additionally, the system supports exporting slot and canvas contents using Figma
 2. When a DSL file used as a DslCanvas source changes during development, the preview app shall re-render the canvas image automatically via Vite's HMR.
 3. The DslCanvas component shall work within the preview app's existing layout system (CSS Modules, design tokens) without requiring special configuration.
 
-### Requirement 9: Figma Plugin Slot Content Export
+### Requirement 9: Unified Export with Slot Image Bundling
 
-**Objective:** As a designer, I want to export slot and canvas frame contents from Figma using the Figma Plugin API's native export capabilities, so that I can extract slot content as high-quality images or vectors in my preferred format and resolution without leaving Figma.
-
-#### Acceptance Criteria
-
-1. The Figma plugin shall provide an "Export Slots" action in the Export tab that allows the user to select one or more slot/canvas frames for export.
-2. When the user initiates a slot content export, the plugin shall allow the user to choose the output format from: PNG, JPG, SVG, and PDF.
-3. The plugin shall allow the user to choose the pixel density (scale factor) for raster exports (PNG, JPG), supporting at minimum 1x, 2x, 3x, and 4x options.
-4. When the user confirms export settings, the plugin shall call Figma's `node.exportAsync()` with the selected format and scale constraint for each selected slot/canvas frame.
-5. The plugin shall export only the contents of the slot/canvas frame (i.e., the frame itself and its children), not the parent component or surrounding nodes.
-6. While the export is in progress, the plugin shall display progress feedback indicating which slot is being exported and the overall completion status.
-7. If a slot/canvas frame export fails, the plugin shall report the error for that specific frame and continue exporting the remaining frames.
-8. The plugin shall make the exported data available for download or clipboard copy, including the file name derived from the slot/canvas name and the chosen format extension.
-
-### Requirement 10: Dual Export Path Coexistence
-
-**Objective:** As a pipeline maintainer, I want the Figma-native slot export to coexist with the existing `@figma-dsl/renderer`-based canvas rendering pipeline, so that both export paths remain functional and users can choose the appropriate method for their use case.
+**Objective:** As a designer, I want the Figma plugin's existing export action to automatically include rendered slot and canvas images alongside the DSL JSON, so that I get a complete, self-contained export package in a single step without a separate export workflow.
 
 #### Acceptance Criteria
 
-1. The Figma plugin's slot content export (Requirement 9) shall operate independently of the existing `@figma-dsl/renderer`-based `renderCanvasNodes()` pipeline.
-2. The existing `renderCanvasNodes()` function and CLI `render --no-canvas` behavior shall remain unchanged after adding the Figma-native export path.
+1. When the user triggers the existing export action (changeset or complete export), the Figma plugin shall automatically render each slot and canvas frame using Figma's `node.exportAsync()` and include the image data in the export output.
+2. The plugin shall render slot and canvas images as PNG at 2x scale by default, with an optional user-configurable scale factor (1x, 2x, 3x, 4x) in the export settings.
+3. When the total export payload size is below a configurable threshold (default: 1 MB), the plugin shall embed slot images as base64-encoded data URIs within the JSON output under a `slotImages` map keyed by slot/canvas name.
+4. When the total export payload size exceeds the threshold, the plugin shall package the JSON and image files together as a ZIP archive, with images stored as separate files named `{slot-name}.png`.
+5. The plugin shall export only the contents of each slot/canvas frame (the frame itself and its children), not the parent component or surrounding nodes.
+6. While the export is in progress, the plugin shall display progress feedback indicating which slot/canvas frame is being rendered and the overall completion status.
+7. If a slot/canvas frame render fails, the plugin shall report the error for that specific frame, omit it from the bundled output, and continue exporting the remaining frames.
+8. The exported JSON shall include a `slotImages` field containing a map of slot/canvas names to their image data (base64 string for inline mode, or relative file path for ZIP mode).
+
+### Requirement 10: Dual Rendering Path Coexistence
+
+**Objective:** As a pipeline maintainer, I want the Figma-native slot image bundling to coexist with the existing `@figma-dsl/renderer`-based canvas rendering pipeline, so that both rendering paths remain functional and consumers can use whichever is appropriate for their context.
+
+#### Acceptance Criteria
+
+1. The Figma plugin's bundled slot images (Requirement 9) shall be produced independently of the existing `@figma-dsl/renderer`-based `renderCanvasNodes()` pipeline.
+2. The existing `renderCanvasNodes()` function and CLI `render --no-canvas` behavior shall remain unchanged after adding the Figma-native bundled export.
 3. Where a canvas node has a `scale` property defined in the DSL, the Figma plugin export shall use the user-selected scale factor (not the DSL-defined scale), since the Figma-native export reflects the designer's export intent rather than the DSL author's rendering intent.
-4. The plugin shall clearly label the two export mechanisms in its UI so that users understand the distinction: "Export Slots (Figma)" for Figma-native export and the existing changeset/complete export for DSL-pipeline-based workflows.
+4. When consuming an export package containing bundled `slotImages`, the DslCanvas React component shall prefer the bundled image data over re-rendering via `@figma-dsl/renderer`, falling back to renderer-based rendering when no bundled image is available.
