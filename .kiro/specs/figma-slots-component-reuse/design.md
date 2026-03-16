@@ -1,3 +1,5 @@
+> **Override Notice (2026-03-16)**: Parts of this spec are superseded by `canvas-component`. Specifically: (1) Requirement 10 (Bidirectional Slot Sync) — image-based slot content is now handled by canvas-component's unified export bundling via `exportAsync`; (2) Plugin slot identification — canvas-component's `SlotDetector` uses `componentPropertyDefinitions` + `node.type === "SLOT"` (more robust than `[Slot]` naming convention alone). Core slot infrastructure (Requirements 1–9) remains valid and is extended by canvas-component.
+
 # Design Document — Figma Slots & Component Reuse
 
 ## Overview

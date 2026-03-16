@@ -14,7 +14,7 @@ The project follows a **specification-driven, research-first** approach. Referen
 ### CLI Bin Stubs
 **Location**: `bin/`
 **Purpose**: Per-command entry points for the CLI (`figma-dsl`, `figma-dsl-compile`, etc.)
-**Convention**: Each stub imports from `packages/cli/dist/cli.js` and injects its command name. Also registered in root `package.json` `"bin"` field. Exception: `figma-dsl-sync` imports directly from `packages/mcp-server/dist/server.js` (standalone MCP server entry point).
+**Convention**: Each stub imports from `packages/cli/dist/cli.js` and injects its command name. Also registered in root `package.json` `"bin"` field. Exception: `figma-dsl-sync` imports directly from `packages/mcp-server/dist/cli.js` (standalone MCP server entry point).
 
 ### MCP Server Config
 **Location**: `.mcp.json` (project root)
@@ -45,7 +45,7 @@ The project follows a **specification-driven, research-first** approach. Referen
 ### Preview App
 **Location**: `preview/`
 **Purpose**: Vite + React app for live previewing components and landing pages
-**Convention**: Components in `src/components/{ComponentName}/` following the 3-file pattern (tsx, module.css, figma.tsx). Pages in `src/pages/`. Shared design tokens in `src/components/tokens.css`.
+**Convention**: Components in `src/components/{ComponentName}/` following the 3-file pattern (tsx, module.css, figma.tsx). Storybook stories in `src/storybook/`. Shared design tokens in `src/components/tokens.css`. Optional `.stories.tsx` files may accompany components.
 
 ### Calibration Output
 **Location**: `calibration/`

@@ -25,10 +25,13 @@ import type { SerializableNode } from './serializer.js';
 import {
   formatSlotName,
   buildSlotPluginData,
-  buildComponentMap as buildComponentEntryMap,
   formatDetachedCopyName,
 } from './slot-utils.js';
-import type { ComponentEntry } from './slot-utils.js';
+import { detectSlots } from './slot-detector.js';
+import type { SlotDetectableComponent } from './slot-detector.js';
+import { captureSlotImages } from './image-capture.js';
+import { bundleExport } from './export-bundler.js';
+import type { BundledExport } from './export-bundler.js';
 import uiHtml from './ui.html';
 import { registerCodegenHandler } from './codegen.js';
 
@@ -451,11 +454,17 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         comp.visible = def.visible;
         setAutoLayoutConfig(comp, def);
 
-        // Register component properties
-        // Skip VARIANT properties — they are only valid on COMPONENT_SET nodes.
+        // Register component properties (non-VARIANT, non-SLOT).
+        // SLOT properties require a child node ID as defaultValue, so they
+        // are deferred until after children are created.
+        const deferredSlotProps: Array<[string, { type: string }]> = [];
         if (def.componentPropertyDefinitions) {
           for (const [propName, propDef] of Object.entries(def.componentPropertyDefinitions)) {
             if (propDef.type === 'VARIANT') continue;
+            if (propDef.type === 'SLOT') {
+              deferredSlotProps.push([propName, propDef]);
+              continue;
+            }
             comp.addComponentProperty(propName, propDef.type as 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', propDef.defaultValue as string);
           }
         }
@@ -465,6 +474,22 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         for (const child of def.children) {
           await createNode(child, comp);
         }
+
+        // Now register deferred SLOT properties using created child node IDs
+        for (const [propName] of deferredSlotProps) {
+          // Extract layer name from property key format "LayerName#nodeId"
+          const hashIdx = propName.lastIndexOf('#');
+          const slotLayerName = hashIdx > 0 ? propName.slice(0, hashIdx) : propName;
+          const matchingChild = comp.children.find(c => c.name === slotLayerName);
+          if (matchingChild) {
+            try {
+              comp.addComponentProperty(slotLayerName, 'SLOT' as ComponentPropertyType, matchingChild.id);
+            } catch (e) {
+              errors.push(`Failed to add SLOT property "${slotLayerName}" to "${def.name}": ${e instanceof Error ? e.message : String(e)}`);
+            }
+          }
+        }
+
         componentMap.set(def.name, comp);
         node = comp;
         break;
@@ -520,9 +545,11 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
 
           // Register shared component properties on the set (not on variant children).
           // Uses extracted helpers from serializer.ts for testability.
+          // SLOT properties are skipped — they require child node IDs and belong on individual components.
           const sharedPropDefs = collectSharedPropDefs(def.children);
           if (sharedPropDefs) {
             for (const [propName, propDef] of getRegistrableProperties(sharedPropDefs)) {
+              if (propDef.type === 'SLOT') continue;
               try {
                 set.addComponentProperty(propName, propDef.type as 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', propDef.defaultValue as string);
               } catch (e) {
@@ -788,7 +815,7 @@ async function embedImageDataForChange(
       for (const fill of fills) {
         if (fill.type === 'IMAGE') {
           const imgPaint = fill as ImagePaint;
-          const image = figma.getImageByHash(imgPaint.imageHash);
+          const image = imgPaint.imageHash ? figma.getImageByHash(imgPaint.imageHash) : null;
           if (image) {
             const bytes = await image.getBytesAsync();
             const base64 = figma.base64Encode(bytes);
@@ -1004,6 +1031,77 @@ function computeCompleteExport(nodeIds: ReadonlyArray<string>, pageName: string)
   };
 }
 
+// --- Image Bundle Pipeline ---
+
+// Minimal AbortController polyfill for Figma plugin sandbox
+class PluginAbortSignal {
+  aborted = false;
+}
+class PluginAbortController {
+  signal = new PluginAbortSignal();
+  abort() { this.signal.aborted = true; }
+}
+
+let exportAbortController: PluginAbortController | null = null;
+
+/**
+ * Run slot detection → image capture → export bundling pipeline on exported nodes.
+ * Returns a BundledExport with either JSON+base64 or ZIP.
+ */
+async function runImageBundlePipeline(
+  nodeIds: ReadonlyArray<string>,
+  exportJson: Record<string, unknown>,
+  scale: number = 2,
+): Promise<BundledExport> {
+  exportAbortController = new PluginAbortController();
+
+  // Detect slots in all exported component nodes
+  const allDetected: import('./slot-detector.js').SlotDetectionResult[] = [];
+  for (const nodeId of nodeIds) {
+    const node = figma.getNodeById(nodeId);
+    if (!node) continue;
+
+    // Resolve InstanceNodes to their main component
+    let componentNode: BaseNode | null = node;
+    if (node.type === 'INSTANCE') {
+      componentNode = (node as InstanceNode).mainComponent;
+      if (!componentNode) continue; // Remote component — skip
+    }
+
+    // Only detect slots on component-like nodes
+    if (componentNode.type === 'COMPONENT' || componentNode.type === 'COMPONENT_SET') {
+      const detected = detectSlots(componentNode as unknown as SlotDetectableComponent);
+      allDetected.push(...detected);
+    }
+  }
+
+  if (allDetected.length === 0) {
+    // No slots found — return plain JSON
+    return {
+      format: 'json',
+      json: JSON.stringify(exportJson),
+      imageCount: 0,
+      totalImageBytes: 0,
+    };
+  }
+
+  // Capture images with progress reporting
+  figma.ui.postMessage({ type: 'export-progress', current: 0, total: allDetected.length, slotName: '' });
+
+  const captured = await captureSlotImages(allDetected, {
+    scale,
+    signal: exportAbortController.signal,
+    onProgress: (current, total, slotName) => {
+      figma.ui.postMessage({ type: 'export-progress', current, total, slotName });
+    },
+  });
+
+  // Bundle
+  const bundled = bundleExport(exportJson, captured);
+  exportAbortController = null;
+  return bundled;
+}
+
 function getTrackedNodeIdsOnPage(): string[] {
   const page = figma.currentPage;
   const ids: string[] = [];
@@ -1056,7 +1154,7 @@ function categorizeChanges(entries: EditLogEntry[]): string[] {
 // Find slot context for a change path within a node
 function findSlotContext(
   rootNode: SceneNode,
-  propertyPath: string,
+  _propertyPath: string,
 ): { slotName: string; currentChildren: PluginNodeDef[] } | undefined {
   // Walk through children to find a slot frame matching the property path
   if (!('children' in rootNode)) return undefined;
@@ -1222,10 +1320,14 @@ async function handleWsMessage(payload: { type: string; requestId?: string; plug
         }
 
         const changeset = await computeChangeset(nodeIds);
+        const bundled = await runImageBundlePipeline(nodeIds, changeset as unknown as Record<string, unknown>);
         wsSend({
           type: 'changeset-result',
           requestId: payload.requestId,
           changeset,
+          bundleFormat: bundled.format,
+          bundleImageCount: bundled.imageCount,
+          ...(bundled.format === 'json' && bundled.json ? { bundledJson: bundled.json } : {}),
         });
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : String(err);
@@ -1255,10 +1357,14 @@ async function handleWsMessage(payload: { type: string; requestId?: string; plug
 
         const pageName = payload.pageName ?? figma.currentPage.name;
         const pluginInput = computeCompleteExport(nodeIds, pageName);
+        const bundled = await runImageBundlePipeline(nodeIds, pluginInput as unknown as Record<string, unknown>);
         wsSend({
           type: 'export-result',
           requestId: payload.requestId,
           pluginInput,
+          bundleFormat: bundled.format,
+          bundleImageCount: bundled.imageCount,
+          ...(bundled.format === 'json' && bundled.json ? { bundledJson: bundled.json } : {}),
         });
       } catch (_err) {
         wsSend({
@@ -1291,7 +1397,7 @@ function filterTrackedByNames(names: string[]): string[] {
   return result;
 }
 
-figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean; scope?: string; payload?: Record<string, unknown> }) => {
+figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean; scope?: string; scale?: number; payload?: Record<string, unknown> }) => {
   // Handle WebSocket messages relayed from UI
   if (msg.type === 'ws-connected') {
     // Send handshake with file key
@@ -1311,6 +1417,15 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
 
   if (msg.type === 'ws-disconnected') {
     // Connection lost — UI handles reconnection
+    return;
+  }
+
+  // Handle export cancellation
+  if (msg.type === 'export-cancel') {
+    if (exportAbortController) {
+      exportAbortController.abort();
+      exportAbortController = null;
+    }
     return;
   }
 
@@ -1336,23 +1451,44 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
         }
       }
 
+      let exportJson: Record<string, unknown>;
+      let baseSummary: string;
+
       if (msg.type === 'export-changeset') {
         const changeset = await computeChangeset(nodeIds);
         const totalChanges = changeset.components.reduce((sum, c) => sum + c.changes.length, 0);
-        const json = JSON.stringify(changeset, null, 2);
-        figma.ui.postMessage({
-          type: 'export-result',
-          json,
-          summary: `Changeset: ${changeset.components.length} components, ${totalChanges} changes`,
-        });
+        exportJson = changeset as unknown as Record<string, unknown>;
+        baseSummary = `Changeset: ${changeset.components.length} components, ${totalChanges} changes`;
       } else {
         const pageName = figma.currentPage.name;
         const complete = computeCompleteExport(nodeIds, pageName);
-        const json = JSON.stringify(complete, null, 2);
+        exportJson = complete as unknown as Record<string, unknown>;
+        baseSummary = `Complete export: ${complete.components.length} components`;
+      }
+
+      // Run image bundle pipeline (slot detection + image capture + bundling)
+      figma.ui.postMessage({ type: 'progress', text: 'Capturing slot images...' });
+      const exportScale = typeof msg.scale === 'number' ? msg.scale : 2;
+      const bundled = await runImageBundlePipeline(nodeIds, exportJson, exportScale);
+
+      const imageSummary = bundled.imageCount > 0
+        ? ` | ${bundled.imageCount} images (${bundled.format})`
+        : '';
+
+      if (bundled.format === 'zip') {
         figma.ui.postMessage({
           type: 'export-result',
-          json,
-          summary: `Complete export: ${complete.components.length} components`,
+          format: 'zip',
+          zipBytes: bundled.zipBytes,
+          json: '',
+          summary: `${baseSummary}${imageSummary}`,
+        });
+      } else {
+        figma.ui.postMessage({
+          type: 'export-result',
+          format: 'json',
+          json: bundled.json ?? JSON.stringify(exportJson, null, 2),
+          summary: `${baseSummary}${imageSummary}`,
         });
       }
     } catch (err) {

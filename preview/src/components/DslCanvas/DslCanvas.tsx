@@ -9,9 +9,23 @@ interface FigmaNodeDict {
   [key: string]: unknown;
 }
 
+/** Pre-bundled image from Figma plugin export */
+export interface BundledImage {
+  /** Base64 data URL or file path */
+  dataUrl: string;
+  /** Pixel width of the image */
+  width: number;
+  /** Pixel height of the image */
+  height: number;
+  /** Source classification */
+  sourceType: 'dslCanvas' | 'nativeSlot';
+}
+
 export interface DslCanvasProps {
-  /** Compiled DSL JSON to render */
-  dsl: FigmaNodeDict;
+  /** Compiled DSL JSON to render (used when no bundledImage) */
+  dsl?: FigmaNodeDict;
+  /** Pre-bundled image from export package — takes priority over dsl */
+  bundledImage?: BundledImage;
   /** Slot override content keyed by slot name — compiled node arrays merged into DSL children before rendering */
   slotOverrides?: Record<string, FigmaNodeDict[]>;
   /** Display width in pixels; height auto-calculated from aspect ratio */
@@ -46,6 +60,7 @@ function applySlotOverrides(
 
 export function DslCanvas({
   dsl,
+  bundledImage,
   slotOverrides,
   width,
   scale = 1,
@@ -59,7 +74,11 @@ export function DslCanvas({
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
+  // Server-side render effect — skipped when bundledImage is provided
   useEffect(() => {
+    // When bundledImage is provided, skip server-side rendering entirely
+    if (bundledImage) return;
+
     if (!dsl || !dsl.type || !dsl.size) {
       setError('Invalid DSL input');
       setDataUrl(null);
@@ -104,7 +123,29 @@ export function DslCanvas({
       });
 
     return () => { controller.abort(); };
-  }, [dsl, slotOverrides, scale]);
+  }, [dsl, bundledImage, slotOverrides, scale]);
+
+  // When bundledImage is provided, use it directly — no server-side render needed.
+  // This is the only rendering path for nativeSlot images (no DSL representation).
+  if (bundledImage) {
+    const bundledAspectRatio = bundledImage.width / bundledImage.height;
+    const bundledContainerStyle: CSSProperties = {
+      ...style,
+      width: width ? `${width}px` : undefined,
+      aspectRatio: `${bundledAspectRatio}`,
+    };
+    return (
+      <div className={`${styles.container} ${className ?? ''}`} style={bundledContainerStyle}>
+        <img
+          className={styles.image}
+          src={bundledImage.dataUrl}
+          alt={alt}
+          width={width}
+          style={{ aspectRatio: `${bundledAspectRatio}` }}
+        />
+      </div>
+    );
+  }
 
   const aspectRatio = dimensions ? dimensions.width / dimensions.height : undefined;
 

@@ -16,5 +16,5 @@ export { Stats } from './Stats/Stats';
 export { TestimonialCard } from './TestimonialCard/TestimonialCard';
 export { Testimonials } from './Testimonials/Testimonials';
 export { DslCanvas } from './DslCanvas/DslCanvas';
-export type { DslCanvasProps } from './DslCanvas/DslCanvas';
+export type { DslCanvasProps, BundledImage } from './DslCanvas/DslCanvas';
 // --- END REFERENCE EXPORTS ---

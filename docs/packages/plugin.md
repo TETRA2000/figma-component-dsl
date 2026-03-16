@@ -90,7 +90,7 @@ The `createNode()` async function dispatches by node type:
 | ELLIPSE | `figma.createEllipse()` | Fills, strokes |
 | TEXT | `figma.createText()` | Async font loading required; characters, alignment |
 | GROUP | `figma.group()` | Creates temp frame for children, groups, removes temp |
-| COMPONENT | `figma.createComponent()` | Registers in `componentMap`; adds property definitions |
+| COMPONENT | `figma.createComponent()` | Registers in `componentMap`; adds property definitions (SLOT properties deferred until after children exist) |
 | COMPONENT_SET | `figma.combineAsVariants()` | Combines child COMPONENT nodes into variant set; shared TEXT/BOOLEAN properties registered on the set after combining |
 | INSTANCE | `refComp.createInstance()` | Looks up `componentMap`; applies property overrides |
 | default | — | Logs error, returns null |
@@ -165,7 +165,7 @@ If the font is unavailable, `loadFontAsync` throws — caught by `createNode`'s 
 **Confidence**: 0.92 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
 ### Component Registration
-When creating a COMPONENT node, it's stored in `componentMap` by name (line 213). Component properties are registered via `addComponentProperty()` before children are appended.
+When creating a COMPONENT node, it's stored in `componentMap` by name. Non-SLOT component properties (TEXT, BOOLEAN, INSTANCE_SWAP) are registered via `addComponentProperty()` before children are appended. SLOT properties are deferred until after children are created, because Figma's `addComponentProperty` for SLOT type requires a `defaultValue` pointing to the child node's ID. The plugin matches the slot layer name from the property key (e.g., `CanvasContainer` from `CanvasContainer#10:0`) to the corresponding child node.
 
 ### Instance Resolution
 INSTANCE nodes look up `componentMap[def.componentId ?? def.name]`. If not found, an error is logged and null is returned. Property overrides are applied via `setProperties()` with per-property try-catch.
@@ -346,6 +346,7 @@ Textarea for pasting PluginInput JSON, auto-export PNGs checkbox, Import button.
 8. **PNG export incomplete**: Generates PNG data but doesn't download files to disk.
 9. ~~**No VARIANT on standalone components**~~: Fixed — VARIANT properties are now automatically skipped during `addComponentProperty()` for standalone components.
 10. **Grid-only positioning**: No absolute positioning support; grid layout always applied.
+11. ~~**SLOT property import fails**~~: Fixed — SLOT-type component properties are now deferred until after children are created, then registered using the matching child node's ID as the required `defaultValue`.
 
 ---
 

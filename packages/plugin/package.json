@@ -7,11 +7,12 @@
     "build": "esbuild src/code.ts --bundle --outfile=dist/code.js --format=iife --target=es2015 --loader:.html=text"
   },
   "dependencies": {
-    "@figma/plugin-typings": "^1.0.0",
-    "@figma-dsl/core": "0.1.0"
+    "@figma-dsl/core": "0.1.0",
+    "@figma/plugin-typings": "^1.0.0"
   },
   "devDependencies": {
     "esbuild": "^0.24.0",
+    "fflate": "^0.8.2",
     "typescript": "^5.9.0"
   }
 }
