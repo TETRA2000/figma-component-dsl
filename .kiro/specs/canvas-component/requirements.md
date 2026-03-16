@@ -15,12 +15,13 @@ This approach creates a class of "image-rendered" UI regions where visual fideli
 #### Acceptance Criteria
 
 1. The DslCanvas component shall accept a `dsl` prop containing compiled DSL JSON (FigmaNodeDict) and render it as an `<img>` element displaying the PNG output.
-2. The DslCanvas component shall accept optional `width` and `height` props to control the displayed image dimensions.
-3. The DslCanvas component shall accept an optional `scale` prop (default: 1) to control the rendering resolution for high-DPI displays.
-4. When the `dsl` prop value changes, the DslCanvas component shall re-render the image to reflect the updated DSL content.
-5. While the DslCanvas component is rendering, the DslCanvas component shall display a placeholder or the previous image to avoid layout shifts.
-6. If the `dsl` prop contains invalid or empty DSL JSON, the DslCanvas component shall display a fallback placeholder image or empty state rather than crashing.
-7. The DslCanvas component shall expose a `className` prop and an optional `style` prop for layout integration within parent components.
+2. The DslCanvas component shall maintain the fixed aspect ratio derived from the rendered DSL content dimensions, preventing distortion when the component is resized.
+3. The DslCanvas component shall accept an optional `width` prop; when provided, the height shall be calculated automatically from the aspect ratio of the rendered image.
+4. The DslCanvas component shall accept an optional `scale` prop (default: 1) to control the rendering resolution for high-DPI displays.
+5. When the `dsl` prop value changes, the DslCanvas component shall re-render the image to reflect the updated DSL content.
+6. While the DslCanvas component is rendering, the DslCanvas component shall display a placeholder or the previous image to avoid layout shifts.
+7. If the `dsl` prop contains invalid or empty DSL JSON, the DslCanvas component shall display a fallback placeholder image or empty state rather than crashing.
+8. The DslCanvas component shall expose a `className` prop and an optional `style` prop for layout integration within parent components.
 
 ### Requirement 2: DSL Canvas Node Type
 
