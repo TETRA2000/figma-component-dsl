@@ -703,7 +703,7 @@ The compiler's `validateNode()` also supports three validation levels via `Compi
 | `normal` | `strokeWeight === 0` becomes a warning instead of error |
 | `loose` | Negative `cornerRadius` and zero `fontSize` also become warnings instead of errors |
 
-> **Note:** RGBA out-of-range and missing `imageSrc` are always errors regardless of level (Figma API hard constraints).
+> **Note:** The following are always errors regardless of level (Figma API hard constraints): RGBA out-of-range (fills and strokes), opacity out of 0–1, gradient stop positions out of 0–1, and missing `imageSrc`.
 
 ```ts
 import { compile } from '@figma-dsl/compiler';
@@ -1215,7 +1215,7 @@ These limitations from earlier versions have been fixed:
 | ~~Inter font only~~ | CJK text is auto-detected and rendered using Noto Sans JP. |
 | ~~No canvas reuse~~ | Canvas pooling (`acquireCanvas`/`releaseCanvas`) is now used in batch operations. |
 | ~~No text decoration~~ | `textDecoration: 'UNDERLINE' \| 'STRIKETHROUGH'` is now supported. |
-| ~~No compiler validation~~ | `validateNode()` now checks cornerRadius, RGBA bounds, strokeWeight, fontSize. Supports configurable `validationLevel` (`strict`/`normal`/`loose`) via `CompilerOptions`. |
+| ~~No compiler validation~~ | `validateNode()` checks cornerRadius, per-corner cornerRadii, opacity bounds, fill RGBA, stroke RGBA, gradient stop positions, strokeWeight, and fontSize. Supports configurable `validationLevel` (`strict`/`normal`/`loose`) via `CompilerOptions`. |
 
 ---
 

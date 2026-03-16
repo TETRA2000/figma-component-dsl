@@ -595,6 +595,92 @@ describe('compile() — validation levels', () => {
       expect(result.errors[0]!.message).toContain('RGBA');
     }
   });
+
+  it('all levels reject opacity out of 0-1 range (Figma hard constraint)', () => {
+    for (const level of ['strict', 'normal', 'loose'] as const) {
+      const node1 = frame('Bad', { opacity: -0.5 });
+      const result1 = compile(node1, { validationLevel: level });
+      expect(result1.errors.length).toBeGreaterThan(0);
+      expect(result1.errors[0]!.message).toContain('opacity');
+
+      const node2 = frame('Bad', { opacity: 1.5 });
+      const result2 = compile(node2, { validationLevel: level });
+      expect(result2.errors.length).toBeGreaterThan(0);
+      expect(result2.errors[0]!.message).toContain('opacity');
+    }
+  });
+
+  it('accepts valid opacity values', () => {
+    const node = frame('OK', { opacity: 0.5 });
+    const result = compile(node);
+    expect(result.errors).toEqual([]);
+  });
+
+  it('reports negative cornerRadii per-corner', () => {
+    const node = frame('Bad', {
+      cornerRadii: { topLeft: -1, topRight: 0, bottomLeft: 4, bottomRight: -2 },
+    });
+    const result = compile(node);
+    const msgs = result.errors.map(e => e.message);
+    expect(msgs.some(m => m.includes('topLeft'))).toBe(true);
+    expect(msgs.some(m => m.includes('bottomRight'))).toBe(true);
+    expect(msgs).toHaveLength(2);
+  });
+
+  it('loose treats negative cornerRadii as warnings', () => {
+    const node = frame('Bad', {
+      cornerRadii: { topLeft: -1, topRight: 0, bottomLeft: 0, bottomRight: 0 },
+    });
+    const result = compile(node, { validationLevel: 'loose' });
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0]!.severity).toBe('warning');
+    expect(result.errors[0]!.message).toContain('cornerRadii.topLeft');
+  });
+
+  it('all levels reject gradient stop positions out of 0-1 range', () => {
+    for (const level of ['strict', 'normal', 'loose'] as const) {
+      const node = frame('Bad', {
+        fills: [gradient([
+          { hex: '#ff0000', position: -0.5 },
+          { hex: '#0000ff', position: 1.5 },
+        ])],
+      });
+      const result = compile(node, { validationLevel: level });
+      expect(result.errors.length).toBe(2);
+      expect(result.errors[0]!.message).toContain('gradient stop position');
+    }
+  });
+
+  it('accepts valid gradient stop positions', () => {
+    const node = frame('OK', {
+      fills: [gradient([
+        { hex: '#ff0000', position: 0 },
+        { hex: '#0000ff', position: 1 },
+      ])],
+    });
+    const result = compile(node);
+    expect(result.errors).toEqual([]);
+  });
+
+  it('all levels reject stroke color RGBA out of 0-1 range', () => {
+    for (const level of ['strict', 'normal', 'loose'] as const) {
+      const node = rectangle('Bad', {
+        size: { x: 10, y: 10 },
+        strokes: [{ color: { r: 2, g: 0, b: 0, a: 1 }, weight: 1 }],
+      });
+      const result = compile(node, { validationLevel: level });
+      expect(result.errors.some(e => e.message.includes('stroke RGBA'))).toBe(true);
+    }
+  });
+
+  it('accepts valid stroke colors', () => {
+    const node = rectangle('OK', {
+      size: { x: 10, y: 10 },
+      strokes: [{ color: { r: 0.5, g: 0.5, b: 0.5, a: 1 }, weight: 1 }],
+    });
+    const result = compile(node);
+    expect(result.errors).toEqual([]);
+  });
 });
 
 describe('compile() — textDecoration passthrough', () => {

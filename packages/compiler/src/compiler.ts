@@ -126,12 +126,31 @@ function validateNode(
     errors.push({ message: msg, nodePath: path, nodeType: node.type, severity: sev });
   };
 
+  // Validate opacity — Figma API hard constraint
+  if (node.opacity !== undefined && (node.opacity < 0 || node.opacity > 1)) {
+    push(`opacity must be in 0-1 range, got ${node.opacity}`);
+  }
+
   // Validate cornerRadius
   if (node.cornerRadius !== undefined && node.cornerRadius < 0) {
     if (level === 'loose') {
       push(`cornerRadius is negative (${node.cornerRadius}), clamping to 0`, 'warning');
     } else {
       push(`cornerRadius must be >= 0, got ${node.cornerRadius}`);
+    }
+  }
+
+  // Validate per-corner cornerRadii — Figma API hard constraint (same as cornerRadius)
+  if (node.cornerRadii) {
+    const { topLeft, topRight, bottomLeft, bottomRight } = node.cornerRadii;
+    for (const [corner, value] of Object.entries({ topLeft, topRight, bottomLeft, bottomRight })) {
+      if (value < 0) {
+        if (level === 'loose') {
+          push(`cornerRadii.${corner} is negative (${value}), clamping to 0`, 'warning');
+        } else {
+          push(`cornerRadii.${corner} must be >= 0, got ${value}`);
+        }
+      }
     }
   }
 
@@ -143,6 +162,14 @@ function validateNode(
         if (r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1) {
           // RGBA range is always an error — Figma API hard constraint
           push(`RGBA values must be in 0-1 range, got rgba(${r}, ${g}, ${b}, ${a})`);
+        }
+      }
+      // Validate gradient stop positions — Figma API hard constraint
+      if ('gradientStops' in fill && fill.gradientStops) {
+        for (const stop of fill.gradientStops) {
+          if (stop.position < 0 || stop.position > 1) {
+            push(`gradient stop position must be in 0-1 range, got ${stop.position}`);
+          }
         }
       }
     }
@@ -158,6 +185,13 @@ function validateNode(
           push(`strokeWeight must be > 0, got ${stroke.weight}`);
         } else {
           push(`strokeWeight is 0, stroke will be invisible`, 'warning');
+        }
+      }
+      // Validate stroke color RGBA — Figma API hard constraint
+      if (stroke.color) {
+        const { r, g, b, a } = stroke.color;
+        if (r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1 || a < 0 || a > 1) {
+          push(`stroke RGBA values must be in 0-1 range, got rgba(${r}, ${g}, ${b}, ${a})`);
         }
       }
     }
