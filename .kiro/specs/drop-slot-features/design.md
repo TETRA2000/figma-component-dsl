@@ -379,7 +379,8 @@ async function runCanvasImagePipeline(
 - When `'nodes'`: `JSON.stringify(exportJson)` returned directly
 - When `'images'`: detect → capture → bundle flow executed
 - Remove all `detectSlots`, `SlotDetectionResult`, `SlotDetectableComponent` imports
-- Replace `formatSlotName` with `formatCanvasName` (using `[Canvas]` prefix), remove `buildSlotPluginData`, `PLUGIN_DATA_SLOT` references
+- Refactor `slot-utils.ts` (not delete): rename slot naming functions to canvas equivalents (`formatCanvasName`, `isCanvasFrameName`, `extractCanvasName`), remove `buildSlotPluginData`, retain non-slot utilities (`buildComponentMap`, `findDuplicateNames`, `resolveInstance`, `formatDetachedCopyName`, `buildDetachedCopy`)
+- Remove `PLUGIN_DATA_SLOT` references
 - Refactor slot-specific frame creation logic in `case 'FRAME'` to use `[Canvas]` naming for DslCanvas frames
 
 ### Preview Layer
@@ -504,9 +505,9 @@ All error patterns are inherited from the existing slot pipeline — no new erro
 - `canvas-detector.test.ts`: Canvas region detection via plugin data, empty results, non-canvas nodes skipped
 - `image-capture.test.ts`: Canvas image capture with scale, progress, abort, per-node failure resilience
 - `export-bundler.test.ts`: Canvas image bundling (base64 mode, ZIP mode, empty images, ZIP fallback)
-- `slot.test.ts` removal: Delete entirely
+- `nodes.test.ts`: Remove slot-related test cases (the `slot()` builder is defined in `nodes.ts`, not a separate `slot.ts` file)
 - `slot-detector.test.ts` removal: Replace with canvas-detector tests
-- `slot-utils.test.ts` removal: Delete entirely
+- `slot-utils.test.ts`: Refactor to test canvas naming utilities (`formatCanvasName`, `isCanvasFrameName`, `extractCanvasName`); retain tests for non-slot functions (`buildComponentMap`, `findDuplicateNames`, `resolveInstance`, `formatDetachedCopyName`, `buildDetachedCopy`)
 
 ### Integration Tests
 - Type compilation: `npx tsc --noEmit` on all modified packages (dsl-core, compiler, exporter, plugin)
