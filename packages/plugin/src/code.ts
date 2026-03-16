@@ -27,6 +27,11 @@ import {
   formatDetachedCopyName,
 } from './slot-utils.js';
 import type { ComponentEntry } from './slot-utils.js';
+import { detectSlots } from './slot-detector.js';
+import type { SlotDetectableComponent } from './slot-detector.js';
+import { captureSlotImages } from './image-capture.js';
+import { bundleExport } from './export-bundler.js';
+import type { BundledExport } from './export-bundler.js';
 import uiHtml from './ui.html';
 
 const componentMap = new Map<string, ComponentNode>();
@@ -984,6 +989,67 @@ function computeCompleteExport(nodeIds: ReadonlyArray<string>, pageName: string)
   };
 }
 
+// --- Image Bundle Pipeline ---
+
+let exportAbortController: AbortController | null = null;
+
+/**
+ * Run slot detection → image capture → export bundling pipeline on exported nodes.
+ * Returns a BundledExport with either JSON+base64 or ZIP.
+ */
+async function runImageBundlePipeline(
+  nodeIds: ReadonlyArray<string>,
+  exportJson: Record<string, unknown>,
+): Promise<BundledExport> {
+  exportAbortController = new AbortController();
+
+  // Detect slots in all exported component nodes
+  const allDetected: import('./slot-detector.js').SlotDetectionResult[] = [];
+  for (const nodeId of nodeIds) {
+    const node = figma.getNodeById(nodeId);
+    if (!node) continue;
+
+    // Resolve InstanceNodes to their main component
+    let componentNode: BaseNode | null = node;
+    if (node.type === 'INSTANCE') {
+      componentNode = (node as InstanceNode).mainComponent;
+      if (!componentNode) continue; // Remote component — skip
+    }
+
+    // Only detect slots on component-like nodes
+    if (componentNode.type === 'COMPONENT' || componentNode.type === 'COMPONENT_SET') {
+      const detected = detectSlots(componentNode as unknown as SlotDetectableComponent);
+      allDetected.push(...detected);
+    }
+  }
+
+  if (allDetected.length === 0) {
+    // No slots found — return plain JSON
+    return {
+      format: 'json',
+      json: JSON.stringify(exportJson),
+      imageCount: 0,
+      totalImageBytes: 0,
+    };
+  }
+
+  // Capture images with progress reporting
+  figma.ui.postMessage({ type: 'export-progress', current: 0, total: allDetected.length, slotName: '' });
+
+  const captured = await captureSlotImages(allDetected, {
+    scale: 2,
+    signal: exportAbortController.signal,
+    onProgress: (current, total, slotName) => {
+      figma.ui.postMessage({ type: 'export-progress', current, total, slotName });
+    },
+  });
+
+  // Bundle
+  const bundled = bundleExport(exportJson, captured);
+  exportAbortController = null;
+  return bundled;
+}
+
 function getTrackedNodeIdsOnPage(): string[] {
   const page = figma.currentPage;
   const ids: string[] = [];
@@ -1196,10 +1262,14 @@ async function handleWsMessage(payload: { type: string; requestId?: string; plug
         }
 
         const changeset = await computeChangeset(nodeIds);
+        const bundled = await runImageBundlePipeline(nodeIds, changeset as unknown as Record<string, unknown>);
         wsSend({
           type: 'changeset-result',
           requestId: payload.requestId,
           changeset,
+          bundleFormat: bundled.format,
+          bundleImageCount: bundled.imageCount,
+          ...(bundled.format === 'json' && bundled.json ? { bundledJson: bundled.json } : {}),
         });
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : String(err);
@@ -1229,10 +1299,14 @@ async function handleWsMessage(payload: { type: string; requestId?: string; plug
 
         const pageName = payload.pageName ?? figma.currentPage.name;
         const pluginInput = computeCompleteExport(nodeIds, pageName);
+        const bundled = await runImageBundlePipeline(nodeIds, pluginInput as unknown as Record<string, unknown>);
         wsSend({
           type: 'export-result',
           requestId: payload.requestId,
           pluginInput,
+          bundleFormat: bundled.format,
+          bundleImageCount: bundled.imageCount,
+          ...(bundled.format === 'json' && bundled.json ? { bundledJson: bundled.json } : {}),
         });
       } catch (_err) {
         wsSend({
@@ -1288,6 +1362,15 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
     return;
   }
 
+  // Handle export cancellation
+  if (msg.type === 'export-cancel') {
+    if (exportAbortController) {
+      exportAbortController.abort();
+      exportAbortController = null;
+    }
+    return;
+  }
+
   // Handle export requests
   if (msg.type === 'export-changeset' || msg.type === 'export-complete') {
     try {
@@ -1310,23 +1393,43 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
         }
       }
 
+      let exportJson: Record<string, unknown>;
+      let baseSummary: string;
+
       if (msg.type === 'export-changeset') {
         const changeset = await computeChangeset(nodeIds);
         const totalChanges = changeset.components.reduce((sum, c) => sum + c.changes.length, 0);
-        const json = JSON.stringify(changeset, null, 2);
-        figma.ui.postMessage({
-          type: 'export-result',
-          json,
-          summary: `Changeset: ${changeset.components.length} components, ${totalChanges} changes`,
-        });
+        exportJson = changeset as unknown as Record<string, unknown>;
+        baseSummary = `Changeset: ${changeset.components.length} components, ${totalChanges} changes`;
       } else {
         const pageName = figma.currentPage.name;
         const complete = computeCompleteExport(nodeIds, pageName);
-        const json = JSON.stringify(complete, null, 2);
+        exportJson = complete as unknown as Record<string, unknown>;
+        baseSummary = `Complete export: ${complete.components.length} components`;
+      }
+
+      // Run image bundle pipeline (slot detection + image capture + bundling)
+      figma.ui.postMessage({ type: 'progress', text: 'Capturing slot images...' });
+      const bundled = await runImageBundlePipeline(nodeIds, exportJson);
+
+      const imageSummary = bundled.imageCount > 0
+        ? ` | ${bundled.imageCount} images (${bundled.format})`
+        : '';
+
+      if (bundled.format === 'zip') {
         figma.ui.postMessage({
           type: 'export-result',
-          json,
-          summary: `Complete export: ${complete.components.length} components`,
+          format: 'zip',
+          zipBytes: bundled.zipBytes,
+          json: '',
+          summary: `${baseSummary}${imageSummary}`,
+        });
+      } else {
+        figma.ui.postMessage({
+          type: 'export-result',
+          format: 'json',
+          json: bundled.json ?? JSON.stringify(exportJson, null, 2),
+          summary: `${baseSummary}${imageSummary}`,
         });
       }
     } catch (err) {
