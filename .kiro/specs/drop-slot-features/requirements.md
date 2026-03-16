@@ -134,12 +134,12 @@ This specification:
 
 #### Acceptance Criteria
 
-1. The plugin shall no longer create frames using the `[Slot]` naming convention.
-2. The plugin shall no longer store or read slot plugin data (the `PLUGIN_DATA_SLOT` key).
-3. The plugin shall no longer contain slot utility functions (`formatSlotName`, `isSlotFrameName`, `extractSlotName`, `buildSlotPluginData`).
+1. The plugin shall replace the `[Slot]` naming convention with a `[Canvas]` naming convention for DslCanvas frames (e.g., `[Canvas] HeroBanner`).
+2. The plugin shall no longer store or read slot plugin data (the `PLUGIN_DATA_SLOT` key). The existing `PLUGIN_DATA_CANVAS` (`dsl-canvas`) key remains for canvas identification.
+3. The plugin shall refactor slot utility functions to canvas equivalents: `formatSlotName` → `formatCanvasName` (using `[Canvas]` prefix), `isSlotFrameName` → `isCanvasFrameName`, `extractSlotName` → `extractCanvasName`. The `buildSlotPluginData` function shall be removed.
 4. When importing a COMPONENT with SLOT-type `componentPropertyDefinitions`, the plugin shall skip the SLOT properties (deferred registration code removed since slots no longer exist).
 5. The plugin serializer shall no longer serialize `isSlot` or `slotPropertyName` fields.
-6. The associated test file `slot-utils.test.ts` shall be removed.
+6. The associated test file `slot-utils.test.ts` shall be updated to test the new `[Canvas]` naming convention utilities.
 
 ### Requirement 10: Simplify DslCanvas Component
 

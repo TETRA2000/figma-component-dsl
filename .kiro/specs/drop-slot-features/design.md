@@ -379,8 +379,8 @@ async function runCanvasImagePipeline(
 - When `'nodes'`: `JSON.stringify(exportJson)` returned directly
 - When `'images'`: detect → capture → bundle flow executed
 - Remove all `detectSlots`, `SlotDetectionResult`, `SlotDetectableComponent` imports
-- Remove `formatSlotName`, `buildSlotPluginData`, `PLUGIN_DATA_SLOT` references
-- Remove slot-specific frame creation logic in `case 'FRAME'`
+- Replace `formatSlotName` with `formatCanvasName` (using `[Canvas]` prefix), remove `buildSlotPluginData`, `PLUGIN_DATA_SLOT` references
+- Refactor slot-specific frame creation logic in `case 'FRAME'` to use `[Canvas]` naming for DslCanvas frames
 
 ### Preview Layer
 
