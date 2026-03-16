@@ -26,6 +26,7 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-16 — Neon Gaming](2026-03-16-neon-gaming.md) — 0 issues found, 0 pipeline fixes | Features: multi-stop gradients, 8-digit hex alpha, thick strokes, clipContent, high cornerRadius
 - [2026-03-16 — Minimal Blog](2026-03-16-minimal-blog.md) — 0 issues found, 0 pipeline fixes | Features: typography variety, CENTER alignment, lineHeight, letterSpacing, textAutoResize:HEIGHT
 - [2026-03-16 — Analytics Dashboard](2026-03-16-analytics-dashboard.md) — 0 issues found, 0 pipeline fixes | Features: FILL sizing, SPACE_BETWEEN, ellipse, strokes, clipContent, mixed layouts
 - [2026-03-16 — Spotify Dark](2026-03-16-spotify-dark.md) — 0 issues found, 0 pipeline fixes | Features: dark fills, cornerRadius 9999 (pills), horizontal auto-layout, gradient fills, small text

@@ -1,7 +1,7 @@
-import { MinimalBlogShowcase } from './pages/_generated/MinimalBlogShowcase';
+import { NeonGamingShowcase } from './pages/_generated/NeonGamingShowcase';
 
 function App() {
-  return <MinimalBlogShowcase />;
+  return <NeonGamingShowcase />;
 }
 
 export default App;
