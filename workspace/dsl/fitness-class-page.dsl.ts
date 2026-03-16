@@ -109,7 +109,7 @@ export default frame('FitnessClassPage', {
           autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
           layoutSizingHorizontal: 'FILL',
           children: [
-            text('FitStudio', { fontSize: 24, fontWeight: 800, color: '#ffffff' }),
+            text('FitStudio', { fontSize: 24, fontWeight: 700, color: '#ffffff' }),
             frame('MemberBadge', {
               autoLayout: horizontal({ spacing: 0, padX: 14, padY: 6 }),
               fills: [solid('#ffffff1a')],

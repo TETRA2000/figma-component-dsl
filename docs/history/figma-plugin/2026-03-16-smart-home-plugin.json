@@ -1,0 +1,3347 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "smart-home Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "SmartHomePage",
+      "size": {
+        "x": 900,
+        "y": 675.2
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "TopBar",
+          "size": {
+            "x": 900,
+            "y": 62.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "HomeLogo",
+              "size": {
+                "x": 130.0999984741211,
+                "y": 28
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ELLIPSE",
+                  "name": "HomeIcon",
+                  "size": {
+                    "x": 28,
+                    "y": 28
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.23137254901960785,
+                        "g": 0.5098039215686274,
+                        "b": 0.9647058823529412,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "TEXT",
+                  "name": "SmartNest",
+                  "size": {
+                    "x": 94.0999984741211,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9450980392156862,
+                        "g": 0.9607843137254902,
+                        "b": 0.9764705882352941,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "SmartNest",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "TopSpacer",
+              "size": {
+                "x": 601.3899993896484,
+                "y": 0
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "TopMeta",
+              "size": {
+                "x": 120.51000213623047,
+                "y": 30.799999999999997
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Good evening, Alex",
+                  "size": {
+                    "x": 120.51000213623047,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9450980392156862,
+                        "g": 0.9607843137254902,
+                        "b": 0.9764705882352941,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Good evening, Alex",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "72F | Partly cloudy",
+                  "size": {
+                    "x": 97.4000015258789,
+                    "y": 13.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.39215686274509803,
+                        "g": 0.4549019607843137,
+                        "b": 0.5450980392156862,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "72F | Partly cloudy",
+                  "fontSize": 11,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 2,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MAX"
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 0.06
+              },
+              "weight": 1,
+              "align": "INSIDE"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 16,
+          "paddingRight": 24,
+          "paddingBottom": 16,
+          "paddingLeft": 24,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "RoomTabs",
+          "size": {
+            "x": 900,
+            "y": 55.6
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Room: All Rooms",
+              "size": {
+                "x": 94.52999877929688,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "All Rooms",
+                  "size": {
+                    "x": 62.529998779296875,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "All Rooms",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.23137254901960785,
+                    "g": 0.5098039215686274,
+                    "b": 0.9647058823529412,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Room: Living Room",
+              "size": {
+                "x": 107.41999816894531,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Living Room",
+                  "size": {
+                    "x": 75.41999816894531,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Living Room",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11764705882352941,
+                    "g": 0.1607843137254902,
+                    "b": 0.23137254901960785,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Room: Bedroom",
+              "size": {
+                "x": 87.70000076293945,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Bedroom",
+                  "size": {
+                    "x": 55.70000076293945,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Bedroom",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11764705882352941,
+                    "g": 0.1607843137254902,
+                    "b": 0.23137254901960785,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Room: Kitchen",
+              "size": {
+                "x": 78.59000015258789,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Kitchen",
+                  "size": {
+                    "x": 46.59000015258789,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Kitchen",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11764705882352941,
+                    "g": 0.1607843137254902,
+                    "b": 0.23137254901960785,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "Room: Garage",
+              "size": {
+                "x": 76.7400016784668,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Garage",
+                  "size": {
+                    "x": 44.7400016784668,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Garage",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.11764705882352941,
+                    "g": 0.1607843137254902,
+                    "b": 0.23137254901960785,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 8,
+          "paddingTop": 12,
+          "paddingRight": 24,
+          "paddingBottom": 12,
+          "paddingLeft": 24,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "MainContent",
+          "size": {
+            "x": 900,
+            "y": 556.8000000000001
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "LeftColumn",
+              "size": {
+                "x": 612,
+                "y": 509.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "DevicesSection",
+                  "size": {
+                    "x": 612,
+                    "y": 286.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Devices",
+                      "size": {
+                        "x": 70.45999908447266,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9450980392156862,
+                            "g": 0.9607843137254902,
+                            "b": 0.9764705882352941,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Devices",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "DeviceRow1",
+                      "size": {
+                        "x": 612,
+                        "y": 120.39999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Device: Living Room Lights",
+                          "size": {
+                            "x": 196,
+                            "y": 120.39999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceTop",
+                              "size": {
+                                "x": 164,
+                                "y": 36
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "ELLIPSE",
+                                  "name": "DeviceIcon",
+                                  "size": {
+                                    "x": 36,
+                                    "y": 36
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.984313725490196,
+                                        "g": 0.7490196078431373,
+                                        "b": 0.1411764705882353,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "DeviceSpacer",
+                                  "size": {
+                                    "x": 118,
+                                    "y": 0
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN",
+                                  "layoutSizingHorizontal": "FILL"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "StatusDot",
+                                  "size": {
+                                    "x": 10,
+                                    "y": 10
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 5
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Living Room Lights",
+                              "size": {
+                                "x": 127.87000274658203,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Living Room Lights",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceBottom",
+                              "size": {
+                                "x": 164,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "Living Room",
+                                  "size": {
+                                    "x": 133.56999969482422,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "layoutSizingHorizontal": "FILL",
+                                  "characters": "Living Room",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "80%",
+                                  "size": {
+                                    "x": 30.43000030517578,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.984313725490196,
+                                        "g": 0.7490196078431373,
+                                        "b": 0.1411764705882353,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "80%",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.11764705882352941,
+                                "g": 0.1607843137254902,
+                                "b": 0.23137254901960785,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.1
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 14,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 16,
+                          "paddingRight": 16,
+                          "paddingBottom": 16,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Device: Thermostat",
+                          "size": {
+                            "x": 196,
+                            "y": 120.39999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceTop",
+                              "size": {
+                                "x": 164,
+                                "y": 36
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "ELLIPSE",
+                                  "name": "DeviceIcon",
+                                  "size": {
+                                    "x": 36,
+                                    "y": 36
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.26666666666666666,
+                                        "b": 0.26666666666666666,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "DeviceSpacer",
+                                  "size": {
+                                    "x": 118,
+                                    "y": 0
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN",
+                                  "layoutSizingHorizontal": "FILL"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "StatusDot",
+                                  "size": {
+                                    "x": 10,
+                                    "y": 10
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 5
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Thermostat",
+                              "size": {
+                                "x": 78.5999984741211,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Thermostat",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceBottom",
+                              "size": {
+                                "x": 164,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "Hallway",
+                                  "size": {
+                                    "x": 140.6200008392334,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "layoutSizingHorizontal": "FILL",
+                                  "characters": "Hallway",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "72F",
+                                  "size": {
+                                    "x": 23.3799991607666,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.26666666666666666,
+                                        "b": 0.26666666666666666,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "72F",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.11764705882352941,
+                                "g": 0.1607843137254902,
+                                "b": 0.23137254901960785,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.1
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 14,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 16,
+                          "paddingRight": 16,
+                          "paddingBottom": 16,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Device: Front Door Lock",
+                          "size": {
+                            "x": 196,
+                            "y": 120.39999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceTop",
+                              "size": {
+                                "x": 164,
+                                "y": 36
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "ELLIPSE",
+                                  "name": "DeviceIcon",
+                                  "size": {
+                                    "x": 36,
+                                    "y": 36
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "DeviceSpacer",
+                                  "size": {
+                                    "x": 118,
+                                    "y": 0
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN",
+                                  "layoutSizingHorizontal": "FILL"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "StatusDot",
+                                  "size": {
+                                    "x": 10,
+                                    "y": 10
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 5
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Front Door Lock",
+                              "size": {
+                                "x": 107.52999877929688,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Front Door Lock",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceBottom",
+                              "size": {
+                                "x": 164,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "Entrance",
+                                  "size": {
+                                    "x": 117.84000015258789,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "layoutSizingHorizontal": "FILL",
+                                  "characters": "Entrance",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Locked",
+                                  "size": {
+                                    "x": 46.15999984741211,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Locked",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.11764705882352941,
+                                "g": 0.1607843137254902,
+                                "b": 0.23137254901960785,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.1
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 14,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 16,
+                          "paddingRight": 16,
+                          "paddingBottom": 16,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 12,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "DeviceRow2",
+                      "size": {
+                        "x": 612,
+                        "y": 120.39999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Device: Bedroom AC",
+                          "size": {
+                            "x": 196,
+                            "y": 118
+                          },
+                          "opacity": 0.6,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceTop",
+                              "size": {
+                                "x": 164,
+                                "y": 36
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "ELLIPSE",
+                                  "name": "DeviceIcon",
+                                  "size": {
+                                    "x": 36,
+                                    "y": 36
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.2,
+                                        "g": 0.2549019607843137,
+                                        "b": 0.3333333333333333,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "DeviceSpacer",
+                                  "size": {
+                                    "x": 118,
+                                    "y": 0
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN",
+                                  "layoutSizingHorizontal": "FILL"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "StatusDot",
+                                  "size": {
+                                    "x": 10,
+                                    "y": 10
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 5
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Bedroom AC",
+                              "size": {
+                                "x": 84.62000274658203,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Bedroom AC",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceBottom",
+                              "size": {
+                                "x": 164,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "Bedroom",
+                                  "size": {
+                                    "x": 164,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "layoutSizingHorizontal": "FILL",
+                                  "characters": "Bedroom",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.09019607843137255,
+                                "b": 0.16470588235294117,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.04
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 14,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 16,
+                          "paddingRight": 16,
+                          "paddingBottom": 16,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Device: Kitchen Speaker",
+                          "size": {
+                            "x": 196,
+                            "y": 120.39999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceTop",
+                              "size": {
+                                "x": 164,
+                                "y": 36
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "ELLIPSE",
+                                  "name": "DeviceIcon",
+                                  "size": {
+                                    "x": 36,
+                                    "y": 36
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5450980392156862,
+                                        "g": 0.3607843137254902,
+                                        "b": 0.9647058823529412,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "DeviceSpacer",
+                                  "size": {
+                                    "x": 118,
+                                    "y": 0
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN",
+                                  "layoutSizingHorizontal": "FILL"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "StatusDot",
+                                  "size": {
+                                    "x": 10,
+                                    "y": 10
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 5
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Kitchen Speaker",
+                              "size": {
+                                "x": 111.33999633789062,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Kitchen Speaker",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceBottom",
+                              "size": {
+                                "x": 164,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "Kitchen",
+                                  "size": {
+                                    "x": 117.06999969482422,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "layoutSizingHorizontal": "FILL",
+                                  "characters": "Kitchen",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Playing",
+                                  "size": {
+                                    "x": 46.93000030517578,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5450980392156862,
+                                        "g": 0.3607843137254902,
+                                        "b": 0.9647058823529412,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Playing",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.11764705882352941,
+                                "g": 0.1607843137254902,
+                                "b": 0.23137254901960785,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.1
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 14,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 16,
+                          "paddingRight": 16,
+                          "paddingBottom": 16,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Device: Garage Door",
+                          "size": {
+                            "x": 196,
+                            "y": 118
+                          },
+                          "opacity": 0.6,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceTop",
+                              "size": {
+                                "x": 164,
+                                "y": 36
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "ELLIPSE",
+                                  "name": "DeviceIcon",
+                                  "size": {
+                                    "x": 36,
+                                    "y": 36
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.2,
+                                        "g": 0.2549019607843137,
+                                        "b": 0.3333333333333333,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "DeviceSpacer",
+                                  "size": {
+                                    "x": 118,
+                                    "y": 0
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN",
+                                  "layoutSizingHorizontal": "FILL"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "StatusDot",
+                                  "size": {
+                                    "x": 10,
+                                    "y": 10
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 5
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Garage Door",
+                              "size": {
+                                "x": 85.2699966430664,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Garage Door",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "DeviceBottom",
+                              "size": {
+                                "x": 164,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "Garage",
+                                  "size": {
+                                    "x": 164,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "layoutSizingHorizontal": "FILL",
+                                  "characters": "Garage",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FILL"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.09019607843137255,
+                                "b": 0.16470588235294117,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.04
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 14,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 16,
+                          "paddingRight": 16,
+                          "paddingBottom": 16,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 12,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "EnergySection",
+                  "size": {
+                    "x": 612,
+                    "y": 202.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Energy Usage Today",
+                      "size": {
+                        "x": 160.22999572753906,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9450980392156862,
+                            "g": 0.9607843137254902,
+                            "b": 0.9764705882352941,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Energy Usage Today",
+                      "fontSize": 16,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "EnergyStats",
+                      "size": {
+                        "x": 572,
+                        "y": 127.60000000000001
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Energy: Power",
+                          "size": {
+                            "x": 180,
+                            "y": 127.60000000000001
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "Ring",
+                              "size": {
+                                "x": 72,
+                                "y": 72
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": []
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "StatValue",
+                              "size": {
+                                "x": 56.82000160217285,
+                                "y": 26.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "2.4",
+                                  "size": {
+                                    "x": 36.08000183105469,
+                                    "y": 26.4
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.23137254901960785,
+                                        "g": 0.5098039215686274,
+                                        "b": 0.9647058823529412,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "2.4",
+                                  "fontSize": 22,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 800,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "kW",
+                                  "size": {
+                                    "x": 18.739999771118164,
+                                    "y": 14.399999999999999
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "kW",
+                                  "fontSize": 12,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 2,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MAX"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Power",
+                              "size": {
+                                "x": 33.099998474121094,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.5803921568627451,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.7215686274509804,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Power",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Energy: Solar",
+                          "size": {
+                            "x": 180,
+                            "y": 127.60000000000001
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "Ring",
+                              "size": {
+                                "x": 72,
+                                "y": 72
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": []
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "StatValue",
+                              "size": {
+                                "x": 51.27000045776367,
+                                "y": 26.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "1.8",
+                                  "size": {
+                                    "x": 30.530000686645508,
+                                    "y": 26.4
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.984313725490196,
+                                        "g": 0.7490196078431373,
+                                        "b": 0.1411764705882353,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "1.8",
+                                  "fontSize": 22,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 800,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "kW",
+                                  "size": {
+                                    "x": 18.739999771118164,
+                                    "y": 14.399999999999999
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "kW",
+                                  "fontSize": 12,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 2,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MAX"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Solar",
+                              "size": {
+                                "x": 27.020000457763672,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.5803921568627451,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.7215686274509804,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Solar",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Energy: Cost",
+                          "size": {
+                            "x": 180,
+                            "y": 127.60000000000001
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "Ring",
+                              "size": {
+                                "x": 72,
+                                "y": 72
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": []
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "StatValue",
+                              "size": {
+                                "x": 91.55999946594238,
+                                "y": 26.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "$3.20",
+                                  "size": {
+                                    "x": 64.18000030517578,
+                                    "y": 26.4
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "$3.20",
+                                  "fontSize": 22,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 800,
+                                  "fontStyle": "Regular"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "/day",
+                                  "size": {
+                                    "x": 25.3799991607666,
+                                    "y": 14.399999999999999
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "/day",
+                                  "fontSize": 12,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 2,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MAX"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Cost",
+                              "size": {
+                                "x": 24.3799991607666,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.5803921568627451,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.7215686274509804,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Cost",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 8,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 16,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11764705882352941,
+                        "g": 0.1607843137254902,
+                        "b": 0.23137254901960785,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.06
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 14,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 16,
+                  "paddingTop": 20,
+                  "paddingRight": 20,
+                  "paddingBottom": 20,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 20,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "ScenesSidebar",
+              "size": {
+                "x": 220,
+                "y": 540.8000000000001
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Quick Scenes",
+                  "size": {
+                    "x": 107.08999633789062,
+                    "y": 19.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9450980392156862,
+                        "g": 0.9607843137254902,
+                        "b": 0.9764705882352941,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Quick Scenes",
+                  "fontSize": 16,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Scene: Movie Night",
+                  "size": {
+                    "x": 220,
+                    "y": 61.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Movie Night",
+                      "size": {
+                        "x": 75.61000061035156,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Movie Night",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Active",
+                      "size": {
+                        "x": 29.559999465942383,
+                        "y": 12
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 0.8
+                        }
+                      ],
+                      "characters": "Active",
+                      "fontSize": 10,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 0.38823529411764707,
+                            "g": 0.4,
+                            "b": 0.9450980392156862,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 0.30980392156862746,
+                            "g": 0.27450980392156865,
+                            "b": 0.8980392156862745,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 14,
+                  "paddingRight": 16,
+                  "paddingBottom": 14,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Scene: Good Morning",
+                  "size": {
+                    "x": 220,
+                    "y": 61.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Good Morning",
+                      "size": {
+                        "x": 89.58999633789062,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Good Morning",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Tap to activate",
+                      "size": {
+                        "x": 69.47000122070312,
+                        "y": 12
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Tap to activate",
+                      "fontSize": 10,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11764705882352941,
+                        "g": 0.1607843137254902,
+                        "b": 0.23137254901960785,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 14,
+                  "paddingRight": 16,
+                  "paddingBottom": 14,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Scene: Away Mode",
+                  "size": {
+                    "x": 220,
+                    "y": 61.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Away Mode",
+                      "size": {
+                        "x": 73.33999633789062,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Away Mode",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Tap to activate",
+                      "size": {
+                        "x": 69.47000122070312,
+                        "y": 12
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Tap to activate",
+                      "fontSize": 10,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11764705882352941,
+                        "g": 0.1607843137254902,
+                        "b": 0.23137254901960785,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 14,
+                  "paddingRight": 16,
+                  "paddingBottom": 14,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Scene: Sleep Time",
+                  "size": {
+                    "x": 220,
+                    "y": 61.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Sleep Time",
+                      "size": {
+                        "x": 70,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Sleep Time",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Tap to activate",
+                      "size": {
+                        "x": 69.47000122070312,
+                        "y": 12
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Tap to activate",
+                      "fontSize": 10,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11764705882352941,
+                        "g": 0.1607843137254902,
+                        "b": 0.23137254901960785,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 14,
+                  "paddingRight": 16,
+                  "paddingBottom": 14,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Scene: Party Mode",
+                  "size": {
+                    "x": 220,
+                    "y": 61.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Party Mode",
+                      "size": {
+                        "x": 72.62999725341797,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Party Mode",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Tap to activate",
+                      "size": {
+                        "x": 69.47000122070312,
+                        "y": 12
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Tap to activate",
+                      "fontSize": 10,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11764705882352941,
+                        "g": 0.1607843137254902,
+                        "b": 0.23137254901960785,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 14,
+                  "paddingRight": 16,
+                  "paddingBottom": 14,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "AutoLog",
+                  "size": {
+                    "x": 220,
+                    "y": 141.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Recent Activity",
+                      "size": {
+                        "x": 95.45999908447266,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9450980392156862,
+                            "g": 0.9607843137254902,
+                            "b": 0.9764705882352941,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Recent Activity",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "7:02 PM - Lights dimmed to 80%",
+                      "size": {
+                        "x": 171.13999938964844,
+                        "y": 16.5
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "7:02 PM - Lights dimmed to 80%",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "6:45 PM - Thermostat set to 72F",
+                      "size": {
+                        "x": 169.3300018310547,
+                        "y": 16.5
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "6:45 PM - Thermostat set to 72F",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "6:30 PM - Front door locked",
+                      "size": {
+                        "x": 146.58999633789062,
+                        "y": 16.5
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "6:30 PM - Front door locked",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "5:15 PM - Solar peak: 2.1 kW",
+                      "size": {
+                        "x": 146.8300018310547,
+                        "y": 16.5
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "5:15 PM - Solar peak: 2.1 kW",
+                      "fontSize": 11,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.11764705882352941,
+                        "g": 0.1607843137254902,
+                        "b": 0.23137254901960785,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.06
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 14,
+                  "paddingRight": 14,
+                  "paddingBottom": 14,
+                  "paddingLeft": 14,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 20,
+          "paddingTop": 8,
+          "paddingRight": 24,
+          "paddingBottom": 8,
+          "paddingLeft": 24,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.058823529411764705,
+            "g": 0.09019607843137255,
+            "b": 0.16470588235294117,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

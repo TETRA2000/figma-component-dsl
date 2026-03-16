@@ -1,0 +1,4506 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "stock-trading Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "StockTradingPage",
+      "size": {
+        "x": 1200,
+        "y": 836
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "TopBar",
+          "size": {
+            "x": 1200,
+            "y": 58
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "TradeX",
+              "size": {
+                "x": 70.41999816894531,
+                "y": 24
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.13333333333333333,
+                    "g": 0.7725490196078432,
+                    "b": 0.3686274509803922,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "TradeX",
+              "fontSize": 20,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "MarketStatus",
+              "size": {
+                "x": 211.18000030517578,
+                "y": 15.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "ELLIPSE",
+                  "name": "StatusDot",
+                  "size": {
+                    "x": 8,
+                    "y": 8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.13333333333333333,
+                        "g": 0.7725490196078432,
+                        "b": 0.3686274509803922,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Market Open",
+                  "size": {
+                    "x": 80.44000244140625,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.13333333333333333,
+                        "g": 0.7725490196078432,
+                        "b": 0.3686274509803922,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Market Open",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Closes in 3h 42m",
+                  "size": {
+                    "x": 98.73999786376953,
+                    "y": 14.399999999999999
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.39215686274509803,
+                        "g": 0.4549019607843137,
+                        "b": 0.5450980392156862,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Closes in 3h 42m",
+                  "fontSize": 12,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 12,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER"
+            },
+            {
+              "type": "FRAME",
+              "name": "AccountInfo",
+              "size": {
+                "x": 150.5800018310547,
+                "y": 30
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "BalanceBadge",
+                  "size": {
+                    "x": 108.58000183105469,
+                    "y": 27.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "$124,832.50",
+                      "size": {
+                        "x": 80.58000183105469,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.13333333333333333,
+                            "g": 0.7725490196078432,
+                            "b": 0.3686274509803922,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "$124,832.50",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.13333333333333333,
+                        "g": 0.7725490196078432,
+                        "b": 0.3686274509803922,
+                        "a": 1
+                      },
+                      "opacity": 0.10196078431372549
+                    }
+                  ],
+                  "cornerRadius": 8,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 6,
+                  "paddingRight": 14,
+                  "paddingBottom": 6,
+                  "paddingLeft": 14,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "ELLIPSE",
+                  "name": "Avatar",
+                  "size": {
+                    "x": 30,
+                    "y": 30
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 0.050980392156862744
+                    }
+                  ]
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 12,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER"
+            }
+          ],
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.10196078431372549,
+                "g": 0.10196078431372549,
+                "b": 0.1803921568627451,
+                "a": 1
+              },
+              "opacity": 1
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 0.06
+              },
+              "weight": 1,
+              "align": "INSIDE"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 14,
+          "paddingRight": 28,
+          "paddingBottom": 14,
+          "paddingLeft": 28,
+          "primaryAxisAlignItems": "SPACE_BETWEEN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "MainContent",
+          "size": {
+            "x": 1200,
+            "y": 778
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "LeftPanel",
+              "size": {
+                "x": 804,
+                "y": 730
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "MarketStats",
+                  "size": {
+                    "x": 804,
+                    "y": 87.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "MarketStat: S&P 500",
+                      "size": {
+                        "x": 192,
+                        "y": 87.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "S&P 500",
+                          "size": {
+                            "x": 45.119998931884766,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.39215686274509803,
+                                "g": 0.4549019607843137,
+                                "b": 0.5450980392156862,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "S&P 500",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "5,234.18",
+                          "size": {
+                            "x": 83.54000091552734,
+                            "y": 24
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "5,234.18",
+                          "fontSize": 20,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "+1.24%",
+                          "size": {
+                            "x": 44.310001373291016,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.13333333333333333,
+                                "g": 0.7725490196078432,
+                                "b": 0.3686274509803922,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "+1.24%",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 10,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 14,
+                      "paddingRight": 16,
+                      "paddingBottom": 14,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "MarketStat: NASDAQ",
+                      "size": {
+                        "x": 192,
+                        "y": 87.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "NASDAQ",
+                          "size": {
+                            "x": 46.560001373291016,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.39215686274509803,
+                                "g": 0.4549019607843137,
+                                "b": 0.5450980392156862,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "NASDAQ",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "16,742.39",
+                          "size": {
+                            "x": 95.9000015258789,
+                            "y": 24
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "16,742.39",
+                          "fontSize": 20,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "+0.87%",
+                          "size": {
+                            "x": 45.810001373291016,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.13333333333333333,
+                                "g": 0.7725490196078432,
+                                "b": 0.3686274509803922,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "+0.87%",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 10,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 14,
+                      "paddingRight": 16,
+                      "paddingBottom": 14,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "MarketStat: DOW",
+                      "size": {
+                        "x": 192,
+                        "y": 87.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "DOW",
+                          "size": {
+                            "x": 27.309999465942383,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.39215686274509803,
+                                "g": 0.4549019607843137,
+                                "b": 0.5450980392156862,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "DOW",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "39,118.22",
+                          "size": {
+                            "x": 91.9000015258789,
+                            "y": 24
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "39,118.22",
+                          "fontSize": 20,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "-0.15%",
+                          "size": {
+                            "x": 40.400001525878906,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9372549019607843,
+                                "g": 0.26666666666666666,
+                                "b": 0.26666666666666666,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "-0.15%",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 10,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 14,
+                      "paddingRight": 16,
+                      "paddingBottom": 14,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "MarketStat: BTC/USD",
+                      "size": {
+                        "x": 192,
+                        "y": 87.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "BTC/USD",
+                          "size": {
+                            "x": 48.77000045776367,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.39215686274509803,
+                                "g": 0.4549019607843137,
+                                "b": 0.5450980392156862,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "BTC/USD",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "$68,432",
+                          "size": {
+                            "x": 84.38999938964844,
+                            "y": 24
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$68,432",
+                          "fontSize": 20,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "+3.42%",
+                          "size": {
+                            "x": 46.709999084472656,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.13333333333333333,
+                                "g": 0.7725490196078432,
+                                "b": 0.3686274509803922,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "+3.42%",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 10,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 14,
+                      "paddingRight": 16,
+                      "paddingBottom": 14,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "ChartSection",
+                  "size": {
+                    "x": 804,
+                    "y": 213.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "ChartHeader",
+                      "size": {
+                        "x": 804,
+                        "y": 21.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Portfolio Performance",
+                          "size": {
+                            "x": 172.19000244140625,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Portfolio Performance",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "ChartFilters",
+                          "size": {
+                            "x": 147.19000053405762,
+                            "y": 21.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "Filter1D",
+                              "size": {
+                                "x": 32.5,
+                                "y": 21.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "1D",
+                                  "size": {
+                                    "x": 12.5,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "1D",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.0392156862745098
+                                }
+                              ],
+                              "cornerRadius": 6,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 4,
+                              "paddingRight": 10,
+                              "paddingBottom": 4,
+                              "paddingLeft": 10,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Filter1W",
+                              "size": {
+                                "x": 35.86999988555908,
+                                "y": 21.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "1W",
+                                  "size": {
+                                    "x": 15.869999885559082,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "1W",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 600,
+                                  "fontStyle": "Semi Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.10196078431372549
+                                }
+                              ],
+                              "cornerRadius": 6,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 4,
+                              "paddingRight": 10,
+                              "paddingBottom": 4,
+                              "paddingLeft": 10,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Filter1M",
+                              "size": {
+                                "x": 34.60000038146973,
+                                "y": 21.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "1M",
+                                  "size": {
+                                    "x": 14.600000381469727,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "1M",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.0392156862745098
+                                }
+                              ],
+                              "cornerRadius": 6,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 4,
+                              "paddingRight": 10,
+                              "paddingBottom": 4,
+                              "paddingLeft": 10,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Filter1Y",
+                              "size": {
+                                "x": 32.22000026702881,
+                                "y": 21.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "1Y",
+                                  "size": {
+                                    "x": 12.220000267028809,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "1Y",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.0392156862745098
+                                }
+                              ],
+                              "cornerRadius": 6,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 4,
+                              "paddingRight": 10,
+                              "paddingBottom": 4,
+                              "paddingLeft": 10,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 4,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "ChartPlaceholder",
+                      "size": {
+                        "x": 804,
+                        "y": 180
+                      },
+                      "opacity": 0.15,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.13333333333333333,
+                                "g": 0.7725490196078432,
+                                "b": 0.3686274509803922,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.13333333333333333,
+                                "g": 0.7725490196078432,
+                                "b": 0.3686274509803922,
+                                "a": 0
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -1,
+                              1.2246467991473532e-16,
+                              0.9999999999999999
+                            ],
+                            [
+                              -1.2246467991473532e-16,
+                              -1,
+                              1
+                            ]
+                          ]
+                        }
+                      ],
+                      "cornerRadius": 12,
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "WatchlistSection",
+                  "size": {
+                    "x": 804,
+                    "y": 389.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "WatchlistHeader",
+                      "size": {
+                        "x": 804,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Watchlist",
+                          "size": {
+                            "x": 73.54000091552734,
+                            "y": 19.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Watchlist",
+                          "fontSize": 16,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "+ Add",
+                          "size": {
+                            "x": 37.5099983215332,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.13333333333333333,
+                                "g": 0.7725490196078432,
+                                "b": 0.3686274509803922,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "+ Add",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Stock: AAPL",
+                      "size": {
+                        "x": 804,
+                        "y": 64
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "StockInfo",
+                          "size": {
+                            "x": 102.13999938964844,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "SymbolBadge",
+                              "size": {
+                                "x": 40,
+                                "y": 40
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "AA",
+                                  "size": {
+                                    "x": 19.600000381469727,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "AA",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.0392156862745098
+                                }
+                              ],
+                              "cornerRadius": 8,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "CENTER",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FIXED",
+                              "layoutSizingVertical": "FIXED"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "StockName",
+                              "size": {
+                                "x": 52.13999938964844,
+                                "y": 32
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "AAPL",
+                                  "size": {
+                                    "x": 38.099998474121094,
+                                    "y": 16.8
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9450980392156862,
+                                        "g": 0.9607843137254902,
+                                        "b": 0.9764705882352941,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "AAPL",
+                                  "fontSize": 14,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Apple Inc.",
+                                  "size": {
+                                    "x": 52.13999938964844,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Apple Inc.",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                }
+                              ],
+                              "stackMode": "VERTICAL",
+                              "itemSpacing": 2,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "MiniChart",
+                          "size": {
+                            "x": 80,
+                            "y": 32
+                          },
+                          "opacity": 0.3,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0,
+                                    "g": 0,
+                                    "b": 0,
+                                    "a": 0
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -1,
+                                  1.2246467991473532e-16,
+                                  0.9999999999999999
+                                ],
+                                [
+                                  -1.2246467991473532e-16,
+                                  -1,
+                                  1
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "StockPrice",
+                          "size": {
+                            "x": 93.63999938964844,
+                            "y": 33.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "$198.42",
+                              "size": {
+                                "x": 55.150001525878906,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "$198.42",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "RIGHT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "++3.18 (+1.63%)",
+                              "size": {
+                                "x": 93.63999938964844,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "++3.18 (+1.63%)",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "RIGHT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MAX"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 8,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Stock: MSFT",
+                      "size": {
+                        "x": 804,
+                        "y": 64
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "StockInfo",
+                          "size": {
+                            "x": 131.0800018310547,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "SymbolBadge",
+                              "size": {
+                                "x": 40,
+                                "y": 40
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "MS",
+                                  "size": {
+                                    "x": 20.6200008392334,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "MS",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.0392156862745098
+                                }
+                              ],
+                              "cornerRadius": 8,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "CENTER",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FIXED",
+                              "layoutSizingVertical": "FIXED"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "StockName",
+                              "size": {
+                                "x": 81.08000183105469,
+                                "y": 32
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "MSFT",
+                                  "size": {
+                                    "x": 39.77000045776367,
+                                    "y": 16.8
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9450980392156862,
+                                        "g": 0.9607843137254902,
+                                        "b": 0.9764705882352941,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "MSFT",
+                                  "fontSize": 14,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Microsoft Corp.",
+                                  "size": {
+                                    "x": 81.08000183105469,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Microsoft Corp.",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                }
+                              ],
+                              "stackMode": "VERTICAL",
+                              "itemSpacing": 2,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "MiniChart",
+                          "size": {
+                            "x": 80,
+                            "y": 32
+                          },
+                          "opacity": 0.3,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0,
+                                    "g": 0,
+                                    "b": 0,
+                                    "a": 0
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -1,
+                                  1.2246467991473532e-16,
+                                  0.9999999999999999
+                                ],
+                                [
+                                  -1.2246467991473532e-16,
+                                  -1,
+                                  1
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "StockPrice",
+                          "size": {
+                            "x": 97.05000305175781,
+                            "y": 33.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "$425.80",
+                              "size": {
+                                "x": 57.66999816894531,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "$425.80",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "RIGHT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "++5.22 (+1.24%)",
+                              "size": {
+                                "x": 97.05000305175781,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "++5.22 (+1.24%)",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "RIGHT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MAX"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 8,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Stock: TSLA",
+                      "size": {
+                        "x": 804,
+                        "y": 64
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "StockInfo",
+                          "size": {
+                            "x": 99.29999923706055,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "SymbolBadge",
+                              "size": {
+                                "x": 40,
+                                "y": 40
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "TS",
+                                  "size": {
+                                    "x": 17.1200008392334,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.26666666666666666,
+                                        "b": 0.26666666666666666,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "TS",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.0392156862745098
+                                }
+                              ],
+                              "cornerRadius": 8,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "CENTER",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FIXED",
+                              "layoutSizingVertical": "FIXED"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "StockName",
+                              "size": {
+                                "x": 49.29999923706055,
+                                "y": 32
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "TSLA",
+                                  "size": {
+                                    "x": 36.79999923706055,
+                                    "y": 16.8
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9450980392156862,
+                                        "g": 0.9607843137254902,
+                                        "b": 0.9764705882352941,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "TSLA",
+                                  "fontSize": 14,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Tesla Inc.",
+                                  "size": {
+                                    "x": 49.29999923706055,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Tesla Inc.",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                }
+                              ],
+                              "stackMode": "VERTICAL",
+                              "itemSpacing": 2,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "MiniChart",
+                          "size": {
+                            "x": 80,
+                            "y": 32
+                          },
+                          "opacity": 0.3,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.9372549019607843,
+                                    "g": 0.26666666666666666,
+                                    "b": 0.26666666666666666,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0,
+                                    "g": 0,
+                                    "b": 0,
+                                    "a": 0
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -1,
+                                  1.2246467991473532e-16,
+                                  0.9999999999999999
+                                ],
+                                [
+                                  -1.2246467991473532e-16,
+                                  -1,
+                                  1
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "StockPrice",
+                          "size": {
+                            "x": 86.23999786376953,
+                            "y": 33.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "$178.56",
+                              "size": {
+                                "x": 53.41999816894531,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "$178.56",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "RIGHT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "-4.32 (-2.36%)",
+                              "size": {
+                                "x": 86.23999786376953,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9372549019607843,
+                                    "g": 0.26666666666666666,
+                                    "b": 0.26666666666666666,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "-4.32 (-2.36%)",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "RIGHT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MAX"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 8,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Stock: NVDA",
+                      "size": {
+                        "x": 804,
+                        "y": 64
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "StockInfo",
+                          "size": {
+                            "x": 119.25,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "SymbolBadge",
+                              "size": {
+                                "x": 40,
+                                "y": 40
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "NV",
+                                  "size": {
+                                    "x": 19.610000610351562,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "NV",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.0392156862745098
+                                }
+                              ],
+                              "cornerRadius": 8,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "CENTER",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FIXED",
+                              "layoutSizingVertical": "FIXED"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "StockName",
+                              "size": {
+                                "x": 69.25,
+                                "y": 32
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "NVDA",
+                                  "size": {
+                                    "x": 41.099998474121094,
+                                    "y": 16.8
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9450980392156862,
+                                        "g": 0.9607843137254902,
+                                        "b": 0.9764705882352941,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "NVDA",
+                                  "fontSize": 14,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "NVIDIA Corp.",
+                                  "size": {
+                                    "x": 69.25,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "NVIDIA Corp.",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                }
+                              ],
+                              "stackMode": "VERTICAL",
+                              "itemSpacing": 2,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "MiniChart",
+                          "size": {
+                            "x": 80,
+                            "y": 32
+                          },
+                          "opacity": 0.3,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0,
+                                    "g": 0,
+                                    "b": 0,
+                                    "a": 0
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -1,
+                                  1.2246467991473532e-16,
+                                  0.9999999999999999
+                                ],
+                                [
+                                  -1.2246467991473532e-16,
+                                  -1,
+                                  1
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "StockPrice",
+                          "size": {
+                            "x": 102.68000030517578,
+                            "y": 33.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "$892.14",
+                              "size": {
+                                "x": 54.209999084472656,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "$892.14",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "RIGHT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "++12.56 (+1.43%)",
+                              "size": {
+                                "x": 102.68000030517578,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "++12.56 (+1.43%)",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "RIGHT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MAX"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 8,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Stock: AMZN",
+                      "size": {
+                        "x": 804,
+                        "y": 64
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "StockInfo",
+                          "size": {
+                            "x": 118.08999633789062,
+                            "y": 40
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "SymbolBadge",
+                              "size": {
+                                "x": 40,
+                                "y": 40
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "AM",
+                                  "size": {
+                                    "x": 21.81999969482422,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.26666666666666666,
+                                        "b": 0.26666666666666666,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "AM",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                }
+                              ],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.0392156862745098
+                                }
+                              ],
+                              "cornerRadius": 8,
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "CENTER",
+                              "counterAxisAlignItems": "CENTER",
+                              "layoutSizingHorizontal": "FIXED",
+                              "layoutSizingVertical": "FIXED"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "StockName",
+                              "size": {
+                                "x": 68.08999633789062,
+                                "y": 32
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "AMZN",
+                                  "size": {
+                                    "x": 43.459999084472656,
+                                    "y": 16.8
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9450980392156862,
+                                        "g": 0.9607843137254902,
+                                        "b": 0.9764705882352941,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "AMZN",
+                                  "fontSize": 14,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Amazon.com",
+                                  "size": {
+                                    "x": 68.08999633789062,
+                                    "y": 13.2
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.39215686274509803,
+                                        "g": 0.4549019607843137,
+                                        "b": 0.5450980392156862,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Amazon.com",
+                                  "fontSize": 11,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 400,
+                                  "fontStyle": "Regular"
+                                }
+                              ],
+                              "stackMode": "VERTICAL",
+                              "itemSpacing": 2,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER"
+                        },
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "MiniChart",
+                          "size": {
+                            "x": 80,
+                            "y": 32
+                          },
+                          "opacity": 0.3,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.9372549019607843,
+                                    "g": 0.26666666666666666,
+                                    "b": 0.26666666666666666,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0,
+                                    "g": 0,
+                                    "b": 0,
+                                    "a": 0
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -1,
+                                  1.2246467991473532e-16,
+                                  0.9999999999999999
+                                ],
+                                [
+                                  -1.2246467991473532e-16,
+                                  -1,
+                                  1
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "StockPrice",
+                          "size": {
+                            "x": 84.05999755859375,
+                            "y": 33.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "$186.23",
+                              "size": {
+                                "x": 54.599998474121094,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9450980392156862,
+                                    "g": 0.9607843137254902,
+                                    "b": 0.9764705882352941,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "$186.23",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "RIGHT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "-1.05 (-0.56%)",
+                              "size": {
+                                "x": 84.05999755859375,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9372549019607843,
+                                    "g": 0.26666666666666666,
+                                    "b": 0.26666666666666666,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "-1.05 (-0.56%)",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "RIGHT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MAX"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.10196078431372549,
+                            "g": 0.10196078431372549,
+                            "b": 0.1803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 8,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 10,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 20,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "RightPanel",
+              "size": {
+                "x": 320,
+                "y": 542
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "PortfolioValue",
+                  "size": {
+                    "x": 320,
+                    "y": 114.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Portfolio Value",
+                      "size": {
+                        "x": 83.41999816894531,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Portfolio Value",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "$124,832.50",
+                      "size": {
+                        "x": 173.55999755859375,
+                        "y": 33.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9450980392156862,
+                            "g": 0.9607843137254902,
+                            "b": 0.9764705882352941,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "$124,832.50",
+                      "fontSize": 28,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "+$8,241.30 (+7.07%) all time",
+                      "size": {
+                        "x": 163.83999633789062,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.13333333333333333,
+                            "g": 0.7725490196078432,
+                            "b": 0.3686274509803922,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "+$8,241.30 (+7.07%) all time",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.06
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 14,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 20,
+                  "paddingRight": 20,
+                  "paddingBottom": 20,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "AllocationCard",
+                  "size": {
+                    "x": 320,
+                    "y": 256
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Allocation",
+                      "size": {
+                        "x": 74.30000305175781,
+                        "y": 18
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9450980392156862,
+                            "g": 0.9607843137254902,
+                            "b": 0.9764705882352941,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Allocation",
+                      "fontSize": 15,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Alloc: Technology",
+                      "size": {
+                        "x": 280,
+                        "y": 25.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "AllocHeader",
+                          "size": {
+                            "x": 280,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "AllocLabel",
+                              "size": {
+                                "x": 86.76000213623047,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "ELLIPSE",
+                                  "name": "Dot",
+                                  "size": {
+                                    "x": 8,
+                                    "y": 8
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.23137254901960785,
+                                        "g": 0.5098039215686274,
+                                        "b": 0.9647058823529412,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Technology",
+                                  "size": {
+                                    "x": 72.76000213623047,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.796078431372549,
+                                        "g": 0.8352941176470589,
+                                        "b": 0.8823529411764706,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Technology",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "42%  ·  $52,430",
+                              "size": {
+                                "x": 92.79000091552734,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "42%  ·  $52,430",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "SPACE_BETWEEN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "AllocBar",
+                          "size": {
+                            "x": 280,
+                            "y": 4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ROUNDED_RECTANGLE",
+                              "name": "AllocFill",
+                              "size": {
+                                "x": 134,
+                                "y": 4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.23137254901960785,
+                                    "g": 0.5098039215686274,
+                                    "b": 0.9647058823529412,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 2
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.0392156862745098
+                            }
+                          ],
+                          "cornerRadius": 2,
+                          "clipContent": true,
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Alloc: Healthcare",
+                      "size": {
+                        "x": 280,
+                        "y": 25.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "AllocHeader",
+                          "size": {
+                            "x": 280,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "AllocLabel",
+                              "size": {
+                                "x": 81.9800033569336,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "ELLIPSE",
+                                  "name": "Dot",
+                                  "size": {
+                                    "x": 8,
+                                    "y": 8
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.13333333333333333,
+                                        "g": 0.7725490196078432,
+                                        "b": 0.3686274509803922,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Healthcare",
+                                  "size": {
+                                    "x": 67.9800033569336,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.796078431372549,
+                                        "g": 0.8352941176470589,
+                                        "b": 0.8823529411764706,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Healthcare",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "18%  ·  $22,470",
+                              "size": {
+                                "x": 89.36000061035156,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "18%  ·  $22,470",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "SPACE_BETWEEN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "AllocBar",
+                          "size": {
+                            "x": 280,
+                            "y": 4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ROUNDED_RECTANGLE",
+                              "name": "AllocFill",
+                              "size": {
+                                "x": 58,
+                                "y": 4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 2
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.0392156862745098
+                            }
+                          ],
+                          "cornerRadius": 2,
+                          "clipContent": true,
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Alloc: Finance",
+                      "size": {
+                        "x": 280,
+                        "y": 25.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "AllocHeader",
+                          "size": {
+                            "x": 280,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "AllocLabel",
+                              "size": {
+                                "x": 63.099998474121094,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "ELLIPSE",
+                                  "name": "Dot",
+                                  "size": {
+                                    "x": 8,
+                                    "y": 8
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9607843137254902,
+                                        "g": 0.6196078431372549,
+                                        "b": 0.043137254901960784,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Finance",
+                                  "size": {
+                                    "x": 49.099998474121094,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.796078431372549,
+                                        "g": 0.8352941176470589,
+                                        "b": 0.8823529411764706,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Finance",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "15%  ·  $18,725",
+                              "size": {
+                                "x": 85.5,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "15%  ·  $18,725",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "SPACE_BETWEEN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "AllocBar",
+                          "size": {
+                            "x": 280,
+                            "y": 4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ROUNDED_RECTANGLE",
+                              "name": "AllocFill",
+                              "size": {
+                                "x": 48,
+                                "y": 4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9607843137254902,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.043137254901960784,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 2
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.0392156862745098
+                            }
+                          ],
+                          "cornerRadius": 2,
+                          "clipContent": true,
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Alloc: Energy",
+                      "size": {
+                        "x": 280,
+                        "y": 25.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "AllocHeader",
+                          "size": {
+                            "x": 280,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "AllocLabel",
+                              "size": {
+                                "x": 57.61000061035156,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "ELLIPSE",
+                                  "name": "Dot",
+                                  "size": {
+                                    "x": 8,
+                                    "y": 8
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.26666666666666666,
+                                        "b": 0.26666666666666666,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Energy",
+                                  "size": {
+                                    "x": 43.61000061035156,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.796078431372549,
+                                        "g": 0.8352941176470589,
+                                        "b": 0.8823529411764706,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Energy",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "12%  ·  $14,980",
+                              "size": {
+                                "x": 87.31999969482422,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "12%  ·  $14,980",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "SPACE_BETWEEN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "AllocBar",
+                          "size": {
+                            "x": 280,
+                            "y": 4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ROUNDED_RECTANGLE",
+                              "name": "AllocFill",
+                              "size": {
+                                "x": 38,
+                                "y": 4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9372549019607843,
+                                    "g": 0.26666666666666666,
+                                    "b": 0.26666666666666666,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 2
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.0392156862745098
+                            }
+                          ],
+                          "cornerRadius": 2,
+                          "clipContent": true,
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Alloc: Cash",
+                      "size": {
+                        "x": 280,
+                        "y": 25.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "AllocHeader",
+                          "size": {
+                            "x": 280,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "AllocLabel",
+                              "size": {
+                                "x": 45.739999771118164,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "ELLIPSE",
+                                  "name": "Dot",
+                                  "size": {
+                                    "x": 8,
+                                    "y": 8
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5803921568627451,
+                                        "g": 0.6392156862745098,
+                                        "b": 0.7215686274509804,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Cash",
+                                  "size": {
+                                    "x": 31.739999771118164,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.796078431372549,
+                                        "g": 0.8352941176470589,
+                                        "b": 0.8823529411764706,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "Cash",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "13%  ·  $16,228",
+                              "size": {
+                                "x": 86.73999786376953,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "13%  ·  $16,228",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "SPACE_BETWEEN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "AllocBar",
+                          "size": {
+                            "x": 280,
+                            "y": 4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ROUNDED_RECTANGLE",
+                              "name": "AllocFill",
+                              "size": {
+                                "x": 42,
+                                "y": 4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.5803921568627451,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.7215686274509804,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 2
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.0392156862745098
+                            }
+                          ],
+                          "cornerRadius": 2,
+                          "clipContent": true,
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.06
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 14,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 14,
+                  "paddingTop": 20,
+                  "paddingRight": 20,
+                  "paddingBottom": 20,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "RecentTrades",
+                  "size": {
+                    "x": 320,
+                    "y": 139.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Recent Trades",
+                      "size": {
+                        "x": 105.30999755859375,
+                        "y": 18
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9450980392156862,
+                            "g": 0.9607843137254902,
+                            "b": 0.9764705882352941,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Recent Trades",
+                      "fontSize": 15,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Trade1",
+                      "size": {
+                        "x": 280,
+                        "y": 30.799999999999997
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "TradeInfo",
+                          "size": {
+                            "x": 107.37999725341797,
+                            "y": 30.799999999999997
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "BUY AAPL",
+                              "size": {
+                                "x": 65.52999877929688,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "BUY AAPL",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "10 shares @ $195.24",
+                              "size": {
+                                "x": 107.37999725341797,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "10 shares @ $195.24",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "$1,952.40",
+                          "size": {
+                            "x": 63.709999084472656,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$1,952.40",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Trade2",
+                      "size": {
+                        "x": 280,
+                        "y": 30.799999999999997
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "TradeInfo2",
+                          "size": {
+                            "x": 102.66999816894531,
+                            "y": 30.799999999999997
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "SELL TSLA",
+                              "size": {
+                                "x": 68.0999984741211,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9372549019607843,
+                                    "g": 0.26666666666666666,
+                                    "b": 0.26666666666666666,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "SELL TSLA",
+                              "fontSize": 13,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "5 shares @ $182.88",
+                              "size": {
+                                "x": 102.66999816894531,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "5 shares @ $182.88",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "$914.40",
+                          "size": {
+                            "x": 51.869998931884766,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9450980392156862,
+                                "g": 0.9607843137254902,
+                                "b": 0.9764705882352941,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$914.40",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.1803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.06
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 14,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 10,
+                  "paddingTop": 20,
+                  "paddingRight": 20,
+                  "paddingBottom": 20,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 16,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 20,
+          "paddingTop": 24,
+          "paddingRight": 28,
+          "paddingBottom": 24,
+          "paddingLeft": 28,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.058823529411764705,
+            "g": 0.058823529411764705,
+            "b": 0.10196078431372549,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

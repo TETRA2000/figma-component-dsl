@@ -52,7 +52,7 @@ function statCard(label: string, value: string, change: string, isPositive: bool
     layoutSizingHorizontal: 'FILL',
     children: [
       text(label, { fontSize: 12, fontWeight: 500, color: '#64748b' }),
-      text(value, { fontSize: 28, fontWeight: 800, color: '#f1f5f9' }),
+      text(value, { fontSize: 28, fontWeight: 700, color: '#f1f5f9' }),
       text(change, { fontSize: 12, fontWeight: 600, color: isPositive ? '#22c55e' : '#ef4444' }),
     ],
   });
@@ -94,7 +94,7 @@ export default frame('PodcastStudioPage', {
           autoLayout: horizontal({ spacing: 8, counterAlign: 'CENTER' }),
           children: [
             ellipse('LogoDot', { size: { x: 10, y: 10 }, fills: [solid('#a78bfa')] }),
-            text('PodStudio', { fontSize: 20, fontWeight: 800, color: '#f1f5f9' }),
+            text('PodStudio', { fontSize: 20, fontWeight: 700, color: '#f1f5f9' }),
           ],
         }),
         frame('HeaderRight', {

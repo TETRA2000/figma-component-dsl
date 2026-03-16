@@ -112,14 +112,14 @@ export default frame('RealEstateDetailPage', {
         frame('PropertyTitle', {
           autoLayout: vertical({ spacing: 4 }),
           children: [
-            text('Lakeside Modern Villa', { fontSize: 26, fontWeight: 800, color: '#1e293b' }),
+            text('Lakeside Modern Villa', { fontSize: 26, fontWeight: 700, color: '#1e293b' }),
             text('42 Lakeview Drive, Bellevue, WA 98004', { fontSize: 14, fontWeight: 400, color: '#64748b' }),
           ],
         }),
         frame('PriceSection', {
           autoLayout: vertical({ spacing: 2, counterAlign: 'MAX' }),
           children: [
-            text('$1,285,000', { fontSize: 28, fontWeight: 800, color: '#2563eb' }),
+            text('$1,285,000', { fontSize: 28, fontWeight: 700, color: '#2563eb' }),
             text('$428/sqft', { fontSize: 13, fontWeight: 500, color: '#64748b' }),
           ],
         }),

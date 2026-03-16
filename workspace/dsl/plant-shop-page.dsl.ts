@@ -32,10 +32,10 @@ function plantCard(name: string, botanical: string, price: string, careLevel: st
                 autoLayout: vertical({ spacing: 2 }),
                 children: [
                   text(name, { fontSize: 15, fontWeight: 700, color: '#1a2e1a' }),
-                  text(botanical, { fontSize: 11, fontWeight: 400, color: '#6b7280', fontStyle: 'italic' }),
+                  text(botanical, { fontSize: 11, fontWeight: 400, color: '#6b7280' }),
                 ],
               }),
-              text(price, { fontSize: 18, fontWeight: 800, color: '#16a34a' }),
+              text(price, { fontSize: 18, fontWeight: 700, color: '#16a34a' }),
             ],
           }),
           frame('CareIcons', {
@@ -105,7 +105,7 @@ export default frame('PlantShopPage', {
           autoLayout: horizontal({ spacing: 6, counterAlign: 'CENTER' }),
           children: [
             ellipse('Leaf', { size: { x: 24, y: 24 }, fills: [gradient([{ hex: '#16a34a', position: 0 }, { hex: '#22c55e', position: 1 }], 135)] }),
-            text('Verdant', { fontSize: 22, fontWeight: 800, color: '#1a2e1a' }),
+            text('Verdant', { fontSize: 22, fontWeight: 700, color: '#1a2e1a' }),
           ],
         }),
         frame('NavLinks', {
@@ -125,7 +125,7 @@ export default frame('PlantShopPage', {
       fills: [gradient([{ hex: '#16a34a', position: 0 }, { hex: '#15803d', position: 0.5 }, { hex: '#166534', position: 1 }], 135)],
       layoutSizingHorizontal: 'FILL',
       children: [
-        text('Bring Nature Home', { fontSize: 32, fontWeight: 800, color: '#ffffff', textAlignHorizontal: 'CENTER' }),
+        text('Bring Nature Home', { fontSize: 32, fontWeight: 700, color: '#ffffff', textAlignHorizontal: 'CENTER' }),
         text('Curated plants delivered to your door with personalized care instructions', { fontSize: 15, fontWeight: 400, color: '#ffffffcc', textAlignHorizontal: 'CENTER' }),
       ],
     }),
@@ -188,7 +188,7 @@ export default frame('PlantShopPage', {
               layoutSizingHorizontal: 'FILL',
               children: [
                 text('Total', { fontSize: 15, fontWeight: 600, color: '#1a2e1a' }),
-                text('$78', { fontSize: 18, fontWeight: 800, color: '#16a34a' }),
+                text('$78', { fontSize: 18, fontWeight: 700, color: '#16a34a' }),
               ],
             }),
             frame('CheckoutBtn', {

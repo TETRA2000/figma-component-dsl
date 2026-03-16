@@ -1,0 +1,3484 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "recipe-detail Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "RecipeDetailPage",
+      "size": {
+        "x": 800,
+        "y": 1203.1999999999998
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "RECTANGLE",
+          "name": "HeroImage",
+          "size": {
+            "x": 800,
+            "y": 320
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [],
+          "fills": [
+            {
+              "type": "GRADIENT_LINEAR",
+              "opacity": 1,
+              "gradientStops": [
+                {
+                  "color": {
+                    "r": 0.9176470588235294,
+                    "g": 0.34509803921568627,
+                    "b": 0.047058823529411764,
+                    "a": 1
+                  },
+                  "position": 0
+                },
+                {
+                  "color": {
+                    "r": 0.9764705882352941,
+                    "g": 0.45098039215686275,
+                    "b": 0.08627450980392157,
+                    "a": 1
+                  },
+                  "position": 0.3
+                },
+                {
+                  "color": {
+                    "r": 0.9921568627450981,
+                    "g": 0.7294117647058823,
+                    "b": 0.4549019607843137,
+                    "a": 1
+                  },
+                  "position": 0.7
+                },
+                {
+                  "color": {
+                    "r": 1,
+                    "g": 0.9686274509803922,
+                    "b": 0.9294117647058824,
+                    "a": 1
+                  },
+                  "position": 1
+                }
+              ],
+              "gradientTransform": [
+                [
+                  -0.9396926207859083,
+                  0.3420201433256689,
+                  0.7988362387301198
+                ],
+                [
+                  -0.3420201433256689,
+                  -0.9396926207859083,
+                  1.1408563820557887
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "RecipeHeader",
+          "size": {
+            "x": 800,
+            "y": 218.4
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "CategoryBadge",
+              "size": {
+                "x": 63.61000061035156,
+                "y": 20
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "ITALIAN",
+                  "size": {
+                    "x": 39.61000061035156,
+                    "y": 12
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "ITALIAN",
+                  "fontSize": 10,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9176470588235294,
+                    "g": 0.34509803921568627,
+                    "b": 0.047058823529411764,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 10,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 4,
+              "paddingRight": 12,
+              "paddingBottom": 4,
+              "paddingLeft": 12,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "TEXT",
+              "name": "Creamy Tuscan Chicken Pasta",
+              "size": {
+                "x": 414.94000244140625,
+                "y": 33.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.12156862745098039,
+                    "g": 0.1607843137254902,
+                    "b": 0.21568627450980393,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Creamy Tuscan Chicken Pasta",
+              "fontSize": 28,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "TEXT",
+              "name": "A rich and flavorful one-pan pasta with sun-dried tomatoes, spinach, and a creamy garlic parmesan sauce. Perfect for weeknight dinners.",
+              "size": {
+                "x": 680,
+                "y": 44.800000000000004
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.4196078431372549,
+                    "g": 0.4470588235294118,
+                    "b": 0.5019607843137255,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "A rich and flavorful one-pan pasta with sun-dried tomatoes, spinach, and a creamy garlic parmesan sauce. Perfect for weeknight dinners.",
+              "fontSize": 14,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "textAutoResize": "HEIGHT",
+              "fontWeight": 400,
+              "fontStyle": "Regular"
+            },
+            {
+              "type": "FRAME",
+              "name": "RecipeMeta",
+              "size": {
+                "x": 381.60000228881836,
+                "y": 28
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Meta: Prep Time",
+                  "size": {
+                    "x": 82.61999893188477,
+                    "y": 28
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "MetaIcon",
+                      "size": {
+                        "x": 28,
+                        "y": 28
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9176470588235294,
+                            "g": 0.34509803921568627,
+                            "b": 0.047058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 0.10196078431372549
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "MetaText",
+                      "size": {
+                        "x": 48.619998931884766,
+                        "y": 27.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Prep Time",
+                          "size": {
+                            "x": 48.619998931884766,
+                            "y": 12
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Prep Time",
+                          "fontSize": 10,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "15 min",
+                          "size": {
+                            "x": 39.790000915527344,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "15 min",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Meta: Cook Time",
+                  "size": {
+                    "x": 85.47000122070312,
+                    "y": 28
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "MetaIcon",
+                      "size": {
+                        "x": 28,
+                        "y": 28
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9176470588235294,
+                            "g": 0.34509803921568627,
+                            "b": 0.047058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 0.10196078431372549
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "MetaText",
+                      "size": {
+                        "x": 51.470001220703125,
+                        "y": 27.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Cook Time",
+                          "size": {
+                            "x": 51.470001220703125,
+                            "y": 12
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Cook Time",
+                          "fontSize": 10,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "25 min",
+                          "size": {
+                            "x": 42.400001525878906,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "25 min",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Meta: Servings",
+                  "size": {
+                    "x": 76.22000122070312,
+                    "y": 28
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "MetaIcon",
+                      "size": {
+                        "x": 28,
+                        "y": 28
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9176470588235294,
+                            "g": 0.34509803921568627,
+                            "b": 0.047058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 0.10196078431372549
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "MetaText",
+                      "size": {
+                        "x": 42.220001220703125,
+                        "y": 27.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Servings",
+                          "size": {
+                            "x": 42.220001220703125,
+                            "y": 12
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Servings",
+                          "fontSize": 10,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "4",
+                          "size": {
+                            "x": 8.65999984741211,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "4",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Meta: Difficulty",
+                  "size": {
+                    "x": 77.29000091552734,
+                    "y": 28
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "MetaIcon",
+                      "size": {
+                        "x": 28,
+                        "y": 28
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9176470588235294,
+                            "g": 0.34509803921568627,
+                            "b": 0.047058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 0.10196078431372549
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "MetaText",
+                      "size": {
+                        "x": 43.290000915527344,
+                        "y": 27.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Difficulty",
+                          "size": {
+                            "x": 43.290000915527344,
+                            "y": 12
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Difficulty",
+                          "fontSize": 10,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Easy",
+                          "size": {
+                            "x": 30.1299991607666,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Easy",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 6,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 20,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 12,
+          "paddingTop": 28,
+          "paddingRight": 36,
+          "paddingBottom": 28,
+          "paddingLeft": 36,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "Content",
+          "size": {
+            "x": 800,
+            "y": 664.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "InstructionsCol",
+              "size": {
+                "x": 440,
+                "y": 556.1
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Instructions",
+                  "size": {
+                    "x": 117.62000274658203,
+                    "y": 24
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.12156862745098039,
+                        "g": 0.1607843137254902,
+                        "b": 0.21568627450980393,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Instructions",
+                  "fontSize": 20,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Step 1",
+                  "size": {
+                    "x": 440,
+                    "y": 117.5
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "StepNumber",
+                      "size": {
+                        "x": 36,
+                        "y": 36
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "1",
+                          "size": {
+                            "x": 6.46999979019165,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "1",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9176470588235294,
+                            "g": 0.34509803921568627,
+                            "b": 0.047058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 18,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "StepContent",
+                      "size": {
+                        "x": 354,
+                        "y": 85.5
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Season chicken breasts with salt, pepper, and Italian seasoning. Sear in a hot skillet with olive oil for 6-7 minutes per side until golden brown and cooked through. Remove and set aside.",
+                          "size": {
+                            "x": 600,
+                            "y": 65.1
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Season chicken breasts with salt, pepper, and Italian seasoning. Sear in a hot skillet with olive oil for 6-7 minutes per side until golden brown and cooked through. Remove and set aside.",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "textAutoResize": "HEIGHT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "💡 Tip: Pat chicken dry for the best sear.",
+                          "size": {
+                            "x": 225.35000610351562,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9176470588235294,
+                                "g": 0.34509803921568627,
+                                "b": 0.047058823529411764,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "💡 Tip: Pat chicken dry for the best sear.",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 0.9686274509803922,
+                        "b": 0.9294117647058824,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 14,
+                  "paddingTop": 16,
+                  "paddingRight": 18,
+                  "paddingBottom": 16,
+                  "paddingLeft": 18,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Step 2",
+                  "size": {
+                    "x": 440,
+                    "y": 75.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "StepNumber",
+                      "size": {
+                        "x": 36,
+                        "y": 36
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "2",
+                          "size": {
+                            "x": 9.449999809265137,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "2",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9176470588235294,
+                            "g": 0.34509803921568627,
+                            "b": 0.047058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 18,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "StepContent",
+                      "size": {
+                        "x": 354,
+                        "y": 43.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "In the same skillet, add minced garlic and cook for 30 seconds until fragrant. Add sun-dried tomatoes and cook for 2 minutes.",
+                          "size": {
+                            "x": 600,
+                            "y": 43.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "In the same skillet, add minced garlic and cook for 30 seconds until fragrant. Add sun-dried tomatoes and cook for 2 minutes.",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "textAutoResize": "HEIGHT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 0.9686274509803922,
+                        "b": 0.9294117647058824,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 14,
+                  "paddingTop": 16,
+                  "paddingRight": 18,
+                  "paddingBottom": 16,
+                  "paddingLeft": 18,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Step 3",
+                  "size": {
+                    "x": 440,
+                    "y": 75.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "StepNumber",
+                      "size": {
+                        "x": 36,
+                        "y": 36
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "3",
+                          "size": {
+                            "x": 9.680000305175781,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "3",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9176470588235294,
+                            "g": 0.34509803921568627,
+                            "b": 0.047058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 18,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "StepContent",
+                      "size": {
+                        "x": 354,
+                        "y": 43.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Pour in chicken broth and heavy cream. Stir well and bring to a gentle simmer. Add the pasta and cook according to package directions, stirring occasionally.",
+                          "size": {
+                            "x": 600,
+                            "y": 43.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Pour in chicken broth and heavy cream. Stir well and bring to a gentle simmer. Add the pasta and cook according to package directions, stirring occasionally.",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "textAutoResize": "HEIGHT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 0.9686274509803922,
+                        "b": 0.9294117647058824,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 14,
+                  "paddingTop": 16,
+                  "paddingRight": 18,
+                  "paddingBottom": 16,
+                  "paddingLeft": 18,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Step 4",
+                  "size": {
+                    "x": 440,
+                    "y": 95.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "StepNumber",
+                      "size": {
+                        "x": 36,
+                        "y": 36
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "4",
+                          "size": {
+                            "x": 10.140000343322754,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "4",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9176470588235294,
+                            "g": 0.34509803921568627,
+                            "b": 0.047058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 18,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "StepContent",
+                      "size": {
+                        "x": 354,
+                        "y": 63.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Add fresh spinach and grated parmesan cheese. Stir until spinach wilts and cheese melts into the sauce. Slice the chicken and place on top.",
+                          "size": {
+                            "x": 600,
+                            "y": 43.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Add fresh spinach and grated parmesan cheese. Stir until spinach wilts and cheese melts into the sauce. Slice the chicken and place on top.",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "textAutoResize": "HEIGHT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "💡 Tip: Reserve a little pasta water to adjust consistency.",
+                          "size": {
+                            "x": 319.1000061035156,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9176470588235294,
+                                "g": 0.34509803921568627,
+                                "b": 0.047058823529411764,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "💡 Tip: Reserve a little pasta water to adjust consistency.",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 0.9686274509803922,
+                        "b": 0.9294117647058824,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 14,
+                  "paddingTop": 16,
+                  "paddingRight": 18,
+                  "paddingBottom": 16,
+                  "paddingLeft": 18,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Step 5",
+                  "size": {
+                    "x": 440,
+                    "y": 68
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "StepNumber",
+                      "size": {
+                        "x": 36,
+                        "y": 36
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "5",
+                          "size": {
+                            "x": 9.329999923706055,
+                            "y": 18
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "5",
+                          "fontSize": 15,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9176470588235294,
+                            "g": 0.34509803921568627,
+                            "b": 0.047058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 18,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "StepContent",
+                      "size": {
+                        "x": 354,
+                        "y": 21.7
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Garnish with fresh basil, a crack of black pepper, and extra parmesan. Serve immediately.",
+                          "size": {
+                            "x": 600,
+                            "y": 21.7
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Garnish with fresh basil, a crack of black pepper, and extra parmesan. Serve immediately.",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "textAutoResize": "HEIGHT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 0.9686274509803922,
+                        "b": 0.9294117647058824,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 14,
+                  "paddingTop": 16,
+                  "paddingRight": 18,
+                  "paddingBottom": 16,
+                  "paddingLeft": 18,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 20,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Sidebar",
+              "size": {
+                "x": 260,
+                "y": 664.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "IngredientsCard",
+                  "size": {
+                    "x": 260,
+                    "y": 415.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Ingredients",
+                      "size": {
+                        "x": 88.83999633789062,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.12156862745098039,
+                            "g": 0.1607843137254902,
+                            "b": 0.21568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Ingredients",
+                      "fontSize": 16,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ingredient: Chicken breasts",
+                      "size": {
+                        "x": 224,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Checkbox",
+                          "size": {
+                            "x": 20,
+                            "y": 20
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "✓",
+                              "size": {
+                                "x": 10.59000015258789,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "✓",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9176470588235294,
+                                "g": 0.34509803921568627,
+                                "b": 0.047058823529411764,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 6,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "2 lbs",
+                          "size": {
+                            "x": 30.030000686645508,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "2 lbs",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Chicken breasts",
+                          "size": {
+                            "x": 106.62999725341797,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Chicken breasts",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ingredient: Penne pasta",
+                      "size": {
+                        "x": 224,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Checkbox",
+                          "size": {
+                            "x": 20,
+                            "y": 20
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "✓",
+                              "size": {
+                                "x": 10.59000015258789,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "✓",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9176470588235294,
+                                "g": 0.34509803921568627,
+                                "b": 0.047058823529411764,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 6,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "12 oz",
+                          "size": {
+                            "x": 31.90999984741211,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "12 oz",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Penne pasta",
+                          "size": {
+                            "x": 82.13999938964844,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Penne pasta",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ingredient: Heavy cream",
+                      "size": {
+                        "x": 224,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Checkbox",
+                          "size": {
+                            "x": 20,
+                            "y": 20
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 0.82,
+                                "g": 0.82,
+                                "b": 0.82,
+                                "a": 1
+                              },
+                              "weight": 1.5,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 6,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "1 cup",
+                          "size": {
+                            "x": 32.41999816894531,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "1 cup",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Heavy cream",
+                          "size": {
+                            "x": 87.48999786376953,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.12156862745098039,
+                                "g": 0.1607843137254902,
+                                "b": 0.21568627450980393,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Heavy cream",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ingredient: Parmesan",
+                      "size": {
+                        "x": 224,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Checkbox",
+                          "size": {
+                            "x": 20,
+                            "y": 20
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 0.82,
+                                "g": 0.82,
+                                "b": 0.82,
+                                "a": 1
+                              },
+                              "weight": 1.5,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 6,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "1/2 cup",
+                          "size": {
+                            "x": 45.439998626708984,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "1/2 cup",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Parmesan",
+                          "size": {
+                            "x": 66.23999786376953,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.12156862745098039,
+                                "g": 0.1607843137254902,
+                                "b": 0.21568627450980393,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Parmesan",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ingredient: Sun-dried tomatoes",
+                      "size": {
+                        "x": 224,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Checkbox",
+                          "size": {
+                            "x": 20,
+                            "y": 20
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 0.82,
+                                "g": 0.82,
+                                "b": 0.82,
+                                "a": 1
+                              },
+                              "weight": 1.5,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 6,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "1/3 cup",
+                          "size": {
+                            "x": 45.61000061035156,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "1/3 cup",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Sun-dried tomatoes",
+                          "size": {
+                            "x": 131.3699951171875,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.12156862745098039,
+                                "g": 0.1607843137254902,
+                                "b": 0.21568627450980393,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Sun-dried tomatoes",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ingredient: Fresh spinach",
+                      "size": {
+                        "x": 224,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Checkbox",
+                          "size": {
+                            "x": 20,
+                            "y": 20
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 0.82,
+                                "g": 0.82,
+                                "b": 0.82,
+                                "a": 1
+                              },
+                              "weight": 1.5,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 6,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "3 cups",
+                          "size": {
+                            "x": 42.33000183105469,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "3 cups",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Fresh spinach",
+                          "size": {
+                            "x": 92.41999816894531,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.12156862745098039,
+                                "g": 0.1607843137254902,
+                                "b": 0.21568627450980393,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Fresh spinach",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ingredient: Garlic cloves",
+                      "size": {
+                        "x": 224,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Checkbox",
+                          "size": {
+                            "x": 20,
+                            "y": 20
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 0.82,
+                                "g": 0.82,
+                                "b": 0.82,
+                                "a": 1
+                              },
+                              "weight": 1.5,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 6,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "4",
+                          "size": {
+                            "x": 8.65999984741211,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "4",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Garlic cloves",
+                          "size": {
+                            "x": 85.16999816894531,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.12156862745098039,
+                                "g": 0.1607843137254902,
+                                "b": 0.21568627450980393,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Garlic cloves",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ingredient: Chicken broth",
+                      "size": {
+                        "x": 224,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Checkbox",
+                          "size": {
+                            "x": 20,
+                            "y": 20
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 0.82,
+                                "g": 0.82,
+                                "b": 0.82,
+                                "a": 1
+                              },
+                              "weight": 1.5,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 6,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "1 cup",
+                          "size": {
+                            "x": 32.41999816894531,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "1 cup",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Chicken broth",
+                          "size": {
+                            "x": 92.5,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.12156862745098039,
+                                "g": 0.1607843137254902,
+                                "b": 0.21568627450980393,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Chicken broth",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ingredient: Italian seasoning",
+                      "size": {
+                        "x": 224,
+                        "y": 32
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Checkbox",
+                          "size": {
+                            "x": 20,
+                            "y": 20
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 0.82,
+                                "g": 0.82,
+                                "b": 0.82,
+                                "a": 1
+                              },
+                              "weight": 1.5,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 6,
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "1 tsp",
+                          "size": {
+                            "x": 28.510000228881836,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "1 tsp",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Italian seasoning",
+                          "size": {
+                            "x": 111.18000030517578,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.12156862745098039,
+                                "g": 0.1607843137254902,
+                                "b": 0.21568627450980393,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Italian seasoning",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 10,
+                      "paddingTop": 6,
+                      "paddingRight": 0,
+                      "paddingBottom": 6,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9803921568627451,
+                        "g": 0.9803921568627451,
+                        "b": 0.9803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.92,
+                        "g": 0.92,
+                        "b": 0.92,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 14,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 18,
+                  "paddingRight": 18,
+                  "paddingBottom": 18,
+                  "paddingLeft": 18,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "NutritionCard",
+                  "size": {
+                    "x": 260,
+                    "y": 229.60000000000002
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Nutrition per serving",
+                      "size": {
+                        "x": 141.63999938964844,
+                        "y": 16.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.12156862745098039,
+                            "g": 0.1607843137254902,
+                            "b": 0.21568627450980393,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Nutrition per serving",
+                      "fontSize": 14,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "NutritionGrid",
+                      "size": {
+                        "x": 224,
+                        "y": 78.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Nutrition: Calories",
+                          "size": {
+                            "x": 108,
+                            "y": 78.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "485",
+                              "size": {
+                                "x": 38.97999954223633,
+                                "y": 24
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9176470588235294,
+                                    "g": 0.34509803921568627,
+                                    "b": 0.047058823529411764,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "485",
+                              "fontSize": 20,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "kcal",
+                              "size": {
+                                "x": 19.43000030517578,
+                                "y": 12
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.611764705882353,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.6862745098039216,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "kcal",
+                              "fontSize": 10,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Calories",
+                              "size": {
+                                "x": 47.15999984741211,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.21568627450980393,
+                                    "g": 0.2549019607843137,
+                                    "b": 0.3176470588235294,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Calories",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 0.9686274509803922,
+                                "b": 0.9294117647058824,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 10,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 12,
+                          "paddingRight": 16,
+                          "paddingBottom": 12,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Nutrition: Protein",
+                          "size": {
+                            "x": 108,
+                            "y": 78.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "38",
+                              "size": {
+                                "x": 25.93000030517578,
+                                "y": 24
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9176470588235294,
+                                    "g": 0.34509803921568627,
+                                    "b": 0.047058823529411764,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "38",
+                              "fontSize": 20,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "g",
+                              "size": {
+                                "x": 6.199999809265137,
+                                "y": 12
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.611764705882353,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.6862745098039216,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "g",
+                              "fontSize": 10,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Protein",
+                              "size": {
+                                "x": 40.619998931884766,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.21568627450980393,
+                                    "g": 0.2549019607843137,
+                                    "b": 0.3176470588235294,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Protein",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 0.9686274509803922,
+                                "b": 0.9294117647058824,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 10,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 12,
+                          "paddingRight": 16,
+                          "paddingBottom": 12,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "NutritionGrid2",
+                      "size": {
+                        "x": 224,
+                        "y": 78.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Nutrition: Carbs",
+                          "size": {
+                            "x": 108,
+                            "y": 78.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "42",
+                              "size": {
+                                "x": 26.1200008392334,
+                                "y": 24
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9176470588235294,
+                                    "g": 0.34509803921568627,
+                                    "b": 0.047058823529411764,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "42",
+                              "fontSize": 20,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "g",
+                              "size": {
+                                "x": 6.199999809265137,
+                                "y": 12
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.611764705882353,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.6862745098039216,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "g",
+                              "fontSize": 10,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Carbs",
+                              "size": {
+                                "x": 34.31999969482422,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.21568627450980393,
+                                    "g": 0.2549019607843137,
+                                    "b": 0.3176470588235294,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Carbs",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 0.9686274509803922,
+                                "b": 0.9294117647058824,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 10,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 12,
+                          "paddingRight": 16,
+                          "paddingBottom": 12,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Nutrition: Fat",
+                          "size": {
+                            "x": 108,
+                            "y": 78.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "18",
+                              "size": {
+                                "x": 21.639999389648438,
+                                "y": 24
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9176470588235294,
+                                    "g": 0.34509803921568627,
+                                    "b": 0.047058823529411764,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "18",
+                              "fontSize": 20,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 700,
+                              "fontStyle": "Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "g",
+                              "size": {
+                                "x": 6.199999809265137,
+                                "y": 12
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.611764705882353,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.6862745098039216,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "g",
+                              "fontSize": 10,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Fat",
+                              "size": {
+                                "x": 17.709999084472656,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.21568627450980393,
+                                    "g": 0.2549019607843137,
+                                    "b": 0.3176470588235294,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Fat",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "CENTER",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 0.9686274509803922,
+                                "b": 0.9294117647058824,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 10,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 2,
+                          "paddingTop": 12,
+                          "paddingRight": 16,
+                          "paddingBottom": 12,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9803921568627451,
+                        "g": 0.9803921568627451,
+                        "b": 0.9803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.92,
+                        "g": 0.92,
+                        "b": 0.92,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 14,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 10,
+                  "paddingTop": 18,
+                  "paddingRight": 18,
+                  "paddingBottom": 18,
+                  "paddingLeft": 18,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 20,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FIXED"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 28,
+          "paddingTop": 0,
+          "paddingRight": 36,
+          "paddingBottom": 0,
+          "paddingLeft": 36,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

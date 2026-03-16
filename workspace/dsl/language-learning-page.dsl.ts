@@ -68,7 +68,7 @@ function progressRing(label: string, value: string, color: string) {
         autoLayout: horizontal({ align: 'CENTER', counterAlign: 'CENTER' }),
         children: [
           ellipse('RingBg', { size: { x: 72, y: 72 }, fills: [solid(color + '1a')] }),
-          text(value, { fontSize: 18, fontWeight: 800, color }),
+          text(value, { fontSize: 18, fontWeight: 700, color }),
         ],
       }),
       text(label, { fontSize: 11, fontWeight: 500, color: '#6b7280', textAlignHorizontal: 'CENTER' }),
@@ -102,7 +102,7 @@ export default frame('LanguageLearningPage', {
         frame('HeaderLeft', {
           autoLayout: vertical({ spacing: 2 }),
           children: [
-            text('LingoLeap', { fontSize: 20, fontWeight: 800, color: '#ffffff' }),
+            text('LingoLeap', { fontSize: 20, fontWeight: 700, color: '#ffffff' }),
             text('Learning Spanish', { fontSize: 12, fontWeight: 500, color: '#ffffffb3' }),
           ],
         }),

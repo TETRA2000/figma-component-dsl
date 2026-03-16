@@ -91,7 +91,7 @@ export default frame('MovieDatabasePage', {
       fills: [solid('#1a1a2e')],
       strokes: [{ color: { r: 1, g: 1, b: 1, a: 0.06 }, weight: 1, align: 'INSIDE' as const }],
       children: [
-        text('CineDB', { fontSize: 22, fontWeight: 800, color: '#f59e0b' }),
+        text('CineDB', { fontSize: 22, fontWeight: 700, color: '#f59e0b' }),
         frame('SearchBar', {
           size: { x: 360 },
           autoLayout: horizontal({ spacing: 0, padX: 16, padY: 10 }),
@@ -142,7 +142,7 @@ export default frame('MovieDatabasePage', {
                     text('FEATURED', { fontSize: 10, fontWeight: 700, color: '#0f172a' }),
                   ],
                 }),
-                text('The Last Horizon', { fontSize: 28, fontWeight: 800, color: '#f1f5f9' }),
+                text('The Last Horizon', { fontSize: 28, fontWeight: 700, color: '#f1f5f9' }),
                 frame('HeroMeta', {
                   autoLayout: horizontal({ spacing: 12, counterAlign: 'CENTER' }),
                   children: [
