@@ -5,8 +5,8 @@
 - **Discovery Scope**: Extension (adding codegen capability to existing plugin)
 - **Key Findings**:
   - Figma Codegen API requires `editorType: ["dev"]` and `capabilities: ["codegen"]` in manifest; the generate callback has a strict 3-second timeout and prohibits `figma.showUI()`
-  - Existing `serializeNode()` in `packages/plugin/src/serializer.ts` already extracts all Figma node properties needed for code generation — this is the primary reuse asset
-  - Code Connect bindings are stored in `.figma.tsx` source files, not in Figma runtime — plugin data (`dsl-identity`) is the practical path for metadata-aware codegen
+  - Existing `serializeNode()` in `packages/plugin/src/serializer.ts` extracts Figma node properties for structural code generation (fallback tier)
+  - Original source code (React TSX, CSS Module, DSL) should be embedded in Figma plugin data at export time, enabling direct retrieval during codegen without reverse-engineering (source-first tier)
 
 ## Research Log
 
@@ -96,21 +96,30 @@
 - **Rationale**: Design tokens define precise values; Figma nodes created from DSL will have exact matches. Manually created nodes may not match, which is acceptable behavior (raw values are still correct)
 - **Trade-offs**: Misses near-matches from manual Figma edits; but raw CSS values are always correct as fallback
 
-### Decision: Code Connect Generation from Plugin Data
-- **Context**: R2 AC2 requires showing Code Connect snippets, but they're not accessible in plugin sandbox
+### Decision: Source-Embedded Codegen (Two-Tier Strategy)
+- **Context**: Codegen needs to show React/CSS/DSL code for Figma nodes. The original question: why reverse-engineer code from node properties when the original source files exist?
 - **Alternatives Considered**:
-  1. Read Code Connect files — impossible from sandbox
-  2. Store Code Connect output in plugin data during export — requires re-export workflow
-  3. Generate Code Connect-style snippet from dsl-identity metadata — works with existing data
-- **Selected Approach**: Generate a Code Connect-style React snippet from `dsl-identity` metadata stored during DSL export
-- **Rationale**: `dsl-identity` already stores component name and can be extended to store property definitions. The generator can produce a snippet structurally similar to Code Connect output.
-- **Trade-offs**: Not the actual Code Connect file content; but functionally equivalent for Dev Mode usage
+  1. Reverse-engineer only — generate all code from Figma node properties via structural inference. Lossy, complex, never produces the actual original code.
+  2. Store source in plugin data — embed original source file contents during export, retrieve during codegen. Simple, exact, instant.
+  3. Store paths + fetch via MCP — store file paths only, fetch contents at codegen time via WebSocket. Always fresh, but requires MCP server running.
+  4. Hybrid — store snapshots + paths for freshness checking. Best of both but most complex.
+- **Selected Approach**: Store source code in plugin data (option 2) with structural inference as fallback for manually-created nodes
+- **Rationale**: Plugin data is always available (no MCP dependency). Source snapshots are point-in-time (updated on re-export). The 100KB per-key limit is sufficient for typical component sources (3–10KB combined). Fallback generators handle nodes without stored sources.
+- **Trade-offs**: Snapshots become stale after local file edits (until re-export). Plugin data storage increases per node. But: codegen returns the exact original code, not a reverse-engineered approximation.
+- **Follow-up**: Extend `ComponentIdentity` type, extend `PluginInput` type, add `source-collector.ts` to CLI/exporter, modify plugin `storeIdentity` to also call `storeSourceSnapshots`
+
+### Decision: Superseded — Code Connect from Plugin Data
+- **Context**: Previously planned to generate Code Connect-style snippets from `dsl-identity` metadata
+- **Status**: **Superseded** by source-embedded approach. R2 AC2 is now satisfied by storing the actual `.figma.tsx` Code Connect file content in `dsl-sources` plugin data. No need for synthetic generation.
 
 ## Risks & Mitigations
-- **3-second timeout with deep trees**: Mitigate with depth-limited traversal (max 50 descendants) and early termination with truncation notice
+- **Source snapshot staleness**: Snapshots are point-in-time; local edits to .tsx/.module.css/.dsl.ts won't appear until re-export. Mitigate by adding `snapshotTimestamp` to `SourceSnapshots` so codegen can display a "last updated" note.
+- **Plugin data size limit (100KB per key)**: Mitigate with 50KB per-file guard in source-collector and separate `dsl-sources` key (not merged into `dsl-identity`). If combined sources exceed 100KB, store only DSL source and log warning.
+- **3-second timeout with deep trees**: Mitigate with depth-limited traversal (max 50 descendants) in fallback path. Source-first path is instant.
 - **`@figma/plugin-typings` version**: `^1.0.0` is a broad range; verify codegen types exist at install time. If missing, update to latest version.
-- **Bundle size increase**: Adding 3 generators + token map increases IIFE bundle. Mitigate by keeping token map minimal and avoiding heavy dependencies.
+- **Bundle size increase**: Adding 3 generators + token map increases IIFE bundle by ~15KB. Source-collector runs in Node.js (CLI), not in bundle.
 - **Dual editorType compatibility**: Test that existing import/sync features work when `"dev"` is added to editorType array
+- **Backward compatibility**: Extended `ComponentIdentity` and `PluginInput` use optional fields only — existing export/import flows continue to work without sources
 
 ## References
 - [Figma Codegen Plugins](https://developers.figma.com/docs/plugins/codegen-plugins/) — API docs, manifest schema, CodegenResult interface
