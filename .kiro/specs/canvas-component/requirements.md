@@ -6,6 +6,8 @@ The DslCanvas component extends the existing Slots feature by introducing a new 
 
 This approach creates a class of "image-rendered" UI regions where visual fidelity is guaranteed, complementing traditional HTML/CSS components for interactive content.
 
+Additionally, the system supports exporting slot and canvas contents using Figma's native Plugin API (`exportAsync`), providing designers with the ability to export slot content as raster images (PNG, JPG) or vector (SVG, PDF) at configurable pixel densities. This Figma-native export path complements the existing `@figma-dsl/renderer`-based rendering pipeline and gives designers a one-click workflow to extract slot content in publication-ready formats directly from within Figma.
+
 ## Requirements
 
 ### Requirement 1: DslCanvas React Component
@@ -96,3 +98,29 @@ This approach creates a class of "image-rendered" UI regions where visual fideli
 1. The DslCanvas component shall be available as a standard import from the preview app's component library.
 2. When a DSL file used as a DslCanvas source changes during development, the preview app shall re-render the canvas image automatically via Vite's HMR.
 3. The DslCanvas component shall work within the preview app's existing layout system (CSS Modules, design tokens) without requiring special configuration.
+
+### Requirement 9: Figma Plugin Slot Content Export
+
+**Objective:** As a designer, I want to export slot and canvas frame contents from Figma using the Figma Plugin API's native export capabilities, so that I can extract slot content as high-quality images or vectors in my preferred format and resolution without leaving Figma.
+
+#### Acceptance Criteria
+
+1. The Figma plugin shall provide an "Export Slots" action in the Export tab that allows the user to select one or more slot/canvas frames for export.
+2. When the user initiates a slot content export, the plugin shall allow the user to choose the output format from: PNG, JPG, SVG, and PDF.
+3. The plugin shall allow the user to choose the pixel density (scale factor) for raster exports (PNG, JPG), supporting at minimum 1x, 2x, 3x, and 4x options.
+4. When the user confirms export settings, the plugin shall call Figma's `node.exportAsync()` with the selected format and scale constraint for each selected slot/canvas frame.
+5. The plugin shall export only the contents of the slot/canvas frame (i.e., the frame itself and its children), not the parent component or surrounding nodes.
+6. While the export is in progress, the plugin shall display progress feedback indicating which slot is being exported and the overall completion status.
+7. If a slot/canvas frame export fails, the plugin shall report the error for that specific frame and continue exporting the remaining frames.
+8. The plugin shall make the exported data available for download or clipboard copy, including the file name derived from the slot/canvas name and the chosen format extension.
+
+### Requirement 10: Dual Export Path Coexistence
+
+**Objective:** As a pipeline maintainer, I want the Figma-native slot export to coexist with the existing `@figma-dsl/renderer`-based canvas rendering pipeline, so that both export paths remain functional and users can choose the appropriate method for their use case.
+
+#### Acceptance Criteria
+
+1. The Figma plugin's slot content export (Requirement 9) shall operate independently of the existing `@figma-dsl/renderer`-based `renderCanvasNodes()` pipeline.
+2. The existing `renderCanvasNodes()` function and CLI `render --no-canvas` behavior shall remain unchanged after adding the Figma-native export path.
+3. Where a canvas node has a `scale` property defined in the DSL, the Figma plugin export shall use the user-selected scale factor (not the DSL-defined scale), since the Figma-native export reflects the designer's export intent rather than the DSL author's rendering intent.
+4. The plugin shall clearly label the two export mechanisms in its UI so that users understand the distinction: "Export Slots (Figma)" for Figma-native export and the existing changeset/complete export for DSL-pipeline-based workflows.
