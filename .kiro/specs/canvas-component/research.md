@@ -40,18 +40,20 @@
   - [Schema 2025 announcements](https://help.figma.com/hc/en-us/articles/35794667554839-What-s-new-from-Schema-2025)
   - **Actual DSL JSON captured from plugin** (before/after converting a RECTANGLE frame into a Slot)
 - **Findings**:
-  - `"SLOT"` is NOT in the `NodeType` union in current Plugin API **typings**, BUT the actual Figma runtime DOES expose `node.type === "SLOT"` for slot nodes
-  - **Confirmed via real export data**: When a frame is converted to a Slot in Figma, the serialized JSON shows `"type": "SLOT"` directly — the serializer's `node.type` property captures it
-  - `componentPropertyDefinitions` also gets a corresponding `"Slot#N:M": { "type": "SLOT" }` entry on the parent component
-  - The SLOT node wraps existing content as children (e.g., a RECTANGLE that was inside the frame becomes a child of the SLOT node)
-  - SLOT nodes have standard frame-like properties: size, opacity, visible, children, clipContent — but no auto-layout properties
-  - **Cannot create** slots programmatically, but **can detect** existing ones via `node.type === "SLOT"`
+  - `"SLOT"` is NOT in the `NodeType` union in current Plugin API **typings**, BUT the actual Figma runtime DOES expose `node.type === "SLOT"` for **wrapped** slot nodes
+  - **Two distinct Figma slot creation methods** — confirmed via real export data:
+    1. **"Wrap in new slot"** (e.g., on a RECTANGLE): Creates a NEW `type: "SLOT"` node that wraps the original element as its child. SLOT nodes have frame-like properties (size, opacity, visible, children, clipContent) but NO auto-layout properties.
+    2. **"Convert to slot"** (e.g., on a FRAME with auto-layout): The FRAME **keeps its `type: "FRAME"`** — it does NOT become `type: "SLOT"`. Instead, only a `componentPropertyDefinitions` entry is added on the parent component (e.g., `"Footer#1:3": { "type": "SLOT" }`). The frame retains all its original properties including auto-layout.
+  - `componentPropertyDefinitions` gets a `"Name#N:M": { "type": "SLOT" }` entry for BOTH creation methods — this is the **only reliable universal signal**
+  - The property key format is `"{LayerName}#{N}:{M}"` where `{LayerName}` matches the child node's `name` property
+  - **Cannot create** slots programmatically, but **can detect** existing ones
   - `ComponentPropertyType` already includes `'SLOT'` in dsl-core/src/types.ts
 - **Implications**:
-  - **Primary detection**: `node.type === "SLOT"` — reliable, high confidence, directly from Figma runtime
-  - **Secondary confirmation**: `componentPropertyDefinitions` entry with `type: "SLOT"` on parent component
-  - Detection is straightforward, not heuristic-based — SLOT is a distinct node type at runtime even if typings lag
+  - **`node.type === "SLOT"` is NOT sufficient** for detection — it only catches "Wrap in new slot" cases
+  - **`componentPropertyDefinitions` is the universal detection method** — present for both creation methods
+  - Detection requires: (1) read `componentPropertyDefinitions` on parent component, (2) match SLOT-type entries to children by layer name, (3) also check `node.type === "SLOT"` for wrapped slots
   - The serializer already captures `node.type` as-is, so SLOT nodes flow through naturally
+  - Converted-to-slot FRAME nodes are indistinguishable from regular frames without checking `componentPropertyDefinitions`
 
 ### Figma exportAsync API
 - **Context**: Need to capture pixel-perfect images of slot content at export time
@@ -110,8 +112,8 @@
 | Inline base64 only | Always embed images as base64 in JSON | Simple, no new dependencies | Large payloads bloat JSON | Adequate for small exports |
 | ZIP only | Always package as ZIP | Consistent format, handles any size | Overkill for small, requires ZIP lib | Too heavy for small |
 | Hybrid base64/ZIP | Base64 below threshold, ZIP above | Best UX for both sizes | Two code paths, threshold tuning | Selected per requirements |
-| node.type === SLOT detection | Check serialized node type directly | Reliable, direct from Figma runtime | Typings may lag; SLOT not in NodeType union yet | Primary detection method — confirmed via real data |
-| componentPropertyDefs detection | Check SLOT type in property definitions | Confirms slot at component level | Requires traversal to parent component | Secondary confirmation |
+| componentPropertyDefs detection | Check SLOT type in componentPropertyDefinitions | Universal — works for BOTH slot creation methods | Requires access to parent component | **Selected as primary** — only universal method |
+| node.type === SLOT detection | Check serialized node type directly | Direct, high confidence for wrapped slots | Only detects "Wrap in new slot" — misses "Convert to slot" frames | Secondary signal, not universal |
 | Naming convention detection | Check `[Slot]` prefix on layer names | Works for DSL-created slots | Fragile for designer-created content | Last resort fallback |
 
 ## Design Decisions
@@ -131,14 +133,17 @@
 - **Rationale**: Reuses existing renderer without modification; HMR support from Vite
 
 ### Decision: Slot Detection Strategy
-- **Context**: Need to identify Figma native slots. Real export data confirms `node.type === "SLOT"` is available at runtime despite missing from Plugin API typings.
+- **Context**: Real export data reveals TWO distinct slot creation methods with different serialization:
+  - "Wrap in new slot" → creates `type: "SLOT"` node (wraps original as child)
+  - "Convert to slot" → keeps `type: "FRAME"` unchanged, only adds `componentPropertyDefinitions` entry
 - **Alternatives Considered**:
-  1. `node.type === "SLOT"` — confirmed working via real serialized JSON data
-  2. `componentPropertyDefinitions` for `type: "SLOT"` — available on ComponentNode, provides parent-level confirmation
-  3. Naming convention detection (`[Slot]` prefix) — fragile, last resort
-- **Selected Approach**: Primary: `node.type === "SLOT"` (direct, high confidence). Secondary: DslCanvas plugin data for canvas regions. Tertiary: `componentPropertyDefinitions` for edge cases.
-- **Rationale**: Real export data proves `node.type === "SLOT"` is the most direct and reliable detection method. SLOT nodes have children, size, and standard frame-like properties, making them straightforward to process.
-- **Trade-offs**: Plugin API typings don't include SLOT yet, so TypeScript type narrowing requires a string comparison or type assertion. API may change during beta.
+  1. `node.type === "SLOT"` only — misses "Convert to slot" frames (they stay FRAME type)
+  2. `componentPropertyDefinitions` only — universal, but requires parent component access and name matching
+  3. Combined: `componentPropertyDefinitions` as primary, `node.type === "SLOT"` as supplementary
+- **Selected Approach**: Primary: `componentPropertyDefinitions` for `type: "SLOT"` entries, matching children by layer name (universal). Supplementary: `node.type === "SLOT"` for direct identification of wrapped slots. DslCanvas plugin data for canvas regions.
+- **Rationale**: `componentPropertyDefinitions` is the ONLY method that detects both creation paths. The key format `"{LayerName}#N:M"` allows matching to children by extracting the name before `#`. `node.type === "SLOT"` provides additional confirmation for wrapped slots.
+- **Trade-offs**: Requires parsing `componentPropertyDefinitions` keys; name matching could break if layer names contain `#`. Still need `(node.type as string) === "SLOT"` for TypeScript.
+- **Follow-up**: Monitor Figma typings for SLOT NodeType addition; test edge cases with renamed slot layers.
 
 ### Decision: Hybrid base64/ZIP Export
 - **Context**: Bundle images with JSON, handling both small and large payloads

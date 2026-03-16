@@ -28,9 +28,11 @@
 The current pipeline flows: DSL definition → compile (with layout) → render to PNG / export to Figma JSON → Figma plugin import. Slots are FRAME nodes annotated with `isSlot: true` metadata. The renderer uses @napi-rs/canvas (Node-native). The plugin exports via `computeChangeset()` and `computeCompleteExport()`, with base64 image embedding already proven for changeset image data.
 
 Key constraints:
-- Figma's `SLOT` NodeType is NOT in Plugin API **typings** yet (beta), but the runtime DOES expose `node.type === "SLOT"` — confirmed via real export data
-- The existing serializer captures `node.type` as-is, so SLOT nodes flow through naturally as `"type": "SLOT"` in the exported JSON
-- `componentPropertyDefinitions` gets a `"Slot#N:M": { "type": "SLOT" }` entry when a slot exists — provides parent-level confirmation
+- Figma has **two** slot creation methods with different serialization behaviors (confirmed via real export data):
+  - **"Wrap in new slot"**: Creates a `type: "SLOT"` node wrapping original content. SLOT nodes have frame-like properties but no auto-layout.
+  - **"Convert to slot"**: Keeps `type: "FRAME"` unchanged — the frame retains all properties including auto-layout. Only `componentPropertyDefinitions` gets a new SLOT entry.
+- `componentPropertyDefinitions` gets a `"{Name}#N:M": { "type": "SLOT" }` entry for **both** creation methods — this is the only universal detection signal
+- The serializer captures `node.type` as-is, so `"SLOT"` nodes flow through naturally but converted frames remain `"FRAME"`
 - Plugin sandbox has no Node.js APIs — ZIP generation requires pure JS library
 
 ### Architecture Pattern & Boundary Map
@@ -151,16 +153,26 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    A[Walk component children] --> B{node.type === SLOT?}
-    B -->|Yes| C{Has dsl-canvas plugin data?}
-    C -->|Yes| D[Tag as dslCanvas source - high confidence]
-    C -->|No| E[Tag as nativeSlot source - high confidence]
-    B -->|No| F{Has dsl-canvas plugin data?}
-    F -->|Yes| G[Tag as dslCanvas source - high confidence]
-    F -->|No| H[Skip - not a slot]
+    A[Read componentPropertyDefinitions on parent component] --> B{Has entries with type SLOT?}
+    B -->|No| C{Any children with node.type === SLOT?}
+    C -->|Yes| D[Tag as nativeSlot - wrapped]
+    C -->|No| E[Check for dsl-canvas plugin data only]
+    B -->|Yes| F[Extract slot names from keys - Name before hash]
+    F --> G[Match children by layer name]
+    G --> H{Child node.type === SLOT?}
+    H -->|Yes| I[Wrapped slot - tag as nativeSlot]
+    H -->|No| J[Converted slot - frame acts as slot - tag as nativeSlot]
+    I --> K{Has dsl-canvas plugin data?}
+    J --> K
+    K -->|Yes| L[Override: tag as dslCanvas]
+    K -->|No| M[Keep nativeSlot classification]
 ```
 
-The SLOT node type is confirmed via real Figma export data. When a designer converts a frame to a Slot, the serialized JSON shows `"type": "SLOT"` directly. The parent component also gets a `componentPropertyDefinitions` entry with `"type": "SLOT"`. This eliminates the need for heuristic detection.
+Real Figma export data reveals two distinct slot creation methods:
+- **"Wrap in new slot"**: Creates `type: "SLOT"` node wrapping the original content as a child
+- **"Convert to slot"**: Frame keeps `type: "FRAME"` unchanged — only `componentPropertyDefinitions` gets a SLOT entry (e.g., `"Footer#1:3": { "type": "SLOT" }`)
+
+`componentPropertyDefinitions` is the only universal detection method that catches both cases.
 
 ## Requirements Traceability
 
@@ -344,20 +356,22 @@ function renderCanvasNodes(
 | Requirements | 9.1, 9.2, 9.3, 9.4, 9.5, 9.6 |
 
 **Responsibilities & Constraints**
-- Walk component node trees to find slot and canvas children
-- Apply detection strategy:
-  1. **`node.type === "SLOT"`** (primary): Direct type check on serialized/traversed nodes — confirmed via real Figma export data to produce `"type": "SLOT"` in JSON output. SLOT nodes have standard frame-like properties (size, opacity, visible, children, clipContent) but no auto-layout.
-  2. **DslCanvas plugin data**: Check `getPluginData('dsl-canvas')` for `isCanvas: true` — identifies DSL-authored canvas regions
-  3. **`componentPropertyDefinitions`** (secondary confirmation): Parent ComponentNode's `componentPropertyDefinitions` contains `"Slot#N:M": { "type": "SLOT" }` entries — useful for correlating slot names with property keys
-- For SLOT-type nodes that also have DslCanvas plugin data, tag as `"dslCanvas"` (DslCanvas took over a native slot)
-- For SLOT-type nodes without DslCanvas data, tag as `"nativeSlot"`
-- Non-SLOT nodes with DslCanvas plugin data are tagged as `"dslCanvas"`
+- Detect slots within component node trees using a combined strategy:
+  1. **`componentPropertyDefinitions`** (primary, universal): Read the parent ComponentNode's `componentPropertyDefinitions`. Entries with `"type": "SLOT"` indicate slots. The key format is `"{LayerName}#{N}:{M}"` — extract the name before `#` to match to children by their `name` property. This catches **both** slot creation methods:
+     - "Wrap in new slot" → creates `type: "SLOT"` node (wraps original content)
+     - "Convert to slot" → keeps `type: "FRAME"` but adds property definition
+  2. **`node.type === "SLOT"`** (supplementary): Direct type check catches wrapped slots even without componentPropertyDefinitions access. SLOT nodes have frame-like properties (size, opacity, visible, children, clipContent) but no auto-layout.
+  3. **DslCanvas plugin data**: Check `getPluginData('dsl-canvas')` for `isCanvas: true` — identifies DSL-authored canvas regions
+- For detected slots that also have DslCanvas plugin data, tag as `"dslCanvas"` (DslCanvas took over a slot)
+- For detected slots without DslCanvas data, tag as `"nativeSlot"`
+- Non-slot nodes with DslCanvas plugin data are tagged as `"dslCanvas"`
 - Support detection in any component, including designer-authored ones
+- Track whether the detected slot is a wrapped slot (`type: "SLOT"`) or converted slot (`type: "FRAME"`) for downstream processing
 
 **Dependencies**
-- Inbound: Figma SceneNode tree or serialized PluginNodeDef tree — from component export (P0)
+- Inbound: Figma ComponentNode/ComponentSetNode — from component export (P0)
 - Outbound: SlotDetectionResult array — consumed by ImageCapture (P0)
-- External: Figma Plugin API — node traversal, getPluginData (P0)
+- External: Figma Plugin API — node traversal, getPluginData, componentPropertyDefinitions (P0)
 
 **Contracts**: Service [x]
 
@@ -365,38 +379,44 @@ function renderCanvasNodes(
 
 ```typescript
 type SlotSourceType = 'dslCanvas' | 'nativeSlot';
+type SlotNodeKind = 'wrapped' | 'converted';
 
 interface SlotDetectionResult {
-  /** The detected slot/canvas node */
+  /** The detected slot/canvas node (SLOT node for wrapped, FRAME node for converted) */
   node: SceneNode;
-  /** Name for the slot (canvasName or slot property name or layer name) */
+  /** Name for the slot (from componentPropertyDefinitions key or canvasName) */
   slotName: string;
   /** Source classification */
   sourceType: SlotSourceType;
-  /** Detection confidence */
-  confidence: 'high' | 'medium';
+  /** Whether this is a wrapped slot (type: SLOT) or converted slot (type: FRAME) */
+  slotNodeKind: SlotNodeKind;
+  /** The componentPropertyDefinitions key (e.g., "Footer#1:3") if detected via property definitions */
+  propertyKey?: string;
   /** Detection method used */
-  detectedVia: 'nodeType' | 'pluginData' | 'componentPropertyDefinitions';
+  detectedVia: 'componentPropertyDefinitions' | 'nodeType' | 'pluginData';
 }
 
 /**
- * Detect all slot-like regions within a component node tree.
- * Returns results ordered by confidence (high first).
+ * Detect all slot and canvas regions within a component node tree.
+ * Uses componentPropertyDefinitions as primary detection (universal),
+ * supplemented by node.type === "SLOT" and DslCanvas plugin data.
  */
 function detectSlots(componentNode: ComponentNode | ComponentSetNode): SlotDetectionResult[];
 ```
 
 - Preconditions: `componentNode` is a valid Figma component or component set
-- Postconditions: All detectable slots returned with classification and confidence
-- Invariants: `node.type === "SLOT"` detection always produces high confidence; DslCanvas plugin data takes priority for source classification
+- Postconditions: All detectable slots returned with classification and kind
+- Invariants: DslCanvas plugin data takes priority for source classification; `componentPropertyDefinitions` catches both creation methods
 
 **Implementation Notes**
 - Create as plugin/src/slot-detector.ts (new file, single responsibility)
-- Primary detection: iterate children and check `child.type === "SLOT"` — this is the most reliable method confirmed by real export data
-- For DslCanvas classification: check `node.getPluginData('dsl-canvas')` on each SLOT node
+- **Primary detection**: Read `componentNode.componentPropertyDefinitions`, filter for entries with `type === "SLOT"`. Parse key format `"{LayerName}#{N}:{M}"` — extract name before `#` to match children by `node.name`.
+- **Determine slotNodeKind**: If matched child has `(node.type as string) === "SLOT"` → `wrapped`; if `type === "FRAME"` → `converted`
+- **Supplementary detection**: Also scan children for `(node.type as string) === "SLOT"` to catch wrapped slots that may not have componentPropertyDefinitions (edge case)
+- **DslCanvas classification**: Check `node.getPluginData('dsl-canvas')` on each detected node
 - TypeScript note: `"SLOT"` is not in `@figma/plugin-typings` NodeType union yet — use `(node.type as string) === "SLOT"` or extend typings locally
-- Correlate with `componentPropertyDefinitions` for slot property name extraction (the key format is `"Slot#N:M"`)
-- SLOT nodes behave like frames: they have `children`, `size`, `opacity`, `visible`, `clipContent` but no auto-layout properties
+- Wrapped SLOT nodes have frame-like properties (children, size, opacity, visible, clipContent) but NO auto-layout
+- Converted FRAME nodes retain ALL original properties including auto-layout
 - Export from plugin modules
 
 ---
