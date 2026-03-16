@@ -26,4 +26,5 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-16 — Spotify Dark](2026-03-16-spotify-dark.md) — 0 issues found, 0 pipeline fixes | Features: dark fills, cornerRadius 9999 (pills), horizontal auto-layout, gradient fills, small text
 - [2026-03-14 — Travel Cards](2026-03-14-travel-cards.md) — 0 issues found, 0 pipeline fixes | Features: cornerRadius, clipContent, strokes, textAutoResize:HEIGHT, FILL sizing, SPACE_BETWEEN, nested auto-layout
