@@ -434,11 +434,17 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         comp.visible = def.visible;
         setAutoLayoutConfig(comp, def);
 
-        // Register component properties
-        // Skip VARIANT properties — they are only valid on COMPONENT_SET nodes.
+        // Register component properties (non-VARIANT, non-SLOT).
+        // SLOT properties require a child node ID as defaultValue, so they
+        // are deferred until after children are created.
+        const deferredSlotProps: Array<[string, { type: string }]> = [];
         if (def.componentPropertyDefinitions) {
           for (const [propName, propDef] of Object.entries(def.componentPropertyDefinitions)) {
             if (propDef.type === 'VARIANT') continue;
+            if (propDef.type === 'SLOT') {
+              deferredSlotProps.push([propName, propDef]);
+              continue;
+            }
             comp.addComponentProperty(propName, propDef.type as 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', propDef.defaultValue as string);
           }
         }
@@ -448,6 +454,22 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         for (const child of def.children) {
           await createNode(child, comp);
         }
+
+        // Now register deferred SLOT properties using created child node IDs
+        for (const [propName] of deferredSlotProps) {
+          // Extract layer name from property key format "LayerName#nodeId"
+          const hashIdx = propName.lastIndexOf('#');
+          const slotLayerName = hashIdx > 0 ? propName.slice(0, hashIdx) : propName;
+          const matchingChild = comp.children.find(c => c.name === slotLayerName);
+          if (matchingChild) {
+            try {
+              comp.addComponentProperty(slotLayerName, 'SLOT' as ComponentPropertyType, matchingChild.id);
+            } catch (e) {
+              errors.push(`Failed to add SLOT property "${slotLayerName}" to "${def.name}": ${e instanceof Error ? e.message : String(e)}`);
+            }
+          }
+        }
+
         componentMap.set(def.name, comp);
         node = comp;
         break;
@@ -503,9 +525,11 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
 
           // Register shared component properties on the set (not on variant children).
           // Uses extracted helpers from serializer.ts for testability.
+          // SLOT properties are skipped — they require child node IDs and belong on individual components.
           const sharedPropDefs = collectSharedPropDefs(def.children);
           if (sharedPropDefs) {
             for (const [propName, propDef] of getRegistrableProperties(sharedPropDefs)) {
+              if (propDef.type === 'SLOT') continue;
               try {
                 set.addComponentProperty(propName, propDef.type as 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', propDef.defaultValue as string);
               } catch (e) {
