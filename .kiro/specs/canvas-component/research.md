@@ -38,17 +38,20 @@
   - [Use slots in Figma](https://help.figma.com/hc/en-us/articles/38231200344599-Use-slots-to-build-flexible-components-in-Figma)
   - [Custom Elements Manifest and Figma Code Connect](https://jamesiv.es/blog/frontend/javascript/2025/09/21/custom-elements-manifest-and-figma-code-connect/)
   - [Schema 2025 announcements](https://help.figma.com/hc/en-us/articles/35794667554839-What-s-new-from-Schema-2025)
+  - **Actual DSL JSON captured from plugin** (before/after converting a RECTANGLE frame into a Slot)
 - **Findings**:
-  - `"SLOT"` is NOT in the `NodeType` union in current Plugin API typings
-  - Slots are in open beta; SlotNodes likely appear as FRAME nodes in Plugin API
-  - Detection approach: check `componentPropertyDefinitions` for entries with `type: "SLOT"`, and examine children layer names for slot naming patterns
-  - Code Connect uses `figma.slot`, `figma.instance`, `figma.children` for slot mapping — these are Code Connect APIs, not Plugin API node types
-  - Slots are "inherently open" — they accept any content, no enforcement
-  - **Cannot create** slots programmatically, but **can detect** existing ones
+  - `"SLOT"` is NOT in the `NodeType` union in current Plugin API **typings**, BUT the actual Figma runtime DOES expose `node.type === "SLOT"` for slot nodes
+  - **Confirmed via real export data**: When a frame is converted to a Slot in Figma, the serialized JSON shows `"type": "SLOT"` directly — the serializer's `node.type` property captures it
+  - `componentPropertyDefinitions` also gets a corresponding `"Slot#N:M": { "type": "SLOT" }` entry on the parent component
+  - The SLOT node wraps existing content as children (e.g., a RECTANGLE that was inside the frame becomes a child of the SLOT node)
+  - SLOT nodes have standard frame-like properties: size, opacity, visible, children, clipContent — but no auto-layout properties
+  - **Cannot create** slots programmatically, but **can detect** existing ones via `node.type === "SLOT"`
+  - `ComponentPropertyType` already includes `'SLOT'` in dsl-core/src/types.ts
 - **Implications**:
-  - Cannot rely on `node.type === "SLOT"` for detection
-  - Must use heuristic detection: componentPropertyDefinitions → naming patterns → plugin data
-  - Detection is best-effort since the API is still in beta
+  - **Primary detection**: `node.type === "SLOT"` — reliable, high confidence, directly from Figma runtime
+  - **Secondary confirmation**: `componentPropertyDefinitions` entry with `type: "SLOT"` on parent component
+  - Detection is straightforward, not heuristic-based — SLOT is a distinct node type at runtime even if typings lag
+  - The serializer already captures `node.type` as-is, so SLOT nodes flow through naturally
 
 ### Figma exportAsync API
 - **Context**: Need to capture pixel-perfect images of slot content at export time
@@ -107,8 +110,9 @@
 | Inline base64 only | Always embed images as base64 in JSON | Simple, no new dependencies | Large payloads bloat JSON | Adequate for small exports |
 | ZIP only | Always package as ZIP | Consistent format, handles any size | Overkill for small, requires ZIP lib | Too heavy for small |
 | Hybrid base64/ZIP | Base64 below threshold, ZIP above | Best UX for both sizes | Two code paths, threshold tuning | Selected per requirements |
-| componentPropertyDefs detection | Check SLOT type in property definitions | Most reliable signal | May not cover all cases | Primary detection method |
-| Naming convention detection | Check `[Slot]` prefix on layer names | Works for DSL-created slots | Fragile for designer-created content | Secondary fallback |
+| node.type === SLOT detection | Check serialized node type directly | Reliable, direct from Figma runtime | Typings may lag; SLOT not in NodeType union yet | Primary detection method — confirmed via real data |
+| componentPropertyDefs detection | Check SLOT type in property definitions | Confirms slot at component level | Requires traversal to parent component | Secondary confirmation |
+| Naming convention detection | Check `[Slot]` prefix on layer names | Works for DSL-created slots | Fragile for designer-created content | Last resort fallback |
 
 ## Design Decisions
 
@@ -127,14 +131,14 @@
 - **Rationale**: Reuses existing renderer without modification; HMR support from Vite
 
 ### Decision: Slot Detection Strategy
-- **Context**: Need to identify Figma native slots without a public SLOT NodeType
+- **Context**: Need to identify Figma native slots. Real export data confirms `node.type === "SLOT"` is available at runtime despite missing from Plugin API typings.
 - **Alternatives Considered**:
-  1. `node.type === "SLOT"` — not available in typings
-  2. `componentPropertyDefinitions` for `type: "SLOT"` — available on ComponentNode
-  3. Naming convention detection (`[Slot]` prefix) — fragile but usable
-- **Selected Approach**: Tiered detection: (1) DslCanvas plugin data (highest priority), (2) `componentPropertyDefinitions` for SLOT-type, (3) naming convention fallback
-- **Rationale**: `componentPropertyDefinitions` is the most reliable signal for designer-created slots. Plugin data provides certainty for DSL-created content.
-- **Trade-offs**: Detection may miss edge cases; beta API may change
+  1. `node.type === "SLOT"` — confirmed working via real serialized JSON data
+  2. `componentPropertyDefinitions` for `type: "SLOT"` — available on ComponentNode, provides parent-level confirmation
+  3. Naming convention detection (`[Slot]` prefix) — fragile, last resort
+- **Selected Approach**: Primary: `node.type === "SLOT"` (direct, high confidence). Secondary: DslCanvas plugin data for canvas regions. Tertiary: `componentPropertyDefinitions` for edge cases.
+- **Rationale**: Real export data proves `node.type === "SLOT"` is the most direct and reliable detection method. SLOT nodes have children, size, and standard frame-like properties, making them straightforward to process.
+- **Trade-offs**: Plugin API typings don't include SLOT yet, so TypeScript type narrowing requires a string comparison or type assertion. API may change during beta.
 
 ### Decision: Hybrid base64/ZIP Export
 - **Context**: Bundle images with JSON, handling both small and large payloads

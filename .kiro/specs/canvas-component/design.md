@@ -28,8 +28,9 @@
 The current pipeline flows: DSL definition → compile (with layout) → render to PNG / export to Figma JSON → Figma plugin import. Slots are FRAME nodes annotated with `isSlot: true` metadata. The renderer uses @napi-rs/canvas (Node-native). The plugin exports via `computeChangeset()` and `computeCompleteExport()`, with base64 image embedding already proven for changeset image data.
 
 Key constraints:
-- Figma's `SLOT` NodeType is NOT in Plugin API typings (beta feature)
-- Slot detection must use `componentPropertyDefinitions` with type `"SLOT"` and naming conventions
+- Figma's `SLOT` NodeType is NOT in Plugin API **typings** yet (beta), but the runtime DOES expose `node.type === "SLOT"` — confirmed via real export data
+- The existing serializer captures `node.type` as-is, so SLOT nodes flow through naturally as `"type": "SLOT"` in the exported JSON
+- `componentPropertyDefinitions` gets a `"Slot#N:M": { "type": "SLOT" }` entry when a slot exists — provides parent-level confirmation
 - Plugin sandbox has no Node.js APIs — ZIP generation requires pure JS library
 
 ### Architecture Pattern & Boundary Map
@@ -150,14 +151,16 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    A[Walk component children] --> B{Has dsl-canvas plugin data?}
-    B -->|Yes| C[Tag as dslCanvas source]
-    B -->|No| D{Parent has componentPropertyDefinitions type SLOT?}
-    D -->|Yes| E[Tag as nativeSlot source]
-    D -->|No| F{Layer name matches slot pattern?}
-    F -->|Yes| G[Tag as nativeSlot source - low confidence]
+    A[Walk component children] --> B{node.type === SLOT?}
+    B -->|Yes| C{Has dsl-canvas plugin data?}
+    C -->|Yes| D[Tag as dslCanvas source - high confidence]
+    C -->|No| E[Tag as nativeSlot source - high confidence]
+    B -->|No| F{Has dsl-canvas plugin data?}
+    F -->|Yes| G[Tag as dslCanvas source - high confidence]
     F -->|No| H[Skip - not a slot]
 ```
+
+The SLOT node type is confirmed via real Figma export data. When a designer converts a frame to a Slot, the serialized JSON shows `"type": "SLOT"` directly. The parent component also gets a `componentPropertyDefinitions` entry with `"type": "SLOT"`. This eliminates the need for heuristic detection.
 
 ## Requirements Traceability
 
@@ -341,19 +344,20 @@ function renderCanvasNodes(
 | Requirements | 9.1, 9.2, 9.3, 9.4, 9.5, 9.6 |
 
 **Responsibilities & Constraints**
-- Walk component node trees to find slot-like children
-- Apply tiered detection strategy:
-  1. **DslCanvas plugin data** (highest priority): Check `getPluginData('dsl-canvas')` for `isCanvas: true`
-  2. **componentPropertyDefinitions**: Check parent ComponentNode for properties with `type: "SLOT"`, match children to slot property names
-  3. **Naming convention fallback**: Check layer names matching `[Slot] *` pattern
-- Tag each detected slot with source type (`"dslCanvas"` or `"nativeSlot"`)
-- When a node matches both DslCanvas and native slot detection, prefer DslCanvas classification
+- Walk component node trees to find slot and canvas children
+- Apply detection strategy:
+  1. **`node.type === "SLOT"`** (primary): Direct type check on serialized/traversed nodes — confirmed via real Figma export data to produce `"type": "SLOT"` in JSON output. SLOT nodes have standard frame-like properties (size, opacity, visible, children, clipContent) but no auto-layout.
+  2. **DslCanvas plugin data**: Check `getPluginData('dsl-canvas')` for `isCanvas: true` — identifies DSL-authored canvas regions
+  3. **`componentPropertyDefinitions`** (secondary confirmation): Parent ComponentNode's `componentPropertyDefinitions` contains `"Slot#N:M": { "type": "SLOT" }` entries — useful for correlating slot names with property keys
+- For SLOT-type nodes that also have DslCanvas plugin data, tag as `"dslCanvas"` (DslCanvas took over a native slot)
+- For SLOT-type nodes without DslCanvas data, tag as `"nativeSlot"`
+- Non-SLOT nodes with DslCanvas plugin data are tagged as `"dslCanvas"`
 - Support detection in any component, including designer-authored ones
 
 **Dependencies**
-- Inbound: Figma SceneNode tree — from component export (P0)
+- Inbound: Figma SceneNode tree or serialized PluginNodeDef tree — from component export (P0)
 - Outbound: SlotDetectionResult array — consumed by ImageCapture (P0)
-- External: Figma Plugin API — node traversal, getPluginData, componentPropertyDefinitions (P0)
+- External: Figma Plugin API — node traversal, getPluginData (P0)
 
 **Contracts**: Service [x]
 
@@ -370,9 +374,9 @@ interface SlotDetectionResult {
   /** Source classification */
   sourceType: SlotSourceType;
   /** Detection confidence */
-  confidence: 'high' | 'medium' | 'low';
+  confidence: 'high' | 'medium';
   /** Detection method used */
-  detectedVia: 'pluginData' | 'componentPropertyDefinitions' | 'namingConvention';
+  detectedVia: 'nodeType' | 'pluginData' | 'componentPropertyDefinitions';
 }
 
 /**
@@ -384,12 +388,15 @@ function detectSlots(componentNode: ComponentNode | ComponentSetNode): SlotDetec
 
 - Preconditions: `componentNode` is a valid Figma component or component set
 - Postconditions: All detectable slots returned with classification and confidence
-- Invariants: DslCanvas plugin data always takes priority over other detection methods
+- Invariants: `node.type === "SLOT"` detection always produces high confidence; DslCanvas plugin data takes priority for source classification
 
 **Implementation Notes**
 - Create as plugin/src/slot-detector.ts (new file, single responsibility)
-- For `componentPropertyDefinitions`, iterate entries and check `type === "SLOT"`
-- For naming convention, reuse `isSlotFrameName()` from existing slot-utils.ts
+- Primary detection: iterate children and check `child.type === "SLOT"` — this is the most reliable method confirmed by real export data
+- For DslCanvas classification: check `node.getPluginData('dsl-canvas')` on each SLOT node
+- TypeScript note: `"SLOT"` is not in `@figma/plugin-typings` NodeType union yet — use `(node.type as string) === "SLOT"` or extend typings locally
+- Correlate with `componentPropertyDefinitions` for slot property name extraction (the key format is `"Slot#N:M"`)
+- SLOT nodes behave like frames: they have `children`, `size`, `opacity`, `visible`, `clipContent` but no auto-layout properties
 - Export from plugin modules
 
 ---
@@ -760,7 +767,7 @@ erDiagram
     BundledExport ||--o{ SlotImageEntry : contains
 ```
 
-Canvas metadata flows as annotations on existing node structures. Slot detection and image capture introduce new types scoped to the plugin layer.
+Canvas metadata flows as annotations on existing node structures. Figma native Slots appear as `"type": "SLOT"` nodes in serialized JSON — frame-like with children, size, and clipContent but no auto-layout properties. The serializer captures them naturally since it reads `node.type` as-is. Slot detection and image capture introduce new types scoped to the plugin layer.
 
 ### Data Contracts & Integration
 
@@ -807,7 +814,7 @@ Canvas metadata flows as annotations on existing node structures. Slot detection
 
 **Slot Detection Errors (plugin)**:
 - Node tree inaccessible → skip component, log warning
-- componentPropertyDefinitions not available → fall through to naming convention
+- `node.type` not available or unexpected → skip node, continue traversal
 - No slots detected → empty SlotDetectionResult array (not an error)
 
 **Image Capture Errors (plugin)**:
@@ -830,7 +837,7 @@ Canvas metadata flows as annotations on existing node structures. Slot detection
 - Compiler passthrough: isCanvas/canvasName/canvasScale preserved
 - Compiler validation: mutual exclusivity of isSlot and isCanvas
 - `renderCanvasNodes()`: extracts canvas nodes, renders each, returns correct Map
-- `SlotDetector.detectSlots()`: detects DslCanvas via plugin data, native slots via componentPropertyDefinitions, fallback via naming, priority ordering, confidence tagging
+- `SlotDetector.detectSlots()`: detects native slots via `type === "SLOT"`, DslCanvas via plugin data, source type classification, property name extraction from componentPropertyDefinitions
 - `ExportBundler.bundleExport()`: base64 mode below threshold, ZIP mode above threshold, empty images map, mixed source types
 - `ImageCapture.captureSlotImages()`: calls exportAsync with correct scale, handles per-slot failure, reports progress
 
