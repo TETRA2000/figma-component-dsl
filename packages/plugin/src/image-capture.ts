@@ -24,7 +24,7 @@ export interface CaptureOptions {
   /** Progress callback */
   onProgress?: (current: number, total: number, slotName: string) => void;
   /** Abort signal for cancellation — checked between captures */
-  signal?: AbortSignal;
+  signal?: { aborted: boolean };
 }
 
 // Minimal exportable node interface for testability

@@ -989,7 +989,16 @@ function computeCompleteExport(nodeIds: ReadonlyArray<string>, pageName: string)
 
 // --- Image Bundle Pipeline ---
 
-let exportAbortController: AbortController | null = null;
+// Minimal AbortController polyfill for Figma plugin sandbox
+class PluginAbortSignal {
+  aborted = false;
+}
+class PluginAbortController {
+  signal = new PluginAbortSignal();
+  abort() { this.signal.aborted = true; }
+}
+
+let exportAbortController: PluginAbortController | null = null;
 
 /**
  * Run slot detection → image capture → export bundling pipeline on exported nodes.
@@ -1000,7 +1009,7 @@ async function runImageBundlePipeline(
   exportJson: Record<string, unknown>,
   scale: number = 2,
 ): Promise<BundledExport> {
-  exportAbortController = new AbortController();
+  exportAbortController = new PluginAbortController();
 
   // Detect slots in all exported component nodes
   const allDetected: import('./slot-detector.js').SlotDetectionResult[] = [];
