@@ -26,6 +26,10 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-16 — E-commerce Product](2026-03-16-ecommerce-product.md) — 0 issues, 0 fixes | Features: two-column layout, gradient image, strikethrough price, size pills, text wrapping
+- [2026-03-16 — Task Manager](2026-03-16-task-manager.md) — 0 issues, 0 fixes | Features: Kanban columns, priority badges, ellipse avatars, SPACE_BETWEEN, text wrapping
+- [2026-03-16 — Music Player](2026-03-16-music-player.md) — 0 issues, 0 fixes | Features: dark theme, gradient album art, highlighted row, progress bar, SPACE_BETWEEN
+- [2026-03-16 — Weather App](2026-03-16-weather-app.md) — 0 issues, 0 fixes | Features: multi-stop gradient, 80px typography, forecast row, detail grid, FILL sizing
 - [2026-03-16 — Fitness Tracker](2026-03-16-fitness-tracker.md) — 0 issues, 0 fixes | Features: dark theme, 8-digit hex alpha, ellipse rings, gradient accents, SPACE_BETWEEN, clipContent progress
 - [2026-03-16 — Real Estate Listings](2026-03-16-real-estate-listings.md) — 0 issues, 0 fixes | Features: dark header, cornerRadii, pill chips, gradient images, sidebar layout, ellipse avatar
 - [2026-03-16 — Education Platform](2026-03-16-education-platform.md) — 0 issues, 0 fixes | Features: deep nesting, progress bars, textDecoration strikethrough, gradient covers, ellipse badges

@@ -1,0 +1,29 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 480px;
+}
+
+.mainImage {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+}
+
+.thumbnailRow {
+  display: flex;
+  gap: 10px;
+}
+
+.thumbnail {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.thumbnail:hover {
+  opacity: 0.8 !important;
+}
