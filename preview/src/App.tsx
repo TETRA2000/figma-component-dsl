@@ -1,7 +1,12 @@
-import { PortfolioShowcaseShowcase } from './pages/_generated/PortfolioShowcaseShowcase';
+import './App.css';
 
 function App() {
-  return <PortfolioShowcaseShowcase />;
+  return (
+    <div className="app">
+      <h1>Figma Component DSL Preview</h1>
+      <p>Select a component to preview.</p>
+    </div>
+  );
 }
 
 export default App;
