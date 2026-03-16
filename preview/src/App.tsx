@@ -1,7 +1,7 @@
-import { AnalyticsDashboardShowcase } from './pages/_generated/AnalyticsDashboardShowcase';
+import { MinimalBlogShowcase } from './pages/_generated/MinimalBlogShowcase';
 
 function App() {
-  return <AnalyticsDashboardShowcase />;
+  return <MinimalBlogShowcase />;
 }
 
 export default App;
