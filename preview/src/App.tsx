@@ -1,7 +1,7 @@
-import { NeonGamingShowcase } from './pages/_generated/NeonGamingShowcase';
+import { BankingAppShowcase } from './pages/_generated/BankingAppShowcase';
 
 function App() {
-  return <NeonGamingShowcase />;
+  return <BankingAppShowcase />;
 }
 
 export default App;
