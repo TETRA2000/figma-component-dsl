@@ -97,7 +97,7 @@ graph TB
 | DSL Core | @figma-dsl/dsl-core | CanvasProps type, canvas() builder, SlotImageMap type | Extends types.ts and nodes.ts |
 | Compiler | @figma-dsl/compiler | Canvas metadata passthrough, validation | No new dependencies |
 | Renderer | @figma-dsl/renderer + @napi-rs/canvas | PNG rendering of canvas subtrees | New renderCanvasNodes utility |
-| Preview | Vite 8 + custom plugin | Dev server middleware for server-side rendering | New vite-plugin-dsl-canvas |
+| Preview | Vite 7 + custom plugin | Dev server middleware for server-side rendering | New vite-plugin-dsl-canvas |
 | React | React 19 | DslCanvas component | CSS Modules for styling |
 | Figma Plugin | Figma Plugin API + fflate | Slot detection, image capture, ZIP packaging | fflate ~8KB for ZIP support |
 | CLI | @figma-dsl/cli | Per-canvas PNG extraction, batch processing | Extends existing commands |
@@ -585,9 +585,9 @@ function bundleExport(
 | Requirements | 10.1, 10.6, 11.1 |
 
 **Implementation Notes**
-- In `computeChangeset()` and `computeCompleteExport()`: after producing export JSON, run SlotDetector → ImageCapture → ExportBundler pipeline
+- In `computeChangeset()` and `computeCompleteExport()`: after producing export JSON, run SlotDetector → ImageCapture → ExportBundler pipeline. For InstanceNode, resolve to `instance.mainComponent` before calling `detectSlots`; if `mainComponent` is null (remote component), skip slot detection for that instance.
 - Update `figma.ui.postMessage` to send `BundledExport` result type
-- Update UI to handle both JSON and ZIP download formats
+- Update UI to handle both JSON and ZIP download formats: for JSON format, use clipboard copy (existing behavior); for ZIP format, create a Blob from `zipBytes`, generate a URL via `URL.createObjectURL()`, and trigger download via a hidden `<a>` element with `download` attribute
 - Progress feedback via `figma.ui.postMessage({ type: 'export-progress', ... })`
 - Cancel button in UI sends `{ type: 'export-cancel' }` message; plugin core calls `abortController.abort()` to signal ImageCapture
 - WebSocket relay in `handleWsMessage()` sends bundled result to MCP server
