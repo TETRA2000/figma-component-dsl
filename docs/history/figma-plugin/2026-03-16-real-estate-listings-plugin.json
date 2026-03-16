@@ -1,0 +1,1793 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "Real Estate Listings Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "RealEstatePage",
+      "size": {
+        "x": 1440,
+        "y": 614
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "Header",
+          "size": {
+            "x": 1440,
+            "y": 233.2
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "Find Your Dream Home",
+              "size": {
+                "x": 446.3299865722656,
+                "y": 48
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Find Your Dream Home",
+              "fontSize": 40,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 700,
+              "fontStyle": "Bold"
+            },
+            {
+              "type": "TEXT",
+              "name": "Browse thousands of listings in your area",
+              "size": {
+                "x": 311.1000061035156,
+                "y": 19.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.5803921568627451,
+                    "g": 0.6392156862745098,
+                    "b": 0.7215686274509804,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Browse thousands of listings in your area",
+              "fontSize": 16,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 400,
+              "fontStyle": "Regular"
+            },
+            {
+              "type": "FRAME",
+              "name": "SearchBar",
+              "size": {
+                "x": 351.7799987792969,
+                "y": 46
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Search by city, neighborhood, or ZIP code...",
+                  "size": {
+                    "x": 311.7799987792969,
+                    "y": 18
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.5803921568627451,
+                        "g": 0.6392156862745098,
+                        "b": 0.7215686274509804,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Search by city, neighborhood, or ZIP code...",
+                  "fontSize": 15,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 12,
+              "paddingTop": 14,
+              "paddingRight": 20,
+              "paddingBottom": 14,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            }
+          ],
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.058823529411764705,
+                "g": 0.09019607843137255,
+                "b": 0.16470588235294117,
+                "a": 1
+              },
+              "opacity": 1
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 12,
+          "paddingTop": 48,
+          "paddingRight": 120,
+          "paddingBottom": 48,
+          "paddingLeft": 120,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "Filters",
+          "size": {
+            "x": 1440,
+            "y": 79.6
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Filter: All",
+              "size": {
+                "x": 48.260000228881836,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "All",
+                  "size": {
+                    "x": 16.260000228881836,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "All",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.058823529411764705,
+                    "g": 0.09019607843137255,
+                    "b": 0.16470588235294117,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "FRAME",
+              "name": "Filter: Houses",
+              "size": {
+                "x": 78.45000076293945,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Houses",
+                  "size": {
+                    "x": 46.45000076293945,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.39215686274509803,
+                        "g": 0.4549019607843137,
+                        "b": 0.5450980392156862,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Houses",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.88,
+                    "g": 0.88,
+                    "b": 0.88,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "FRAME",
+              "name": "Filter: Apartments",
+              "size": {
+                "x": 103.33999633789062,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Apartments",
+                  "size": {
+                    "x": 71.33999633789062,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.39215686274509803,
+                        "g": 0.4549019607843137,
+                        "b": 0.5450980392156862,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Apartments",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.88,
+                    "g": 0.88,
+                    "b": 0.88,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "FRAME",
+              "name": "Filter: Condos",
+              "size": {
+                "x": 79.59000015258789,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Condos",
+                  "size": {
+                    "x": 47.59000015258789,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.39215686274509803,
+                        "g": 0.4549019607843137,
+                        "b": 0.5450980392156862,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Condos",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.88,
+                    "g": 0.88,
+                    "b": 0.88,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "FRAME",
+              "name": "Filter: Townhouses",
+              "size": {
+                "x": 109.7300033569336,
+                "y": 31.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Townhouses",
+                  "size": {
+                    "x": 77.7300033569336,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.39215686274509803,
+                        "g": 0.4549019607843137,
+                        "b": 0.5450980392156862,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Townhouses",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.88,
+                    "g": 0.88,
+                    "b": 0.88,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 15.8,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 8,
+              "paddingRight": 16,
+              "paddingBottom": 8,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "MIN"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 10,
+          "paddingTop": 24,
+          "paddingRight": 120,
+          "paddingBottom": 24,
+          "paddingLeft": 120,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "MainContent",
+          "size": {
+            "x": 1440,
+            "y": 301.2
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "PropertyGrid",
+              "size": {
+                "x": 1019.5,
+                "y": 301.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Property: 1234 Maple Street",
+                  "size": {
+                    "x": 280,
+                    "y": 301.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "PropertyImage",
+                      "size": {
+                        "x": 280,
+                        "y": 160
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.09019607843137255,
+                                "b": 0.16470588235294117,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.2,
+                                "g": 0.2549019607843137,
+                                "b": 0.3333333333333333,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.7071067811865475,
+                              0.7071067811865476,
+                              0.49999999999999994
+                            ],
+                            [
+                              -0.7071067811865476,
+                              -0.7071067811865475,
+                              1.2071067811865475
+                            ]
+                          ]
+                        }
+                      ],
+                      "cornerRadius": null
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "PropertyInfo",
+                      "size": {
+                        "x": 201.93000030517578,
+                        "y": 129.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "$450,000",
+                          "size": {
+                            "x": 108.37000274658203,
+                            "y": 26.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.09019607843137255,
+                                "b": 0.16470588235294117,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$450,000",
+                          "fontSize": 22,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "1234 Maple Street",
+                          "size": {
+                            "x": 121.16999816894531,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "1234 Maple Street",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Downtown, Austin TX",
+                          "size": {
+                            "x": 132.17999267578125,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Downtown, Austin TX",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "PropertyStats",
+                          "size": {
+                            "x": 169.93000030517578,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "3 beds",
+                              "size": {
+                                "x": 39.06999969482422,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "3 beds",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "2 baths",
+                              "size": {
+                                "x": 42.720001220703125,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "2 baths",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "1,850 sqft",
+                              "size": {
+                                "x": 56.13999938964844,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "1,850 sqft",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 16,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 16,
+                      "paddingRight": 16,
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.92,
+                        "g": 0.92,
+                        "b": 0.92,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Property: 567 Lakeview Drive",
+                  "size": {
+                    "x": 280,
+                    "y": 301.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "PropertyImage",
+                      "size": {
+                        "x": 280,
+                        "y": 160
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.09019607843137255,
+                                "b": 0.16470588235294117,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.2,
+                                "g": 0.2549019607843137,
+                                "b": 0.3333333333333333,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.7071067811865475,
+                              0.7071067811865476,
+                              0.49999999999999994
+                            ],
+                            [
+                              -0.7071067811865476,
+                              -0.7071067811865475,
+                              1.2071067811865475
+                            ]
+                          ]
+                        }
+                      ],
+                      "cornerRadius": null
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "PropertyInfo",
+                      "size": {
+                        "x": 205.43999481201172,
+                        "y": 129.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "$725,000",
+                          "size": {
+                            "x": 105.44999694824219,
+                            "y": 26.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.09019607843137255,
+                                "b": 0.16470588235294117,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$725,000",
+                          "fontSize": 22,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "567 Lakeview Drive",
+                          "size": {
+                            "x": 130.38999938964844,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "567 Lakeview Drive",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Westlake Hills, Austin TX",
+                          "size": {
+                            "x": 152.25,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Westlake Hills, Austin TX",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "PropertyStats",
+                          "size": {
+                            "x": 173.43999481201172,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "4 beds",
+                              "size": {
+                                "x": 39.41999816894531,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "4 beds",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "3 baths",
+                              "size": {
+                                "x": 42.849998474121094,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "3 baths",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "2,640 sqft",
+                              "size": {
+                                "x": 59.16999816894531,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "2,640 sqft",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 16,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 16,
+                      "paddingRight": 16,
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.92,
+                        "g": 0.92,
+                        "b": 0.92,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Property: 890 Cedar Park Lane",
+                  "size": {
+                    "x": 280,
+                    "y": 301.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "RECTANGLE",
+                      "name": "PropertyImage",
+                      "size": {
+                        "x": 280,
+                        "y": 160
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.09019607843137255,
+                                "b": 0.16470588235294117,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.2,
+                                "g": 0.2549019607843137,
+                                "b": 0.3333333333333333,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.7071067811865475,
+                              0.7071067811865476,
+                              0.49999999999999994
+                            ],
+                            [
+                              -0.7071067811865476,
+                              -0.7071067811865475,
+                              1.2071067811865475
+                            ]
+                          ]
+                        }
+                      ],
+                      "cornerRadius": null
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "PropertyInfo",
+                      "size": {
+                        "x": 202.45000076293945,
+                        "y": 129.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "$325,000",
+                          "size": {
+                            "x": 106.8499984741211,
+                            "y": 26.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.058823529411764705,
+                                "g": 0.09019607843137255,
+                                "b": 0.16470588235294117,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "$325,000",
+                          "fontSize": 22,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 700,
+                          "fontStyle": "Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "890 Cedar Park Lane",
+                          "size": {
+                            "x": 141.22000122070312,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "890 Cedar Park Lane",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Cedar Park, Austin TX",
+                          "size": {
+                            "x": 135.63999938964844,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Cedar Park, Austin TX",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "PropertyStats",
+                          "size": {
+                            "x": 170.45000076293945,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "2 beds",
+                              "size": {
+                                "x": 38.939998626708984,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "2 beds",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "2 baths",
+                              "size": {
+                                "x": 42.720001220703125,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "2 baths",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "1,200 sqft",
+                              "size": {
+                                "x": 56.790000915527344,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "1,200 sqft",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 16,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 16,
+                      "paddingRight": 16,
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.92,
+                        "g": 0.92,
+                        "b": 0.92,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 24,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Sidebar",
+              "size": {
+                "x": 148.5,
+                "y": 215.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Featured Agent",
+                  "size": {
+                    "x": 111.48999786376953,
+                    "y": 18
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.058823529411764705,
+                        "g": 0.09019607843137255,
+                        "b": 0.16470588235294117,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Featured Agent",
+                  "fontSize": 15,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "AgentCard",
+                  "size": {
+                    "x": 148.5,
+                    "y": 181.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "AgentAvatar",
+                      "size": {
+                        "x": 56,
+                        "y": 56
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.09019607843137255,
+                            "b": 0.16470588235294117,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Sarah Johnson",
+                      "size": {
+                        "x": 108.5,
+                        "y": 18
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.058823529411764705,
+                            "g": 0.09019607843137255,
+                            "b": 0.16470588235294117,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Sarah Johnson",
+                      "fontSize": 15,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "(512) 555-0147",
+                      "size": {
+                        "x": 92.43000030517578,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.39215686274509803,
+                            "g": 0.4549019607843137,
+                            "b": 0.5450980392156862,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "(512) 555-0147",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "RatingRow",
+                      "size": {
+                        "x": 99.31999969482422,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "4.9",
+                          "size": {
+                            "x": 20.540000915527344,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.6196078431372549,
+                                "b": 0.043137254901960784,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "4.9",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "(127 reviews)",
+                          "size": {
+                            "x": 74.77999877929688,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "(127 reviews)",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 4,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.92,
+                        "g": 0.92,
+                        "b": 0.92,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 20,
+                  "paddingRight": 20,
+                  "paddingBottom": 20,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 16,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 32,
+          "paddingTop": 0,
+          "paddingRight": 120,
+          "paddingBottom": 0,
+          "paddingLeft": 120,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.9803921568627451,
+            "g": 0.9803921568627451,
+            "b": 0.9725490196078431,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

@@ -1,0 +1,2465 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "Fitness Tracker Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "FitnessTrackerPage",
+      "size": {
+        "x": 720,
+        "y": 841.5999999999999
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "Header",
+          "size": {
+            "x": 720,
+            "y": 74
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "FitTrack",
+              "size": {
+                "x": 86.76000213623047,
+                "y": 26.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 0.38823529411764707,
+                    "b": 0.2784313725490196,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "FitTrack",
+              "fontSize": 22,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 800,
+              "fontStyle": "Regular"
+            },
+            {
+              "type": "FRAME",
+              "name": "HeaderRight",
+              "size": {
+                "x": 141.86000061035156,
+                "y": 34
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "March 16, 2026",
+                  "size": {
+                    "x": 95.86000061035156,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 0.5019607843137255
+                    }
+                  ],
+                  "characters": "March 16, 2026",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 500,
+                  "fontStyle": "Medium"
+                },
+                {
+                  "type": "ELLIPSE",
+                  "name": "Avatar",
+                  "size": {
+                    "x": 34,
+                    "y": 34
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "GRADIENT_LINEAR",
+                      "opacity": 1,
+                      "gradientStops": [
+                        {
+                          "color": {
+                            "r": 1,
+                            "g": 0.38823529411764707,
+                            "b": 0.2784313725490196,
+                            "a": 1
+                          },
+                          "position": 0
+                        },
+                        {
+                          "color": {
+                            "r": 1,
+                            "g": 0.5490196078431373,
+                            "b": 0,
+                            "a": 1
+                          },
+                          "position": 1
+                        }
+                      ],
+                      "gradientTransform": [
+                        [
+                          -0.7071067811865475,
+                          0.7071067811865476,
+                          0.49999999999999994
+                        ],
+                        [
+                          -0.7071067811865476,
+                          -0.7071067811865475,
+                          1.2071067811865475
+                        ]
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 12,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER"
+            }
+          ],
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.10196078431372549,
+                "g": 0.10196078431372549,
+                "b": 0.10196078431372549,
+                "a": 1
+              },
+              "opacity": 1
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 0.06
+              },
+              "weight": 1,
+              "align": "INSIDE"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 20,
+          "paddingRight": 32,
+          "paddingBottom": 20,
+          "paddingLeft": 32,
+          "primaryAxisAlignItems": "SPACE_BETWEEN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "Content",
+          "size": {
+            "x": 720,
+            "y": 767.5999999999999
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "ActivitySection",
+              "size": {
+                "x": 656,
+                "y": 198.79999999999998
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Activity",
+                  "size": {
+                    "x": 68.58000183105469,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Activity",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "ActivityRings",
+                  "size": {
+                    "x": 656,
+                    "y": 157.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Ring: Move",
+                      "size": {
+                        "x": 80,
+                        "y": 101.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "RingOuter",
+                          "size": {
+                            "x": 80,
+                            "y": 80
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "RingBg",
+                              "size": {
+                                "x": 80,
+                                "y": 80
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.050980392156862744
+                                }
+                              ]
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RingValue",
+                              "size": {
+                                "x": 42.84000015258789,
+                                "y": 40.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "580",
+                                  "size": {
+                                    "x": 42.84000015258789,
+                                    "y": 26.4
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 0.38823529411764707,
+                                        "b": 0.2784313725490196,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "580",
+                                  "fontSize": 22,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "CENTER",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Move",
+                                  "size": {
+                                    "x": 26.40999984741211,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.5019607843137255
+                                    }
+                                  ],
+                                  "characters": "Move",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "CENTER",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "VERTICAL",
+                              "itemSpacing": 2,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "580 / 750 cal",
+                          "size": {
+                            "x": 68.91000366210938,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.34901960784313724
+                            }
+                          ],
+                          "characters": "580 / 750 cal",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ring: Exercise",
+                      "size": {
+                        "x": 80,
+                        "y": 101.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "RingOuter",
+                          "size": {
+                            "x": 80,
+                            "y": 80
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "RingBg",
+                              "size": {
+                                "x": 80,
+                                "y": 80
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.050980392156862744
+                                }
+                              ]
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RingValue",
+                              "size": {
+                                "x": 40.4900016784668,
+                                "y": 40.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "35",
+                                  "size": {
+                                    "x": 27.889999389648438,
+                                    "y": 26.4
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5176470588235295,
+                                        "g": 0.8,
+                                        "b": 0.08627450980392157,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "35",
+                                  "fontSize": 22,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "CENTER",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Exercise",
+                                  "size": {
+                                    "x": 40.4900016784668,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.5019607843137255
+                                    }
+                                  ],
+                                  "characters": "Exercise",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "CENTER",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "VERTICAL",
+                              "itemSpacing": 2,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "35 / 50 min",
+                          "size": {
+                            "x": 59.290000915527344,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.34901960784313724
+                            }
+                          ],
+                          "characters": "35 / 50 min",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Ring: Stand",
+                      "size": {
+                        "x": 80,
+                        "y": 101.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "RingOuter",
+                          "size": {
+                            "x": 80,
+                            "y": 80
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ELLIPSE",
+                              "name": "RingBg",
+                              "size": {
+                                "x": 80,
+                                "y": 80
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 1,
+                                    "g": 1,
+                                    "b": 1,
+                                    "a": 1
+                                  },
+                                  "opacity": 0.050980392156862744
+                                }
+                              ]
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "RingValue",
+                              "size": {
+                                "x": 27.790000915527344,
+                                "y": 40.4
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "10",
+                                  "size": {
+                                    "x": 24.31999969482422,
+                                    "y": 26.4
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.23137254901960785,
+                                        "g": 0.5098039215686274,
+                                        "b": 0.9647058823529412,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "10",
+                                  "fontSize": 22,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "CENTER",
+                                  "fontWeight": 700,
+                                  "fontStyle": "Bold"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "Stand",
+                                  "size": {
+                                    "x": 27.790000915527344,
+                                    "y": 12
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.5019607843137255
+                                    }
+                                  ],
+                                  "characters": "Stand",
+                                  "fontSize": 10,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "CENTER",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "VERTICAL",
+                              "itemSpacing": 2,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "CENTER",
+                          "counterAxisAlignItems": "CENTER",
+                          "layoutSizingHorizontal": "FIXED",
+                          "layoutSizingVertical": "FIXED"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "10 / 12 hr",
+                          "size": {
+                            "x": 46.7400016784668,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.34901960784313724
+                            }
+                          ],
+                          "characters": "10 / 12 hr",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 0.03137254901960784
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.06
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 16,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 28,
+                  "paddingRight": 16,
+                  "paddingBottom": 28,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "SPACE_BETWEEN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 20,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "StepsSection",
+              "size": {
+                "x": 656,
+                "y": 204
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Today's Stats",
+                  "size": {
+                    "x": 119.7300033569336,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Today's Stats",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "StepCounter",
+                  "size": {
+                    "x": 656,
+                    "y": 166.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "StepHeader",
+                      "size": {
+                        "x": 608,
+                        "y": 16.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Steps",
+                          "size": {
+                            "x": 38.09000015258789,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 0.5019607843137255
+                            }
+                          ],
+                          "characters": "Steps",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "84%",
+                          "size": {
+                            "x": 32.349998474121094,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.5176470588235295,
+                                "g": 0.8,
+                                "b": 0.08627450980392157,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "84%",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "SPACE_BETWEEN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "8,432",
+                      "size": {
+                        "x": 104.95999908447266,
+                        "y": 43.199999999999996
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "8,432",
+                      "fontSize": 36,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 800,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "StepBar",
+                      "size": {
+                        "x": 608,
+                        "y": 8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "StepFill",
+                          "size": {
+                            "x": 504,
+                            "y": 8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.5176470588235295,
+                                    "g": 0.8,
+                                    "b": 0.08627450980392157,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.13333333333333333,
+                                    "g": 0.7725490196078432,
+                                    "b": 0.3686274509803922,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  6.123233995736766e-17,
+                                  1,
+                                  -5.551115123125783e-17
+                                ],
+                                [
+                                  -1,
+                                  6.123233995736766e-17,
+                                  1
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 0.050980392156862744
+                        }
+                      ],
+                      "cornerRadius": 4,
+                      "clipContent": true,
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "8,432 / 10,000 steps",
+                      "size": {
+                        "x": 116.37000274658203,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 0.34901960784313724
+                        }
+                      ],
+                      "characters": "8,432 / 10,000 steps",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.10196078431372549,
+                        "g": 0.10196078431372549,
+                        "b": 0.10196078431372549,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.06
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 16,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 24,
+                  "paddingRight": 24,
+                  "paddingBottom": 24,
+                  "paddingLeft": 24,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 16,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "WorkoutsSection",
+              "size": {
+                "x": 656,
+                "y": 236.79999999999998
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "WorkoutsHeader",
+                  "size": {
+                    "x": 656,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Recent Workouts",
+                      "size": {
+                        "x": 150.9499969482422,
+                        "y": 21.599999999999998
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Recent Workouts",
+                      "fontSize": 18,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "See all",
+                      "size": {
+                        "x": 41.369998931884766,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 0.38823529411764707,
+                            "b": 0.2784313725490196,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "See all",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "SPACE_BETWEEN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "WorkoutGrid",
+                  "size": {
+                    "x": 656,
+                    "y": 199.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "WorkoutCol1",
+                      "size": {
+                        "x": 322,
+                        "y": 199.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Workout: Morning Run",
+                          "size": {
+                            "x": 322,
+                            "y": 93.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "WorkoutTop",
+                              "size": {
+                                "x": 132.4800033569336,
+                                "y": 36
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "WorkoutIcon",
+                                  "size": {
+                                    "x": 36,
+                                    "y": 36
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "RUN",
+                                      "size": {
+                                        "x": 25.809999465942383,
+                                        "y": 14.399999999999999
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 0.38823529411764707,
+                                            "b": 0.2784313725490196,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "RUN",
+                                      "fontSize": 12,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "CENTER",
+                                      "fontWeight": 700,
+                                      "fontStyle": "Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 10,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "CENTER",
+                                  "counterAxisAlignItems": "CENTER",
+                                  "layoutSizingHorizontal": "FIXED",
+                                  "layoutSizingVertical": "FIXED"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "WorkoutTitle",
+                                  "size": {
+                                    "x": 86.4800033569336,
+                                    "y": 32
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Morning Run",
+                                      "size": {
+                                        "x": 86.4800033569336,
+                                        "y": 16.8
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 1,
+                                            "b": 1,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Morning Run",
+                                      "fontSize": 14,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    },
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Today",
+                                      "size": {
+                                        "x": 31.770000457763672,
+                                        "y": 13.2
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 1,
+                                            "b": 1,
+                                            "a": 1
+                                          },
+                                          "opacity": 0.34901960784313724
+                                        }
+                                      ],
+                                      "characters": "Today",
+                                      "fontSize": 11,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 400,
+                                      "fontStyle": "Regular"
+                                    }
+                                  ],
+                                  "stackMode": "VERTICAL",
+                                  "itemSpacing": 2,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 10,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "WorkoutStats",
+                              "size": {
+                                "x": 290,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "32 min",
+                                  "size": {
+                                    "x": 42.27000045776367,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5176470588235295,
+                                        "g": 0.8,
+                                        "b": 0.08627450980392157,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "32 min",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "320 cal",
+                                  "size": {
+                                    "x": 46.310001373291016,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 0.38823529411764707,
+                                        "b": 0.2784313725490196,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "320 cal",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "SPACE_BETWEEN",
+                              "counterAxisAlignItems": "MIN",
+                              "layoutSizingHorizontal": "FILL"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.10196078431372549,
+                                "g": 0.10196078431372549,
+                                "b": 0.10196078431372549,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.06
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 14,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 16,
+                          "paddingRight": 16,
+                          "paddingBottom": 16,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Workout: Cycling",
+                          "size": {
+                            "x": 322,
+                            "y": 93.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "WorkoutTop",
+                              "size": {
+                                "x": 97.63999938964844,
+                                "y": 36
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "WorkoutIcon",
+                                  "size": {
+                                    "x": 36,
+                                    "y": 36
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "CYC",
+                                      "size": {
+                                        "x": 26.010000228881836,
+                                        "y": 14.399999999999999
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 0.38823529411764707,
+                                            "b": 0.2784313725490196,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "CYC",
+                                      "fontSize": 12,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "CENTER",
+                                      "fontWeight": 700,
+                                      "fontStyle": "Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 10,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "CENTER",
+                                  "counterAxisAlignItems": "CENTER",
+                                  "layoutSizingHorizontal": "FIXED",
+                                  "layoutSizingVertical": "FIXED"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "WorkoutTitle",
+                                  "size": {
+                                    "x": 51.63999938964844,
+                                    "y": 32
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Cycling",
+                                      "size": {
+                                        "x": 51.150001525878906,
+                                        "y": 16.8
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 1,
+                                            "b": 1,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Cycling",
+                                      "fontSize": 14,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    },
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Yesterday",
+                                      "size": {
+                                        "x": 51.63999938964844,
+                                        "y": 13.2
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 1,
+                                            "b": 1,
+                                            "a": 1
+                                          },
+                                          "opacity": 0.34901960784313724
+                                        }
+                                      ],
+                                      "characters": "Yesterday",
+                                      "fontSize": 11,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 400,
+                                      "fontStyle": "Regular"
+                                    }
+                                  ],
+                                  "stackMode": "VERTICAL",
+                                  "itemSpacing": 2,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 10,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "WorkoutStats",
+                              "size": {
+                                "x": 290,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "45 min",
+                                  "size": {
+                                    "x": 42.47999954223633,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5176470588235295,
+                                        "g": 0.8,
+                                        "b": 0.08627450980392157,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "45 min",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "380 cal",
+                                  "size": {
+                                    "x": 46.47999954223633,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 0.38823529411764707,
+                                        "b": 0.2784313725490196,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "380 cal",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "SPACE_BETWEEN",
+                              "counterAxisAlignItems": "MIN",
+                              "layoutSizingHorizontal": "FILL"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.10196078431372549,
+                                "g": 0.10196078431372549,
+                                "b": 0.10196078431372549,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.06
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 14,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 16,
+                          "paddingRight": 16,
+                          "paddingBottom": 16,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 12,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "WorkoutCol2",
+                      "size": {
+                        "x": 322,
+                        "y": 199.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "Workout: HIIT Session",
+                          "size": {
+                            "x": 322,
+                            "y": 93.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "WorkoutTop",
+                              "size": {
+                                "x": 130.4800033569336,
+                                "y": 36
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "WorkoutIcon",
+                                  "size": {
+                                    "x": 36,
+                                    "y": 36
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "HIT",
+                                      "size": {
+                                        "x": 20.34000015258789,
+                                        "y": 14.399999999999999
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 0.38823529411764707,
+                                            "b": 0.2784313725490196,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "HIT",
+                                      "fontSize": 12,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "CENTER",
+                                      "fontWeight": 700,
+                                      "fontStyle": "Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 10,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "CENTER",
+                                  "counterAxisAlignItems": "CENTER",
+                                  "layoutSizingHorizontal": "FIXED",
+                                  "layoutSizingVertical": "FIXED"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "WorkoutTitle",
+                                  "size": {
+                                    "x": 84.4800033569336,
+                                    "y": 32
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "HIIT Session",
+                                      "size": {
+                                        "x": 84.4800033569336,
+                                        "y": 16.8
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 1,
+                                            "b": 1,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "HIIT Session",
+                                      "fontSize": 14,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    },
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Today",
+                                      "size": {
+                                        "x": 31.770000457763672,
+                                        "y": 13.2
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 1,
+                                            "b": 1,
+                                            "a": 1
+                                          },
+                                          "opacity": 0.34901960784313724
+                                        }
+                                      ],
+                                      "characters": "Today",
+                                      "fontSize": 11,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 400,
+                                      "fontStyle": "Regular"
+                                    }
+                                  ],
+                                  "stackMode": "VERTICAL",
+                                  "itemSpacing": 2,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 10,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "WorkoutStats",
+                              "size": {
+                                "x": 290,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "28 min",
+                                  "size": {
+                                    "x": 42.29999923706055,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5176470588235295,
+                                        "g": 0.8,
+                                        "b": 0.08627450980392157,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "28 min",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "410 cal",
+                                  "size": {
+                                    "x": 43.7400016784668,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 0.38823529411764707,
+                                        "b": 0.2784313725490196,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "410 cal",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "SPACE_BETWEEN",
+                              "counterAxisAlignItems": "MIN",
+                              "layoutSizingHorizontal": "FILL"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.10196078431372549,
+                                "g": 0.10196078431372549,
+                                "b": 0.10196078431372549,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.06
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 14,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 16,
+                          "paddingRight": 16,
+                          "paddingBottom": 16,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "Workout: Yoga Flow",
+                          "size": {
+                            "x": 322,
+                            "y": 93.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "FRAME",
+                              "name": "WorkoutTop",
+                              "size": {
+                                "x": 115.41000366210938,
+                                "y": 36
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "WorkoutIcon",
+                                  "size": {
+                                    "x": 36,
+                                    "y": 36
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "YGA",
+                                      "size": {
+                                        "x": 25.850000381469727,
+                                        "y": 14.399999999999999
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 0.38823529411764707,
+                                            "b": 0.2784313725490196,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "YGA",
+                                      "fontSize": 12,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "CENTER",
+                                      "fontWeight": 700,
+                                      "fontStyle": "Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 1,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 0.050980392156862744
+                                    }
+                                  ],
+                                  "cornerRadius": 10,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "CENTER",
+                                  "counterAxisAlignItems": "CENTER",
+                                  "layoutSizingHorizontal": "FIXED",
+                                  "layoutSizingVertical": "FIXED"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "WorkoutTitle",
+                                  "size": {
+                                    "x": 69.41000366210938,
+                                    "y": 32
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Yoga Flow",
+                                      "size": {
+                                        "x": 69.41000366210938,
+                                        "y": 16.8
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 1,
+                                            "b": 1,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Yoga Flow",
+                                      "fontSize": 14,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    },
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Yesterday",
+                                      "size": {
+                                        "x": 51.63999938964844,
+                                        "y": 13.2
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 1,
+                                            "g": 1,
+                                            "b": 1,
+                                            "a": 1
+                                          },
+                                          "opacity": 0.34901960784313724
+                                        }
+                                      ],
+                                      "characters": "Yesterday",
+                                      "fontSize": 11,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 400,
+                                      "fontStyle": "Regular"
+                                    }
+                                  ],
+                                  "stackMode": "VERTICAL",
+                                  "itemSpacing": 2,
+                                  "paddingTop": 0,
+                                  "paddingRight": 0,
+                                  "paddingBottom": 0,
+                                  "paddingLeft": 0,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 10,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "CENTER"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "WorkoutStats",
+                              "size": {
+                                "x": 290,
+                                "y": 15.6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "TEXT",
+                                  "name": "60 min",
+                                  "size": {
+                                    "x": 42.689998626708984,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.5176470588235295,
+                                        "g": 0.8,
+                                        "b": 0.08627450980392157,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "60 min",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                },
+                                {
+                                  "type": "TEXT",
+                                  "name": "180 cal",
+                                  "size": {
+                                    "x": 43.720001220703125,
+                                    "y": 15.6
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 1,
+                                        "g": 0.38823529411764707,
+                                        "b": 0.2784313725490196,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "characters": "180 cal",
+                                  "fontSize": 13,
+                                  "fontFamily": "Inter",
+                                  "textAlignHorizontal": "LEFT",
+                                  "fontWeight": 500,
+                                  "fontStyle": "Medium"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 0,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "SPACE_BETWEEN",
+                              "counterAxisAlignItems": "MIN",
+                              "layoutSizingHorizontal": "FILL"
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.10196078431372549,
+                                "g": 0.10196078431372549,
+                                "b": 0.10196078431372549,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "strokes": [
+                            {
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 0.06
+                              },
+                              "weight": 1,
+                              "align": "INSIDE"
+                            }
+                          ],
+                          "cornerRadius": 14,
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 10,
+                          "paddingTop": 16,
+                          "paddingRight": 16,
+                          "paddingBottom": 16,
+                          "paddingLeft": 16,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 12,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 16,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 32,
+          "paddingTop": 32,
+          "paddingRight": 32,
+          "paddingBottom": 32,
+          "paddingLeft": 32,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.058823529411764705,
+            "g": 0.058823529411764705,
+            "b": 0.058823529411764705,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

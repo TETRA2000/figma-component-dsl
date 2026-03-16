@@ -1,0 +1,2567 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "Education Platform Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "EducationPage",
+      "size": {
+        "x": 1440,
+        "y": 888.8
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "TEXT",
+          "name": "Learning Hub",
+          "size": {
+            "x": 183.4199981689453,
+            "y": 33.6
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [],
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.06666666666666667,
+                "g": 0.09411764705882353,
+                "b": 0.15294117647058825,
+                "a": 1
+              },
+              "opacity": 1
+            }
+          ],
+          "characters": "Learning Hub",
+          "fontSize": 28,
+          "fontFamily": "Inter",
+          "textAlignHorizontal": "LEFT",
+          "fontWeight": 700,
+          "fontStyle": "Bold"
+        },
+        {
+          "type": "FRAME",
+          "name": "SearchBar",
+          "size": {
+            "x": 1344,
+            "y": 40.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "Search courses, topics, instructors...",
+              "size": {
+                "x": 1312,
+                "y": 16.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.611764705882353,
+                    "g": 0.6392156862745098,
+                    "b": 0.6862745098039216,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "layoutSizingHorizontal": "FILL",
+              "characters": "Search courses, topics, instructors...",
+              "fontSize": 14,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 400,
+              "fontStyle": "Regular"
+            }
+          ],
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "opacity": 1
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 0.9,
+                "g": 0.9,
+                "b": 0.9,
+                "a": 1
+              },
+              "weight": 1,
+              "align": "INSIDE"
+            }
+          ],
+          "cornerRadius": 10,
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 12,
+          "paddingRight": 16,
+          "paddingBottom": 12,
+          "paddingLeft": 16,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "CoursesSection",
+          "size": {
+            "x": 1344,
+            "y": 345.2
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "Continue Learning",
+              "size": {
+                "x": 177.9600067138672,
+                "y": 24
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.06666666666666667,
+                    "g": 0.09411764705882353,
+                    "b": 0.15294117647058825,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Continue Learning",
+              "fontSize": 20,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "LEFT",
+              "fontWeight": 600,
+              "fontStyle": "Semi Bold"
+            },
+            {
+              "type": "FRAME",
+              "name": "CourseGrid",
+              "size": {
+                "x": 1344,
+                "y": 257.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Course: Web Development",
+                  "size": {
+                    "x": 434.6666666666667,
+                    "y": 257.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "CourseCover",
+                      "size": {
+                        "x": 394.6666666666667,
+                        "y": 120
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.48627450980392156,
+                                "g": 0.22745098039215686,
+                                "b": 0.9294117647058824,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.11764705882352941,
+                                "g": 0.10588235294117647,
+                                "b": 0.29411764705882354,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.7071067811865475,
+                              0.7071067811865476,
+                              0.49999999999999994
+                            ],
+                            [
+                              -0.7071067811865476,
+                              -0.7071067811865475,
+                              1.2071067811865475
+                            ]
+                          ]
+                        }
+                      ],
+                      "cornerRadius": 8,
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Web Development",
+                      "size": {
+                        "x": 141.47999572753906,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Web Development",
+                      "fontSize": 16,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Sarah Johnson",
+                      "size": {
+                        "x": 92.0999984741211,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Sarah Johnson",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "ProgressSection",
+                      "size": {
+                        "x": 394.6666666666667,
+                        "y": 26.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "ProgressHeader",
+                          "size": {
+                            "x": 394.6666666666667,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "65% complete",
+                              "size": {
+                                "x": 83.25,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.48627450980392156,
+                                    "g": 0.22745098039215686,
+                                    "b": 0.9294117647058824,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "65% complete",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "12 of 20 lessons",
+                              "size": {
+                                "x": 92.04000091552734,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.611764705882353,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.6862745098039216,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "12 of 20 lessons",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "SPACE_BETWEEN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "ProgressTrack",
+                          "size": {
+                            "x": 394.6666666666667,
+                            "y": 6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ROUNDED_RECTANGLE",
+                              "name": "Fill",
+                              "size": {
+                                "x": 182,
+                                "y": 6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.48627450980392156,
+                                    "g": 0.22745098039215686,
+                                    "b": 0.9294117647058824,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 3
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9529411764705882,
+                                "g": 0.9568627450980393,
+                                "b": 0.9647058823529412,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 3,
+                          "clipContent": true,
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.93,
+                        "g": 0.93,
+                        "b": 0.93,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 20,
+                  "paddingRight": 20,
+                  "paddingBottom": 20,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Course: UI Design Mastery",
+                  "size": {
+                    "x": 434.6666666666667,
+                    "y": 257.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "CourseCover",
+                      "size": {
+                        "x": 394.6666666666667,
+                        "y": 120
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.6196078431372549,
+                                "b": 0.043137254901960784,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.11764705882352941,
+                                "g": 0.10588235294117647,
+                                "b": 0.29411764705882354,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.7071067811865475,
+                              0.7071067811865476,
+                              0.49999999999999994
+                            ],
+                            [
+                              -0.7071067811865476,
+                              -0.7071067811865475,
+                              1.2071067811865475
+                            ]
+                          ]
+                        }
+                      ],
+                      "cornerRadius": 8,
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "UI Design Mastery",
+                      "size": {
+                        "x": 141.75999450683594,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "UI Design Mastery",
+                      "fontSize": 16,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Alex Chen",
+                      "size": {
+                        "x": 62.599998474121094,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Alex Chen",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "ProgressSection",
+                      "size": {
+                        "x": 394.6666666666667,
+                        "y": 26.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "ProgressHeader",
+                          "size": {
+                            "x": 394.6666666666667,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "40% complete",
+                              "size": {
+                                "x": 84.08000183105469,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9607843137254902,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.043137254901960784,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "40% complete",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "8 of 18 lessons",
+                              "size": {
+                                "x": 84.68000030517578,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.611764705882353,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.6862745098039216,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "8 of 18 lessons",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "SPACE_BETWEEN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "ProgressTrack",
+                          "size": {
+                            "x": 394.6666666666667,
+                            "y": 6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ROUNDED_RECTANGLE",
+                              "name": "Fill",
+                              "size": {
+                                "x": 112,
+                                "y": 6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.9607843137254902,
+                                    "g": 0.6196078431372549,
+                                    "b": 0.043137254901960784,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 3
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9529411764705882,
+                                "g": 0.9568627450980393,
+                                "b": 0.9647058823529412,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 3,
+                          "clipContent": true,
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.93,
+                        "g": 0.93,
+                        "b": 0.93,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 20,
+                  "paddingRight": 20,
+                  "paddingBottom": 20,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Course: Data Science Fundamentals",
+                  "size": {
+                    "x": 434.6666666666667,
+                    "y": 257.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "CourseCover",
+                      "size": {
+                        "x": 394.6666666666667,
+                        "y": 120
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "GRADIENT_LINEAR",
+                          "opacity": 1,
+                          "gradientStops": [
+                            {
+                              "color": {
+                                "r": 0.23137254901960785,
+                                "g": 0.5098039215686274,
+                                "b": 0.9647058823529412,
+                                "a": 1
+                              },
+                              "position": 0
+                            },
+                            {
+                              "color": {
+                                "r": 0.11764705882352941,
+                                "g": 0.10588235294117647,
+                                "b": 0.29411764705882354,
+                                "a": 1
+                              },
+                              "position": 1
+                            }
+                          ],
+                          "gradientTransform": [
+                            [
+                              -0.7071067811865475,
+                              0.7071067811865476,
+                              0.49999999999999994
+                            ],
+                            [
+                              -0.7071067811865476,
+                              -0.7071067811865475,
+                              1.2071067811865475
+                            ]
+                          ]
+                        }
+                      ],
+                      "cornerRadius": 8,
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Data Science Fundamentals",
+                      "size": {
+                        "x": 214.83999633789062,
+                        "y": 19.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Data Science Fundamentals",
+                      "fontSize": 16,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Dr. Maria Lopez",
+                      "size": {
+                        "x": 96.70999908447266,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Dr. Maria Lopez",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 400,
+                      "fontStyle": "Regular"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "ProgressSection",
+                      "size": {
+                        "x": 394.6666666666667,
+                        "y": 26.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "FRAME",
+                          "name": "ProgressHeader",
+                          "size": {
+                            "x": 394.6666666666667,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "85% complete",
+                              "size": {
+                                "x": 83.23999786376953,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.23137254901960785,
+                                    "g": 0.5098039215686274,
+                                    "b": 0.9647058823529412,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "85% complete",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 500,
+                              "fontStyle": "Medium"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "17 of 20 lessons",
+                              "size": {
+                                "x": 91.51000213623047,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.611764705882353,
+                                    "g": 0.6392156862745098,
+                                    "b": 0.6862745098039216,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "17 of 20 lessons",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            }
+                          ],
+                          "stackMode": "HORIZONTAL",
+                          "itemSpacing": 0,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "SPACE_BETWEEN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "ProgressTrack",
+                          "size": {
+                            "x": 394.6666666666667,
+                            "y": 6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "ROUNDED_RECTANGLE",
+                              "name": "Fill",
+                              "size": {
+                                "x": 238,
+                                "y": 6
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.23137254901960785,
+                                    "g": 0.5098039215686274,
+                                    "b": 0.9647058823529412,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "cornerRadius": 3
+                            }
+                          ],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9529411764705882,
+                                "g": 0.9568627450980393,
+                                "b": 0.9647058823529412,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "cornerRadius": 3,
+                          "clipContent": true,
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 6,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.93,
+                        "g": 0.93,
+                        "b": 0.93,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 12,
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 20,
+                  "paddingRight": 20,
+                  "paddingBottom": 20,
+                  "paddingLeft": 20,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 20,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 16,
+          "paddingTop": 24,
+          "paddingRight": 0,
+          "paddingBottom": 24,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "TwoCol",
+          "size": {
+            "x": 1344,
+            "y": 405.2
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "CurrentLesson",
+              "size": {
+                "x": 885.1000061035156,
+                "y": 405.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Current Module: React Hooks",
+                  "size": {
+                    "x": 227.44000244140625,
+                    "y": 19.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.06666666666666667,
+                        "g": 0.09411764705882353,
+                        "b": 0.15294117647058825,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Current Module: React Hooks",
+                  "fontSize": 16,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Lesson 1",
+                  "size": {
+                    "x": 845.1000061035156,
+                    "y": 57.2
+                  },
+                  "opacity": 0.6,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "LessonNum",
+                      "size": {
+                        "x": 28,
+                        "y": 28
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "✓",
+                          "size": {
+                            "x": 10.59000015258789,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "✓",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.48627450980392156,
+                            "g": 0.22745098039215686,
+                            "b": 0.9294117647058824,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 14,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "LessonInfo",
+                      "size": {
+                        "x": 773.1000061035156,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Introduction to useState",
+                          "size": {
+                            "x": 160.33999633789062,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Introduction to useState",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "12 min",
+                          "size": {
+                            "x": 36.08000183105469,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "12 min",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.94,
+                        "b": 0.94,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Lesson 2",
+                  "size": {
+                    "x": 845.1000061035156,
+                    "y": 57.2
+                  },
+                  "opacity": 0.6,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "LessonNum",
+                      "size": {
+                        "x": 28,
+                        "y": 28
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "✓",
+                          "size": {
+                            "x": 10.59000015258789,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "✓",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.48627450980392156,
+                            "g": 0.22745098039215686,
+                            "b": 0.9294117647058824,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 14,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "LessonInfo",
+                      "size": {
+                        "x": 773.1000061035156,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "useEffect Deep Dive",
+                          "size": {
+                            "x": 135.69000244140625,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "useEffect Deep Dive",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "18 min",
+                          "size": {
+                            "x": 36.189998626708984,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "18 min",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.94,
+                        "b": 0.94,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Lesson 3",
+                  "size": {
+                    "x": 845.1000061035156,
+                    "y": 57.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "LessonNum",
+                      "size": {
+                        "x": 28,
+                        "y": 28
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "3",
+                          "size": {
+                            "x": 7.630000114440918,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "3",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9529411764705882,
+                            "g": 0.9568627450980393,
+                            "b": 0.9647058823529412,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 14,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "LessonInfo",
+                      "size": {
+                        "x": 773.1000061035156,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Custom Hooks Patterns",
+                          "size": {
+                            "x": 157.91000366210938,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Custom Hooks Patterns",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "15 min",
+                          "size": {
+                            "x": 35.880001068115234,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "15 min",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.94,
+                        "b": 0.94,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Lesson 4",
+                  "size": {
+                    "x": 845.1000061035156,
+                    "y": 57.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "LessonNum",
+                      "size": {
+                        "x": 28,
+                        "y": 28
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "4",
+                          "size": {
+                            "x": 7.989999771118164,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "4",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9529411764705882,
+                            "g": 0.9568627450980393,
+                            "b": 0.9647058823529412,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 14,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "LessonInfo",
+                      "size": {
+                        "x": 773.1000061035156,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "useContext & Global State",
+                          "size": {
+                            "x": 174.42999267578125,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "useContext & Global State",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "20 min",
+                          "size": {
+                            "x": 38.77000045776367,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "20 min",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.94,
+                        "b": 0.94,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Lesson 5",
+                  "size": {
+                    "x": 845.1000061035156,
+                    "y": 57.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "LessonNum",
+                      "size": {
+                        "x": 28,
+                        "y": 28
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "5",
+                          "size": {
+                            "x": 7.349999904632568,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "5",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9529411764705882,
+                            "g": 0.9568627450980393,
+                            "b": 0.9647058823529412,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 14,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FIXED",
+                      "layoutSizingVertical": "FIXED"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "LessonInfo",
+                      "size": {
+                        "x": 773.1000061035156,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Performance with useMemo",
+                          "size": {
+                            "x": 188.74000549316406,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Performance with useMemo",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 500,
+                          "fontStyle": "Medium"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "14 min",
+                          "size": {
+                            "x": 36.52000045776367,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "14 min",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.94,
+                        "b": 0.94,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 12,
+                  "paddingRight": 16,
+                  "paddingBottom": 12,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 20,
+              "paddingRight": 20,
+              "paddingBottom": 20,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Achievements",
+              "size": {
+                "x": 434.8999938964844,
+                "y": 164.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Achievements",
+                  "size": {
+                    "x": 110.37999725341797,
+                    "y": 19.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.06666666666666667,
+                        "g": 0.09411764705882353,
+                        "b": 0.15294117647058825,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Achievements",
+                  "fontSize": 16,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "BadgeGrid",
+                  "size": {
+                    "x": 394.8999938964844,
+                    "y": 93.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Badge: Fast Learner",
+                      "size": {
+                        "x": 90.48999786376953,
+                        "y": 93.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "BadgeCircle",
+                          "size": {
+                            "x": 48,
+                            "y": 48
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9607843137254902,
+                                "g": 0.6196078431372549,
+                                "b": 0.043137254901960784,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Fast Learner",
+                          "size": {
+                            "x": 66.48999786376953,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Fast Learner",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.93,
+                            "g": 0.93,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 12,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 12,
+                      "paddingRight": 12,
+                      "paddingBottom": 12,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Badge: Streak Master",
+                      "size": {
+                        "x": 98.27999877929688,
+                        "y": 93.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "BadgeCircle",
+                          "size": {
+                            "x": 48,
+                            "y": 48
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.9372549019607843,
+                                "g": 0.26666666666666666,
+                                "b": 0.26666666666666666,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Streak Master",
+                          "size": {
+                            "x": 74.27999877929688,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Streak Master",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.93,
+                            "g": 0.93,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 12,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 12,
+                      "paddingRight": 12,
+                      "paddingBottom": 12,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Badge: Top Student",
+                      "size": {
+                        "x": 88.48999786376953,
+                        "y": 93.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "BadgeCircle",
+                          "size": {
+                            "x": 48,
+                            "y": 48
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.48627450980392156,
+                                "g": 0.22745098039215686,
+                                "b": 0.9294117647058824,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Top Student",
+                          "size": {
+                            "x": 64.48999786376953,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Top Student",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.93,
+                            "g": 0.93,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 12,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 12,
+                      "paddingRight": 12,
+                      "paddingBottom": 12,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Badge: Completist",
+                      "size": {
+                        "x": 81.63999938964844,
+                        "y": 93.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ELLIPSE",
+                          "name": "BadgeCircle",
+                          "size": {
+                            "x": 48,
+                            "y": 48
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06274509803921569,
+                                "g": 0.7254901960784313,
+                                "b": 0.5058823529411764,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Completist",
+                          "size": {
+                            "x": 57.63999938964844,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.21568627450980393,
+                                "g": 0.2549019607843137,
+                                "b": 0.3176470588235294,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Completist",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.93,
+                            "g": 0.93,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 12,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 8,
+                      "paddingTop": 12,
+                      "paddingRight": 12,
+                      "paddingBottom": 12,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 20,
+              "paddingRight": 20,
+              "paddingBottom": 20,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 24,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.9764705882352941,
+            "g": 0.9803921568627451,
+            "b": 0.984313725490196,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 32,
+      "paddingRight": 48,
+      "paddingBottom": 32,
+      "paddingLeft": 48,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

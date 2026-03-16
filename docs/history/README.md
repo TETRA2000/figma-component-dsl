@@ -26,6 +26,10 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-16 — Fitness Tracker](2026-03-16-fitness-tracker.md) — 0 issues, 0 fixes | Features: dark theme, 8-digit hex alpha, ellipse rings, gradient accents, SPACE_BETWEEN, clipContent progress
+- [2026-03-16 — Real Estate Listings](2026-03-16-real-estate-listings.md) — 0 issues, 0 fixes | Features: dark header, cornerRadii, pill chips, gradient images, sidebar layout, ellipse avatar
+- [2026-03-16 — Education Platform](2026-03-16-education-platform.md) — 0 issues, 0 fixes | Features: deep nesting, progress bars, textDecoration strikethrough, gradient covers, ellipse badges
+- [2026-03-16 — Healthcare Dashboard](2026-03-16-healthcare-dashboard.md) — 0 issues, 0 fixes | Features: ellipse dots, large numbers, pill medications, two-column layout, SPACE_BETWEEN
 - [2026-03-16 — Portfolio Showcase](2026-03-16-portfolio-showcase.md) — 0 issues, 0 fixes | Features: large typography 72px, gradient overlays, SPACE_BETWEEN nav, gradient CTAs
 - [2026-03-16 — Social Feed](2026-03-16-social-feed.md) — 0 issues, 0 fixes | Features: ellipse avatars, SPACE_BETWEEN actions, nested layouts, text wrapping
 - [2026-03-16 — SaaS Pricing](2026-03-16-saas-pricing.md) — 0 issues, 0 fixes | Features: equal-width FILL columns, gradient buttons, SPACE_BETWEEN, strokes

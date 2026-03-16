@@ -1,0 +1,79 @@
+.card {
+  width: 360px;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 200px;
+  background: #e2e8f0;
+  position: relative;
+}
+
+.priceBadge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: #059669;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 8px;
+}
+
+.content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.address {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.neighborhood {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #64748b;
+  margin: 0;
+}
+
+.specs {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.spec {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+}
+
+.specLabel {
+  font-weight: 400;
+  color: #94a3b8;
+}

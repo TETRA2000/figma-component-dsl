@@ -1,0 +1,68 @@
+.badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 120px;
+}
+
+.circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+  border: 3px solid #7c3aed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.circleEarned {
+  composes: circle;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.iconPlaceholder {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(124, 58, 237, 0.3);
+}
+
+.iconPlaceholderEarned {
+  composes: iconPlaceholder;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.name {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  text-align: center;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.nameUnearned {
+  composes: name;
+  color: #9ca3af;
+}
+
+.status {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  color: #f59e0b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.statusUnearned {
+  composes: status;
+  color: #d1d5db;
+}

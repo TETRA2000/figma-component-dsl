@@ -1,0 +1,2223 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "Healthcare Dashboard Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "HealthcarePage",
+      "size": {
+        "x": 1440,
+        "y": 573.2
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "Header",
+          "size": {
+            "x": 1344,
+            "y": 54.400000000000006
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "HeaderLeft",
+              "size": {
+                "x": 143.8699951171875,
+                "y": 54.400000000000006
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "My Health",
+                  "size": {
+                    "x": 139.74000549316406,
+                    "y": 33.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.06666666666666667,
+                        "g": 0.09411764705882353,
+                        "b": 0.15294117647058825,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "My Health",
+                  "fontSize": 28,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 700,
+                  "fontStyle": "Bold"
+                },
+                {
+                  "type": "TEXT",
+                  "name": "Welcome back, Sarah",
+                  "size": {
+                    "x": 143.8699951171875,
+                    "y": 16.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.4196078431372549,
+                        "g": 0.4470588235294118,
+                        "b": 0.5019607843137255,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Welcome back, Sarah",
+                  "fontSize": 14,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "stackMode": "VERTICAL",
+              "itemSpacing": 4,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "ELLIPSE",
+              "name": "ProfileAvatar",
+              "size": {
+                "x": 44,
+                "y": 44
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.050980392156862744,
+                    "g": 0.5803921568627451,
+                    "b": 0.5333333333333333,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ]
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 0,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "SPACE_BETWEEN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "Vitals",
+          "size": {
+            "x": 1344,
+            "y": 150
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Vital: Heart Rate",
+              "size": {
+                "x": 324,
+                "y": 102
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "VitalTop",
+                  "size": {
+                    "x": 83.63999938964844,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "StatusDot",
+                      "size": {
+                        "x": 10,
+                        "y": 10
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Heart Rate",
+                      "size": {
+                        "x": 65.63999938964844,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Heart Rate",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "VitalValue",
+                  "size": {
+                    "x": 72.51000022888184,
+                    "y": 38.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "72",
+                      "size": {
+                        "x": 38.77000045776367,
+                        "y": 38.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "72",
+                      "fontSize": 32,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "bpm",
+                      "size": {
+                        "x": 29.739999771118164,
+                        "y": 16.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.611764705882353,
+                            "g": 0.6392156862745098,
+                            "b": 0.6862745098039216,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "bpm",
+                      "fontSize": 14,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MAX"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.93,
+                    "g": 0.93,
+                    "b": 0.93,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 8,
+              "paddingTop": 20,
+              "paddingRight": 20,
+              "paddingBottom": 20,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Vital: Blood Pressure",
+              "size": {
+                "x": 324,
+                "y": 102
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "VitalTop",
+                  "size": {
+                    "x": 112.0199966430664,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "StatusDot",
+                      "size": {
+                        "x": 10,
+                        "y": 10
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.23137254901960785,
+                            "g": 0.5098039215686274,
+                            "b": 0.9647058823529412,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Blood Pressure",
+                      "size": {
+                        "x": 94.0199966430664,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Blood Pressure",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "VitalValue",
+                  "size": {
+                    "x": 158.3300018310547,
+                    "y": 38.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "120/80",
+                      "size": {
+                        "x": 110.36000061035156,
+                        "y": 38.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "120/80",
+                      "fontSize": 32,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "mmHg",
+                      "size": {
+                        "x": 43.970001220703125,
+                        "y": 16.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.611764705882353,
+                            "g": 0.6392156862745098,
+                            "b": 0.6862745098039216,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "mmHg",
+                      "fontSize": 14,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MAX"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.93,
+                    "g": 0.93,
+                    "b": 0.93,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 8,
+              "paddingTop": 20,
+              "paddingRight": 20,
+              "paddingBottom": 20,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Vital: O2 Level",
+              "size": {
+                "x": 324,
+                "y": 102
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "VitalTop",
+                  "size": {
+                    "x": 72.31999969482422,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "StatusDot",
+                      "size": {
+                        "x": 10,
+                        "y": 10
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "O2 Level",
+                      "size": {
+                        "x": 54.31999969482422,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "O2 Level",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "VitalValue",
+                  "size": {
+                    "x": 59.510000228881836,
+                    "y": 38.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "98",
+                      "size": {
+                        "x": 41.61000061035156,
+                        "y": 38.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "98",
+                      "fontSize": 32,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "%",
+                      "size": {
+                        "x": 13.899999618530273,
+                        "y": 16.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.611764705882353,
+                            "g": 0.6392156862745098,
+                            "b": 0.6862745098039216,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "%",
+                      "fontSize": 14,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MAX"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.93,
+                    "g": 0.93,
+                    "b": 0.93,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 8,
+              "paddingTop": 20,
+              "paddingRight": 20,
+              "paddingBottom": 20,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Vital: Temperature",
+              "size": {
+                "x": 324,
+                "y": 102
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "VitalTop",
+                  "size": {
+                    "x": 97.33999633789062,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ELLIPSE",
+                      "name": "StatusDot",
+                      "size": {
+                        "x": 10,
+                        "y": 10
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06274509803921569,
+                            "g": 0.7254901960784313,
+                            "b": 0.5058823529411764,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "Temperature",
+                      "size": {
+                        "x": 79.33999633789062,
+                        "y": 15.6
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.4196078431372549,
+                            "g": 0.4470588235294118,
+                            "b": 0.5019607843137255,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Temperature",
+                      "fontSize": 13,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 8,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "VitalValue",
+                  "size": {
+                    "x": 90.1200008392334,
+                    "y": 38.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "98.6",
+                      "size": {
+                        "x": 71.47000122070312,
+                        "y": 38.4
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.06666666666666667,
+                            "g": 0.09411764705882353,
+                            "b": 0.15294117647058825,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "98.6",
+                      "fontSize": 32,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 700,
+                      "fontStyle": "Bold"
+                    },
+                    {
+                      "type": "TEXT",
+                      "name": "°F",
+                      "size": {
+                        "x": 14.649999618530273,
+                        "y": 16.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.611764705882353,
+                            "g": 0.6392156862745098,
+                            "b": 0.6862745098039216,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "°F",
+                      "fontSize": 14,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 500,
+                      "fontStyle": "Medium"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 4,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MAX"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.93,
+                    "g": 0.93,
+                    "b": 0.93,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 8,
+              "paddingTop": 20,
+              "paddingRight": 20,
+              "paddingBottom": 20,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 16,
+          "paddingTop": 24,
+          "paddingRight": 0,
+          "paddingBottom": 24,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "TwoColumn",
+          "size": {
+            "x": 1344,
+            "y": 304.8
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Appointments",
+              "size": {
+                "x": 660,
+                "y": 281.2
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Upcoming Appointments",
+                  "size": {
+                    "x": 216.1999969482422,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.06666666666666667,
+                        "g": 0.09411764705882353,
+                        "b": 0.15294117647058825,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Upcoming Appointments",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Appt: Dr. Williams",
+                  "size": {
+                    "x": 620,
+                    "y": 61.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "TimeSlot",
+                      "size": {
+                        "x": 82.52000045776367,
+                        "y": 32.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "9:00 AM",
+                          "size": {
+                            "x": 58.52000045776367,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.050980392156862744,
+                                "g": 0.5803921568627451,
+                                "b": 0.5333333333333333,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "9:00 AM",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9411764705882353,
+                            "g": 0.9921568627450981,
+                            "b": 0.9803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 8,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 8,
+                      "paddingRight": 12,
+                      "paddingBottom": 8,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "DoctorInfo",
+                      "size": {
+                        "x": 489.4799995422363,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Dr. Williams",
+                          "size": {
+                            "x": 79.7699966430664,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Dr. Williams",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Cardiology",
+                          "size": {
+                            "x": 61.47999954223633,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Cardiology",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.94,
+                        "b": 0.94,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 16,
+                  "paddingTop": 14,
+                  "paddingRight": 16,
+                  "paddingBottom": 14,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Appt: Dr. Chen",
+                  "size": {
+                    "x": 620,
+                    "y": 61.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "TimeSlot",
+                      "size": {
+                        "x": 80.79999923706055,
+                        "y": 32.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "2:30 PM",
+                          "size": {
+                            "x": 56.79999923706055,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.050980392156862744,
+                                "g": 0.5803921568627451,
+                                "b": 0.5333333333333333,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "2:30 PM",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9411764705882353,
+                            "g": 0.9921568627450981,
+                            "b": 0.9803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 8,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 8,
+                      "paddingRight": 12,
+                      "paddingBottom": 8,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "DoctorInfo",
+                      "size": {
+                        "x": 491.20000076293945,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Dr. Chen",
+                          "size": {
+                            "x": 58.22999954223633,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Dr. Chen",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "Dermatology",
+                          "size": {
+                            "x": 72.81999969482422,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Dermatology",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.94,
+                        "b": 0.94,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 16,
+                  "paddingTop": 14,
+                  "paddingRight": 16,
+                  "paddingBottom": 14,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Appt: Dr. Patel",
+                  "size": {
+                    "x": 620,
+                    "y": 61.2
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "TimeSlot",
+                      "size": {
+                        "x": 81.72999954223633,
+                        "y": 32.8
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "4:00 PM",
+                          "size": {
+                            "x": 57.72999954223633,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.050980392156862744,
+                                "g": 0.5803921568627451,
+                                "b": 0.5333333333333333,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "4:00 PM",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "CENTER",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.9411764705882353,
+                            "g": 0.9921568627450981,
+                            "b": 0.9803921568627451,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 8,
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 8,
+                      "paddingRight": 12,
+                      "paddingBottom": 8,
+                      "paddingLeft": 12,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "DoctorInfo",
+                      "size": {
+                        "x": 490.2700004577637,
+                        "y": 33.2
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Dr. Patel",
+                          "size": {
+                            "x": 56.189998626708984,
+                            "y": 16.8
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.06666666666666667,
+                                "g": 0.09411764705882353,
+                                "b": 0.15294117647058825,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Dr. Patel",
+                          "fontSize": 14,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "General Practice",
+                          "size": {
+                            "x": 94.02999877929688,
+                            "y": 14.399999999999999
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.611764705882353,
+                                "g": 0.6392156862745098,
+                                "b": 0.6862745098039216,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "General Practice",
+                          "fontSize": 12,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 2,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.94,
+                        "g": 0.94,
+                        "b": 0.94,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 16,
+                  "paddingTop": 14,
+                  "paddingRight": 16,
+                  "paddingBottom": 14,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 20,
+              "paddingRight": 20,
+              "paddingBottom": 20,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Medications",
+              "size": {
+                "x": 660,
+                "y": 304.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Medications",
+                  "size": {
+                    "x": 107.11000061035156,
+                    "y": 21.599999999999998
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.06666666666666667,
+                        "g": 0.09411764705882353,
+                        "b": 0.15294117647058825,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Medications",
+                  "fontSize": 18,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 600,
+                  "fontStyle": "Semi Bold"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Med: Metformin",
+                  "size": {
+                    "x": 159.29000091552734,
+                    "y": 48.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "PillIcon",
+                      "size": {
+                        "x": 24,
+                        "y": 24
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.050980392156862744,
+                            "g": 0.5803921568627451,
+                            "b": 0.5333333333333333,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 6
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "MedInfo",
+                      "size": {
+                        "x": 91.29000091552734,
+                        "y": 28.799999999999997
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Metformin",
+                          "size": {
+                            "x": 64.88999938964844,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.050980392156862744,
+                                "g": 0.5803921568627451,
+                                "b": 0.5333333333333333,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Metformin",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "500mg - Morning",
+                          "size": {
+                            "x": 91.29000091552734,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "500mg - Morning",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9411764705882353,
+                        "g": 0.9921568627450981,
+                        "b": 0.9803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.8,
+                        "g": 0.94,
+                        "b": 0.91,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 24.4,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 10,
+                  "paddingRight": 16,
+                  "paddingBottom": 10,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Med: Lisinopril",
+                  "size": {
+                    "x": 148.44000244140625,
+                    "y": 48.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "PillIcon",
+                      "size": {
+                        "x": 24,
+                        "y": 24
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.050980392156862744,
+                            "g": 0.5803921568627451,
+                            "b": 0.5333333333333333,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 6
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "MedInfo",
+                      "size": {
+                        "x": 80.44000244140625,
+                        "y": 28.799999999999997
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Lisinopril",
+                          "size": {
+                            "x": 57.33000183105469,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.050980392156862744,
+                                "g": 0.5803921568627451,
+                                "b": 0.5333333333333333,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Lisinopril",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "10mg - Evening",
+                          "size": {
+                            "x": 80.44000244140625,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "10mg - Evening",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9411764705882353,
+                        "g": 0.9921568627450981,
+                        "b": 0.9803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.8,
+                        "g": 0.94,
+                        "b": 0.91,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 24.4,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 10,
+                  "paddingRight": 16,
+                  "paddingBottom": 10,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Med: Vitamin D",
+                  "size": {
+                    "x": 164.26000213623047,
+                    "y": 48.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "PillIcon",
+                      "size": {
+                        "x": 24,
+                        "y": 24
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.050980392156862744,
+                            "g": 0.5803921568627451,
+                            "b": 0.5333333333333333,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 6
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "MedInfo",
+                      "size": {
+                        "x": 96.26000213623047,
+                        "y": 28.799999999999997
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Vitamin D",
+                          "size": {
+                            "x": 60.70000076293945,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.050980392156862744,
+                                "g": 0.5803921568627451,
+                                "b": 0.5333333333333333,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Vitamin D",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "2000 IU - Morning",
+                          "size": {
+                            "x": 96.26000213623047,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "2000 IU - Morning",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9411764705882353,
+                        "g": 0.9921568627450981,
+                        "b": 0.9803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.8,
+                        "g": 0.94,
+                        "b": 0.91,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 24.4,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 10,
+                  "paddingRight": 16,
+                  "paddingBottom": 10,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Med: Aspirin",
+                  "size": {
+                    "x": 134.70999908447266,
+                    "y": 48.8
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "ROUNDED_RECTANGLE",
+                      "name": "PillIcon",
+                      "size": {
+                        "x": 24,
+                        "y": 24
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.050980392156862744,
+                            "g": 0.5803921568627451,
+                            "b": 0.5333333333333333,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "cornerRadius": 6
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "MedInfo",
+                      "size": {
+                        "x": 66.70999908447266,
+                        "y": 28.799999999999997
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "TEXT",
+                          "name": "Aspirin",
+                          "size": {
+                            "x": 44.619998931884766,
+                            "y": 15.6
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.050980392156862744,
+                                "g": 0.5803921568627451,
+                                "b": 0.5333333333333333,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "Aspirin",
+                          "fontSize": 13,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 600,
+                          "fontStyle": "Semi Bold"
+                        },
+                        {
+                          "type": "TEXT",
+                          "name": "81mg - Night",
+                          "size": {
+                            "x": 66.70999908447266,
+                            "y": 13.2
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "SOLID",
+                              "color": {
+                                "r": 0.4196078431372549,
+                                "g": 0.4470588235294118,
+                                "b": 0.5019607843137255,
+                                "a": 1
+                              },
+                              "opacity": 1
+                            }
+                          ],
+                          "characters": "81mg - Night",
+                          "fontSize": 11,
+                          "fontFamily": "Inter",
+                          "textAlignHorizontal": "LEFT",
+                          "fontWeight": 400,
+                          "fontStyle": "Regular"
+                        }
+                      ],
+                      "stackMode": "VERTICAL",
+                      "itemSpacing": 0,
+                      "paddingTop": 0,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9411764705882353,
+                        "g": 0.9921568627450981,
+                        "b": 0.9803921568627451,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.8,
+                        "g": 0.94,
+                        "b": 0.91,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 24.4,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 10,
+                  "paddingRight": 16,
+                  "paddingBottom": 10,
+                  "paddingLeft": 16,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "cornerRadius": 12,
+              "stackMode": "VERTICAL",
+              "itemSpacing": 12,
+              "paddingTop": 20,
+              "paddingRight": 20,
+              "paddingBottom": 20,
+              "paddingLeft": 20,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "HORIZONTAL",
+          "itemSpacing": 24,
+          "paddingTop": 0,
+          "paddingRight": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.9725490196078431,
+            "g": 0.9803921568627451,
+            "b": 0.9882352941176471,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 32,
+      "paddingRight": 48,
+      "paddingBottom": 32,
+      "paddingLeft": 48,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}
