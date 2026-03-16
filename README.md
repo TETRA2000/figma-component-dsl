@@ -9,7 +9,7 @@ A domain-specific language for defining Figma component structures declaratively
 git submodule update --init --recursive
 npm install
 
-# Run all tests (273 tests across 17 files)
+# Run all tests (754 tests across 40 files)
 npx vitest run
 ```
 
@@ -17,9 +17,9 @@ npx vitest run
 
 | Package | Description |
 |---------|-------------|
-| `@figma-dsl/core` | DSL node primitives, color/fill helpers, image support, layout config, component/variant system, changeset schema, canonical PluginNodeDef types, diff algorithm |
+| `@figma-dsl/core` | DSL node primitives, color/fill helpers, image support, layout config, component/variant system, canvas builder, changeset schema, canonical PluginNodeDef types, diff algorithm |
 | `@figma-dsl/compiler` | Compiles DslNode trees to FigmaNodeDict with GUID assignment, text measurement, and two-pass auto-layout |
-| `@figma-dsl/renderer` | Renders compiled nodes to PNG via @napi-rs/canvas (Skia), with image loading and caching |
+| `@figma-dsl/renderer` | Renders compiled nodes to PNG via @napi-rs/canvas (Skia), with image loading, caching, and per-canvas extraction |
 | `@figma-dsl/capturer` | Captures React component screenshots via Playwright |
 | `@figma-dsl/comparator` | Pixel-level image comparison with similarity scoring via pixelmatch |
 | `@figma-dsl/exporter` | Generates Figma plugin input JSON from compiled DSL |
@@ -33,8 +33,8 @@ npx vitest run
 # Compile DSL to Figma node dictionary
 bin/figma-dsl-compile button.dsl.ts -o compiled.json
 
-# Render DSL to PNG
-bin/figma-dsl-render button.dsl.ts -o button.png
+# Render DSL to PNG (also extracts per-canvas PNGs)
+bin/figma-dsl-render button.dsl.ts -o button.png [--no-canvas]
 
 # Capture a React component screenshot
 bin/figma-dsl-capture http://localhost:5173 -o screenshot.png -v 1280x720
@@ -92,6 +92,17 @@ export default component('Button', {
 // Image support: embed images as nodes or fills
 image('Avatar', { src: './assets/avatar.png', size: { x: 48, y: 48 }, cornerRadius: 24 });
 frame('Hero', { size: { x: 800, y: 400 }, fills: [imageFill('./assets/hero.jpg', { scaleMode: 'FILL' })] });
+
+// Canvas: render DSL subtrees as standalone PNG images
+import { canvas } from '@figma-dsl/core';
+
+canvas('HeroBanner', {
+  size: { x: 800, y: 400 },
+  scale: 2,  // 2x resolution for high-DPI
+  children: [
+    text('Welcome', { fontSize: 48, fontWeight: 700, color: '#ffffff' }),
+  ],
+});
 ```
 
 ## Pipeline
@@ -159,6 +170,13 @@ On a fresh clone, the preview app won't build because `_generated/` directories 
 
 ```bash
 cd preview && npm install --legacy-peer-deps && npm run dev
+```
+
+The `<DslCanvas>` React component renders DSL content as images with fixed aspect ratio, optional slot overrides, and HMR support via a Vite plugin:
+
+```tsx
+import { DslCanvas } from './components';
+<DslCanvas dsl={compiledNode} width={400} scale={2} />
 ```
 
 A sync script keeps reference components up to date:

@@ -84,9 +84,11 @@ Loads a `.dsl.ts` module, compiles with layout measurements, outputs JSON. Error
 
 #### `render` — DSL/JSON to PNG
 ```bash
-figma-dsl render <file.dsl.ts|compiled.json> -o output.png [-s scale] [-b background] [--debug-layout]
+figma-dsl render <file.dsl.ts|compiled.json> -o output.png [-s scale] [-b background] [--debug-layout] [--no-canvas]
 ```
 Accepts either raw DSL (compiled on-the-fly) or precompiled JSON. Scale is a float multiplier (default 1.0).
+
+When the input contains `canvas()` nodes, per-canvas PNGs are automatically extracted alongside the main output (e.g., `HeroBanner.png`). Use `--no-canvas` to skip canvas extraction.
 
 The `--debug-layout` flag overlays layout debug information on the rendered PNG:
 - Semi-transparent colored rectangles for padding areas
@@ -263,7 +265,7 @@ The `processBatch()` function orchestrates bulk operations:
 
 1. **File Discovery**: `discoverDslFiles()` finds `.dsl.ts` files via glob patterns
 2. **Per-file processing** (sequential):
-   - Load DSL module → compile → render PNG → generate plugin input
+   - Load DSL module → compile → render PNG → extract per-canvas PNGs → generate plugin input
 3. **Artifact aggregation**:
    - Merge all plugin nodes into single `plugin-input.json`
    - Write `batch-manifest.json` with component metadata
@@ -273,6 +275,7 @@ The `processBatch()` function orchestrates bulk operations:
 <outputDir>/
 ├── dsl/
 │   ├── component-name.png
+│   ├── CanvasName.png       # per-canvas PNGs (from canvas() nodes)
 │   └── ...
 ├── plugin-input.json  (merged)
 └── batch-manifest.json
@@ -410,7 +413,7 @@ Component names are heuristically parsed to extract category prefixes (e.g., `co
 |---------|---------|
 | `@figma-dsl/core` | `DslNode` type, node constructors |
 | `@figma-dsl/compiler` | `compileWithLayout()`, `textMeasurer` |
-| `@figma-dsl/renderer` | `renderToFile()`, `initializeRenderer()`, `collectImageSources()`, `preloadImages()` |
+| `@figma-dsl/renderer` | `renderToFile()`, `initializeRenderer()`, `collectImageSources()`, `preloadImages()`, `renderCanvasNodes()` |
 | `@figma-dsl/capturer` | `captureUrl()` for browser automation |
 | `@figma-dsl/comparator` | `compareFiles()` for visual diff |
 | `@figma-dsl/exporter` | `exportToFile()`, `generatePluginInput()` |

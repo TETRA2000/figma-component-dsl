@@ -267,6 +267,49 @@ instance('Button', { Label: 'Sign Up' })
 
 > **Warning:** See [Figma Plugin Constraints](#figma-plugin-constraints) for limitations.
 
+#### `canvas(name, props?)`
+
+Creates a canvas node — a FRAME marked for image rendering rather than HTML/CSS conversion. Canvas nodes are extracted and rendered as standalone PNG images by the renderer and CLI. They work seamlessly with the Figma plugin's slot system.
+
+```ts
+import { canvas } from '@figma-dsl/core';
+
+// Standalone canvas region
+canvas('HeroBanner', {
+  size: { x: 800, y: 400 },
+  scale: 2,  // 2x resolution for high-DPI output
+  children: [
+    text('Welcome', { fontSize: 48, fontWeight: 700, color: '#ffffff' }),
+  ],
+})
+
+// Canvas inside a component (renders as image, not HTML)
+component('Card', {
+  children: [
+    canvas('CardHero', {
+      size: { x: 320, y: 200 },
+      children: [/* complex visual content */],
+    }),
+    text('Description', { fontSize: 14, color: '#333' }),
+  ],
+})
+```
+
+**Options:**
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `size` | `{ x: number, y?: number }` | | Width and optional height |
+| `scale` | `number` | `1` | Render scale factor for high-DPI output |
+| `children` | `Node[]` | | Child nodes rendered as image content |
+| `autoLayout` | `horizontal(...)` \| `vertical(...)` | | Auto-layout configuration |
+| `fills` | `Fill[]` | | Background fills |
+| `cornerRadius` | `number` | | Border radius |
+| `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | | Horizontal sizing mode |
+| `layoutSizingVertical` | `'FIXED' \| 'HUG' \| 'FILL'` | | Vertical sizing mode |
+
+> **Note:** Canvas nodes can be used outside of COMPONENT/COMPONENT_SET context (unlike slots). A node cannot be both a canvas and a slot — this is validated by the compiler with a mutual exclusivity check.
+
 #### `group(name, children)`
 
 Creates a logical grouping without visual styling (no fills, strokes, or auto-layout).
@@ -629,13 +672,17 @@ bin/figma-dsl export examples/navbar.dsl.ts -o output/navbar.figma.json
 ```bash
 bin/figma-dsl render output/navbar.json -o output/navbar.png
 bin/figma-dsl render output/navbar.json -o output/navbar-debug.png --debug-layout
+bin/figma-dsl render canvas-demo.dsl.ts -o output/demo.png --no-canvas
 ```
 
 | Parameter | Description |
 |-----------|-------------|
-| First argument | Path to compiled `.json` file |
+| First argument | Path to compiled `.json` file or `.dsl.ts` source |
 | `-o` | Output PNG file path |
 | `--debug-layout` | Overlay layout debug info (frame borders, padding areas, computed sizes) |
+| `--no-canvas` | Skip per-canvas PNG extraction (only render the full composite image) |
+
+When the input contains `canvas()` nodes, the render command automatically extracts each canvas subtree and writes it as a separate `{canvasName}.png` file alongside the main output. Use `--no-canvas` to disable this behavior.
 
 ### `compare` — Compare two rendered PNGs
 
@@ -821,6 +868,8 @@ Each `.figma.json` file follows this structure:
 ```
 
 **Node types in exported JSON:** `FRAME`, `TEXT`, `RECTANGLE`, `COMPONENT`, `INSTANCE`, `GROUP`
+
+Canvas nodes are exported as FRAME nodes with additional `isCanvas`, `canvasName`, and `isSlot` metadata fields.
 
 ---
 
