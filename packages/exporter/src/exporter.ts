@@ -93,9 +93,11 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
   }
 
   if (node.strokes?.length) {
+    // Use per-stroke weight, falling back to node-level strokeWeight for safety
+    const fallbackWeight = node.strokeWeight;
     result.strokes = node.strokes.map(s => ({
       color: s.color,
-      weight: s.weight,
+      weight: s.weight ?? fallbackWeight ?? 1,
       align: s.align,
     }));
   }
