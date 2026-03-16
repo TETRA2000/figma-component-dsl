@@ -26,5 +26,6 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-16 — 200 Real-World App Screens](2026-03-16-200-app-screens.md) — 200 designs, 0 pipeline fixes, 20 batches across 20 app domains | Features: all node types, gradients, radial gradients, per-corner radii, clipContent, FILL/HUG sizing, text wrapping, strokes, deep nesting, SPACE_BETWEEN, defineTokens
 - [2026-03-16 — DslCanvas 100-Design Stress Test](2026-03-16-dslcanvas-dogfooding.md) — 100 designs, 0 pipeline fixes, 10 batches | Features: all node types, gradients, per-corner radii, canvas nesting (4-deep), FILL/HUG sizing, text wrapping, strokes, clipContent, stress tests (100-rect grid, 1000x1000 canvas)
 - [2026-03-14 — Travel Cards](2026-03-14-travel-cards.md) — 0 issues found, 0 pipeline fixes | Features: cornerRadius, clipContent, strokes, textAutoResize:HEIGHT, FILL sizing, SPACE_BETWEEN, nested auto-layout
