@@ -1231,6 +1231,14 @@ frame('Button', {
 })
 ```
 
+### ~~3b. SLOT property `defaultValue` required — FIXED~~
+
+**Error:** `"Property 'node.addComponentProperty.defaultValue' failed validation: Expected one of the following, but none matched: Required value missing"`
+
+**Cause:** Figma's `addComponentProperty()` for SLOT-type properties requires a `defaultValue` that references the child node's ID. The plugin previously tried to register all component properties (including SLOT) before creating children, so no node ID was available.
+
+**Fix:** SLOT properties are now deferred until after children are created. The plugin extracts the layer name from the property key (e.g., `CanvasContainer` from `CanvasContainer#10:0`), finds the matching child node, and uses its ID as the `defaultValue`.
+
 ### 4. Sections import as separate frames
 
 **Cause:** Each top-level entry in the `components` array becomes an independent frame on the Figma canvas.
@@ -1277,6 +1285,7 @@ These limitations from earlier versions have been fixed:
 | `Unknown option '--format'` | `--format` flag not supported | Remove `--format plugin` from the command |
 | `FILL can only be set on children of auto-layout frames` | Plugin version too old | Update plugin — this was fixed by splitting setAutoLayout into config + sizing phases |
 | `Can only add variant property to a component set` | `type: 'VARIANT'` on standalone component | Now auto-filtered by exporter and plugin; use `type: 'TEXT'` or `type: 'BOOLEAN'` for clarity |
+| `defaultValue failed validation: Required value missing` | SLOT property registered before child node exists | Now auto-handled — SLOT properties are deferred until after children are created |
 | `Component not found for instance: X` | `instance()` referencing missing component | Replace with inline `frame()` |
 | Sections scattered on canvas | No parent wrapper in merged JSON | Wrap sections in a parent FRAME with vertical layout |
 | Dividers are 1x1 px | Missing `layoutSizingHorizontal: 'FILL'` | Add `layoutSizingHorizontal: 'FILL'` to the divider rectangle |
