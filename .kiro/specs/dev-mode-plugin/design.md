@@ -327,7 +327,7 @@ interface PluginInput {
   readonly targetPage: string;
   readonly components: ReadonlyArray<PluginNodeDef>;
   readonly resolveExisting?: boolean;
-  readonly componentSources?: ReadonlyMap<string, SourceSnapshots>;  // NEW
+  readonly componentSources?: Readonly<Record<string, SourceSnapshots>>;  // NEW: plain object, JSON-serializable
 }
 
 // Plugin data key for source storage
@@ -348,7 +348,7 @@ const PLUGIN_DATA_SOURCES = 'dsl-sources';
 
 **Responsibilities & Constraints**
 - Register `figma.codegen.on("generate")` handler in plugin initialization
-- **Primary path**: Read `dsl-sources` plugin data from the selected node; if source for the requested language exists, return it directly as a `CodegenResult`
+- **Primary path**: Read `dsl-sources` plugin data from the selected node; if not found, walk up `node.parent` to find the nearest ancestor with `dsl-sources` (sources are stored on the root component node, but developers may select child nodes in Dev Mode); if source for the requested language exists, return it directly as a `CodegenResult`
 - **Fallback path**: If no stored sources, serialize the node using `serializeNode()` with depth limiting, then route to the appropriate structural generator
 - Read `dsl-identity` and `dsl-baseline` plugin data for metadata-aware fallback generation
 - Read preferences via `figma.codegen.preferences` (applied only in fallback path)
@@ -394,6 +394,9 @@ function serializeWithDepthLimit(
   node: SceneNode,
   maxDescendants: number,
 ): { def: PluginNodeDef; truncated: boolean };
+
+// Walk up node tree to find nearest ancestor with dsl-sources plugin data
+function findSourceSnapshots(node: SceneNode): SourceSnapshots | null;
 
 // Language-to-source mapping
 function getStoredSource(
