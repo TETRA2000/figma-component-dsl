@@ -23,10 +23,8 @@ import type { SerializableNode } from './serializer.js';
 import {
   formatSlotName,
   buildSlotPluginData,
-  buildComponentMap as buildComponentEntryMap,
   formatDetachedCopyName,
 } from './slot-utils.js';
-import type { ComponentEntry } from './slot-utils.js';
 import { detectSlots } from './slot-detector.js';
 import type { SlotDetectableComponent } from './slot-detector.js';
 import { captureSlotImages } from './image-capture.js';
@@ -773,7 +771,7 @@ async function embedImageDataForChange(
       for (const fill of fills) {
         if (fill.type === 'IMAGE') {
           const imgPaint = fill as ImagePaint;
-          const image = figma.getImageByHash(imgPaint.imageHash);
+          const image = imgPaint.imageHash ? figma.getImageByHash(imgPaint.imageHash) : null;
           if (image) {
             const bytes = await image.getBytesAsync();
             const base64 = figma.base64Encode(bytes);
@@ -1100,7 +1098,7 @@ function categorizeChanges(entries: EditLogEntry[]): string[] {
 // Find slot context for a change path within a node
 function findSlotContext(
   rootNode: SceneNode,
-  propertyPath: string,
+  _propertyPath: string,
 ): { slotName: string; currentChildren: PluginNodeDef[] } | undefined {
   // Walk through children to find a slot frame matching the property path
   if (!('children' in rootNode)) return undefined;

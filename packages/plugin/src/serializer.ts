@@ -96,7 +96,7 @@ export function serializeFills(node: SerializableNode): PluginNodeDef['fills'] {
       return {
         type: 'IMAGE',
         opacity: f.opacity ?? 1,
-        imageHash: f.imageHash,
+        imageHash: f.imageHash ?? undefined,
         imageScaleMode: f.scaleMode,
       };
     }
