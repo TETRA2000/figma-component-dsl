@@ -1,7 +1,7 @@
-import { DogfoodingGallery } from './pages/_generated/DogfoodingGallery';
+import { AnalyticsDashboardShowcase } from './pages/_generated/AnalyticsDashboardShowcase';
 
 function App() {
-  return <DogfoodingGallery />;
+  return <AnalyticsDashboardShowcase />;
 }
 
 export default App;
