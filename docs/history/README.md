@@ -26,6 +26,14 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-16 — Settings Page](2026-03-16-settings.md) — 0 issues, 0 fixes | Features: sidebar nav, form fields, toggle switches, section dividers
+- [2026-03-16 — Crypto Dashboard](2026-03-16-crypto-dashboard.md) — 0 issues, 0 fixes | Features: dark theme, gradient portfolio, up/down indicators, large numbers
+- [2026-03-16 — Social Profile](2026-03-16-social-profile.md) — 0 issues, 0 fixes | Features: cover gradient, avatar, stat counters, post grid, follower list
+- [2026-03-16 — Job Board](2026-03-16-job-board.md) — 0 issues, 0 fixes | Features: salary badges, tag pills, company logos, FILL columns
+- [2026-03-16 — Photo Gallery](2026-03-16-photo-gallery.md) — 0 issues, 0 fixes | Features: masonry grid, gradient photos, ellipse avatars, filter pills
+- [2026-03-16 — Flight Search](2026-03-16-flight-search.md) — 0 issues, 0 fixes | Features: gradient hero, search form, flight routes, price tags
+- [2026-03-16 — News Aggregator](2026-03-16-news-aggregator.md) — 0 issues, 0 fixes | Features: category badges, two-column articles, trending sidebar, text wrapping
+- [2026-03-16 — Hotel Booking](2026-03-16-hotel-booking.md) — 0 issues, 0 fixes | Features: gradient hero, star ratings, amenity pills, cornerRadii
 - [2026-03-16 — Chat Messenger](2026-03-16-chat-messenger.md) — 0 issues, 0 fixes | Features: cornerRadii asymmetric bubbles, ellipse avatars, online status, two-panel layout
 - [2026-03-16 — Calendar App](2026-03-16-calendar-app.md) — 0 issues, 0 fixes | Features: two-panel layout, colored event borders, day columns, mini calendar grid
 - [2026-03-16 — Podcast App](2026-03-16-podcast-app.md) — 0 issues, 0 fixes | Features: dark theme, gradient art, progress bar, episode cards, library rows
