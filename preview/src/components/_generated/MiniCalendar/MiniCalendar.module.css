@@ -1,0 +1,76 @@
+.calendar {
+  width: 224px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.monthYear {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+}
+
+.dayHeader {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #94a3b8;
+  padding: 4px 0;
+}
+
+.date {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #475569;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.date:hover {
+  background: #f1f5f9;
+}
+
+.dateToday {
+  composes: date;
+  background: #3b82f6;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.dateToday:hover {
+  background: #2563eb;
+}
+
+.dateEmpty {
+  composes: date;
+  cursor: default;
+}
+
+.dateEmpty:hover {
+  background: transparent;
+}
