@@ -161,3 +161,122 @@
   - Run TypeScript type checking on all modified packages to ensure no type errors
   - Run the full vitest suite to confirm no regressions in existing slot, compiler, renderer, or exporter functionality
   - _Requirements: 2.5, 3.2, 4.3_
+
+- [ ] 9. Implement Figma native slot detection in the plugin
+- [ ] 9.1 Build the slot detector using componentPropertyDefinitions as primary detection
+  - Read the parent component's property definitions and filter for entries with SLOT type
+  - Parse the property key format by splitting on the last hash character to extract the layer name, handling layer names that contain hash characters
+  - Match extracted names to direct children by their layer name
+  - When name matching fails (e.g., layer renamed after slot creation), fall back to positional correlation — match Nth unmatched SLOT-type property to the Nth unmatched child, and log a warning
+  - Determine the slot node kind: if the matched child has type SLOT it is a wrapped slot; if it has type FRAME it is a converted slot
+  - Use string casting for the SLOT type check since it is not yet in the official plugin typings
+  - _Requirements: 9.1, 9.6_
+  - _Contracts: SlotDetector_
+
+- [ ] 9.2 Add supplementary detection and DslCanvas classification
+  - Scan component children for nodes with type SLOT even when componentPropertyDefinitions is absent or empty, to catch edge cases
+  - Check each detected node for DslCanvas plugin data — if present, classify as dslCanvas source type; otherwise classify as nativeSlot
+  - For nodes with DslCanvas plugin data that were not detected via property definitions or type check, include them as dslCanvas entries
+  - Record the detection method used (componentPropertyDefinitions, nodeType, or pluginData) on each result
+  - _Requirements: 9.4, 9.5_
+
+- [ ] 9.3 Add unit tests for slot detection
+  - Test detection via componentPropertyDefinitions with both wrapped and converted slots
+  - Test supplementary detection via node type SLOT when no property definitions exist
+  - Test DslCanvas classification takes priority over nativeSlot when plugin data is present
+  - Test name-match fallback triggers and logs a warning when layer name doesn't match
+  - Test that detection works on designer-authored components (not just DSL-created ones)
+  - Test key parsing handles layer names containing hash characters
+  - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6_
+
+- [ ] 10. (P) Implement image capture via exportAsync
+- [ ] 10.1 Build the image capture service with progress and cancellation
+  - For each detected slot, call the Figma export API to produce a PNG at the configured scale factor (default 2x, configurable 1x–4x)
+  - Calculate pixel dimensions from the node's width and height multiplied by the scale factor
+  - Report progress after each successful capture via the progress callback
+  - Check the abort signal before each capture and return partial results if aborted
+  - On per-slot capture failure, log the error, omit that slot from results, and continue with remaining slots
+  - _Requirements: 10.1, 10.2, 10.5, 10.6, 10.7_
+  - _Contracts: ImageCapture_
+
+- [ ] 10.2 Add unit tests for image capture
+  - Test that exportAsync is called with correct PNG format and scale constraint for each slot
+  - Test that progress callback is invoked with correct current/total/slotName values
+  - Test that a failed capture for one slot does not prevent remaining captures
+  - Test that abort signal causes early return with partial results
+  - Test that dimensions are calculated correctly from node size × scale
+  - _Requirements: 10.1, 10.2, 10.5, 10.6, 10.7_
+
+- [ ] 11. (P) Implement export bundling with base64/ZIP threshold
+- [ ] 11.1 Build the export bundler with dual format support
+  - Calculate total payload size from JSON string length plus all image byte lengths
+  - When below the size threshold (default 1 MB), embed each image as a base64 data URI in a slotImages map within the JSON, tagged with source type, scale, and dimensions
+  - When above the threshold, package the JSON and PNG files into a ZIP archive using a pure-JS ZIP library, with images stored as separate files
+  - Add the ZIP library as a dev dependency in the plugin package (bundled by esbuild into the IIFE)
+  - Return a result indicating the chosen format, the bundled data, image count, and total image byte size
+  - If ZIP generation fails, fall back to base64-only format even when above threshold, and log a warning
+  - _Requirements: 10.3, 10.4_
+  - _Contracts: ExportBundler_
+
+- [ ] 11.2 Add unit tests for export bundling
+  - Test that payloads below threshold produce JSON with embedded base64 data URIs
+  - Test that payloads above threshold produce a ZIP archive containing the JSON file and separate PNG files
+  - Test that each slotImages entry includes source type, scale, width, and height
+  - Test that an empty captured images map produces JSON without a slotImages field
+  - Test that ZIP generation failure falls back to base64 mode with a warning
+  - Test that mixed dslCanvas and nativeSlot source types are correctly tagged
+  - _Requirements: 10.3, 10.4_
+
+- [ ] 12. Integrate slot detection, image capture, and bundling into the export flow
+- [ ] 12.1 Wire the detection-capture-bundle pipeline into existing export actions
+  - After the existing changeset or complete export produces JSON, run the slot detector on each exported component
+  - For instance nodes, resolve to the main component before detection; skip detection if the main component is null (remote component)
+  - Pass detected slots to the image capture service with the user-configured scale factor and an abort controller
+  - Pass captured images and export JSON to the bundler, then send the bundled result to the plugin UI
+  - _Requirements: 10.1, 10.6, 11.1_
+
+- [ ] 12.2 Add export progress feedback and cancellation UI
+  - Send progress messages to the plugin UI indicating which slot is being rendered and overall completion status
+  - Add a cancel button in the plugin UI that sends a cancellation message to the plugin core, which aborts the image capture via the abort controller
+  - _Requirements: 10.6_
+
+- [ ] 12.3 Handle both JSON and ZIP download formats in the plugin UI
+  - For JSON format exports, use the existing clipboard copy behavior
+  - For ZIP format exports, create a downloadable file from the archive bytes and trigger a browser download via a hidden link element
+  - Update the WebSocket relay to send the bundled result (including format indicator) to the MCP server
+  - _Requirements: 10.3, 10.4_
+
+- [ ] 13. Add bundled image support to DslCanvas component
+- [ ] 13.1 Extend DslCanvas to accept and prefer bundled images
+  - Add a bundledImage prop that provides a pre-rendered data URL with dimensions and source type
+  - When bundledImage is provided, display it directly without sending a render request to the Vite plugin
+  - When bundledImage is not provided, fall back to the existing server-side render path
+  - For native slot images (source type nativeSlot), the bundled image is the only rendering path since there is no DSL representation to render
+  - _Requirements: 11.4, 11.5_
+
+- [ ] 13.2 Verify dual rendering path coexistence
+  - Confirm the existing renderCanvasNodes utility and CLI render --no-canvas behavior remain unchanged after adding the bundled image path
+  - Confirm that when a DslCanvas node has a scale property in the DSL, the Figma plugin export uses the user-selected scale factor (not the DSL-defined scale)
+  - Confirm the Figma plugin's bundled images are produced independently of the renderer-based renderCanvasNodes pipeline
+  - _Requirements: 11.1, 11.2, 11.3_
+
+- [ ] 14. End-to-end integration and final validation
+- [ ] 14.1 Integration test: export with slot detection and image bundling
+  - Create a test component with both DslCanvas regions and native Figma slots
+  - Run the export flow and verify the output JSON contains a slotImages map with entries for both source types
+  - Verify each entry has correct data (base64 URI or file path), source type tag, scale, and dimensions
+  - Verify that when total payload exceeds 1 MB, the output switches to ZIP format
+  - _Requirements: 9.1, 10.1, 10.2, 10.3, 10.4_
+
+- [ ] 14.2 Integration test: DslCanvas with bundled images from export
+  - Load an export package containing slotImages into the DslCanvas component via the bundledImage prop
+  - Verify the component displays the bundled image without triggering a server-side render
+  - Verify aspect ratio is maintained from the bundled image dimensions
+  - Verify native slot images render correctly despite having no DSL representation
+  - _Requirements: 1.1, 1.2, 11.4, 11.5_
+
+- [ ] 14.3 Run type checks and full test suite across all modified packages
+  - Run TypeScript type checking on the plugin, preview, dsl-core, and CLI packages
+  - Run vitest across all packages to confirm no regressions
+  - Verify the fflate dependency is correctly bundled by esbuild into the plugin IIFE
+  - _Requirements: 9.1, 10.1, 11.1_
