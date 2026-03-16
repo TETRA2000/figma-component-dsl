@@ -1,110 +1,114 @@
 /**
- * Yoga Studio — Class schedule, instructor bios, and pricing
+ * Yoga Studio — Class schedule, instructor bios, and membership plans
+ * DSL features: soft gradients, ellipse avatars, FILL columns, cornerRadius, centered text
  */
 import { frame, text, rectangle, ellipse, solid, gradient, horizontal, vertical } from '@figma-dsl/core';
 
-function classRow(time: string, name: string, level: string, instructor: string, levelColor: string) {
+function classRow(name: string, time: string, level: string, instructor: string) {
   return frame(`Class: ${name}`, {
-    autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN', counterAlign: 'CENTER', padX: 14, padY: 12 }),
+    autoLayout: horizontal({ spacing: 0, padX: 16, padY: 14, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
     fills: [solid('#ffffff')],
-    cornerRadius: 8,
+    cornerRadius: 10,
     layoutSizingHorizontal: 'FILL',
-    strokes: [{ color: { r: 0.95, g: 0.95, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+    strokes: [{ color: { r: 0.93, g: 0.90, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      frame('Info', { autoLayout: horizontal({ spacing: 12, counterAlign: 'CENTER' }), children: [
-        text(time, { fontSize: 13, fontWeight: 700, color: '#7c3aed' }),
-        text(name, { fontSize: 14, fontWeight: 600, color: '#1e293b' }),
-        text(instructor, { fontSize: 12, fontWeight: 400, color: '#94a3b8' }),
+      frame('Left', { autoLayout: vertical({ spacing: 2 }), children: [
+        text(name, { fontSize: 14, fontWeight: 600, color: '#1e1b4b' }),
+        text(`${time} · ${instructor}`, { fontSize: 11, fontWeight: 400, color: '#7c7399' }),
       ] }),
-      frame('LevelBadge', { autoLayout: horizontal({ padX: 10, padY: 3 }), fills: [solid(levelColor + '15')], cornerRadius: 9999, children: [
-        text(level, { fontSize: 11, fontWeight: 600, color: levelColor }),
-      ] }),
+      frame('LevelBadge', {
+        autoLayout: horizontal({ spacing: 0, padX: 10, padY: 4 }),
+        fills: [solid(level === 'Beginner' ? '#ecfdf5' : level === 'Intermediate' ? '#fffbeb' : '#fef2f2')],
+        cornerRadius: 9999,
+        children: [text(level, { fontSize: 11, fontWeight: 600, color: level === 'Beginner' ? '#059669' : level === 'Intermediate' ? '#d97706' : '#dc2626' })],
+      }),
     ],
   });
 }
 
-function instructorBio(name: string, style: string, years: number, color: string) {
+function instructorCard(name: string, focus: string, years: number, color: string) {
   return frame(`Instructor: ${name}`, {
-    autoLayout: vertical({ spacing: 8, padX: 16, padY: 16, counterAlign: 'CENTER' }),
+    autoLayout: vertical({ spacing: 10, padX: 18, padY: 18, counterAlign: 'CENTER' }),
     fills: [solid('#ffffff')],
-    cornerRadius: 12,
+    cornerRadius: 14,
     layoutSizingHorizontal: 'FILL',
+    strokes: [{ color: { r: 0.93, g: 0.90, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      ellipse('Avatar', { size: { x: 52, y: 52 }, fills: [gradient([{ hex: color, position: 0 }, { hex: '#a78bfa', position: 1 }], 135)] }),
-      text(name, { fontSize: 14, fontWeight: 600, color: '#1e293b', textAlignHorizontal: 'CENTER' }),
-      text(style, { fontSize: 12, fontWeight: 400, color: '#7c3aed', textAlignHorizontal: 'CENTER' }),
-      text(`${years} years experience`, { fontSize: 11, fontWeight: 400, color: '#94a3b8', textAlignHorizontal: 'CENTER' }),
+      ellipse('Avatar', { size: { x: 56, y: 56 }, fills: [gradient([{ hex: color, position: 0 }, { hex: '#a78bfa', position: 1 }], 135)] }),
+      text(name, { fontSize: 15, fontWeight: 600, color: '#1e1b4b', textAlignHorizontal: 'CENTER' }),
+      text(focus, { fontSize: 12, fontWeight: 400, color: '#7c7399', textAlignHorizontal: 'CENTER' }),
+      text(`${years} years experience`, { fontSize: 11, fontWeight: 500, color: '#8b5cf6', textAlignHorizontal: 'CENTER' }),
     ],
   });
 }
 
-function pricingCard(name: string, price: string, period: string, features: string[], highlighted: boolean) {
-  return frame(`Price: ${name}`, {
-    autoLayout: vertical({ spacing: 10, padX: 18, padY: 18 }),
-    fills: [solid(highlighted ? '#7c3aed' : '#ffffff')],
-    cornerRadius: 12,
-    strokes: highlighted ? [] : [{ color: { r: 0.93, g: 0.93, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+function planCard(name: string, price: string, perks: string[], highlight: boolean) {
+  return frame(`Plan: ${name}`, {
+    autoLayout: vertical({ spacing: 12, padX: 20, padY: 22, counterAlign: 'CENTER' }),
+    fills: [solid(highlight ? '#7c3aed' : '#ffffff')],
+    cornerRadius: 16,
     layoutSizingHorizontal: 'FILL',
+    strokes: highlight ? [] : [{ color: { r: 0.88, g: 0.83, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      text(name, { fontSize: 16, fontWeight: 700, color: highlighted ? '#ffffff' : '#1e293b' }),
-      text(price, { fontSize: 28, fontWeight: 800, color: highlighted ? '#ffffff' : '#7c3aed' }),
-      text(period, { fontSize: 12, fontWeight: 400, color: highlighted ? '#ffffffb3' : '#94a3b8' }),
-      ...features.map(f => text(`✓ ${f}`, { fontSize: 12, fontWeight: 400, color: highlighted ? '#ffffffcc' : '#475569' })),
+      text(name, { fontSize: 18, fontWeight: 700, color: highlight ? '#ffffff' : '#1e1b4b', textAlignHorizontal: 'CENTER' }),
+      text(price, { fontSize: 32, fontWeight: 800, color: highlight ? '#ffffff' : '#7c3aed', textAlignHorizontal: 'CENTER' }),
+      text('/month', { fontSize: 12, fontWeight: 400, color: highlight ? '#c4b5fd' : '#a78bfa', textAlignHorizontal: 'CENTER' }),
+      ...perks.map(p => text(p, { fontSize: 12, fontWeight: 400, color: highlight ? '#e9d5ff' : '#64748b', textAlignHorizontal: 'CENTER' })),
     ],
   });
 }
 
 export default frame('YogaStudioPage', {
-  size: { x: 800 },
+  size: { x: 1000 },
   autoLayout: vertical({ spacing: 0 }),
   fills: [solid('#faf5ff')],
   children: [
     frame('Hero', {
-      autoLayout: vertical({ spacing: 4, padX: 32, padY: 28, counterAlign: 'CENTER' }),
-      fills: [gradient([{ hex: '#4c1d95', position: 0 }, { hex: '#7c3aed', position: 1 }], 135)],
+      autoLayout: vertical({ spacing: 8, padX: 48, padY: 40, counterAlign: 'CENTER' }),
+      fills: [gradient([{ hex: '#7c3aed', position: 0 }, { hex: '#a78bfa', position: 1 }], 135)],
       layoutSizingHorizontal: 'FILL',
       children: [
-        text('Serenity Yoga', { fontSize: 26, fontWeight: 800, color: '#ffffff' }),
-        text('Find your balance — body, mind, spirit', { fontSize: 13, fontWeight: 400, color: '#c4b5fd' }),
+        text('Serene Flow Yoga', { fontSize: 30, fontWeight: 800, color: '#ffffff', textAlignHorizontal: 'CENTER' }),
+        text('Find your balance, breathe deeply', { fontSize: 14, fontWeight: 400, color: '#e9d5ff', textAlignHorizontal: 'CENTER' }),
       ],
     }),
     frame('Content', {
-      autoLayout: vertical({ spacing: 24, padX: 32, padY: 28 }),
+      autoLayout: vertical({ spacing: 28, padX: 44, padY: 28 }),
       layoutSizingHorizontal: 'FILL',
       children: [
         frame('Schedule', {
-          autoLayout: vertical({ spacing: 8 }),
+          autoLayout: vertical({ spacing: 10 }),
           layoutSizingHorizontal: 'FILL',
           children: [
-            text('Today\'s Classes', { fontSize: 18, fontWeight: 700, color: '#1e293b' }),
-            classRow('6:30 AM', 'Sunrise Flow', 'Beginner', 'Maya Chen', '#22c55e'),
-            classRow('9:00 AM', 'Power Vinyasa', 'Advanced', 'Raj Patel', '#ef4444'),
-            classRow('12:00 PM', 'Gentle Stretch', 'All Levels', 'Lina Kim', '#3b82f6'),
-            classRow('5:30 PM', 'Hot Yoga', 'Intermediate', 'James Okoye', '#f59e0b'),
-            classRow('7:00 PM', 'Yin & Restore', 'Beginner', 'Maya Chen', '#22c55e'),
+            text("Today's Classes", { fontSize: 20, fontWeight: 700, color: '#1e1b4b' }),
+            classRow('Morning Vinyasa', '7:00 AM', 'Intermediate', 'Maya'),
+            classRow('Gentle Hatha', '9:30 AM', 'Beginner', 'Liam'),
+            classRow('Power Flow', '12:00 PM', 'Advanced', 'Ava'),
+            classRow('Yin Restore', '5:30 PM', 'Beginner', 'Priya'),
           ],
         }),
         frame('Instructors', {
           autoLayout: vertical({ spacing: 12 }),
           layoutSizingHorizontal: 'FILL',
           children: [
-            text('Our Instructors', { fontSize: 18, fontWeight: 700, color: '#1e293b' }),
-            frame('InstructorGrid', { autoLayout: horizontal({ spacing: 12 }), layoutSizingHorizontal: 'FILL', children: [
-              instructorBio('Maya Chen', 'Hatha & Yin', 12, '#ec4899'),
-              instructorBio('Raj Patel', 'Ashtanga & Vinyasa', 8, '#f59e0b'),
-              instructorBio('Lina Kim', 'Restorative', 6, '#22d3ee'),
+            text('Our Instructors', { fontSize: 20, fontWeight: 700, color: '#1e1b4b' }),
+            frame('InstructorGrid', { autoLayout: horizontal({ spacing: 14 }), layoutSizingHorizontal: 'FILL', children: [
+              instructorCard('Maya Patel', 'Vinyasa & Ashtanga', 12, '#8b5cf6'),
+              instructorCard('Liam Brooks', 'Hatha & Meditation', 8, '#06b6d4'),
+              instructorCard('Ava Santos', 'Power & Hot Yoga', 10, '#ec4899'),
+              instructorCard('Priya Sharma', 'Yin & Restorative', 6, '#10b981'),
             ] }),
           ],
         }),
-        frame('Pricing', {
+        frame('Plans', {
           autoLayout: vertical({ spacing: 12 }),
           layoutSizingHorizontal: 'FILL',
           children: [
-            text('Membership Plans', { fontSize: 18, fontWeight: 700, color: '#1e293b' }),
-            frame('PriceGrid', { autoLayout: horizontal({ spacing: 12 }), layoutSizingHorizontal: 'FILL', children: [
-              pricingCard('Drop-In', '$20', 'per class', ['Single class', 'Mat rental'], false),
-              pricingCard('Monthly', '$89', 'per month', ['Unlimited classes', 'Free mat rental', 'Guest passes'], true),
-              pricingCard('Annual', '$799', 'per year', ['Unlimited classes', 'Workshops included', 'Retail discounts'], false),
+            text('Membership Plans', { fontSize: 20, fontWeight: 700, color: '#1e1b4b', textAlignHorizontal: 'CENTER' }),
+            frame('PlanGrid', { autoLayout: horizontal({ spacing: 14 }), layoutSizingHorizontal: 'FILL', children: [
+              planCard('Drop-In', '$20', ['Single class access', 'Mat rental included'], false),
+              planCard('Unlimited', '$99', ['Unlimited classes', 'Guest passes', 'Workshop access'], true),
+              planCard('10-Pack', '$150', ['10 class credits', 'Valid 3 months'], false),
             ] }),
           ],
         }),

@@ -1,116 +1,57 @@
 /**
- * Concert Venue — Venue page with seating chart placeholder, event list, and ticket tiers
- * DSL features stressed: gradient seating map placeholder, tiered pricing cards with borders,
- * event list rows with date badges, pill genre tags, dark accent header, ellipse seat indicators
+ * Concert Venue — Event listing with ticket tiers, venue info, upcoming shows
+ * DSL features: gradient hero, event list cards, tier pricing, ellipse avatars, status badges
  */
 import { frame, text, rectangle, ellipse, solid, gradient, horizontal, vertical } from '@figma-dsl/core';
 
-function eventRow(artist: string, genre: string, date: string, month: string, day: string, time: string, status: 'on-sale' | 'selling-fast' | 'sold-out') {
-  const statusColor = status === 'on-sale' ? '#16a34a' : status === 'selling-fast' ? '#f59e0b' : '#ef4444';
-  const statusBg = status === 'on-sale' ? '#f0fdf4' : status === 'selling-fast' ? '#fffbeb' : '#fef2f2';
-  const statusLabel = status === 'on-sale' ? 'On Sale' : status === 'selling-fast' ? 'Selling Fast' : 'Sold Out';
+function eventCard(artist: string, date: string, genre: string, color: string, soldOut: boolean) {
   return frame(`Event: ${artist}`, {
     autoLayout: horizontal({ spacing: 14, padX: 16, padY: 14, counterAlign: 'CENTER' }),
-    fills: [solid('#ffffff')],
-    cornerRadius: 12,
-    layoutSizingHorizontal: 'FILL',
-    strokes: [{ color: { r: 0.92, g: 0.92, b: 0.92, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+    fills: [solid('#ffffff')], cornerRadius: 12, layoutSizingHorizontal: 'FILL',
+    strokes: [{ color: { r: 0.92, g: 0.93, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      frame('DateBadge', {
-        size: { x: 52, y: 56 },
-        autoLayout: vertical({ spacing: 0, counterAlign: 'CENTER', align: 'CENTER' }),
-        fills: [solid('#f8fafc')],
-        cornerRadius: 10,
-        children: [
-          text(month, { fontSize: 10, fontWeight: 700, color: '#dc2626', textAlignHorizontal: 'CENTER' }),
-          text(day, { fontSize: 22, fontWeight: 700, color: '#1e293b', textAlignHorizontal: 'CENTER' }),
-        ],
-      }),
+      ellipse(`Av:${artist}`, { size: { x: 48, y: 48 }, fills: [solid(color)] }),
       frame('EventInfo', {
-        autoLayout: vertical({ spacing: 4 }),
-        layoutSizingHorizontal: 'FILL',
+        autoLayout: vertical({ spacing: 2 }), layoutSizingHorizontal: 'FILL',
         children: [
-          text(artist, { fontSize: 15, fontWeight: 700, color: '#1e293b' }),
-          frame('EventMeta', {
-            autoLayout: horizontal({ spacing: 8, counterAlign: 'CENTER' }),
-            children: [
-              text(time, { fontSize: 12, fontWeight: 400, color: '#64748b' }),
-              frame('GenreTag', {
-                autoLayout: horizontal({ spacing: 0, padX: 8, padY: 2 }),
-                fills: [solid('#eff6ff')],
-                cornerRadius: 6,
-                children: [
-                  text(genre, { fontSize: 10, fontWeight: 600, color: '#3b82f6' }),
-                ],
-              }),
-            ],
-          }),
+          text(artist, { fontSize: 15, fontWeight: 700, color: '#111827' }),
+          text(date, { fontSize: 12, fontWeight: 400, color: '#6b7280' }),
+          text(genre, { fontSize: 11, fontWeight: 500, color }),
         ],
       }),
       frame('StatusBadge', {
         autoLayout: horizontal({ spacing: 0, padX: 12, padY: 5 }),
-        fills: [solid(statusBg)],
-        cornerRadius: 9999,
-        children: [
-          text(statusLabel, { fontSize: 11, fontWeight: 600, color: statusColor }),
-        ],
+        fills: [solid(soldOut ? '#fef2f2' : '#f0fdf4')], cornerRadius: 9999,
+        children: [text(soldOut ? 'Sold Out' : 'Available', { fontSize: 11, fontWeight: 600, color: soldOut ? '#dc2626' : '#16a34a' })],
       }),
     ],
   });
 }
 
-function ticketTier(name: string, price: string, features: string[], color: string, recommended: boolean) {
+function ticketTier(name: string, price: string, perks: string[], color: string, featured: boolean) {
   return frame(`Tier: ${name}`, {
-    autoLayout: vertical({ spacing: 12, padX: 20, padY: 20 }),
-    fills: [solid('#ffffff')],
-    cornerRadius: 14,
-    layoutSizingHorizontal: 'FILL',
-    strokes: [{ color: recommended ? { r: 0.86, g: 0.15, b: 0.15, a: 1 } : { r: 0.92, g: 0.92, b: 0.92, a: 1 }, weight: recommended ? 2 : 1, align: 'INSIDE' as const }],
+    autoLayout: vertical({ spacing: 10, padX: 18, padY: 18 }),
+    fills: [solid(featured ? color : '#ffffff')], cornerRadius: 14, layoutSizingHorizontal: 'FILL',
+    strokes: featured ? [] : [{ color: { r: 0.9, g: 0.9, b: 0.9, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      ...(recommended ? [
-        frame('RecommendedBadge', {
-          autoLayout: horizontal({ spacing: 0, padX: 10, padY: 3 }),
-          fills: [solid('#dc2626')],
-          cornerRadius: 6,
-          children: [
-            text('BEST VALUE', { fontSize: 9, fontWeight: 700, color: '#ffffff' }),
-          ],
-        }),
-      ] : []),
-      text(name, { fontSize: 16, fontWeight: 700, color: '#1e293b' }),
-      text(price, { fontSize: 28, fontWeight: 700, color }),
-      frame('TierFeatures', {
-        autoLayout: vertical({ spacing: 6 }),
-        layoutSizingHorizontal: 'FILL',
-        children: features.map(f =>
-          frame(`Feature: ${f}`, {
-            autoLayout: horizontal({ spacing: 8, counterAlign: 'CENTER' }),
-            children: [
-              ellipse('Check', { size: { x: 6, y: 6 }, fills: [solid(color)] }),
-              text(f, { fontSize: 13, fontWeight: 400, color: '#475569' }),
-            ],
-          })
-        ),
-      }),
-      frame('SelectBtn', {
+      text(name, { fontSize: 14, fontWeight: 700, color: featured ? '#ffffff' : '#111827' }),
+      text(price, { fontSize: 26, fontWeight: 800, color: featured ? '#ffffff' : color }),
+      ...perks.map(p => text(`• ${p}`, { fontSize: 12, fontWeight: 400, color: featured ? '#ffffffcc' : '#6b7280' })),
+      frame('TierBtn', {
         autoLayout: horizontal({ spacing: 0, padY: 10, align: 'CENTER' }),
-        fills: [solid(recommended ? '#dc2626' : '#f8fafc')],
-        cornerRadius: 8,
-        layoutSizingHorizontal: 'FILL',
-        children: [
-          text('Select Tickets', { fontSize: 13, fontWeight: 600, color: recommended ? '#ffffff' : '#475569' }),
-        ],
+        fills: [solid(featured ? '#ffffff' : color)], cornerRadius: 8, layoutSizingHorizontal: 'FILL',
+        children: [text('Select', { fontSize: 13, fontWeight: 600, color: featured ? color : '#ffffff' })],
       }),
     ],
   });
 }
 
-function seatLegendItem(label: string, color: string) {
-  return frame(`Legend: ${label}`, {
-    autoLayout: horizontal({ spacing: 6, counterAlign: 'CENTER' }),
+function venueInfo(label: string, value: string) {
+  return frame(`Info: ${label}`, {
+    autoLayout: horizontal({ spacing: 0, padY: 6 }), layoutSizingHorizontal: 'FILL',
     children: [
-      ellipse('Dot', { size: { x: 10, y: 10 }, fills: [solid(color)] }),
-      text(label, { fontSize: 11, fontWeight: 500, color: '#64748b' }),
+      text(label, { fontSize: 12, fontWeight: 500, color: '#9ca3af', layoutSizingHorizontal: 'FILL' }),
+      text(value, { fontSize: 12, fontWeight: 600, color: '#374151' }),
     ],
   });
 }
@@ -118,121 +59,51 @@ function seatLegendItem(label: string, color: string) {
 export default frame('ConcertVenuePage', {
   size: { x: 1000 },
   autoLayout: vertical({ spacing: 0 }),
-  fills: [solid('#f8fafc')],
+  fills: [solid('#fafafa')],
   children: [
-    // Header
-    frame('Header', {
-      autoLayout: vertical({ spacing: 6, padX: 36, padY: 28 }),
-      fills: [gradient([{ hex: '#1e293b', position: 0 }, { hex: '#0f172a', position: 1 }], 135)],
-      layoutSizingHorizontal: 'FILL',
+    frame('Hero', {
+      autoLayout: vertical({ spacing: 6, padX: 36, padY: 32 }), layoutSizingHorizontal: 'FILL',
+      fills: [gradient([{ hex: '#1e1b4b', position: 0 }, { hex: '#4c1d95', position: 0.6 }, { hex: '#7c3aed', position: 1 }], 135)],
       children: [
-        frame('HeaderTop', {
-          autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
-          layoutSizingHorizontal: 'FILL',
-          children: [
-            text('The Grand Arena', { fontSize: 26, fontWeight: 700, color: '#ffffff' }),
-            frame('CapacityBadge', {
-              autoLayout: horizontal({ spacing: 0, padX: 14, padY: 6 }),
-              fills: [solid('#ffffff0d')],
-              cornerRadius: 8,
-              children: [
-                text('Capacity: 12,500', { fontSize: 12, fontWeight: 600, color: '#94a3b8' }),
-              ],
-            }),
-          ],
-        }),
-        text('456 Concert Boulevard, Austin, TX 78701', { fontSize: 14, fontWeight: 400, color: '#94a3b8' }),
+        text('The Velvet Room', { fontSize: 32, fontWeight: 900, color: '#ffffff' }),
+        text('Live Music Venue • Downtown Portland', { fontSize: 14, fontWeight: 500, color: '#c4b5fd' }),
+        text('Capacity 1,200 • Full Bar • VIP Lounge', { fontSize: 12, fontWeight: 400, color: '#a78bfa' }),
       ],
     }),
-
-    // Content
-    frame('Content', {
-      autoLayout: vertical({ spacing: 28, padX: 36, padY: 28 }),
-      layoutSizingHorizontal: 'FILL',
+    frame('MainContent', {
+      autoLayout: horizontal({ spacing: 24, padX: 36, padY: 24 }), layoutSizingHorizontal: 'FILL',
       children: [
-        // Seating chart section
-        frame('SeatingSection', {
-          autoLayout: vertical({ spacing: 14 }),
-          layoutSizingHorizontal: 'FILL',
+        frame('EventsList', {
+          autoLayout: vertical({ spacing: 10 }), layoutSizingHorizontal: 'FILL',
           children: [
-            text('Seating Chart', { fontSize: 18, fontWeight: 700, color: '#1e293b' }),
-            frame('SeatingChart', {
-              size: { x: 1, y: 240 },
-              autoLayout: vertical({ spacing: 8, align: 'CENTER', counterAlign: 'CENTER' }),
-              fills: [gradient([{ hex: '#e2e8f0', position: 0 }, { hex: '#f1f5f9', position: 0.5 }, { hex: '#e2e8f0', position: 1 }], 135)],
-              cornerRadius: 16,
-              layoutSizingHorizontal: 'FILL',
-              children: [
-                // Stage indicator
-                frame('StageIndicator', {
-                  size: { x: 200, y: 32 },
-                  autoLayout: horizontal({ align: 'CENTER', counterAlign: 'CENTER' }),
-                  fills: [solid('#1e293b')],
-                  cornerRadius: 8,
-                  children: [
-                    text('STAGE', { fontSize: 12, fontWeight: 700, color: '#ffffff' }),
-                  ],
-                }),
-                // Seat rows placeholder
-                frame('SeatRows', {
-                  autoLayout: vertical({ spacing: 6, counterAlign: 'CENTER' }),
-                  children: [
-                    frame('Row1', { autoLayout: horizontal({ spacing: 4 }), children: Array.from({ length: 12 }, (_, i) => ellipse(`S1-${i}`, { size: { x: 14, y: 14 }, fills: [solid('#dc2626')] })) }),
-                    frame('Row2', { autoLayout: horizontal({ spacing: 4 }), children: Array.from({ length: 16 }, (_, i) => ellipse(`S2-${i}`, { size: { x: 14, y: 14 }, fills: [solid('#f59e0b')] })) }),
-                    frame('Row3', { autoLayout: horizontal({ spacing: 4 }), children: Array.from({ length: 20 }, (_, i) => ellipse(`S3-${i}`, { size: { x: 14, y: 14 }, fills: [solid('#3b82f6')] })) }),
-                    frame('Row4', { autoLayout: horizontal({ spacing: 4 }), children: Array.from({ length: 24 }, (_, i) => ellipse(`S4-${i}`, { size: { x: 14, y: 14 }, fills: [solid('#22c55e')] })) }),
-                  ],
-                }),
-              ],
-            }),
-            frame('SeatLegend', {
-              autoLayout: horizontal({ spacing: 20, align: 'CENTER' }),
-              layoutSizingHorizontal: 'FILL',
-              children: [
-                seatLegendItem('VIP Front', '#dc2626'),
-                seatLegendItem('Premium', '#f59e0b'),
-                seatLegendItem('Standard', '#3b82f6'),
-                seatLegendItem('General', '#22c55e'),
-              ],
-            }),
+            text('Upcoming Shows', { fontSize: 18, fontWeight: 700, color: '#111827' }),
+            eventCard('Nova Collective', 'Mar 22, 2026 • 8:00 PM', 'Indie Rock', '#7c3aed', false),
+            eventCard('DJ Solaris', 'Mar 28, 2026 • 9:00 PM', 'Electronic', '#3b82f6', false),
+            eventCard('The Ember Trio', 'Apr 3, 2026 • 7:30 PM', 'Jazz Fusion', '#f59e0b', false),
+            eventCard('Midnight Aurora', 'Apr 10, 2026 • 8:00 PM', 'Synthwave', '#ec4899', true),
+            eventCard('Cedar Folk Band', 'Apr 15, 2026 • 7:00 PM', 'Folk', '#16a34a', false),
           ],
         }),
-
-        // Ticket tiers
-        frame('TicketSection', {
-          autoLayout: vertical({ spacing: 14 }),
-          layoutSizingHorizontal: 'FILL',
+        frame('Sidebar', {
+          size: { x: 300 },
+          autoLayout: vertical({ spacing: 16 }),
           children: [
-            text('Ticket Tiers', { fontSize: 18, fontWeight: 700, color: '#1e293b' }),
-            frame('TierGrid', {
-              autoLayout: horizontal({ spacing: 14 }),
-              layoutSizingHorizontal: 'FILL',
+            text('Ticket Tiers', { fontSize: 18, fontWeight: 700, color: '#111827' }),
+            ticketTier('General', '$35', ['Standing room', 'Cash bar access'], '#7c3aed', false),
+            ticketTier('VIP', '$85', ['Reserved seating', 'VIP lounge', 'Complimentary drink'], '#7c3aed', true),
+            ticketTier('Premium', '$150', ['Front row', 'Meet & greet', 'Open bar'], '#7c3aed', false),
+            frame('VenueDetails', {
+              autoLayout: vertical({ spacing: 4, padX: 16, padY: 14 }),
+              fills: [solid('#ffffff')], cornerRadius: 12, layoutSizingHorizontal: 'FILL',
+              strokes: [{ color: { r: 0.9, g: 0.9, b: 0.9, a: 1 }, weight: 1, align: 'INSIDE' as const }],
               children: [
-                ticketTier('General', '$45', ['Standing area access', 'Shared restrooms', 'Cash bar'], '#22c55e', false),
-                ticketTier('Premium', '$95', ['Reserved seating', 'Priority entry', 'Complimentary drink', 'Merch discount'], '#dc2626', true),
-                ticketTier('VIP', '$185', ['Front row seats', 'Backstage meet & greet', 'Open bar', 'VIP lounge', 'Free parking'], '#f59e0b', false),
+                text('Venue Info', { fontSize: 14, fontWeight: 700, color: '#111827' }),
+                venueInfo('Address', '42 Music Lane, Portland'),
+                venueInfo('Parking', 'Garage adjacent'),
+                venueInfo('Age', '21+ after 9 PM'),
+                venueInfo('Doors', '1 hour before show'),
               ],
             }),
-          ],
-        }),
-
-        // Upcoming events
-        frame('EventsSection', {
-          autoLayout: vertical({ spacing: 12 }),
-          layoutSizingHorizontal: 'FILL',
-          children: [
-            frame('EventsHeader', {
-              autoLayout: horizontal({ spacing: 0, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
-              layoutSizingHorizontal: 'FILL',
-              children: [
-                text('Upcoming Events', { fontSize: 18, fontWeight: 700, color: '#1e293b' }),
-                text('Full calendar', { fontSize: 13, fontWeight: 600, color: '#dc2626' }),
-              ],
-            }),
-            eventRow('Aurora Nights', 'Indie Rock', 'Mar 22, 2026', 'MAR', '22', '8:00 PM', 'on-sale'),
-            eventRow('DJ Nebula', 'Electronic', 'Mar 28, 2026', 'MAR', '28', '10:00 PM', 'selling-fast'),
-            eventRow('The Velvet Strings', 'Jazz', 'Apr 3, 2026', 'APR', '03', '7:30 PM', 'on-sale'),
-            eventRow('Crimson Tide', 'Metal', 'Apr 10, 2026', 'APR', '10', '9:00 PM', 'sold-out'),
           ],
         }),
       ],

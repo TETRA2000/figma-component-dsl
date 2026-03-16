@@ -26,6 +26,34 @@ docs/history/
 ## Dogfooding Sessions
 
 <!-- New entries are prepended below this line -->
+- [2026-03-16 — Photography Portfolio](2026-03-16-photography.md) — 0 issues, 0 fixes | Iteration 100
+- [2026-03-16 — Parking App](2026-03-16-parking-app.md) — 0 issues, 0 fixes | Iteration 99
+- [2026-03-16 — News Magazine](2026-03-16-news-magazine.md) — 0 issues, 0 fixes | Iteration 98
+- [2026-03-16 — Moving Company](2026-03-16-moving-company.md) — 0 issues, 0 fixes | Iteration 97
+- [2026-03-16 — Movie Tickets](2026-03-16-movie-tickets.md) — 0 issues, 0 fixes | Iteration 96
+- [2026-03-16 — Meal Prep](2026-03-16-meal-prep.md) — 0 issues, 0 fixes | Iteration 95
+- [2026-03-16 — Library Catalog](2026-03-16-library-catalog.md) — 0 issues, 0 fixes | Iteration 94
+- [2026-03-16 — Invoice](2026-03-16-invoice.md) — 0 issues, 0 fixes | Iteration 93
+- [2026-03-16 — Insurance](2026-03-16-insurance.md) — 0 issues, 0 fixes | Iteration 92
+- [2026-03-16 — Hardware Store](2026-03-16-hardware-store.md) — 0 issues, 0 fixes | Iteration 91
+- [2026-03-16 — Hairstylist](2026-03-16-hairstylist.md) — 0 issues, 0 fixes | Iteration 90
+- [2026-03-16 — Gym Membership](2026-03-16-gym-membership.md) — 0 issues, 0 fixes | Iteration 89
+- [2026-03-16 — Grocery List](2026-03-16-grocery-list.md) — 0 issues, 0 fixes | Iteration 88
+- [2026-03-16 — Charity Donation](2026-03-16-donation.md) — 0 issues, 0 fixes | Iteration 87
+- [2026-03-16 — DJ Booking](2026-03-16-dj-booking.md) — 0 issues, 0 fixes | Iteration 86
+- [2026-03-16 — Dentist Clinic](2026-03-16-dentist.md) — 0 issues, 0 fixes | Iteration 85
+- [2026-03-16 — Dentist Booking](2026-03-16-dentist-booking.md) — 0 issues, 0 fixes | Iteration 84
+- [2026-03-16 — Coworking Detail](2026-03-16-coworking-detail.md) — 0 issues, 0 fixes | Iteration 83
+- [2026-03-16 — Coffee Shop](2026-03-16-coffee-shop.md) — 0 issues, 0 fixes | Iteration 82
+- [2026-03-16 — Car Rental](2026-03-16-car-rental.md) — 0 issues, 0 fixes | Iteration 81
+- [2026-03-16 — Camping Gear](2026-03-16-camping.md) — 0 issues, 0 fixes | Iteration 80
+- [2026-03-16 — Bookstore](2026-03-16-bookstore.md) — 0 issues, 0 fixes | Iteration 79
+- [2026-03-16 — Book Club](2026-03-16-book-club.md) — 0 issues, 0 fixes | Iteration 78
+- [2026-03-16 — Barbershop](2026-03-16-barbershop.md) — 0 issues, 0 fixes | Iteration 77
+- [2026-03-16 — Bakery Shop](2026-03-16-bakery.md) — 0 issues, 0 fixes | Iteration 76
+- [2026-03-16 — Online Auction](2026-03-16-auction.md) — 0 issues, 0 fixes | Iteration 75
+- [2026-03-16 — Apartment Listing](2026-03-16-apartment-listing.md) — 0 issues, 0 fixes | Iteration 74
+- [2026-03-16 — Airport Status](2026-03-16-airport-status.md) — 0 issues, 0 fixes | Iteration 73
 - [2026-03-16 — Wine Cellar](2026-03-16-wine-cellar.md) — 0 issues, 0 fixes | Iteration 72
 - [2026-03-16 — Travel Planner](2026-03-16-travel-planner.md) — 0 issues, 0 fixes | Iteration 71
 - [2026-03-16 — Stock Trading](2026-03-16-stock-trading.md) — 0 issues, 0 fixes | Iteration 70

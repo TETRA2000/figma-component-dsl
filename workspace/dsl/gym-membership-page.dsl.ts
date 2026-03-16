@@ -1,123 +1,170 @@
 /**
- * Gym Membership — Tier pricing cards, class schedule, trainer profiles
- * DSL features: pricing tier cards, gradient featured tier, schedule table, ellipse avatars
+ * Gym Membership Page — Class schedule, membership tiers, trainer profiles
+ *
+ * DSL features stressed: FILL columns, gradient hero section, price cards,
+ * SPACE_BETWEEN for row alignment, cornerRadius cards, ellipse avatars
  */
-import { frame, text, rectangle, ellipse, solid, gradient, horizontal, vertical } from '@figma-dsl/core';
+import {
+  frame, text, rectangle, ellipse,
+  solid, gradient,
+  horizontal, vertical,
+} from '@figma-dsl/core';
 
-function tierCard(name: string, price: string, perks: string[], color: string, featured: boolean) {
-  return frame(`Tier: ${name}`, {
-    autoLayout: vertical({ spacing: 10, padX: 20, padY: 22 }),
-    fills: [featured ? gradient([{ hex: color, position: 0 }, { hex: '#1e1b4b', position: 1 }], 160) : solid('#ffffff')],
-    cornerRadius: 16, layoutSizingHorizontal: 'FILL',
-    strokes: featured ? [] : [{ color: { r: 0.92, g: 0.93, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+function classRow(time: string, name: string, trainer: string, spots: string) {
+  return frame(`Class: ${name}`, {
+    autoLayout: horizontal({ spacing: 0, padX: 16, padY: 14, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
+    fills: [solid('#ffffff')],
+    cornerRadius: 10,
+    layoutSizingHorizontal: 'FILL',
+    strokes: [{ color: { r: 0.91, g: 0.91, b: 0.91, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      text(name, { fontSize: 16, fontWeight: 700, color: featured ? '#ffffff' : '#111827' }),
-      frame('PriceRow', {
-        autoLayout: horizontal({ spacing: 2, counterAlign: 'MAX' }),
+      frame(`${name}Left`, {
+        autoLayout: horizontal({ spacing: 12, counterAlign: 'CENTER' }),
         children: [
-          text(price, { fontSize: 32, fontWeight: 900, color: featured ? '#ffffff' : color }),
-          text('/mo', { fontSize: 13, fontWeight: 400, color: featured ? '#ffffffaa' : '#9ca3af' }),
+          frame('TimeBadge', {
+            autoLayout: horizontal({ padX: 10, padY: 6, align: 'CENTER' }),
+            fills: [solid('#f0f9ff')],
+            cornerRadius: 6,
+            children: [
+              text(time, { fontSize: 12, fontWeight: 700, color: '#0369a1' }),
+            ],
+          }),
+          frame(`${name}Info`, {
+            autoLayout: vertical({ spacing: 2 }),
+            children: [
+              text(name, { fontSize: 14, fontWeight: 600, color: '#1e293b' }),
+              text(`with ${trainer}`, { fontSize: 12, fontWeight: 400, color: '#94a3b8' }),
+            ],
+          }),
         ],
       }),
-      ...perks.map(p => text(`✓  ${p}`, { fontSize: 13, fontWeight: 400, color: featured ? '#ffffffcc' : '#374151' })),
-      frame('TierBtn', {
-        autoLayout: horizontal({ spacing: 0, padY: 12, align: 'CENTER' }),
-        fills: [solid(featured ? '#ffffff' : color)],
-        cornerRadius: 10, layoutSizingHorizontal: 'FILL',
-        children: [text('Join Now', { fontSize: 14, fontWeight: 700, color: featured ? color : '#ffffff' })],
+      text(spots, { fontSize: 12, fontWeight: 500, color: '#64748b' }),
+    ],
+  });
+}
+
+function tierCard(name: string, price: string, perks: string[], highlighted: boolean) {
+  return frame(`Tier: ${name}`, {
+    autoLayout: vertical({ spacing: 20, padX: 24, padY: 28 }),
+    fills: highlighted
+      ? [gradient([{ hex: '#0ea5e9', position: 0 }, { hex: '#6366f1', position: 1 }], 135)]
+      : [solid('#ffffff')],
+    cornerRadius: 16,
+    layoutSizingHorizontal: 'FILL',
+    strokes: highlighted ? [] : [{ color: { r: 0.90, g: 0.90, b: 0.90, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+    children: [
+      text(name, { fontSize: 18, fontWeight: 700, color: highlighted ? '#ffffff' : '#1e293b' }),
+      text(price, { fontSize: 36, fontWeight: 800, color: highlighted ? '#ffffff' : '#0f172a' }),
+      rectangle(`${name}Divider`, {
+        size: { x: 1, y: 1 }, fills: [solid(highlighted ? '#ffffff33' : '#e2e8f0')],
+        layoutSizingHorizontal: 'FILL',
+      }),
+      frame(`${name}Perks`, {
+        autoLayout: vertical({ spacing: 8 }),
+        layoutSizingHorizontal: 'FILL',
+        children: perks.map(p =>
+          text(`\u2713  ${p}`, { fontSize: 13, fontWeight: 400, color: highlighted ? '#e0f2fe' : '#475569' })
+        ),
+      }),
+      frame(`${name}CTA`, {
+        autoLayout: horizontal({ padY: 12, align: 'CENTER' }),
+        fills: highlighted ? [solid('#ffffff')] : [solid('#0ea5e9')],
+        cornerRadius: 10,
+        layoutSizingHorizontal: 'FILL',
+        children: [
+          text('Join Now', {
+            fontSize: 14, fontWeight: 600,
+            color: highlighted ? '#0ea5e9' : '#ffffff',
+            textAlignHorizontal: 'CENTER',
+          }),
+        ],
       }),
     ],
   });
 }
 
-function classRow(time: string, name: string, trainer: string, spots: number) {
-  return frame(`Class: ${name}`, {
-    autoLayout: horizontal({ spacing: 0, padX: 14, padY: 10, counterAlign: 'CENTER' }),
-    layoutSizingHorizontal: 'FILL',
-    strokes: [{ color: { r: 0.95, g: 0.95, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
-    children: [
-      text(time, { fontSize: 12, fontWeight: 600, color: '#6b7280', size: { x: 70 } }),
-      text(name, { fontSize: 13, fontWeight: 600, color: '#111827', layoutSizingHorizontal: 'FILL' }),
-      text(trainer, { fontSize: 12, fontWeight: 400, color: '#6b7280', size: { x: 100 } }),
-      text(`${spots} spots`, { fontSize: 11, fontWeight: 500, color: spots < 5 ? '#dc2626' : '#16a34a' }),
-    ],
-  });
-}
-
-function trainerCard(name: string, specialty: string, color: string) {
+function trainerCard(name: string, specialty: string, color1: string, color2: string) {
   return frame(`Trainer: ${name}`, {
-    autoLayout: vertical({ spacing: 8, padX: 14, padY: 14, counterAlign: 'CENTER' }),
-    fills: [solid('#ffffff')], cornerRadius: 12, layoutSizingHorizontal: 'FILL',
-    strokes: [{ color: { r: 0.92, g: 0.93, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+    autoLayout: vertical({ spacing: 12, padX: 20, padY: 20, counterAlign: 'CENTER' }),
+    fills: [solid('#ffffff')],
+    cornerRadius: 14,
+    layoutSizingHorizontal: 'FILL',
+    strokes: [{ color: { r: 0.92, g: 0.92, b: 0.92, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      ellipse(`Av:${name}`, { size: { x: 56, y: 56 }, fills: [solid(color)] }),
-      text(name, { fontSize: 14, fontWeight: 700, color: '#111827' }),
-      text(specialty, { fontSize: 12, fontWeight: 400, color: '#6b7280' }),
+      ellipse(`${name}Avatar`, {
+        size: { x: 56, y: 56 },
+        fills: [gradient([{ hex: color1, position: 0 }, { hex: color2, position: 1 }], 135)],
+      }),
+      text(name, { fontSize: 15, fontWeight: 600, color: '#1e293b', textAlignHorizontal: 'CENTER' }),
+      text(specialty, { fontSize: 12, fontWeight: 400, color: '#64748b', textAlignHorizontal: 'CENTER' }),
     ],
   });
 }
 
 export default frame('GymMembershipPage', {
-  size: { x: 1000 },
+  size: { x: 1100 },
   autoLayout: vertical({ spacing: 0 }),
   fills: [solid('#f8fafc')],
   children: [
-    frame('Header', {
-      autoLayout: horizontal({ spacing: 0, padX: 32, padY: 16, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
+    // Hero
+    frame('Hero', {
+      autoLayout: vertical({ spacing: 12, padX: 60, padY: 56, counterAlign: 'CENTER' }),
+      fills: [gradient([{ hex: '#0c4a6e', position: 0 }, { hex: '#1e40af', position: 1 }], 135)],
       layoutSizingHorizontal: 'FILL',
-      fills: [gradient([{ hex: '#ef4444', position: 0 }, { hex: '#dc2626', position: 1 }], 90)],
       children: [
-        text('IRONWORKS GYM', { fontSize: 22, fontWeight: 900, color: '#ffffff' }),
-        frame('Nav', {
+        text('ELEVATE YOUR FITNESS', { fontSize: 14, fontWeight: 700, color: '#7dd3fc', textAlignHorizontal: 'CENTER' }),
+        text('Train Hard. Live Strong.', { fontSize: 40, fontWeight: 800, color: '#ffffff', textAlignHorizontal: 'CENTER' }),
+        text('Unlimited classes, top trainers, and state-of-the-art facilities.', {
+          fontSize: 16, fontWeight: 400, color: '#bae6fd', textAlignHorizontal: 'CENTER',
+        }),
+      ],
+    }),
+
+    // Schedule
+    frame('ScheduleSection', {
+      autoLayout: vertical({ spacing: 16, padX: 48, padY: 40 }),
+      layoutSizingHorizontal: 'FILL',
+      children: [
+        text("Today's Classes", { fontSize: 22, fontWeight: 700, color: '#0f172a' }),
+        classRow('6:00 AM', 'Power Yoga', 'Sarah K.', '4 spots left'),
+        classRow('8:30 AM', 'HIIT Blast', 'Mike R.', '2 spots left'),
+        classRow('12:00 PM', 'Spin Cycle', 'Jenna L.', '8 spots left'),
+        classRow('5:30 PM', 'Strength Training', 'Carlos D.', 'Full'),
+      ],
+    }),
+
+    // Membership Tiers
+    frame('TiersSection', {
+      autoLayout: vertical({ spacing: 24, padX: 48, padY: 40 }),
+      layoutSizingHorizontal: 'FILL',
+      children: [
+        text('Membership Plans', { fontSize: 22, fontWeight: 700, color: '#0f172a', textAlignHorizontal: 'CENTER' }),
+        frame('TierCards', {
+          autoLayout: horizontal({ spacing: 20 }),
+          layoutSizingHorizontal: 'FILL',
+          children: [
+            tierCard('Basic', '$29/mo', ['Gym access', 'Locker room', '2 classes/week'], false),
+            tierCard('Pro', '$59/mo', ['Unlimited classes', 'Sauna & pool', 'Personal program', 'Nutrition guide'], true),
+            tierCard('Elite', '$99/mo', ['Everything in Pro', '1-on-1 training', 'Guest passes', 'Recovery suite'], false),
+          ],
+        }),
+      ],
+    }),
+
+    // Trainers
+    frame('TrainersSection', {
+      autoLayout: vertical({ spacing: 20, padX: 48, padY: 40 }),
+      layoutSizingHorizontal: 'FILL',
+      children: [
+        text('Our Trainers', { fontSize: 22, fontWeight: 700, color: '#0f172a' }),
+        frame('TrainerGrid', {
           autoLayout: horizontal({ spacing: 16 }),
+          layoutSizingHorizontal: 'FILL',
           children: [
-            text('Plans', { fontSize: 13, fontWeight: 600, color: '#ffffff' }),
-            text('Classes', { fontSize: 13, fontWeight: 400, color: '#ffffffcc' }),
-            text('Trainers', { fontSize: 13, fontWeight: 400, color: '#ffffffcc' }),
-          ],
-        }),
-      ],
-    }),
-    frame('TierSection', {
-      autoLayout: vertical({ spacing: 14, padX: 32, padY: 24 }),
-      layoutSizingHorizontal: 'FILL',
-      children: [
-        text('Membership Plans', { fontSize: 20, fontWeight: 800, color: '#111827' }),
-        frame('TierRow', {
-          autoLayout: horizontal({ spacing: 16 }), layoutSizingHorizontal: 'FILL',
-          children: [
-            tierCard('Basic', '$29', ['Gym floor access', 'Locker room', 'Free WiFi'], '#ef4444', false),
-            tierCard('Pro', '$59', ['All Basic perks', 'Group classes', 'Sauna & pool', 'Free towels'], '#ef4444', true),
-            tierCard('Elite', '$99', ['All Pro perks', 'Personal trainer 2x/mo', 'Nutrition plan', 'Guest passes'], '#ef4444', false),
-          ],
-        }),
-      ],
-    }),
-    frame('BottomArea', {
-      autoLayout: horizontal({ spacing: 24, padX: 32, padY: 16 }),
-      layoutSizingHorizontal: 'FILL',
-      children: [
-        frame('Schedule', {
-          autoLayout: vertical({ spacing: 6, padX: 16, padY: 16 }),
-          fills: [solid('#ffffff')], cornerRadius: 14, layoutSizingHorizontal: 'FILL',
-          strokes: [{ color: { r: 0.92, g: 0.93, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
-          children: [
-            text("Today's Classes", { fontSize: 16, fontWeight: 700, color: '#111827' }),
-            classRow('6:00 AM', 'Morning HIIT', 'Coach Jake', 3),
-            classRow('8:00 AM', 'Power Yoga', 'Maya S.', 8),
-            classRow('12:00 PM', 'Boxing Circuit', 'Coach Jake', 12),
-            classRow('5:30 PM', 'Spin Class', 'Rachel L.', 2),
-            classRow('7:00 PM', 'CrossFit WOD', 'Mike T.', 6),
-          ],
-        }),
-        frame('Trainers', {
-          size: { x: 300 },
-          autoLayout: vertical({ spacing: 10 }),
-          children: [
-            text('Our Trainers', { fontSize: 16, fontWeight: 700, color: '#111827' }),
-            trainerCard('Coach Jake', 'HIIT & Boxing', '#ef4444'),
-            trainerCard('Maya Singh', 'Yoga & Pilates', '#8b5cf6'),
-            trainerCard('Mike Torres', 'CrossFit & Strength', '#3b82f6'),
+            trainerCard('Sarah Kim', 'Yoga & Pilates', '#f472b6', '#c084fc'),
+            trainerCard('Mike Rivera', 'HIIT & CrossFit', '#fb923c', '#f43f5e'),
+            trainerCard('Jenna Lee', 'Cycling & Cardio', '#34d399', '#22d3ee'),
+            trainerCard('Carlos Diaz', 'Strength & Power', '#60a5fa', '#818cf8'),
           ],
         }),
       ],

@@ -1,0 +1,2669 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetPage": "library-catalog Dogfooding",
+  "components": [
+    {
+      "type": "FRAME",
+      "name": "LibraryCatalogPage",
+      "size": {
+        "x": 1000,
+        "y": 650.4
+      },
+      "opacity": 1,
+      "visible": true,
+      "children": [
+        {
+          "type": "FRAME",
+          "name": "Hero",
+          "size": {
+            "x": 1000,
+            "y": 120.4
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "City Public Library",
+              "size": {
+                "x": 251.2100067138672,
+                "y": 33.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "City Public Library",
+              "fontSize": 28,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "CENTER",
+              "fontWeight": 800,
+              "fontStyle": "Regular"
+            },
+            {
+              "type": "TEXT",
+              "name": "Browse, borrow, and discover",
+              "size": {
+                "x": 196.49000549316406,
+                "y": 16.8
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.7686274509803922,
+                    "g": 0.7098039215686275,
+                    "b": 0.9921568627450981,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "characters": "Browse, borrow, and discover",
+              "fontSize": 14,
+              "fontFamily": "Inter",
+              "textAlignHorizontal": "CENTER",
+              "fontWeight": 400,
+              "fontStyle": "Regular"
+            }
+          ],
+          "fills": [
+            {
+              "type": "GRADIENT_LINEAR",
+              "opacity": 1,
+              "gradientStops": [
+                {
+                  "color": {
+                    "r": 0.2627450980392157,
+                    "g": 0.2196078431372549,
+                    "b": 0.792156862745098,
+                    "a": 1
+                  },
+                  "position": 0
+                },
+                {
+                  "color": {
+                    "r": 0.42745098039215684,
+                    "g": 0.1568627450980392,
+                    "b": 0.8509803921568627,
+                    "a": 1
+                  },
+                  "position": 1
+                }
+              ],
+              "gradientTransform": [
+                [
+                  -0.7071067811865475,
+                  0.7071067811865476,
+                  0.49999999999999994
+                ],
+                [
+                  -0.7071067811865476,
+                  -0.7071067811865475,
+                  1.2071067811865475
+                ]
+              ]
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 6,
+          "paddingTop": 32,
+          "paddingRight": 44,
+          "paddingBottom": 32,
+          "paddingLeft": 44,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "CENTER",
+          "layoutSizingHorizontal": "FILL"
+        },
+        {
+          "type": "FRAME",
+          "name": "Content",
+          "size": {
+            "x": 1000,
+            "y": 530
+          },
+          "opacity": 1,
+          "visible": true,
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "SearchBar",
+              "size": {
+                "x": 912,
+                "y": 39.6
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Search books, authors, genres...",
+                  "size": {
+                    "x": 199.2100067138672,
+                    "y": 15.6
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.6313725490196078,
+                        "g": 0.6313725490196078,
+                        "b": 0.6666666666666666,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "characters": "Search books, authors, genres...",
+                  "fontSize": 13,
+                  "fontFamily": "Inter",
+                  "textAlignHorizontal": "LEFT",
+                  "fontWeight": 400,
+                  "fontStyle": "Regular"
+                }
+              ],
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                  },
+                  "opacity": 1
+                }
+              ],
+              "strokes": [
+                {
+                  "color": {
+                    "r": 0.88,
+                    "g": 0.88,
+                    "b": 0.92,
+                    "a": 1
+                  },
+                  "weight": 1,
+                  "align": "INSIDE"
+                }
+              ],
+              "cornerRadius": 10,
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 0,
+              "paddingTop": 12,
+              "paddingRight": 16,
+              "paddingBottom": 12,
+              "paddingLeft": 16,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            },
+            {
+              "type": "FRAME",
+              "name": "Filters",
+              "size": {
+                "x": 478.4499988555908,
+                "y": 26.4
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Filter: All",
+                  "size": {
+                    "x": 43.010000228881836,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "All",
+                      "size": {
+                        "x": 15.010000228881836,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "All",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.2627450980392157,
+                        "g": 0.2196078431372549,
+                        "b": 0.792156862745098,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "cornerRadius": 13.2,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 6,
+                  "paddingRight": 14,
+                  "paddingBottom": 6,
+                  "paddingLeft": 14,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Filter: Fiction",
+                  "size": {
+                    "x": 67.20999908447266,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Fiction",
+                      "size": {
+                        "x": 39.209999084472656,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.42745098039215684,
+                            "g": 0.1568627450980392,
+                            "b": 0.8509803921568627,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Fiction",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9607843137254902,
+                        "g": 0.9529411764705882,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.84,
+                        "g": 0.81,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 13.2,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 6,
+                  "paddingRight": 14,
+                  "paddingBottom": 6,
+                  "paddingLeft": 14,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Filter: Non-Fiction",
+                  "size": {
+                    "x": 96.55000305175781,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Non-Fiction",
+                      "size": {
+                        "x": 68.55000305175781,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.42745098039215684,
+                            "g": 0.1568627450980392,
+                            "b": 0.8509803921568627,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Non-Fiction",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9607843137254902,
+                        "g": 0.9529411764705882,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.84,
+                        "g": 0.81,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 13.2,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 6,
+                  "paddingRight": 14,
+                  "paddingBottom": 6,
+                  "paddingLeft": 14,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Filter: Science",
+                  "size": {
+                    "x": 74.45999908447266,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Science",
+                      "size": {
+                        "x": 46.459999084472656,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.42745098039215684,
+                            "g": 0.1568627450980392,
+                            "b": 0.8509803921568627,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Science",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9607843137254902,
+                        "g": 0.9529411764705882,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.84,
+                        "g": 0.81,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 13.2,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 6,
+                  "paddingRight": 14,
+                  "paddingBottom": 6,
+                  "paddingLeft": 14,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Filter: History",
+                  "size": {
+                    "x": 70.11999893188477,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "History",
+                      "size": {
+                        "x": 42.119998931884766,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.42745098039215684,
+                            "g": 0.1568627450980392,
+                            "b": 0.8509803921568627,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "History",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9607843137254902,
+                        "g": 0.9529411764705882,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.84,
+                        "g": 0.81,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 13.2,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 6,
+                  "paddingRight": 14,
+                  "paddingBottom": 6,
+                  "paddingLeft": 14,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Filter: Biography",
+                  "size": {
+                    "x": 87.0999984741211,
+                    "y": 26.4
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "TEXT",
+                      "name": "Biography",
+                      "size": {
+                        "x": 59.099998474121094,
+                        "y": 14.399999999999999
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 0.42745098039215684,
+                            "g": 0.1568627450980392,
+                            "b": 0.8509803921568627,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "characters": "Biography",
+                      "fontSize": 12,
+                      "fontFamily": "Inter",
+                      "textAlignHorizontal": "LEFT",
+                      "fontWeight": 600,
+                      "fontStyle": "Semi Bold"
+                    }
+                  ],
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "color": {
+                        "r": 0.9607843137254902,
+                        "g": 0.9529411764705882,
+                        "b": 1,
+                        "a": 1
+                      },
+                      "opacity": 1
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "color": {
+                        "r": 0.84,
+                        "g": 0.81,
+                        "b": 0.95,
+                        "a": 1
+                      },
+                      "weight": 1,
+                      "align": "INSIDE"
+                    }
+                  ],
+                  "cornerRadius": 13.2,
+                  "stackMode": "HORIZONTAL",
+                  "itemSpacing": 0,
+                  "paddingTop": 6,
+                  "paddingRight": 14,
+                  "paddingBottom": 6,
+                  "paddingLeft": 14,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 8,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN"
+            },
+            {
+              "type": "FRAME",
+              "name": "Columns",
+              "size": {
+                "x": 912,
+                "y": 360
+              },
+              "opacity": 1,
+              "visible": true,
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "Col1",
+                  "size": {
+                    "x": 448,
+                    "y": 360
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Book: The Great Gatsby",
+                      "size": {
+                        "x": 448,
+                        "y": 112
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "Cover",
+                          "size": {
+                            "x": 60,
+                            "y": 84
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.11764705882352941,
+                                    "g": 0.25098039215686274,
+                                    "b": 0.6862745098039216,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.23137254901960785,
+                                    "g": 0.5098039215686274,
+                                    "b": 0.9647058823529412,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.8660254037844387,
+                                  0.49999999999999994,
+                                  0.6830127018922194
+                                ],
+                                [
+                                  -0.49999999999999994,
+                                  -0.8660254037844387,
+                                  1.1830127018922194
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "BookInfo",
+                          "size": {
+                            "x": 346,
+                            "y": 80.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "The Great Gatsby",
+                              "size": {
+                                "x": 118.04000091552734,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.11764705882352941,
+                                    "g": 0.1607843137254902,
+                                    "b": 0.23137254901960785,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "The Great Gatsby",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "F. Scott Fitzgerald",
+                              "size": {
+                                "x": 102.72000122070312,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "F. Scott Fitzgerald",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Tags",
+                              "size": {
+                                "x": 105.84000015258789,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Fiction",
+                                  "size": {
+                                    "x": 48.68000030517578,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Fiction",
+                                      "size": {
+                                        "x": 32.68000030517578,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.23137254901960785,
+                                            "g": 0.5098039215686274,
+                                            "b": 0.9647058823529412,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Fiction",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.9647058823529412,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 4,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Classic",
+                                  "size": {
+                                    "x": 51.15999984741211,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Classic",
+                                      "size": {
+                                        "x": 35.15999984741211,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.23137254901960785,
+                                            "g": 0.5098039215686274,
+                                            "b": 0.9647058823529412,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Classic",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.9647058823529412,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 4,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Due: Mar 25",
+                              "size": {
+                                "x": 64.6500015258789,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8627450980392157,
+                                    "g": 0.14901960784313725,
+                                    "b": 0.14901960784313725,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Due: Mar 25",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.9,
+                            "g": 0.9,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 10,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 14,
+                      "paddingTop": 14,
+                      "paddingRight": 14,
+                      "paddingBottom": 14,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Book: Sapiens",
+                      "size": {
+                        "x": 448,
+                        "y": 112
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "Cover",
+                          "size": {
+                            "x": 60,
+                            "y": 84
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.023529411764705882,
+                                    "g": 0.37254901960784315,
+                                    "b": 0.27450980392156865,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.0196078431372549,
+                                    "g": 0.5882352941176471,
+                                    "b": 0.4117647058823529,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.8660254037844387,
+                                  0.49999999999999994,
+                                  0.6830127018922194
+                                ],
+                                [
+                                  -0.49999999999999994,
+                                  -0.8660254037844387,
+                                  1.1830127018922194
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "BookInfo",
+                          "size": {
+                            "x": 346,
+                            "y": 80.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Sapiens",
+                              "size": {
+                                "x": 54.08000183105469,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.11764705882352941,
+                                    "g": 0.1607843137254902,
+                                    "b": 0.23137254901960785,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Sapiens",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Yuval Noah Harari",
+                              "size": {
+                                "x": 102.48999786376953,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Yuval Noah Harari",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Tags",
+                              "size": {
+                                "x": 130.22999954223633,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Non-Fiction",
+                                  "size": {
+                                    "x": 73.13000106811523,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Non-Fiction",
+                                      "size": {
+                                        "x": 57.130001068115234,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.23137254901960785,
+                                            "g": 0.5098039215686274,
+                                            "b": 0.9647058823529412,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Non-Fiction",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.9647058823529412,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 4,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: History",
+                                  "size": {
+                                    "x": 51.099998474121094,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "History",
+                                      "size": {
+                                        "x": 35.099998474121094,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.23137254901960785,
+                                            "g": 0.5098039215686274,
+                                            "b": 0.9647058823529412,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "History",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.9647058823529412,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 4,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Due: Apr 2",
+                              "size": {
+                                "x": 56.31999969482422,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8627450980392157,
+                                    "g": 0.14901960784313725,
+                                    "b": 0.14901960784313725,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Due: Apr 2",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.9,
+                            "g": 0.9,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 10,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 14,
+                      "paddingTop": 14,
+                      "paddingRight": 14,
+                      "paddingBottom": 14,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Book: Dune",
+                      "size": {
+                        "x": 448,
+                        "y": 112
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "Cover",
+                          "size": {
+                            "x": 60,
+                            "y": 84
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.5725490196078431,
+                                    "g": 0.25098039215686274,
+                                    "b": 0.054901960784313725,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.8509803921568627,
+                                    "g": 0.4666666666666667,
+                                    "b": 0.023529411764705882,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.8660254037844387,
+                                  0.49999999999999994,
+                                  0.6830127018922194
+                                ],
+                                [
+                                  -0.49999999999999994,
+                                  -0.8660254037844387,
+                                  1.1830127018922194
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "BookInfo",
+                          "size": {
+                            "x": 346,
+                            "y": 80.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Dune",
+                              "size": {
+                                "x": 35.529998779296875,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.11764705882352941,
+                                    "g": 0.1607843137254902,
+                                    "b": 0.23137254901960785,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Dune",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Frank Herbert",
+                              "size": {
+                                "x": 78.62999725341797,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Frank Herbert",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Tags",
+                              "size": {
+                                "x": 101.26000022888184,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Sci-Fi",
+                                  "size": {
+                                    "x": 44.10000038146973,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Sci-Fi",
+                                      "size": {
+                                        "x": 28.100000381469727,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.23137254901960785,
+                                            "g": 0.5098039215686274,
+                                            "b": 0.9647058823529412,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Sci-Fi",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.9647058823529412,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 4,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                },
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Classic",
+                                  "size": {
+                                    "x": 51.15999984741211,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Classic",
+                                      "size": {
+                                        "x": 35.15999984741211,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.23137254901960785,
+                                            "g": 0.5098039215686274,
+                                            "b": 0.9647058823529412,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Classic",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.9647058823529412,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 4,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Due: Mar 30",
+                              "size": {
+                                "x": 65.31999969482422,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8627450980392157,
+                                    "g": 0.14901960784313725,
+                                    "b": 0.14901960784313725,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Due: Mar 30",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.9,
+                            "g": 0.9,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 10,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 14,
+                      "paddingTop": 14,
+                      "paddingRight": 14,
+                      "paddingBottom": 14,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                },
+                {
+                  "type": "FRAME",
+                  "name": "Col2",
+                  "size": {
+                    "x": 448,
+                    "y": 360
+                  },
+                  "opacity": 1,
+                  "visible": true,
+                  "children": [
+                    {
+                      "type": "FRAME",
+                      "name": "Book: Becoming",
+                      "size": {
+                        "x": 448,
+                        "y": 112
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "Cover",
+                          "size": {
+                            "x": 60,
+                            "y": 84
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.6235294117647059,
+                                    "g": 0.07058823529411765,
+                                    "b": 0.2235294117647059,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.8823529411764706,
+                                    "g": 0.11372549019607843,
+                                    "b": 0.2823529411764706,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.8660254037844387,
+                                  0.49999999999999994,
+                                  0.6830127018922194
+                                ],
+                                [
+                                  -0.49999999999999994,
+                                  -0.8660254037844387,
+                                  1.1830127018922194
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "BookInfo",
+                          "size": {
+                            "x": 346,
+                            "y": 80.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Becoming",
+                              "size": {
+                                "x": 67.77999877929688,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.11764705882352941,
+                                    "g": 0.1607843137254902,
+                                    "b": 0.23137254901960785,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Becoming",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Michelle Obama",
+                              "size": {
+                                "x": 91.51000213623047,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Michelle Obama",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Tags",
+                              "size": {
+                                "x": 65.25,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Biography",
+                                  "size": {
+                                    "x": 65.25,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Biography",
+                                      "size": {
+                                        "x": 49.25,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.23137254901960785,
+                                            "g": 0.5098039215686274,
+                                            "b": 0.9647058823529412,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Biography",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.9647058823529412,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 4,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Due: Apr 5",
+                              "size": {
+                                "x": 56.20000076293945,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8627450980392157,
+                                    "g": 0.14901960784313725,
+                                    "b": 0.14901960784313725,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Due: Apr 5",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.9,
+                            "g": 0.9,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 10,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 14,
+                      "paddingTop": 14,
+                      "paddingRight": 14,
+                      "paddingBottom": 14,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Book: Atomic Habits",
+                      "size": {
+                        "x": 448,
+                        "y": 112
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "Cover",
+                          "size": {
+                            "x": 60,
+                            "y": 84
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.48627450980392156,
+                                    "g": 0.17647058823529413,
+                                    "b": 0.07058823529411765,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.9176470588235294,
+                                    "g": 0.34509803921568627,
+                                    "b": 0.047058823529411764,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.8660254037844387,
+                                  0.49999999999999994,
+                                  0.6830127018922194
+                                ],
+                                [
+                                  -0.49999999999999994,
+                                  -0.8660254037844387,
+                                  1.1830127018922194
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "BookInfo",
+                          "size": {
+                            "x": 346,
+                            "y": 80.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "Atomic Habits",
+                              "size": {
+                                "x": 94.5199966430664,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.11764705882352941,
+                                    "g": 0.1607843137254902,
+                                    "b": 0.23137254901960785,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Atomic Habits",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "James Clear",
+                              "size": {
+                                "x": 70.8499984741211,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "James Clear",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Tags",
+                              "size": {
+                                "x": 61.56999969482422,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Self-Help",
+                                  "size": {
+                                    "x": 61.56999969482422,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Self-Help",
+                                      "size": {
+                                        "x": 45.56999969482422,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.23137254901960785,
+                                            "g": 0.5098039215686274,
+                                            "b": 0.9647058823529412,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Self-Help",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.9647058823529412,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 4,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Due: Mar 28",
+                              "size": {
+                                "x": 64.95999908447266,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8627450980392157,
+                                    "g": 0.14901960784313725,
+                                    "b": 0.14901960784313725,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Due: Mar 28",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.9,
+                            "g": 0.9,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 10,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 14,
+                      "paddingTop": 14,
+                      "paddingRight": 14,
+                      "paddingBottom": 14,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    },
+                    {
+                      "type": "FRAME",
+                      "name": "Book: The Martian",
+                      "size": {
+                        "x": 448,
+                        "y": 112
+                      },
+                      "opacity": 1,
+                      "visible": true,
+                      "children": [
+                        {
+                          "type": "ROUNDED_RECTANGLE",
+                          "name": "Cover",
+                          "size": {
+                            "x": 60,
+                            "y": 84
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [],
+                          "fills": [
+                            {
+                              "type": "GRADIENT_LINEAR",
+                              "opacity": 1,
+                              "gradientStops": [
+                                {
+                                  "color": {
+                                    "r": 0.11764705882352941,
+                                    "g": 0.22745098039215686,
+                                    "b": 0.37254901960784315,
+                                    "a": 1
+                                  },
+                                  "position": 0
+                                },
+                                {
+                                  "color": {
+                                    "r": 0.011764705882352941,
+                                    "g": 0.4117647058823529,
+                                    "b": 0.6313725490196078,
+                                    "a": 1
+                                  },
+                                  "position": 1
+                                }
+                              ],
+                              "gradientTransform": [
+                                [
+                                  -0.8660254037844387,
+                                  0.49999999999999994,
+                                  0.6830127018922194
+                                ],
+                                [
+                                  -0.49999999999999994,
+                                  -0.8660254037844387,
+                                  1.1830127018922194
+                                ]
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "FRAME",
+                          "name": "BookInfo",
+                          "size": {
+                            "x": 346,
+                            "y": 80.4
+                          },
+                          "opacity": 1,
+                          "visible": true,
+                          "children": [
+                            {
+                              "type": "TEXT",
+                              "name": "The Martian",
+                              "size": {
+                                "x": 81.58999633789062,
+                                "y": 16.8
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.11764705882352941,
+                                    "g": 0.1607843137254902,
+                                    "b": 0.23137254901960785,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "The Martian",
+                              "fontSize": 14,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Andy Weir",
+                              "size": {
+                                "x": 58.529998779296875,
+                                "y": 14.399999999999999
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.39215686274509803,
+                                    "g": 0.4549019607843137,
+                                    "b": 0.5450980392156862,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Andy Weir",
+                              "fontSize": 12,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 400,
+                              "fontStyle": "Regular"
+                            },
+                            {
+                              "type": "FRAME",
+                              "name": "Tags",
+                              "size": {
+                                "x": 44.10000038146973,
+                                "y": 18
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [
+                                {
+                                  "type": "FRAME",
+                                  "name": "Tag: Sci-Fi",
+                                  "size": {
+                                    "x": 44.10000038146973,
+                                    "y": 18
+                                  },
+                                  "opacity": 1,
+                                  "visible": true,
+                                  "children": [
+                                    {
+                                      "type": "TEXT",
+                                      "name": "Sci-Fi",
+                                      "size": {
+                                        "x": 28.100000381469727,
+                                        "y": 12
+                                      },
+                                      "opacity": 1,
+                                      "visible": true,
+                                      "children": [],
+                                      "fills": [
+                                        {
+                                          "type": "SOLID",
+                                          "color": {
+                                            "r": 0.23137254901960785,
+                                            "g": 0.5098039215686274,
+                                            "b": 0.9647058823529412,
+                                            "a": 1
+                                          },
+                                          "opacity": 1
+                                        }
+                                      ],
+                                      "characters": "Sci-Fi",
+                                      "fontSize": 10,
+                                      "fontFamily": "Inter",
+                                      "textAlignHorizontal": "LEFT",
+                                      "fontWeight": 600,
+                                      "fontStyle": "Semi Bold"
+                                    }
+                                  ],
+                                  "fills": [
+                                    {
+                                      "type": "SOLID",
+                                      "color": {
+                                        "r": 0.9372549019607843,
+                                        "g": 0.9647058823529412,
+                                        "b": 1,
+                                        "a": 1
+                                      },
+                                      "opacity": 1
+                                    }
+                                  ],
+                                  "cornerRadius": 4,
+                                  "stackMode": "HORIZONTAL",
+                                  "itemSpacing": 0,
+                                  "paddingTop": 3,
+                                  "paddingRight": 8,
+                                  "paddingBottom": 3,
+                                  "paddingLeft": 8,
+                                  "primaryAxisAlignItems": "MIN",
+                                  "counterAxisAlignItems": "MIN"
+                                }
+                              ],
+                              "stackMode": "HORIZONTAL",
+                              "itemSpacing": 6,
+                              "paddingTop": 0,
+                              "paddingRight": 0,
+                              "paddingBottom": 0,
+                              "paddingLeft": 0,
+                              "primaryAxisAlignItems": "MIN",
+                              "counterAxisAlignItems": "MIN"
+                            },
+                            {
+                              "type": "TEXT",
+                              "name": "Due: Apr 10",
+                              "size": {
+                                "x": 61.380001068115234,
+                                "y": 13.2
+                              },
+                              "opacity": 1,
+                              "visible": true,
+                              "children": [],
+                              "fills": [
+                                {
+                                  "type": "SOLID",
+                                  "color": {
+                                    "r": 0.8627450980392157,
+                                    "g": 0.14901960784313725,
+                                    "b": 0.14901960784313725,
+                                    "a": 1
+                                  },
+                                  "opacity": 1
+                                }
+                              ],
+                              "characters": "Due: Apr 10",
+                              "fontSize": 11,
+                              "fontFamily": "Inter",
+                              "textAlignHorizontal": "LEFT",
+                              "fontWeight": 600,
+                              "fontStyle": "Semi Bold"
+                            }
+                          ],
+                          "stackMode": "VERTICAL",
+                          "itemSpacing": 6,
+                          "paddingTop": 0,
+                          "paddingRight": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "primaryAxisAlignItems": "MIN",
+                          "counterAxisAlignItems": "MIN",
+                          "layoutSizingHorizontal": "FILL"
+                        }
+                      ],
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1
+                          },
+                          "opacity": 1
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "color": {
+                            "r": 0.9,
+                            "g": 0.9,
+                            "b": 0.93,
+                            "a": 1
+                          },
+                          "weight": 1,
+                          "align": "INSIDE"
+                        }
+                      ],
+                      "cornerRadius": 10,
+                      "stackMode": "HORIZONTAL",
+                      "itemSpacing": 14,
+                      "paddingTop": 14,
+                      "paddingRight": 14,
+                      "paddingBottom": 14,
+                      "paddingLeft": 14,
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "layoutSizingHorizontal": "FILL"
+                    }
+                  ],
+                  "stackMode": "VERTICAL",
+                  "itemSpacing": 12,
+                  "paddingTop": 0,
+                  "paddingRight": 0,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "layoutSizingHorizontal": "FILL"
+                }
+              ],
+              "stackMode": "HORIZONTAL",
+              "itemSpacing": 16,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "layoutSizingHorizontal": "FILL"
+            }
+          ],
+          "stackMode": "VERTICAL",
+          "itemSpacing": 24,
+          "paddingTop": 28,
+          "paddingRight": 44,
+          "paddingBottom": 28,
+          "paddingLeft": 44,
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "layoutSizingHorizontal": "FILL"
+        }
+      ],
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.9803921568627451,
+            "g": 0.9607843137254902,
+            "b": 1,
+            "a": 1
+          },
+          "opacity": 1
+        }
+      ],
+      "stackMode": "VERTICAL",
+      "itemSpacing": 0,
+      "paddingTop": 0,
+      "paddingRight": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "layoutSizingHorizontal": "FIXED"
+    }
+  ]
+}

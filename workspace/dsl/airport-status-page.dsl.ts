@@ -27,7 +27,7 @@ function flightRow(flight: string, dest: string, time: string, gate: string, sta
 function tabButton(label: string, active: boolean) {
   return frame(`Tab: ${label}`, {
     autoLayout: horizontal({ padX: 20, padY: 10 }),
-    fills: [solid(active ? '#1e40af' : 'transparent')],
+    fills: [solid(active ? '#1e40af' : '#ffffff00')],
     cornerRadius: 8,
     children: [text(label, { fontSize: 14, fontWeight: 600, color: active ? '#ffffff' : '#64748b' })],
   });
