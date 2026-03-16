@@ -1,5 +1,5 @@
 import type { FigmaNodeDict, CompileResult, FigmaPaint } from '@figma-dsl/compiler';
-import type { PluginNodeDef, PluginInput } from '@figma-dsl/core';
+import type { PluginNodeDef, PluginInput, SourceSnapshots } from '@figma-dsl/core';
 import { writeFileSync, mkdirSync, readFileSync } from 'fs';
 import { dirname, resolve, extname, isAbsolute } from 'path';
 
@@ -238,6 +238,7 @@ export function generatePluginInput(
   compileResult: CompileResult,
   pageName = 'Component Library',
   options?: ExportOptions,
+  componentSources?: Readonly<Record<string, SourceSnapshots>>,
 ): PluginInput {
   const assetDir = options?.assetDir ?? process.cwd();
   const rootNode = convertToPluginNode(compileResult.root, assetDir);
@@ -249,11 +250,17 @@ export function generatePluginInput(
       ? [rootNode]
       : [rootNode];
 
-  return {
+  const result: PluginInput = {
     schemaVersion: '1.0.0',
     targetPage: pageName,
     components,
   };
+
+  if (componentSources && Object.keys(componentSources).length > 0) {
+    return { ...result, componentSources };
+  }
+
+  return result;
 }
 
 export function exportToFile(
