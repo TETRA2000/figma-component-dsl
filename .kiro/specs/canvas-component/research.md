@@ -156,6 +156,14 @@
 - **Selected Approach**: All rendering in plugin sandbox via `exportAsync`
 - **Rationale**: `exportAsync` runs in Figma's rendering engine, produces pixel-perfect output. UI thread has no access to canvas nodes.
 
+### Design Review Findings (Post-Validation)
+- **Context**: Design review identified three addressable issues before task generation
+- **Findings**:
+  1. **Native Slot round-trip limitation**: No public API exists to recreate SLOT nodes programmatically. Components re-imported via plugin will lose slot semantics. Mitigation: document as known limitation, store slot metadata in `pluginData` for future API availability.
+  2. **`componentPropertyDefinitions` key parsing fragility**: The `"{LayerName}#{N}:{M}"` key format is an internal Figma convention. Layer names containing `#` break naive splitting; renamed layers cause match failures. Mitigation: split on **last** `#` instead of first; add positional fallback correlation when name matching fails, with warning logging.
+  3. **No cancellation for long-running exports**: The detect → capture → bundle pipeline lacks abort support. For components with many slots at high scale, designers cannot cancel. Mitigation: add `AbortSignal` parameter to `CaptureOptions`, check between captures, wire to cancel button in plugin UI.
+- **Implications**: All three issues are addressable without architectural changes. Issue #1 is a documentation addition, #2 is a parsing enhancement with fallback, #3 is an `AbortSignal` parameter addition.
+
 ## Risks & Mitigations
 - **Slots API instability** — Beta feature, API may change → Pin plugin typings, graceful degradation
 - **Large export performance** — Many slots × high scale = slow → Progress feedback, cancellation support

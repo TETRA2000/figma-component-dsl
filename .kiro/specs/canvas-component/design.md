@@ -21,6 +21,10 @@
 - Replacing existing HTML/CSS components
 - Interactive content inside canvas/slot image regions
 
+### Known Limitations
+- **Native Slot round-trip**: Components imported via the plugin that originally contained Figma native Slots (`type: "SLOT"`) will lose their slot semantics on re-import. There is no public Figma Plugin API to programmatically create or define Slots — `exportAsync` captures the visual content as images, but slot behavior cannot be restored. The plugin preserves slot content and stores slot metadata in `pluginData` for potential future use if the API becomes available. This limitation affects only the re-import path; initial export and image capture work correctly.
+- **`componentPropertyDefinitions` key format**: The `"{LayerName}#{N}:{M}"` key format used for slot detection is an internal Figma convention, not a documented stable API contract. Layer names containing `#` may cause incorrect parsing. If a designer renames a slot layer after creation, the property key may not update, causing a match failure. The SlotDetector includes fallback logic (see below) to mitigate this.
+
 ## Architecture
 
 ### Existing Architecture Analysis
@@ -135,9 +139,9 @@ sequenceDiagram
     Core->>Core: computeChangeset or computeCompleteExport
     Core->>Detector: detectSlots for exported components
     Detector-->>Core: SlotDetectionResult array
-    Core->>Capture: captureSlotImages for each detected slot
-    Capture->>Capture: node.exportAsync PNG at scale
-    Capture-->>Core: Map of slotName to Uint8Array
+    Core->>Capture: captureSlotImages for each detected slot with AbortSignal
+    Capture->>Capture: node.exportAsync PNG at scale - check signal between captures
+    Capture-->>Core: Map of slotName to Uint8Array - partial if aborted
     Core->>Bundler: bundleExport with JSON + images
     Bundler->>Bundler: Calculate total payload size
     alt Below threshold
@@ -158,8 +162,11 @@ flowchart TD
     C -->|Yes| D[Tag as nativeSlot - wrapped]
     C -->|No| E[Check for dsl-canvas plugin data only]
     B -->|Yes| F[Extract slot names from keys - Name before hash]
-    F --> G[Match children by layer name]
-    G --> H{Child node.type === SLOT?}
+    F --> G[Match children by layer name - split on last hash]
+    G --> G2{Name match found?}
+    G2 -->|Yes| H{Child node.type === SLOT?}
+    G2 -->|No| G3[Fallback: positional correlation with warning]
+    G3 --> H
     H -->|Yes| I[Wrapped slot - tag as nativeSlot]
     H -->|No| J[Converted slot - frame acts as slot - tag as nativeSlot]
     I --> K{Has dsl-canvas plugin data?}
@@ -410,7 +417,8 @@ function detectSlots(componentNode: ComponentNode | ComponentSetNode): SlotDetec
 
 **Implementation Notes**
 - Create as plugin/src/slot-detector.ts (new file, single responsibility)
-- **Primary detection**: Read `componentNode.componentPropertyDefinitions`, filter for entries with `type === "SLOT"`. Parse key format `"{LayerName}#{N}:{M}"` — extract name before `#` to match children by `node.name`.
+- **Primary detection**: Read `componentNode.componentPropertyDefinitions`, filter for entries with `type === "SLOT"`. Parse key format `"{LayerName}#{N}:{M}"` — extract name before the **last** `#` to handle layer names containing `#`. Match extracted name to children by `node.name`.
+- **Name-match fallback**: If no child matches the extracted name (e.g., designer renamed the layer after slot creation), fall back to positional correlation: match the Nth SLOT-type property definition to the Nth unmatched child with `(node.type as string) === "SLOT"` or the Nth unmatched FRAME child. Log a warning when fallback is used.
 - **Determine slotNodeKind**: If matched child has `(node.type as string) === "SLOT"` → `wrapped`; if `type === "FRAME"` → `converted`
 - **Supplementary detection**: Also scan children for `(node.type as string) === "SLOT"` to catch wrapped slots that may not have componentPropertyDefinitions (edge case)
 - **DslCanvas classification**: Check `node.getPluginData('dsl-canvas')` on each detected node
@@ -433,6 +441,7 @@ function detectSlots(componentNode: ComponentNode | ComponentSetNode): SlotDetec
 - Default scale: 2x; configurable via export settings (1x, 2x, 3x, 4x)
 - Export only slot frame content (the node and its children)
 - Report progress per-slot during capture
+- Check `signal.aborted` before each capture; if aborted, return partial results collected so far
 - On per-slot failure, log error, skip that slot, continue with remaining
 
 **Dependencies**
@@ -462,6 +471,8 @@ interface CaptureOptions {
   scale?: number;
   /** Progress callback */
   onProgress?: (current: number, total: number, slotName: string) => void;
+  /** Abort signal for cancellation — checked between captures */
+  signal?: AbortSignal;
 }
 
 /**
@@ -578,6 +589,7 @@ function bundleExport(
 - Update `figma.ui.postMessage` to send `BundledExport` result type
 - Update UI to handle both JSON and ZIP download formats
 - Progress feedback via `figma.ui.postMessage({ type: 'export-progress', ... })`
+- Cancel button in UI sends `{ type: 'export-cancel' }` message; plugin core calls `abortController.abort()` to signal ImageCapture
 - WebSocket relay in `handleWsMessage()` sends bundled result to MCP server
 
 ---
