@@ -1,159 +1,204 @@
 /**
- * Apartment Listing — Floor plan placeholder, amenities grid, resident reviews
- * DSL features: gradient hero, feature grid, review cards with ellipse avatars, amenity tags
+ * Apartment Listing — Floor plan placeholder, amenity icons, price breakdown
+ *
+ * DSL features stressed: gradient image placeholder, amenity pills,
+ * table rows, cornerRadius cards, FILL sizing, SPACE_BETWEEN
  */
-import { frame, text, rectangle, ellipse, solid, gradient, horizontal, vertical } from '@figma-dsl/core';
+import {
+  frame, text, rectangle, ellipse,
+  solid, gradient,
+  horizontal, vertical,
+} from '@figma-dsl/core';
 
-function amenityItem(icon: string, label: string) {
+function amenityPill(label: string) {
   return frame(`Amenity: ${label}`, {
-    autoLayout: horizontal({ spacing: 8, padX: 12, padY: 8, counterAlign: 'CENTER' }),
-    fills: [solid('#f8fafc')], cornerRadius: 8, layoutSizingHorizontal: 'FILL',
+    autoLayout: horizontal({ padX: 14, padY: 7 }),
+    fills: [solid('#f0fdf4')],
+    cornerRadius: 9999,
+    strokes: [{ color: { r: 0.74, g: 0.90, b: 0.78, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      text(icon, { fontSize: 16, fontWeight: 400, color: '#2563eb' }),
-      text(label, { fontSize: 13, fontWeight: 500, color: '#374151' }),
+      text(label, { fontSize: 12, fontWeight: 500, color: '#15803d' }),
     ],
   });
 }
 
-function reviewCard(name: string, rating: number, comment: string, date: string, color: string) {
-  const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
-  return frame(`Review: ${name}`, {
-    autoLayout: vertical({ spacing: 8, padX: 16, padY: 14 }),
-    fills: [solid('#ffffff')], cornerRadius: 12, layoutSizingHorizontal: 'FILL',
-    strokes: [{ color: { r: 0.92, g: 0.93, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+function priceRow(label: string, amount: string, bold: boolean) {
+  return frame(`Price: ${label}`, {
+    autoLayout: horizontal({ spacing: 0, padX: 0, padY: 10, align: 'SPACE_BETWEEN' }),
+    layoutSizingHorizontal: 'FILL',
+    strokes: bold ? [] : [{ color: { r: 0.94, g: 0.94, b: 0.94, a: 1 }, weight: 1, align: 'INSIDE' as const }],
     children: [
-      frame('ReviewHeader', {
-        autoLayout: horizontal({ spacing: 10, counterAlign: 'CENTER' }),
-        children: [
-          ellipse(`Av:${name}`, { size: { x: 36, y: 36 }, fills: [solid(color)] }),
-          frame('ReviewerInfo', {
-            autoLayout: vertical({ spacing: 1 }),
-            children: [
-              text(name, { fontSize: 13, fontWeight: 600, color: '#111827' }),
-              text(date, { fontSize: 11, fontWeight: 400, color: '#9ca3af' }),
-            ],
-          }),
-        ],
-      }),
-      text(stars, { fontSize: 13, fontWeight: 400, color: '#f59e0b' }),
-      text(comment, {
-        fontSize: 13, fontWeight: 400, color: '#6b7280',
-        size: { x: 400 }, textAutoResize: 'HEIGHT', lineHeight: { value: 150, unit: 'PERCENT' },
-      }),
+      text(label, { fontSize: 14, fontWeight: bold ? 700 : 400, color: bold ? '#111827' : '#6b7280' }),
+      text(amount, { fontSize: 14, fontWeight: bold ? 700 : 500, color: bold ? '#111827' : '#374151' }),
     ],
   });
 }
 
-function detailRow(label: string, value: string) {
+function detailItem(label: string, value: string) {
   return frame(`Detail: ${label}`, {
-    autoLayout: horizontal({ spacing: 0, padY: 8 }), layoutSizingHorizontal: 'FILL',
-    strokes: [{ color: { r: 0.95, g: 0.95, b: 0.95, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+    autoLayout: vertical({ spacing: 4, counterAlign: 'CENTER' }),
+    layoutSizingHorizontal: 'FILL',
     children: [
-      text(label, { fontSize: 13, fontWeight: 500, color: '#6b7280', layoutSizingHorizontal: 'FILL' }),
-      text(value, { fontSize: 13, fontWeight: 600, color: '#111827' }),
+      text(value, { fontSize: 22, fontWeight: 700, color: '#111827', textAlignHorizontal: 'CENTER' }),
+      text(label, { fontSize: 12, fontWeight: 400, color: '#6b7280', textAlignHorizontal: 'CENTER' }),
     ],
   });
 }
 
 export default frame('ApartmentListingPage', {
-  size: { x: 1000 },
+  size: { x: 1040 },
   autoLayout: vertical({ spacing: 0 }),
-  fills: [solid('#ffffff')],
+  fills: [solid('#f9fafb')],
   children: [
-    rectangle('HeroImage', {
-      size: { x: 1000, y: 300 },
-      fills: [gradient([{ hex: '#475569', position: 0 }, { hex: '#94a3b8', position: 0.5 }, { hex: '#e2e8f0', position: 1 }], 160)],
-    }),
-    frame('ListingHeader', {
-      autoLayout: horizontal({ spacing: 0, padX: 36, padY: 20, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
+    // Header
+    frame('Header', {
+      autoLayout: horizontal({ spacing: 0, padX: 40, padY: 18, align: 'SPACE_BETWEEN', counterAlign: 'CENTER' }),
       layoutSizingHorizontal: 'FILL',
+      fills: [solid('#ffffff')],
+      strokes: [{ color: { r: 0.93, g: 0.93, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
       children: [
-        frame('TitleArea', {
-          autoLayout: vertical({ spacing: 4 }),
+        text('HomeFind', { fontSize: 22, fontWeight: 800, color: '#16a34a' }),
+        frame('HeaderNav', {
+          autoLayout: horizontal({ spacing: 20 }),
           children: [
-            text('The Meridian — Unit 8B', { fontSize: 24, fontWeight: 800, color: '#111827' }),
-            text('2BR / 2BA • 1,150 sqft • Available Apr 1', { fontSize: 13, fontWeight: 400, color: '#6b7280' }),
-          ],
-        }),
-        frame('PriceArea', {
-          autoLayout: vertical({ spacing: 0, counterAlign: 'MAX' }),
-          children: [
-            text('$2,850/mo', { fontSize: 26, fontWeight: 800, color: '#2563eb' }),
-            text('12-month lease', { fontSize: 12, fontWeight: 400, color: '#9ca3af' }),
+            text('Search', { fontSize: 14, fontWeight: 500, color: '#374151' }),
+            text('Saved', { fontSize: 14, fontWeight: 500, color: '#374151' }),
+            text('Messages', { fontSize: 14, fontWeight: 500, color: '#374151' }),
           ],
         }),
       ],
     }),
-    frame('MainContent', {
-      autoLayout: horizontal({ spacing: 28, padX: 36, padY: 20 }),
+
+    // Main content
+    frame('ListingContent', {
+      autoLayout: horizontal({ spacing: 28, padX: 40, padY: 32 }),
       layoutSizingHorizontal: 'FILL',
       children: [
+        // Left column
         frame('LeftCol', {
-          autoLayout: vertical({ spacing: 20 }), layoutSizingHorizontal: 'FILL',
+          autoLayout: vertical({ spacing: 24 }),
+          layoutSizingHorizontal: 'FILL',
           children: [
+            // Floor Plan Placeholder
             frame('FloorPlan', {
-              autoLayout: vertical({ spacing: 8 }), layoutSizingHorizontal: 'FILL',
+              autoLayout: vertical({ spacing: 0, counterAlign: 'CENTER' }),
+              size: { x: 1, y: 280 },
+              fills: [gradient([{ hex: '#d1fae5', position: 0 }, { hex: '#a7f3d0', position: 1 }], 160)],
+              cornerRadius: 14,
+              layoutSizingHorizontal: 'FILL',
+              clipContent: true,
               children: [
-                text('Floor Plan', { fontSize: 18, fontWeight: 700, color: '#111827' }),
-                frame('PlanPlaceholder', {
-                  size: { x: 1, y: 200 },
-                  autoLayout: horizontal({ align: 'CENTER', counterAlign: 'CENTER' }),
-                  fills: [solid('#f1f5f9')], cornerRadius: 12, layoutSizingHorizontal: 'FILL',
-                  children: [text('Floor Plan View', { fontSize: 14, fontWeight: 500, color: '#94a3b8' })],
+                frame('FloorPlanLabel', {
+                  autoLayout: horizontal({ padX: 16, padY: 8, align: 'CENTER' }),
+                  fills: [solid('#ffffff99')],
+                  cornerRadius: 8,
+                  children: [
+                    text('Floor Plan — 2BR / 1BA', { fontSize: 14, fontWeight: 600, color: '#15803d' }),
+                  ],
                 }),
               ],
             }),
+
+            // Details
+            frame('QuickDetails', {
+              autoLayout: horizontal({ spacing: 0, padX: 20, padY: 20, align: 'SPACE_BETWEEN' }),
+              fills: [solid('#ffffff')],
+              cornerRadius: 12,
+              layoutSizingHorizontal: 'FILL',
+              strokes: [{ color: { r: 0.93, g: 0.93, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+              children: [
+                detailItem('Bedrooms', '2'),
+                detailItem('Bathrooms', '1'),
+                detailItem('Sq Ft', '950'),
+                detailItem('Floor', '3rd'),
+              ],
+            }),
+
+            // Amenities
             frame('Amenities', {
-              autoLayout: vertical({ spacing: 8 }), layoutSizingHorizontal: 'FILL',
+              autoLayout: vertical({ spacing: 12 }),
+              layoutSizingHorizontal: 'FILL',
               children: [
                 text('Amenities', { fontSize: 18, fontWeight: 700, color: '#111827' }),
-                frame('AmenRow1', {
-                  autoLayout: horizontal({ spacing: 8 }), layoutSizingHorizontal: 'FILL',
-                  children: [amenityItem('🏊', 'Pool'), amenityItem('💪', 'Gym'), amenityItem('🅿️', 'Parking')],
+                frame('AmenityPills', {
+                  autoLayout: horizontal({ spacing: 8, wrap: true }),
+                  layoutSizingHorizontal: 'FILL',
+                  children: [
+                    amenityPill('In-Unit Laundry'),
+                    amenityPill('Dishwasher'),
+                    amenityPill('Central AC'),
+                    amenityPill('Hardwood Floors'),
+                    amenityPill('Roof Deck'),
+                    amenityPill('Gym'),
+                    amenityPill('Pet Friendly'),
+                    amenityPill('Parking'),
+                  ],
                 }),
-                frame('AmenRow2', {
-                  autoLayout: horizontal({ spacing: 8 }), layoutSizingHorizontal: 'FILL',
-                  children: [amenityItem('🐕', 'Pet Friendly'), amenityItem('👕', 'In-Unit Laundry'), amenityItem('📦', 'Storage')],
-                }),
-              ],
-            }),
-            frame('Reviews', {
-              autoLayout: vertical({ spacing: 10 }), layoutSizingHorizontal: 'FILL',
-              children: [
-                text('Resident Reviews', { fontSize: 18, fontWeight: 700, color: '#111827' }),
-                reviewCard('Alex Morgan', 5, 'Great location and responsive management. The pool area is amazing and the gym is well-maintained.', 'Feb 2026', '#3b82f6'),
-                reviewCard('Jamie Lee', 4, 'Love the apartment layout. Only wish the parking garage was a bit closer to the elevator.', 'Jan 2026', '#ec4899'),
               ],
             }),
           ],
         }),
+
+        // Right column
         frame('RightCol', {
-          size: { x: 280 },
-          autoLayout: vertical({ spacing: 12 }),
+          autoLayout: vertical({ spacing: 20 }),
+          size: { x: 320 },
           children: [
-            frame('Details', {
-              autoLayout: vertical({ spacing: 2, padX: 18, padY: 18 }),
-              fills: [solid('#f8fafc')], cornerRadius: 14, layoutSizingHorizontal: 'FILL',
+            // Price Card
+            frame('PriceCard', {
+              autoLayout: vertical({ spacing: 16, padX: 24, padY: 24 }),
+              fills: [solid('#ffffff')],
+              cornerRadius: 14,
+              layoutSizingHorizontal: 'FILL',
+              strokes: [{ color: { r: 0.93, g: 0.93, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
               children: [
-                text('Unit Details', { fontSize: 15, fontWeight: 700, color: '#111827' }),
-                detailRow('Floor', '8th'),
-                detailRow('Bedrooms', '2'),
-                detailRow('Bathrooms', '2'),
-                detailRow('Sq Ft', '1,150'),
-                detailRow('Deposit', '$2,850'),
-                detailRow('Pets', 'Allowed ($50/mo)'),
+                text('$2,850 /mo', { fontSize: 28, fontWeight: 800, color: '#111827' }),
+                text('Sunset District, San Francisco', { fontSize: 14, fontWeight: 400, color: '#6b7280' }),
+                rectangle('PriceDivider', {
+                  size: { x: 1, y: 1 }, fills: [solid('#e5e7eb')], layoutSizingHorizontal: 'FILL',
+                }),
+                priceRow('Base rent', '$2,850', false),
+                priceRow('Utilities (est.)', '$120', false),
+                priceRow('Parking', '$150', false),
+                rectangle('TotalDivider', {
+                  size: { x: 1, y: 2 }, fills: [solid('#111827')], layoutSizingHorizontal: 'FILL',
+                }),
+                priceRow('Monthly Total', '$3,120', true),
+                frame('ApplyBtn', {
+                  autoLayout: horizontal({ padY: 14, align: 'CENTER' }),
+                  fills: [gradient([{ hex: '#16a34a', position: 0 }, { hex: '#22c55e', position: 1 }], 90)],
+                  cornerRadius: 12,
+                  layoutSizingHorizontal: 'FILL',
+                  children: [
+                    text('Apply Now', {
+                      fontSize: 15, fontWeight: 700, color: '#ffffff', textAlignHorizontal: 'CENTER',
+                    }),
+                  ],
+                }),
               ],
             }),
-            frame('ApplyBtn', {
-              autoLayout: horizontal({ spacing: 0, padY: 14, align: 'CENTER' }),
-              fills: [solid('#2563eb')], cornerRadius: 10, layoutSizingHorizontal: 'FILL',
-              children: [text('Apply Now', { fontSize: 15, fontWeight: 700, color: '#ffffff' })],
-            }),
-            frame('TourBtn', {
-              autoLayout: horizontal({ spacing: 0, padY: 14, align: 'CENTER' }),
-              fills: [solid('#ffffff')], cornerRadius: 10, layoutSizingHorizontal: 'FILL',
-              strokes: [{ color: { r: 0.15, g: 0.39, b: 0.92, a: 1 }, weight: 1.5, align: 'INSIDE' as const }],
-              children: [text('Schedule Tour', { fontSize: 15, fontWeight: 700, color: '#2563eb' })],
+
+            // Agent Card
+            frame('AgentCard', {
+              autoLayout: horizontal({ spacing: 14, padX: 20, padY: 18, counterAlign: 'CENTER' }),
+              fills: [solid('#ffffff')],
+              cornerRadius: 14,
+              layoutSizingHorizontal: 'FILL',
+              strokes: [{ color: { r: 0.93, g: 0.93, b: 0.93, a: 1 }, weight: 1, align: 'INSIDE' as const }],
+              children: [
+                ellipse('AgentAv', {
+                  size: { x: 44, y: 44 },
+                  fills: [gradient([{ hex: '#16a34a', position: 0 }, { hex: '#0ea5e9', position: 1 }], 135)],
+                }),
+                frame('AgentInfo', {
+                  autoLayout: vertical({ spacing: 2 }),
+                  children: [
+                    text('Lisa Park', { fontSize: 15, fontWeight: 600, color: '#111827' }),
+                    text('Listing Agent', { fontSize: 12, fontWeight: 400, color: '#6b7280' }),
+                    text('(555) 987-6543', { fontSize: 12, fontWeight: 500, color: '#16a34a' }),
+                  ],
+                }),
+              ],
             }),
           ],
         }),
