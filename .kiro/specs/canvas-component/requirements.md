@@ -2,25 +2,25 @@
 
 ## Introduction
 
-The Canvas component extends the existing Slots feature by introducing a new component type that bridges Figma and React with pixel-perfect visual consistency. Instead of converting DSL content to HTML/CSS (which inevitably diverges from Figma rendering), the Canvas component accepts Figma DSL JSON and renders it as an image using the existing `@figma-dsl/renderer` package. In Figma, designers use Slots to place arbitrary content inside Canvas components. The DSL pipeline compiles these slot contents and the renderer produces identical PNG output in both environments — ensuring that what designers see in Figma matches exactly what users see in React.
+The DslCanvas component extends the existing Slots feature by introducing a new component type that bridges Figma and React with pixel-perfect visual consistency. Instead of converting DSL content to HTML/CSS (which inevitably diverges from Figma rendering), the DslCanvas component accepts Figma DSL JSON and renders it as an image using the existing `@figma-dsl/renderer` package. In Figma, designers use Slots to place arbitrary content inside DslCanvas components. The DSL pipeline compiles these slot contents and the renderer produces identical PNG output in both environments — ensuring that what designers see in Figma matches exactly what users see in React. The name "DslCanvas" is used to distinguish from the HTML `<canvas>` element.
 
 This approach creates a class of "image-rendered" UI regions where visual fidelity is guaranteed, complementing traditional HTML/CSS components for interactive content.
 
 ## Requirements
 
-### Requirement 1: Canvas React Component
+### Requirement 1: DslCanvas React Component
 
-**Objective:** As a developer, I want a React `<Canvas>` component that accepts DSL JSON and displays a rendered image, so that I can embed pixel-perfect Figma-consistent visuals in my React application without writing HTML/CSS for that content.
+**Objective:** As a developer, I want a React `<DslCanvas>` component that accepts DSL JSON and displays a rendered image, so that I can embed pixel-perfect Figma-consistent visuals in my React application without writing HTML/CSS for that content.
 
 #### Acceptance Criteria
 
-1. The Canvas component shall accept a `dsl` prop containing compiled DSL JSON (FigmaNodeDict) and render it as an `<img>` element displaying the PNG output.
-2. The Canvas component shall accept optional `width` and `height` props to control the displayed image dimensions.
-3. The Canvas component shall accept an optional `scale` prop (default: 1) to control the rendering resolution for high-DPI displays.
-4. When the `dsl` prop value changes, the Canvas component shall re-render the image to reflect the updated DSL content.
-5. While the Canvas component is rendering, the Canvas component shall display a placeholder or the previous image to avoid layout shifts.
-6. If the `dsl` prop contains invalid or empty DSL JSON, the Canvas component shall display a fallback placeholder image or empty state rather than crashing.
-7. The Canvas component shall expose a `className` prop and an optional `style` prop for layout integration within parent components.
+1. The DslCanvas component shall accept a `dsl` prop containing compiled DSL JSON (FigmaNodeDict) and render it as an `<img>` element displaying the PNG output.
+2. The DslCanvas component shall accept optional `width` and `height` props to control the displayed image dimensions.
+3. The DslCanvas component shall accept an optional `scale` prop (default: 1) to control the rendering resolution for high-DPI displays.
+4. When the `dsl` prop value changes, the DslCanvas component shall re-render the image to reflect the updated DSL content.
+5. While the DslCanvas component is rendering, the DslCanvas component shall display a placeholder or the previous image to avoid layout shifts.
+6. If the `dsl` prop contains invalid or empty DSL JSON, the DslCanvas component shall display a fallback placeholder image or empty state rather than crashing.
+7. The DslCanvas component shall expose a `className` prop and an optional `style` prop for layout integration within parent components.
 
 ### Requirement 2: DSL Canvas Node Type
 
@@ -73,7 +73,7 @@ This approach creates a class of "image-rendered" UI regions where visual fideli
 #### Acceptance Criteria
 
 1. When an instance node provides slot overrides for a canvas-typed slot, the compiler shall compile the override content and mark it for canvas rendering.
-2. The Canvas React component shall accept slot override content (compiled DslNode arrays) and render them as images.
+2. The DslCanvas React component shall accept slot override content (compiled DslNode arrays) and render them as images.
 3. Where a component defines both regular slots and canvas slots, the pipeline shall handle each slot type according to its rendering mode (HTML for regular slots, image for canvas slots).
 
 ### Requirement 7: CLI Integration
@@ -88,10 +88,10 @@ This approach creates a class of "image-rendered" UI regions where visual fideli
 
 ### Requirement 8: Preview App Integration
 
-**Objective:** As a developer, I want to use the Canvas component in the preview app with live reload, so that I can iterate on canvas content with immediate visual feedback.
+**Objective:** As a developer, I want to use the DslCanvas component in the preview app with live reload, so that I can iterate on canvas content with immediate visual feedback.
 
 #### Acceptance Criteria
 
-1. The Canvas component shall be available as a standard import from the preview app's component library.
-2. When a DSL file used as a Canvas source changes during development, the preview app shall re-render the canvas image automatically via Vite's HMR.
-3. The Canvas component shall work within the preview app's existing layout system (CSS Modules, design tokens) without requiring special configuration.
+1. The DslCanvas component shall be available as a standard import from the preview app's component library.
+2. When a DSL file used as a DslCanvas source changes during development, the preview app shall re-render the canvas image automatically via Vite's HMR.
+3. The DslCanvas component shall work within the preview app's existing layout system (CSS Modules, design tokens) without requiring special configuration.
