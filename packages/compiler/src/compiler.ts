@@ -418,6 +418,24 @@ function compileNode(
     result.booleanOperation = node.booleanOperation;
   }
 
+  // Banner Mode properties passthrough
+  if (node.effects?.length) {
+    result.effects = node.effects;
+  }
+  if (node.blendMode) {
+    result.blendMode = node.blendMode;
+  }
+  // Rotation for any node type (not just LINE/POLYGON/STAR)
+  if (node.rotation !== undefined && node.type !== 'LINE' && node.type !== 'POLYGON' && node.type !== 'STAR') {
+    result.rotation = node.rotation;
+  }
+  // Banner Mode text style properties
+  if (node.type === 'TEXT' && node.textStyle) {
+    if (node.textStyle.textTransform) result.textTransform = node.textStyle.textTransform;
+    if (node.textStyle.textStroke) result.textStroke = node.textStyle.textStroke;
+    if (node.textStyle.textShadow) result.textShadow = node.textStyle.textShadow;
+  }
+
   // Compile children
   if (node.children) {
     result.children = node.children.map((child, idx) =>
@@ -428,23 +446,60 @@ function compileNode(
   return result;
 }
 
+function warnBannerPropsInStandardMode(node: DslNode, path: string, errors: CompileError[]): void {
+  const bannerProps: string[] = [];
+  if (node.effects?.length) bannerProps.push('effects');
+  if (node.blendMode) bannerProps.push('blendMode');
+  if (node.rotation !== undefined && node.type !== 'LINE' && node.type !== 'POLYGON' && node.type !== 'STAR') {
+    bannerProps.push('rotation');
+  }
+  if (bannerProps.length > 0) {
+    errors.push({
+      message: `Banner Mode properties [${bannerProps.join(', ')}] are ignored in standard mode`,
+      nodePath: path,
+      nodeType: node.type,
+      severity: 'warning',
+    });
+  }
+  if (node.children) {
+    for (const child of node.children) {
+      warnBannerPropsInStandardMode(child, `${path} > ${child.name}`, errors);
+    }
+  }
+}
+
 export function compile(node: DslNode, options?: CompilerOptions): CompileResult {
   resetGuidCounter();
   const errors: CompileError[] = [];
+  const mode = options?.mode ?? 'standard';
+
+  // Warn if Banner Mode properties are used in standard mode
+  if (mode === 'standard') {
+    warnBannerPropsInStandardMode(node, node.name, errors);
+  }
+
   const root = compileNode(node, undefined, 0, node.name, errors, options?.validationLevel);
   return {
     root,
     nodeCount: guidCounter,
     errors,
+    mode,
   };
 }
 
 export function compileWithLayout(node: DslNode, measurer: TextMeasurer, options?: CompilerOptions): CompileResult {
-  const { sizes, offsets } = resolveLayout(node, measurer);
+  const mode = options?.mode ?? 'standard';
+  const { sizes, offsets } = resolveLayout(node, measurer, mode);
   resetGuidCounter();
   const errors: CompileError[] = [];
+
+  // Warn if Banner Mode properties are used in standard mode
+  if (mode === 'standard') {
+    warnBannerPropsInStandardMode(node, node.name, errors);
+  }
+
   const root = compileNodeWithLayout(node, undefined, 0, node.name, errors, sizes, offsets, [1, 0, 0, 0, 1, 0], options?.validationLevel);
-  return { root, nodeCount: guidCounter, errors };
+  return { root, nodeCount: guidCounter, errors, mode };
 }
 
 function compileNodeWithLayout(

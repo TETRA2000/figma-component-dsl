@@ -35,7 +35,7 @@ All modules are stateless — no runtime state is maintained. The design enables
 ```
 packages/dsl-core/
 ├── src/
-│   ├── types.ts           # Type definitions only (no runtime values)
+│   ├── types.ts           # Type definitions (DslNode, TextStyle, EffectDefinition, BlendMode, FontDeclaration)
 │   ├── nodes.ts           # Node factory functions (9 constructors, including image)
 │   ├── colors.ts          # Color utilities & fill factories (including imageFill)
 │   ├── image-helpers.ts   # Image draw instruction computation & format validation
@@ -228,6 +228,70 @@ Sets `direction: 'VERTICAL'` with same merge behavior.
 The `text()` factory accepts `TextStyle & ChildLayoutProps & { size?: { x: number; y?: number } }`, allowing typography, layout control, and explicit width constraint in a single call. The `color` shorthand is auto-converted to a `SolidFill` via `parseHex()`. When `textAutoResize: 'HEIGHT'` is set with an explicit `size.x`, the text wraps at the given width and auto-calculates height.
 
 **Evidence**: `src/types.ts:65-74`, `src/nodes.ts:34-68`
+
+---
+
+## Banner Mode Types
+**Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
+
+### Visual Effect Types
+
+```typescript
+interface DropShadowEffect {
+  type: 'DROP_SHADOW';
+  color: RgbaColor;
+  offsetX: number;
+  offsetY: number;
+  blur: number;
+  spread?: number;
+}
+
+interface LayerBlurEffect {
+  type: 'LAYER_BLUR';
+  radius: number;
+}
+
+type EffectDefinition = DropShadowEffect | LayerBlurEffect;
+```
+
+### Blend Mode
+
+```typescript
+type BlendMode =
+  | 'NORMAL' | 'MULTIPLY' | 'SCREEN' | 'OVERLAY'
+  | 'DARKEN' | 'LIGHTEN' | 'COLOR_DODGE' | 'COLOR_BURN'
+  | 'HARD_LIGHT' | 'SOFT_LIGHT' | 'DIFFERENCE' | 'EXCLUSION';
+```
+
+### Font Declaration
+
+```typescript
+interface FontDeclaration {
+  path: string;       // relative to --asset-dir or absolute
+  family: string;
+  weight?: number;    // 100–900, default 400
+  style?: 'normal' | 'italic';  // default 'normal'
+}
+```
+
+### Extended Text Style Properties (Banner Mode)
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `textTransform` | `'UPPERCASE' \| 'LOWERCASE' \| 'CAPITALIZE'` | Transform text content before rendering |
+| `textStroke` | `{ color: string; width: number }` | Stroke outline around text glyphs |
+| `textShadow` | `{ color: string; offsetX: number; offsetY: number; blur: number }` | Drop shadow behind text |
+
+### DslNode Banner Mode Properties
+
+Frame, rectangle, ellipse, and image nodes support:
+- `effects?: EffectDefinition[]` — Visual effects (drop shadow, layer blur)
+- `blendMode?: BlendMode` — Compositing blend mode
+- `rotation?: number` — Rotation in degrees around node center
+
+All Banner Mode properties are optional. Standard-mode files remain unaffected.
+
+**Evidence**: `src/types.ts:14-41,124-139,152-208`
 
 ---
 

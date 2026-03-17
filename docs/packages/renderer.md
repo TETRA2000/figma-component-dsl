@@ -71,13 +71,21 @@ packages/renderer/
 | Fill rendering | `applyFills()` — solid + linear gradient + radial gradient |
 | Corner radius resolution | `resolveCornerRadius()`, `hasCornerRadius()` |
 | Shape utility | `drawRoundedRect()` |
-| Node rendering | `renderNode()` — recursive tree traversal |
+| Node rendering | `renderNode()` — recursive tree traversal with effects and blend modes |
 | Stroke rendering | Multi-stroke loop with INSIDE/CENTER/OUTSIDE alignment |
-| Text rendering | `renderText()` with word-wrap + `drawTextDecoration()` |
+| Text rendering | `renderText()` with word-wrap, text transform, text stroke, text shadow, gradient fills |
 | Text decoration | `drawTextDecoration()` — UNDERLINE/STRIKETHROUGH lines |
+| Text transform | `applyTextTransform()` — UPPERCASE/LOWERCASE/CAPITALIZE |
 | Canvas pooling | `acquireCanvas()`, `releaseCanvas()` |
 | Debug overlay | `renderDebugOverlay()` — frame borders, padding, computed sizes |
 | Public API | `render()`, `renderToFile()` |
+
+**Additional modules**:
+
+| Module | Purpose |
+|--------|---------|
+| `effects.ts` | Drop shadow, layer blur, blend mode rendering via canvas API |
+| `font-manager.ts` | Bundled and custom font registration, CJK font resolution |
 
 **Evidence**: `src/index.ts:1`, `src/renderer.ts`, `package.json`
 
@@ -530,10 +538,86 @@ npm run test     # vitest run
 
 ---
 
+## Effects System (Banner Mode)
+**Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
+
+The `effects.ts` module provides visual effects rendering for Banner Mode nodes:
+
+### Functions
+
+```typescript
+function applyDropShadow(ctx: SKRSContext2D, effect: DropShadowEffect): void;
+function clearShadow(ctx: SKRSContext2D): void;
+function applyLayerBlur(
+  ctx: SKRSContext2D, effect: LayerBlurEffect,
+  renderFn: () => void,
+  bounds: { x: number; y: number; width: number; height: number }
+): void;
+function applyBlendMode(ctx: SKRSContext2D, blendMode: BlendMode): void;
+function resetBlendMode(ctx: SKRSContext2D): void;
+function applyEffects(
+  ctx: SKRSContext2D, effects?: EffectDefinition[], blendMode?: BlendMode
+): () => void;  // Returns cleanup function
+```
+
+- **Drop shadow**: Sets `shadowColor`, `shadowBlur`, `shadowOffsetX`, `shadowOffsetY` before drawing. Applied before coordinate transforms to avoid the @napi-rs/canvas translate bug.
+- **Layer blur**: Renders to off-screen canvas with `ctx.filter = 'blur(Xpx)'`, composites result back.
+- **Blend mode**: Maps DSL blend modes to `globalCompositeOperation` values (MULTIPLY→multiply, SCREEN→screen, etc.).
+- **State management**: All effects bracketed with `ctx.save()`/`ctx.restore()`.
+
+> **Note:** `BACKGROUND_BLUR` is deferred to phase 2 (requires two-pass rendering).
+
+---
+
+## Font Manager (Banner Mode)
+**Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
+
+The `font-manager.ts` module manages bundled and custom font registration:
+
+### Functions
+
+```typescript
+function initializeFontManager(options: FontManagerOptions): string[];
+function resolveFontFamily(text: string, requestedFamily?: string): string;
+```
+
+### FontManagerOptions
+
+```typescript
+interface FontManagerOptions {
+  fontDir: string;                    // bundled fonts directory
+  assetDir?: string;                  // base for relative font paths
+  customFonts?: FontRegistration[];   // from DSL file's fonts export
+}
+```
+
+- **Bundled fonts**: Inter (400–700) for Latin, Noto Sans JP (400, 700) for CJK
+- **Custom fonts**: Registered from `FontRegistration[]`, supports `.ttf`, `.otf`, `.woff2`
+- **WOFF2 decompression**: Uses `@woff2/woff2-rs` peer dependency; emits error if not installed
+- **CJK auto-detection**: `resolveFontFamily()` returns `'Noto Sans JP'` when text contains CJK characters (U+3000–U+9FFF, U+F900–U+FAFF)
+- **Buffer retention**: Font buffers stored in module-level Map to prevent GC
+
+---
+
+## Extended Text Rendering (Banner Mode)
+**Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
+
+Banner Mode extends text rendering with:
+
+- **Text transform**: `applyTextTransform()` converts text before measuring and rendering (UPPERCASE, LOWERCASE, CAPITALIZE)
+- **Text stroke**: After `fillText()`, applies `strokeText()` with specified color and width
+- **Text shadow**: Sets canvas shadow properties before `fillText()` for drop shadow effect
+- **Gradient text**: Creates `CanvasGradient` matching text bounds when gradient fills are used
+- **Text opacity**: Applied via `globalAlpha` for semi-transparent text layering
+
+All enhancements are conditional — standard text rendering is unchanged when Banner properties are absent.
+
+---
+
 ## Known Limitations
 **Confidence**: 0.92 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-1. **No shadow/blur effects**: Not in FigmaNodeDict type or rendering implementation.
+1. ~~**No shadow/blur effects**~~: **Resolved** — Banner Mode adds DROP_SHADOW and LAYER_BLUR effects via the effects helper.
 2. **No dashed/dotted strokes**: Stroke dash patterns not supported.
 3. ~~**Unused `assetDir` option**~~: **Resolved** — Image loading now uses `imageCache` (pre-loaded via `preloadImages()`) for rendering IMAGE nodes and fills.
 4. **Silent text failure**: Text nodes without `textData`/`derivedTextData` render as blank without error.

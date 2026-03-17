@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { frame, text, rectangle, ellipse, group, line, section, polygon, star, union, subtract, intersect, exclude } from './nodes.js';
-import type { DslNode } from './types.js';
+import type { DslNode, EffectDefinition, BlendMode, FontDeclaration } from './types.js';
 import { solid } from './colors.js';
 
 describe('frame()', () => {
@@ -367,5 +367,111 @@ describe('node hierarchy', () => {
     expect(tree.children![0]!.children).toHaveLength(2);
     expect(tree.children![0]!.children![0]!.type).toBe('TEXT');
     expect(tree.children![0]!.children![1]!.type).toBe('RECTANGLE');
+  });
+});
+
+// --- Banner Mode Types Tests ---
+describe('Banner Mode: effects and blendMode', () => {
+  it('frame accepts effects array and blendMode', () => {
+    const shadow: EffectDefinition = {
+      type: 'DROP_SHADOW',
+      color: { r: 0, g: 0, b: 0, a: 0.5 },
+      offsetX: 0,
+      offsetY: 4,
+      blur: 8,
+    };
+    const node = frame('Banner', {
+      size: { x: 800, y: 400 },
+      effects: [shadow],
+      blendMode: 'MULTIPLY' as BlendMode,
+      rotation: 15,
+    });
+    expect(node.effects).toHaveLength(1);
+    expect(node.effects![0]!.type).toBe('DROP_SHADOW');
+    expect(node.blendMode).toBe('MULTIPLY');
+    expect(node.rotation).toBe(15);
+  });
+
+  it('rectangle accepts effects and blendMode', () => {
+    const blur: EffectDefinition = { type: 'LAYER_BLUR', radius: 10 };
+    const node = rectangle('Blurred', {
+      size: { x: 100, y: 100 },
+      effects: [blur],
+      blendMode: 'SCREEN' as BlendMode,
+    });
+    expect(node.effects).toHaveLength(1);
+    expect(node.effects![0]!.type).toBe('LAYER_BLUR');
+    expect(node.blendMode).toBe('SCREEN');
+  });
+
+  it('ellipse accepts effects and blendMode', () => {
+    const node = ellipse('Circle', {
+      size: { x: 50, y: 50 },
+      effects: [],
+      blendMode: 'OVERLAY' as BlendMode,
+      rotation: 45,
+    });
+    expect(node.effects).toEqual([]);
+    expect(node.blendMode).toBe('OVERLAY');
+    expect(node.rotation).toBe(45);
+  });
+
+  it('effects array is defensively copied', () => {
+    const effects: EffectDefinition[] = [{ type: 'LAYER_BLUR', radius: 5 }];
+    const node = frame('F', { effects });
+    effects.push({ type: 'LAYER_BLUR', radius: 10 });
+    expect(node.effects).toHaveLength(1);
+  });
+
+  it('frame without effects has undefined effects', () => {
+    const node = frame('Plain', {});
+    expect(node.effects).toBeUndefined();
+    expect(node.blendMode).toBeUndefined();
+    expect(node.rotation).toBeUndefined();
+  });
+});
+
+describe('Banner Mode: extended typography', () => {
+  it('text accepts textTransform, textStroke, textShadow', () => {
+    const node = text('HELLO WORLD', {
+      fontSize: 48,
+      textTransform: 'UPPERCASE',
+      textStroke: { color: '#000000', width: 2 },
+      textShadow: { color: '#000000', offsetX: 2, offsetY: 2, blur: 4 },
+    });
+    expect(node.textStyle?.textTransform).toBe('UPPERCASE');
+    expect(node.textStyle?.textStroke).toEqual({ color: '#000000', width: 2 });
+    expect(node.textStyle?.textShadow).toEqual({ color: '#000000', offsetX: 2, offsetY: 2, blur: 4 });
+  });
+
+  it('text without banner props has undefined banner text style fields', () => {
+    const node = text('Normal text', { fontSize: 14 });
+    expect(node.textStyle?.textTransform).toBeUndefined();
+    expect(node.textStyle?.textStroke).toBeUndefined();
+    expect(node.textStyle?.textShadow).toBeUndefined();
+  });
+});
+
+describe('Banner Mode: FontDeclaration type', () => {
+  it('FontDeclaration type is correctly structured', () => {
+    const decl: FontDeclaration = {
+      path: './fonts/NotoSansJP.woff2',
+      family: 'Noto Sans JP',
+      weight: 400,
+      style: 'normal',
+    };
+    expect(decl.path).toBe('./fonts/NotoSansJP.woff2');
+    expect(decl.family).toBe('Noto Sans JP');
+    expect(decl.weight).toBe(400);
+    expect(decl.style).toBe('normal');
+  });
+
+  it('FontDeclaration weight and style are optional', () => {
+    const decl: FontDeclaration = {
+      path: './fonts/Custom.ttf',
+      family: 'Custom',
+    };
+    expect(decl.weight).toBeUndefined();
+    expect(decl.style).toBeUndefined();
   });
 });

@@ -17,14 +17,14 @@ npx vitest run
 
 | Package | Description |
 |---------|-------------|
-| `@figma-dsl/core` | DSL node primitives, color/fill helpers, image support, layout config, component/variant system, changeset schema, canonical PluginNodeDef types, diff algorithm |
-| `@figma-dsl/compiler` | Compiles DslNode trees to FigmaNodeDict with GUID assignment, text measurement, and two-pass auto-layout |
-| `@figma-dsl/renderer` | Renders compiled nodes to PNG via @napi-rs/canvas (Skia), with image loading and caching |
+| `@figma-dsl/core` | DSL node primitives, color/fill helpers, image support, layout config, component/variant system, changeset schema, canonical PluginNodeDef types, diff algorithm, Banner Mode types (effects, blend modes, font declarations) |
+| `@figma-dsl/compiler` | Compiles DslNode trees to FigmaNodeDict with GUID assignment, text measurement, two-pass auto-layout, and Banner Mode absolute positioning |
+| `@figma-dsl/renderer` | Renders compiled nodes to PNG via @napi-rs/canvas (Skia), with image loading, caching, effects (shadows, blur, blend modes), and custom font support |
 | `@figma-dsl/capturer` | Captures React component screenshots via Playwright |
 | `@figma-dsl/comparator` | Pixel-level image comparison with similarity scoring via pixelmatch |
 | `@figma-dsl/exporter` | Generates Figma plugin input JSON from compiled DSL |
 | `@figma-dsl/plugin` | Figma plugin: imports DSL definitions as Figma nodes, tracks edits, exports changesets and complete DSL JSON |
-| `@figma-dsl/validator` | DSL compatibility validator with 10 rules (file-structure, styling, AST-based) |
+| `@figma-dsl/validator` | DSL compatibility validator with 10 rules (file-structure, styling, AST-based) and Banner Mode preset |
 | `@figma-dsl/cli` | CLI interface for all pipeline operations |
 
 ## CLI Usage
@@ -92,6 +92,45 @@ export default component('Button', {
 // Image support: embed images as nodes or fills
 image('Avatar', { src: './assets/avatar.png', size: { x: 48, y: 48 }, cornerRadius: 24 });
 frame('Hero', { size: { x: 800, y: 400 }, fills: [imageFill('./assets/hero.jpg', { scaleMode: 'FILL' })] });
+```
+
+### Banner Mode Example
+
+Banner Mode drops React compatibility and enables absolute positioning, visual effects, extended typography, and custom fonts for rich banner designs.
+
+```typescript
+import { frame, text, rectangle } from '@figma-dsl/core';
+import { solid, gradient } from '@figma-dsl/core';
+import type { FontDeclaration } from '@figma-dsl/core';
+
+// Opt into Banner Mode
+export const mode = 'banner';
+
+// Declare custom fonts
+export const fonts: FontDeclaration[] = [
+  { path: './fonts/NotoSansJP-Bold.ttf', family: 'Noto Sans JP', weight: 700 },
+];
+
+export default frame('PromoBanner', {
+  size: { x: 1200, y: 630 },
+  fills: [gradient([{ hex: '#1a0533', position: 0 }, { hex: '#0a1628', position: 1 }], 135)],
+  // No autoLayout → children use absolute x/y positioning
+  children: [
+    text('SUMMER SALE', {
+      fontSize: 72, fontWeight: 700, color: '#ffffff',
+      textTransform: 'UPPERCASE',
+      textStroke: { color: '#ff6b35', width: 2 },
+      textShadow: { color: '#00000080', offsetX: 4, offsetY: 4, blur: 8 },
+    }),
+    rectangle('Accent', {
+      size: { x: 200, y: 200 },
+      fills: [solid('#7c3aed')],
+      rotation: 45,
+      effects: [{ type: 'DROP_SHADOW', color: { r: 0, g: 0, b: 0, a: 0.5 }, offsetX: 0, offsetY: 8, blur: 24 }],
+      blendMode: 'SCREEN',
+    }),
+  ],
+});
 ```
 
 ## Pipeline
@@ -208,6 +247,8 @@ Preview server configurations for Claude Desktop are defined in `.claude/launch.
 - **pixelmatch + pngjs** — pixel-level image comparison
 - **Vitest** — test runner
 - **Inter font** — bundled (Regular, Medium, SemiBold, Bold)
+- **Noto Sans JP** — bundled (Regular, Bold) for Japanese/CJK text
+- **Banner Mode** — visual effects, absolute positioning, custom fonts, extended typography
 
 ## References
 

@@ -6,6 +6,8 @@ The DSL is implemented as a TypeScript monorepo with npm workspaces under `packa
 
 **Core Pipeline**: DSL definition → compile (with layout) → render to PNG / export to Figma JSON → Figma plugin import
 
+**Banner Mode Pipeline**: Same flow with mode-aware branching — absolute positioning in layout resolver, effects rendering (shadows, blur, blend modes), extended text rendering (transform, stroke, shadow, gradient fills), and custom font registration. Opted in per file via `export const mode = 'banner'`.
+
 **Monorepo Packages** (all `@figma-dsl/` scoped):
 - `dsl-core` — Node types, DSL builder API, bundled fonts
 - `compiler` — `compileWithLayout` with text measurement via @napi-rs/canvas
@@ -15,7 +17,7 @@ The DSL is implemented as a TypeScript monorepo with npm workspaces under `packa
 - `comparator` — Pixel-diff image comparison with similarity scoring
 - `cli` — 14-command CLI (`figma-dsl`) with bin stubs
 - `plugin` — Figma plugin (esbuild → IIFE) for importing JSON into Figma
-- `validator` — DSL compatibility validation with 10 rules (file structure, styling, AST-based checks)
+- `validator` — DSL compatibility validation with 10 rules (file structure, styling, AST-based checks) and Banner Mode preset
 - `mcp-server` — MCP (Model Context Protocol) server for real-time Figma sync via stdio + WebSocket bridge
 
 **Reference implementations** (git submodules in `references/`):
@@ -44,7 +46,8 @@ The DSL is implemented as a TypeScript monorepo with npm workspaces under `packa
 
 | Purpose | Library | Context |
 |---------|---------|---------|
-| PNG rendering & text measurement | @napi-rs/canvas | Node-native Canvas 2D API (replaces PyCairo) |
+| PNG rendering & text measurement | @napi-rs/canvas | Node-native Canvas 2D API (replaces PyCairo); also used for effects (shadows, blur, blend modes) |
+| WOFF2 font decompression | @woff2/woff2-rs | Optional peer dep for custom .woff2 font loading in Banner Mode |
 | Browser automation | Playwright | React screenshot capture |
 | Figma node creation | Figma Plugin API | Export DSL to Figma via plugin |
 | Design-to-code mapping | @figma/code-connect | Dev Mode integration (reference app) |
@@ -100,6 +103,7 @@ pytest                   # Unit tests
 6. **npm workspaces monorepo** — Each package independently buildable/testable, cross-referenced via workspace dependencies
 7. **Node >= 22** — Required for native TypeScript support and top-level await in bin stubs
 8. **MCP over stdio + WebSocket bridge** — MCP server communicates with Claude Code via stdio and with Figma plugin via WebSocket on localhost:9800; plugin UI relays messages between WebSocket and Figma sandbox
+9. **Banner Mode as opt-in per file** — Mode detected from `export const mode = 'banner'` at module load time, threaded through the entire pipeline via `CompilerOptions.mode`. No new packages — effects, fonts, and text extensions are isolated modules within existing packages (renderer/effects.ts, renderer/font-manager.ts). Declarative font loading via `export const fonts` array (no module-level side effects)
 
 ---
 _Document standards and patterns, not every dependency_

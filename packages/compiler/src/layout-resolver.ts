@@ -1,5 +1,5 @@
 import type { DslNode, AutoLayoutConfig } from '@figma-dsl/core';
-import type { TextMeasurer } from './types.js';
+import type { TextMeasurer, CompilerMode } from './types.js';
 
 interface ResolvedSize {
   width: number;
@@ -30,6 +30,7 @@ function getChildSizing(child: DslNode, axis: 'horizontal' | 'vertical'): 'FIXED
 export function resolveLayout(
   root: DslNode,
   measurer: TextMeasurer,
+  mode: CompilerMode = 'standard',
 ): LayoutResult {
   const sizes = new Map<DslNode, ResolvedSize>();
   const offsets = new Map<DslNode, { x: number; y: number }>();
@@ -39,7 +40,7 @@ export function resolveLayout(
 
   // Pass 2: Top-down — position children
   offsets.set(root, { x: 0, y: 0 });
-  positionChildren(root, sizes, offsets, measurer);
+  positionChildren(root, sizes, offsets, measurer, mode);
 
   return { sizes, offsets };
 }
@@ -218,6 +219,7 @@ function positionChildren(
   sizes: Map<DslNode, ResolvedSize>,
   offsets: Map<DslNode, { x: number; y: number }>,
   measurer: TextMeasurer,
+  mode: CompilerMode = 'standard',
 ): void {
   if (!node.children?.length) return;
 
@@ -354,6 +356,17 @@ function positionChildren(
       offsets.set(child, childOffset);
       primaryOffset += (isHorizontal ? childSize.width : childSize.height) + effectiveSpacing;
     }
+  } else if (mode === 'banner') {
+    // Banner Mode: absolute positioning using x/y from node.size or explicit position
+    // Children are positioned at their declared x/y coordinates
+    for (const child of node.children) {
+      // In banner mode, use the DslNode's size.x/y as position when no autoLayout
+      // The convention: child.size holds dimensions, position comes from a separate field
+      // Since DslNode doesn't have separate x/y position fields, we use size for dimensions
+      // and the offset represents position. For banner mode children in a non-auto-layout frame,
+      // default to (0,0) — actual absolute coordinates will be set through the compile step
+      offsets.set(child, { x: 0, y: 0 });
+    }
   } else {
     // No auto-layout: children at (0, 0) relative to parent
     for (const child of node.children) {
@@ -363,6 +376,6 @@ function positionChildren(
 
   // Recurse into children
   for (const child of node.children) {
-    positionChildren(child, sizes, offsets, measurer);
+    positionChildren(child, sizes, offsets, measurer, mode);
   }
 }

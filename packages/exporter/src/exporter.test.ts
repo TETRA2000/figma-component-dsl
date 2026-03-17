@@ -320,3 +320,63 @@ describe('generatePluginInput() — IMAGE nodes', () => {
     expect(imgNode.imageScaleMode).toBe('FIT');
   });
 });
+
+// --- Banner Mode Exporter Tests ---
+describe('generatePluginInput() — Banner Mode effects', () => {
+  it('maps DROP_SHADOW effects to Figma format', () => {
+    const node = frame('Banner', {
+      size: { x: 800, y: 400 },
+      effects: [{
+        type: 'DROP_SHADOW',
+        color: { r: 0, g: 0, b: 0, a: 0.5 },
+        offsetX: 2,
+        offsetY: 4,
+        blur: 8,
+        spread: 1,
+      }],
+    });
+    const compiled = compile(node, { mode: 'banner' });
+    const input = generatePluginInput(compiled);
+    const root = input.components[0]!;
+    expect((root as Record<string, unknown>).effects).toBeDefined();
+    const effects = (root as Record<string, unknown>).effects as Array<Record<string, unknown>>;
+    expect(effects).toHaveLength(1);
+    expect(effects[0]!.type).toBe('DROP_SHADOW');
+    expect(effects[0]!.visible).toBe(true);
+    expect(effects[0]!.radius).toBe(8);
+    expect(effects[0]!.offset).toEqual({ x: 2, y: 4 });
+    expect(effects[0]!.spread).toBe(1);
+  });
+
+  it('maps LAYER_BLUR effects to Figma format', () => {
+    const node = frame('Blurred', {
+      size: { x: 100, y: 100 },
+      effects: [{ type: 'LAYER_BLUR', radius: 10 }],
+    });
+    const compiled = compile(node, { mode: 'banner' });
+    const input = generatePluginInput(compiled);
+    const root = input.components[0]!;
+    const effects = (root as Record<string, unknown>).effects as Array<Record<string, unknown>>;
+    expect(effects).toHaveLength(1);
+    expect(effects[0]!.type).toBe('LAYER_BLUR');
+    expect(effects[0]!.radius).toBe(10);
+  });
+
+  it('maps blendMode to export output', () => {
+    const node = frame('Blended', {
+      size: { x: 100, y: 100 },
+      blendMode: 'MULTIPLY',
+    });
+    const compiled = compile(node, { mode: 'banner' });
+    const input = generatePluginInput(compiled);
+    const root = input.components[0]! as Record<string, unknown>;
+    expect(root.blendMode).toBe('MULTIPLY');
+  });
+
+  it('propagates mode to export output', () => {
+    const node = frame('Root', { size: { x: 100, y: 100 } });
+    const compiled = compile(node, { mode: 'banner' });
+    const input = generatePluginInput(compiled);
+    expect(input.mode).toBe('banner');
+  });
+});

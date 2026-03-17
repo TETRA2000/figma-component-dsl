@@ -311,6 +311,29 @@ Schema validation, auto-layout preservation, component properties, instance refe
 
 ---
 
+## Banner Mode Effects Export
+**Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
+
+When exporting Banner Mode files, the exporter maps DSL effects to Figma-compatible JSON:
+
+### Effects Mapping
+
+- **DROP_SHADOW**: Mapped to Figma's `effects` array with `type`, `visible`, `color` (0–1 RGBA), `offset` (x, y), `radius` (blur), and `spread`
+- **LAYER_BLUR**: Mapped to Figma's `effects` array with `type`, `visible`, and `radius`
+- **BlendMode**: Passed through directly to the `blendMode` property
+
+### Text Style Extensions
+
+Banner Mode text properties (`textTransform`, `textStroke`, `textShadow`) are passed through to the exported JSON for Figma plugin consumption.
+
+### Mode Propagation
+
+When `compileResult.mode` is `'banner'`, the exported `PluginInput` includes a `mode: 'banner'` field at the root level.
+
+**Evidence**: `src/exporter.ts:186-239`
+
+---
+
 ## Known Limitations
 **Confidence**: 0.90 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 

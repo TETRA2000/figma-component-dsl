@@ -31,6 +31,9 @@ export function frame(name: string, props: FrameProps): DslNode {
     layoutGrow: props.layoutGrow,
     layoutSizingHorizontal: props.layoutSizingHorizontal,
     layoutSizingVertical: props.layoutSizingVertical,
+    effects: props.effects ? [...props.effects] : undefined,
+    blendMode: props.blendMode,
+    rotation: props.rotation,
   };
 }
 
@@ -51,6 +54,9 @@ export function text(
     textAutoResize: style.textAutoResize,
     textDecoration: style.textDecoration,
     color: style.color,
+    textTransform: style.textTransform,
+    textStroke: style.textStroke,
+    textShadow: style.textShadow,
   } : undefined;
 
   // Auto-convert color shorthand to fill
@@ -97,6 +103,9 @@ export function rectangle(name: string, props: RectangleProps): DslNode {
     layoutGrow: props.layoutGrow,
     layoutSizingHorizontal: props.layoutSizingHorizontal,
     layoutSizingVertical: props.layoutSizingVertical,
+    effects: props.effects ? [...props.effects] : undefined,
+    blendMode: props.blendMode,
+    rotation: props.rotation,
   };
 }
 
@@ -112,6 +121,9 @@ export function ellipse(name: string, props: EllipseProps): DslNode {
     layoutGrow: props.layoutGrow,
     layoutSizingHorizontal: props.layoutSizingHorizontal,
     layoutSizingVertical: props.layoutSizingVertical,
+    effects: props.effects ? [...props.effects] : undefined,
+    blendMode: props.blendMode,
+    rotation: props.rotation,
   };
 }
 

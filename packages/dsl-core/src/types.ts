@@ -10,6 +10,36 @@ export type StrokeCap = 'NONE' | 'ROUND' | 'SQUARE' | 'LINE_ARROW' | 'TRIANGLE_A
 // --- Boolean Operation ---
 export type BooleanOperationType = 'UNION' | 'SUBTRACT' | 'INTERSECT' | 'EXCLUDE';
 
+// --- Banner Mode: Effects ---
+export interface DropShadowEffect {
+  type: 'DROP_SHADOW';
+  color: RgbaColor;
+  offsetX: number;
+  offsetY: number;
+  blur: number;
+  spread?: number;
+}
+
+export interface LayerBlurEffect {
+  type: 'LAYER_BLUR';
+  radius: number;
+}
+
+export type EffectDefinition = DropShadowEffect | LayerBlurEffect;
+
+export type BlendMode =
+  | 'NORMAL' | 'MULTIPLY' | 'SCREEN' | 'OVERLAY'
+  | 'DARKEN' | 'LIGHTEN' | 'COLOR_DODGE' | 'COLOR_BURN'
+  | 'HARD_LIGHT' | 'SOFT_LIGHT' | 'DIFFERENCE' | 'EXCLUSION';
+
+// --- Banner Mode: Font Declaration ---
+export interface FontDeclaration {
+  path: string;
+  family: string;
+  weight?: number;    // 100–900, default 400
+  style?: 'normal' | 'italic';  // default 'normal'
+}
+
 // --- Color & Fill ---
 export interface RgbaColor {
   r: number; // 0–1
@@ -101,6 +131,11 @@ export interface TextStyle {
   textAutoResize?: 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT';
   textDecoration?: 'NONE' | 'UNDERLINE' | 'STRIKETHROUGH';
   color?: string;            // hex string, convenience shorthand
+
+  // Banner Mode: Extended Typography
+  textTransform?: 'UPPERCASE' | 'LOWERCASE' | 'CAPITALIZE';
+  textStroke?: { color: string; width: number };
+  textShadow?: { color: string; offsetX: number; offsetY: number; blur: number };
 }
 
 // --- Component Properties ---
@@ -158,8 +193,12 @@ export interface DslNode {
   pointCount?: number;
   innerRadius?: number; // STAR only, 0–1, default 0.382
 
-  // Rotation (LINE, POLYGON, STAR)
+  // Rotation (LINE, POLYGON, STAR; any node in Banner Mode)
   rotation?: number;
+
+  // Banner Mode: Visual Effects
+  effects?: EffectDefinition[];
+  blendMode?: BlendMode;
 
   // Boolean operation (BOOLEAN_OPERATION only)
   booleanOperation?: BooleanOperationType;
@@ -183,6 +222,10 @@ export interface FrameProps {
   layoutGrow?: number;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+  // Banner Mode
+  effects?: EffectDefinition[];
+  blendMode?: BlendMode;
+  rotation?: number;
 }
 
 export interface RectangleProps {
@@ -196,6 +239,10 @@ export interface RectangleProps {
   layoutGrow?: number;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+  // Banner Mode
+  effects?: EffectDefinition[];
+  blendMode?: BlendMode;
+  rotation?: number;
 }
 
 export interface EllipseProps {
@@ -206,6 +253,10 @@ export interface EllipseProps {
   layoutGrow?: number;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+  // Banner Mode
+  effects?: EffectDefinition[];
+  blendMode?: BlendMode;
+  rotation?: number;
 }
 
 export interface ComponentProps extends FrameProps {
