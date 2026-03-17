@@ -112,6 +112,35 @@
 - **Context**: Previously planned to generate Code Connect-style snippets from `dsl-identity` metadata
 - **Status**: **Superseded** by source-embedded approach. R2 AC2 is now satisfied by storing the actual `.figma.tsx` Code Connect file content in `dsl-sources` plugin data. No need for synthetic generation.
 
+### Phase 2: Async Codegen Callback for Canvas Capture
+- **Context**: DslCanvas HTML preview requires calling `exportAsync()` within the codegen callback to capture canvas region images as PNG
+- **Sources Consulted**: https://developers.figma.com/docs/plugins/codegen-plugins/, Figma Plugin API docs
+- **Findings**:
+  - `figma.codegen.on("generate")` supports `Promise<CodegenResult[]>` return type — async callbacks are fully supported
+  - `exportAsync()` can be called within the generate callback as long as execution completes within 3 seconds
+  - Scale factor 1 produces adequate resolution for Dev Mode preview while minimizing capture time
+  - Each `exportAsync` call takes ~500ms, so 3 captures ≈ 1.5s, leaving ~1.5s for detection + generation
+- **Implications**: `handleCodegenEvent` becomes async. Must cap captures at 3 regions and use scale=1 to stay within timeout.
+
+### Phase 2: Canvas Detection Reuse
+- **Context**: Can existing `canvas-detector.ts` and `image-capture.ts` from canvas-component feature be reused in codegen?
+- **Sources Consulted**: `packages/plugin/src/canvas-detector.ts`, `packages/plugin/src/image-capture.ts`
+- **Findings**:
+  - `detectCanvasRegions(componentNode)` returns `CanvasRegion[]` — checks `dsl-canvas` plugin data on direct children
+  - `captureCanvasImages(regions, options)` returns `Promise<Map<string, CapturedCanvasImage>>` — uses `exportAsync` with configurable scale
+  - Both modules are already structured for reuse: pure functions, no global state, configurable options
+  - No modifications needed — they can be called directly from the codegen pipeline
+- **Implications**: Zero new code for detection/capture infrastructure. Codegen only needs a thin integration layer in `codegen.ts` and new `codegen-html.ts` generator.
+
+### Phase 2: HTML Preview Performance Budget
+- **Context**: HTML/CSS preview with embedded canvas images must complete within 3-second timeout
+- **Analysis**:
+  - Canvas detection: <1ms (simple plugin data check on direct children)
+  - Image capture (3 regions, scale 1): ~1.5s (500ms per exportAsync call)
+  - HTML/CSS generation + base64 encoding: <500ms
+  - Total estimated: ~2s, leaving ~1s headroom
+- **Implications**: Performance budget is feasible. MAX_CANVAS_CAPTURES=3 and CANVAS_CAPTURE_SCALE=1 are hard constraints to enforce.
+
 ## Risks & Mitigations
 - **Source snapshot staleness**: Snapshots are point-in-time; local edits to .tsx/.module.css/.dsl.ts won't appear until re-export. Mitigate by adding `snapshotTimestamp` to `SourceSnapshots` so codegen can display a "last updated" note.
 - **Plugin data size limit (100KB per key)**: Mitigate with 50KB per-file guard in source-collector and separate `dsl-sources` key (not merged into `dsl-identity`). If combined sources exceed 100KB, store only DSL source and log warning.
@@ -120,6 +149,9 @@
 - **Bundle size increase**: Adding 3 generators + token map increases IIFE bundle by ~15KB. Source-collector runs in Node.js (CLI), not in bundle.
 - **Dual editorType compatibility**: Test that existing import/sync features work when `"dev"` is added to editorType array
 - **Backward compatibility**: Extended `ComponentIdentity` and `PluginInput` use optional fields only — existing export/import flows continue to work without sources
+- **Canvas capture timeout risk**: If exportAsync takes longer than expected (e.g., large/complex canvas nodes), the 3-second timeout could be exceeded. Mitigate by enforcing MAX_CANVAS_CAPTURES=3 and CANVAS_CAPTURE_SCALE=1 as hard limits, with placeholder fallback on individual capture failure.
+- **Base64 image size**: Large canvas regions at scale 1 could produce large base64 strings. Mitigate by capping region count and using PNG format (good compression for UI graphics). Typical canvas PNG at scale 1 is 10–50KB base64.
+- **HTML preview fidelity**: Generated HTML/CSS is a structural approximation, not pixel-perfect. Acceptable for Dev Mode reference use case.
 
 ## References
 - [Figma Codegen Plugins](https://developers.figma.com/docs/plugins/codegen-plugins/) — API docs, manifest schema, CodegenResult interface
