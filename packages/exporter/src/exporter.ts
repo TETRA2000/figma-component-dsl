@@ -236,12 +236,8 @@ export function generatePluginInput(
     schemaVersion: '1.0.0',
     targetPage: pageName,
     components,
+    mode: compileResult.mode === 'banner' ? 'banner' : undefined,
   };
-
-  // Propagate mode to export output
-  if (compileResult.mode) {
-    (result as Record<string, unknown>).mode = compileResult.mode;
-  }
 
   return result;
 }

@@ -408,7 +408,7 @@ describe('Integration: Banner Mode full pipeline (DSL → compile → render →
 
     // Stage 3: Export
     const pluginInput = generatePluginInput(compiled);
-    expect((pluginInput as Record<string, unknown>).mode).toBe('banner');
+    expect(pluginInput.mode).toBe('banner');
     expect(pluginInput.components).toHaveLength(1);
 
     const root = pluginInput.components[0]!;
@@ -446,7 +446,7 @@ describe('Integration: Banner Mode full pipeline (DSL → compile → render →
     const simple = frame('Simple', { size: { x: 100, y: 100 } });
     const compiled = compileWithLayout(simple, textMeasurer, { mode: 'banner' });
     const pluginInput = generatePluginInput(compiled);
-    expect((pluginInput as Record<string, unknown>).mode).toBe('banner');
+    expect(pluginInput.mode).toBe('banner');
   });
 });
 
@@ -500,7 +500,7 @@ describe('Integration: Standard mode backward compatibility', () => {
 
     const pluginInput = generatePluginInput(compiled);
     // Standard mode should not set 'banner' mode in plugin input
-    expect((pluginInput as Record<string, unknown>).mode).not.toBe('banner');
+    expect(pluginInput.mode).not.toBe('banner');
     expect(pluginInput.components[0]!.stackMode).toBe('HORIZONTAL');
   });
 

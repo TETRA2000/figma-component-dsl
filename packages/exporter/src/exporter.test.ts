@@ -377,6 +377,6 @@ describe('generatePluginInput() — Banner Mode effects', () => {
     const node = frame('Root', { size: { x: 100, y: 100 } });
     const compiled = compile(node, { mode: 'banner' });
     const input = generatePluginInput(compiled);
-    expect((input as Record<string, unknown>).mode).toBe('banner');
+    expect(input.mode).toBe('banner');
   });
 });

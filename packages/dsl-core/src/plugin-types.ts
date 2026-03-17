@@ -86,6 +86,7 @@ export interface PluginInput {
   readonly schemaVersion: string;
   readonly targetPage: string;
   readonly components: ReadonlyArray<PluginNodeDef>;
+  readonly mode?: 'standard' | 'banner';
 }
 
 // --- Edit Tracker Types ---
