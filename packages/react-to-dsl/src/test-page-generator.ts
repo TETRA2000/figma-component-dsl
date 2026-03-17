@@ -2,8 +2,9 @@
  * Test page generator — produces 200 self-contained React TSX pages
  * across 18 categories for the React-to-DSL conversion pipeline.
  *
- * Each generated file is a standalone React component that can be
- * served by the test server and rendered in a browser.
+ * Each generated file uses nested React function components (component composition)
+ * to simulate realistic React code. All component definitions are inlined
+ * since esbuild transforms each file independently as an IIFE.
  */
 
 import { mkdirSync, writeFileSync, existsSync } from 'fs';
@@ -18,10 +19,11 @@ function pad(n: number): string {
   return n.toString().padStart(2, '0');
 }
 
-/** Wrap a React component body in a full TSX file with default export. */
-function wrapComponent(name: string, body: string): string {
+/** Wrap a React component body with dependencies prepended. */
+function wrapComponentWithDeps(name: string, body: string, deps: string[] = []): string {
   const safeName = name.replace(/-/g, '_');
-  return `export default function ${safeName}() {
+  const depsCode = deps.length > 0 ? deps.join('\n\n') + '\n\n' : '';
+  return `${depsCode}export default function ${safeName}() {
   return (
 ${body}
   );
@@ -29,47 +31,151 @@ ${body}
 `;
 }
 
-/** Create a root div with data-testid for extraction. */
+/** Create a root div. */
 function root(style: string, children: string): string {
   return `    <div data-testid="root" style={${style}}>
 ${children}
     </div>`;
 }
 
-/** Create a styled div. */
-function div(style: string, children: string, indent = 6): string {
-  const pad = ' '.repeat(indent);
-  return `${pad}<div style={${style}}>
-${children}
-${pad}</div>`;
+// ---------------------------------------------------------------------------
+// Reusable Component Definitions (return TSX source code strings)
+// ---------------------------------------------------------------------------
+
+function defBadge(): string {
+  return `function Badge({ label, color, textColor }: { label: string; color: string; textColor?: string }) {
+  return (
+    <div style={{ backgroundColor: color, color: textColor || '#fff', padding: '4px 12px', borderRadius: 9999, fontSize: 12, fontWeight: 600, display: 'inline-flex' }}>
+      <span>{label}</span>
+    </div>
+  );
+}`;
 }
 
-/** Create a styled text span. */
-function span(text: string, style?: string, indent = 8): string {
-  const pad = ' '.repeat(indent);
-  if (style) {
-    return `${pad}<span style={${style}}>${text}</span>`;
-  }
-  return `${pad}<span>${text}</span>`;
+function defButton(): string {
+  return `function Button({ children, color, textColor }: { children: React.ReactNode; color?: string; textColor?: string }) {
+  return (
+    <div style={{ backgroundColor: color || '#3498db', padding: '8px 16px', borderRadius: 4, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ color: textColor || '#fff', fontSize: 14, fontWeight: 600 }}>{children}</span>
+    </div>
+  );
+}`;
 }
 
-/** Create a styled paragraph. */
-function p(text: string, style?: string, indent = 8): string {
-  const pad = ' '.repeat(indent);
-  if (style) {
-    return `${pad}<p style={${style}}>${text}</p>`;
-  }
-  return `${pad}<p>${text}</p>`;
+function defCard(): string {
+  return `function Card({ title, children, accentColor }: { title: string; children?: React.ReactNode; accentColor?: string }) {
+  return (
+    <div style={{ backgroundColor: '#fff', borderRadius: 8, padding: 20, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
+      <h3 style={{ fontSize: 18, fontWeight: 600, color: '#333', marginBottom: 8 }}>{title}</h3>
+      {children}
+      {accentColor && <div style={{ height: 3, backgroundColor: accentColor, marginTop: 12, borderRadius: 2 }} />}
+    </div>
+  );
+}`;
 }
 
-/** Create a heading. */
-function h(level: number, text: string, style?: string, indent = 8): string {
-  const pad = ' '.repeat(indent);
-  const tag = `h${level}`;
-  if (style) {
-    return `${pad}<${tag} style={${style}}>${text}</${tag}>`;
-  }
-  return `${pad}<${tag}>${text}</${tag}>`;
+function defAvatar(): string {
+  return `function Avatar({ color, size }: { color: string; size?: number }) {
+  const s = size || 40;
+  return <div style={{ width: s, height: s, borderRadius: s / 2, backgroundColor: color }} />;
+}`;
+}
+
+function defNavItem(): string {
+  return `function NavItem({ label, active, color }: { label: string; active?: boolean; color?: string }) {
+  return (
+    <span style={{ color: color || '#333', fontSize: 14, fontWeight: active ? 600 : 400, padding: '8px 12px', borderBottom: active ? '2px solid currentColor' : 'none' }}>
+      {label}
+    </span>
+  );
+}`;
+}
+
+function defDivider(): string {
+  return `function Divider({ color }: { color?: string }) {
+  return <div style={{ height: 1, backgroundColor: color || '#e0e0e0', width: '100%' }} />;
+}`;
+}
+
+function defStat(): string {
+  return `function Stat({ value, label, color }: { value: string; label: string; color?: string }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+      <span style={{ fontSize: 24, fontWeight: 700, color: color || '#333' }}>{value}</span>
+      <span style={{ fontSize: 12, color: '#999' }}>{label}</span>
+    </div>
+  );
+}`;
+}
+
+function defFeatureItem(): string {
+  return `function FeatureItem({ icon, title, description }: { icon: string; title: string; description: string }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+      <div style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#3498db', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ color: '#fff', fontSize: 14 }}>{icon}</span>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flexGrow: 1 }}>
+        <span style={{ fontSize: 14, fontWeight: 600, color: '#333' }}>{title}</span>
+        <span style={{ fontSize: 12, color: '#666' }}>{description}</span>
+      </div>
+    </div>
+  );
+}`;
+}
+
+function defSectionHeader(): string {
+  return `function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <h2 style={{ fontSize: 24, fontWeight: 700, color: '#333' }}>{title}</h2>
+      {subtitle && <p style={{ fontSize: 14, color: '#666' }}>{subtitle}</p>}
+    </div>
+  );
+}`;
+}
+
+function defTag(): string {
+  return `function Tag({ label, color }: { label: string; color: string }) {
+  return (
+    <div style={{ backgroundColor: color, color: '#fff', padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 500, display: 'inline-flex' }}>
+      <span>{label}</span>
+    </div>
+  );
+}`;
+}
+
+function defProgressBar(): string {
+  return `function ProgressBar({ percent, color }: { percent: number; color?: string }) {
+  return (
+    <div style={{ width: '100%', height: 8, backgroundColor: '#eee', borderRadius: 4, overflow: 'hidden' }}>
+      <div style={{ width: percent + '%', height: '100%', backgroundColor: color || '#3498db', borderRadius: 4 }} />
+    </div>
+  );
+}`;
+}
+
+function defListItem(): string {
+  return `function ListItem({ label, description }: { label: string; description?: string }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 2, padding: '8px 0' }}>
+      <div style={{ fontSize: 14, fontWeight: 500, color: '#333' }}>{label}</div>
+      {description && <div style={{ fontSize: 12, color: '#666' }}>{description}</div>}
+    </div>
+  );
+}`;
+}
+
+function defChip(): string {
+  return `function Chip({ label, selected, color }: { label: string; selected?: boolean; color?: string }) {
+  const bg = selected ? (color || '#3498db') : '#f0f0f0';
+  const textColor = selected ? '#fff' : '#333';
+  return (
+    <div style={{ backgroundColor: bg, color: textColor, padding: '6px 14px', borderRadius: 16, fontSize: 13, fontWeight: 500, display: 'inline-flex' }}>
+      <span>{label}</span>
+    </div>
+  );
+}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -100,7 +206,7 @@ const generators: Record<string, PageGenerator> = {
 };
 
 // ---------------------------------------------------------------------------
-// Layout Horizontal (15 variants)
+// Layout Horizontal (15 variants) — uses Badge and Button as children
 // ---------------------------------------------------------------------------
 
 function generateLayoutHorizontal(variant: number): string {
@@ -119,24 +225,24 @@ function generateLayoutHorizontal(variant: number): string {
 
   const childCount = 2 + (variant % 4);
   const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6'];
+  const labels = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon'];
 
   const children = Array.from({ length: childCount }, (_, i) => {
     const color = colors[i % colors.length]!;
-    const w = 40 + (i * 20);
-    const h = 40 + ((variant * 7 + i * 13) % 40);
-    return div(
-      `{ width: ${w}, height: ${h}, backgroundColor: '${color}' }`,
-      '',
-      8,
-    );
+    const label = labels[i % labels.length]!;
+    if (i % 2 === 0) {
+      return `        <Badge label="${label}" color="${color}" />`;
+    } else {
+      return `        <Button color="${color}">${label}</Button>`;
+    }
   }).join('\n');
 
   const rootStyle = `{ display: 'flex', flexDirection: 'row', gap: ${gap}, justifyContent: '${justify}', alignItems: '${align}', padding: 16, backgroundColor: '#f5f5f5', minHeight: 120 }`;
-  return wrapComponent(`layout_horizontal_${pad(variant)}`, root(rootStyle, children));
+  return wrapComponentWithDeps(`layout_horizontal_${pad(variant)}`, root(rootStyle, children), [defBadge(), defButton()]);
 }
 
 // ---------------------------------------------------------------------------
-// Layout Vertical (15 variants)
+// Layout Vertical (15 variants) — uses Badge as children
 // ---------------------------------------------------------------------------
 
 function generateLayoutVertical(variant: number): string {
@@ -150,23 +256,20 @@ function generateLayoutVertical(variant: number): string {
 
   const childCount = 2 + (variant % 3);
   const colors = ['#1abc9c', '#e67e22', '#3498db', '#e74c3c', '#8e44ad'];
+  const labels = ['First', 'Second', 'Third', 'Fourth', 'Fifth'];
 
   const children = Array.from({ length: childCount }, (_, i) => {
     const color = colors[i % colors.length]!;
-    const h = 30 + (i * 10);
-    return div(
-      `{ height: ${h}, backgroundColor: '${color}' }`,
-      '',
-      8,
-    );
+    const label = labels[i % labels.length]!;
+    return `        <Badge label="${label}" color="${color}" />`;
   }).join('\n');
 
   const rootStyle = `{ display: 'flex', flexDirection: 'column', gap: ${gap}, alignItems: '${align}', padding: 16, backgroundColor: '#fafafa', minWidth: 200 }`;
-  return wrapComponent(`layout_vertical_${pad(variant)}`, root(rootStyle, children));
+  return wrapComponentWithDeps(`layout_vertical_${pad(variant)}`, root(rootStyle, children), [defBadge()]);
 }
 
 // ---------------------------------------------------------------------------
-// Layout Nested (15 variants)
+// Layout Nested (15 variants) — uses Badge inside nested containers
 // ---------------------------------------------------------------------------
 
 function generateLayoutNested(variant: number): string {
@@ -179,71 +282,68 @@ function generateLayoutNested(variant: number): string {
   const innerCount = 2 + (variant % 3);
   const outerCount = 2 + (variant % 2);
 
-  const innerChildren = (offset: number) =>
-    Array.from({ length: innerCount }, (_, i) => {
-      const c = colors[(i + offset) % colors.length]!;
-      return div(`{ width: 50, height: 30, backgroundColor: '${c}' }`, '', 12);
+  const outerChildren = Array.from({ length: outerCount }, (_, gi) => {
+    const innerChildren = Array.from({ length: innerCount }, (__, i) => {
+      const c = colors[(i + gi * 2) % colors.length]!;
+      return `            <Badge label="Item ${gi * innerCount + i + 1}" color="${c}" />`;
     }).join('\n');
 
-  const outerChildren = Array.from({ length: outerCount }, (_, i) => {
-    return div(
-      `{ display: 'flex', flexDirection: '${innerDir}', gap: ${innerGap}, padding: 8, backgroundColor: '#eee', borderRadius: 4 }`,
-      innerChildren(i * 2),
-      8,
-    );
+    return `        <div style={{ display: 'flex', flexDirection: '${innerDir}', gap: ${innerGap}, padding: 8, backgroundColor: '#eee', borderRadius: 4 }}>
+${innerChildren}
+        </div>`;
   }).join('\n');
 
   const rootStyle = `{ display: 'flex', flexDirection: '${outerDir}', gap: ${gap}, padding: 16, backgroundColor: '#f5f5f5' }`;
-  return wrapComponent(`layout_nested_${pad(variant)}`, root(rootStyle, outerChildren));
+  return wrapComponentWithDeps(`layout_nested_${pad(variant)}`, root(rootStyle, outerChildren), [defBadge()]);
 }
 
 // ---------------------------------------------------------------------------
-// Layout Sizing (10 variants)
+// Layout Sizing (10 variants) — uses Button as content
 // ---------------------------------------------------------------------------
 
 function generateLayoutSizing(variant: number): string {
-  const configs: Array<{ desc: string; children: string[] }> = [
-    { desc: 'Fixed width children', children: [
-      `{ width: 100, height: 50, backgroundColor: '#e74c3c' }`,
-      `{ width: 200, height: 50, backgroundColor: '#3498db' }`,
+  const configs: Array<{ children: Array<{ style: string; label: string }> }> = [
+    { children: [
+      { style: `{ width: 100, height: 50, backgroundColor: '#e74c3c', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Fixed 100' },
+      { style: `{ width: 200, height: 50, backgroundColor: '#3498db', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Fixed 200' },
     ]},
-    { desc: 'Flex grow', children: [
-      `{ flexGrow: 1, height: 50, backgroundColor: '#2ecc71' }`,
-      `{ width: 100, height: 50, backgroundColor: '#e67e22' }`,
+    { children: [
+      { style: `{ flexGrow: 1, height: 50, backgroundColor: '#2ecc71', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Grow 1' },
+      { style: `{ width: 100, height: 50, backgroundColor: '#e67e22', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Fixed' },
     ]},
-    { desc: 'Multiple flex grow', children: [
-      `{ flexGrow: 1, height: 50, backgroundColor: '#9b59b6' }`,
-      `{ flexGrow: 2, height: 50, backgroundColor: '#1abc9c' }`,
+    { children: [
+      { style: `{ flexGrow: 1, height: 50, backgroundColor: '#9b59b6', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Grow 1' },
+      { style: `{ flexGrow: 2, height: 50, backgroundColor: '#1abc9c', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Grow 2' },
     ]},
-    { desc: 'Width 100%', children: [
-      `{ width: '100%', height: 40, backgroundColor: '#e74c3c' }`,
-      `{ width: '100%', height: 40, backgroundColor: '#3498db' }`,
+    { children: [
+      { style: `{ width: '100%', height: 40, backgroundColor: '#e74c3c', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Full Width' },
+      { style: `{ width: '100%', height: 40, backgroundColor: '#3498db', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Full Width' },
     ]},
-    { desc: 'Fixed height', children: [
-      `{ width: 80, height: 100, backgroundColor: '#2ecc71' }`,
-      `{ width: 80, height: 60, backgroundColor: '#e67e22' }`,
+    { children: [
+      { style: `{ width: 80, height: 100, backgroundColor: '#2ecc71', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Tall' },
+      { style: `{ width: 80, height: 60, backgroundColor: '#e67e22', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Short' },
     ]},
-    { desc: 'Auto width (hug)', children: [
-      `{ padding: 16, backgroundColor: '#9b59b6' }`,
-      `{ padding: 24, backgroundColor: '#1abc9c' }`,
+    { children: [
+      { style: `{ padding: 16, backgroundColor: '#9b59b6', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Hug' },
+      { style: `{ padding: 24, backgroundColor: '#1abc9c', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Hug' },
     ]},
-    { desc: 'Min width constraint', children: [
-      `{ minWidth: 100, height: 50, backgroundColor: '#e74c3c', flexGrow: 1 }`,
-      `{ minWidth: 150, height: 50, backgroundColor: '#3498db', flexGrow: 1 }`,
+    { children: [
+      { style: `{ minWidth: 100, height: 50, backgroundColor: '#e74c3c', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Min 100' },
+      { style: `{ minWidth: 150, height: 50, backgroundColor: '#3498db', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Min 150' },
     ]},
-    { desc: 'Max width constraint', children: [
-      `{ maxWidth: 200, height: 50, backgroundColor: '#2ecc71', flexGrow: 1 }`,
-      `{ height: 50, backgroundColor: '#e67e22', flexGrow: 1 }`,
+    { children: [
+      { style: `{ maxWidth: 200, height: 50, backgroundColor: '#2ecc71', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Max 200' },
+      { style: `{ height: 50, backgroundColor: '#e67e22', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Fill' },
     ]},
-    { desc: 'Mixed sizing', children: [
-      `{ width: 100, height: 50, backgroundColor: '#9b59b6' }`,
-      `{ flexGrow: 1, height: 50, backgroundColor: '#1abc9c' }`,
-      `{ width: 80, height: 50, backgroundColor: '#e74c3c' }`,
+    { children: [
+      { style: `{ width: 100, height: 50, backgroundColor: '#9b59b6', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Fixed' },
+      { style: `{ flexGrow: 1, height: 50, backgroundColor: '#1abc9c', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Grow' },
+      { style: `{ width: 80, height: 50, backgroundColor: '#e74c3c', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Fixed' },
     ]},
-    { desc: 'Vertical fill', children: [
-      `{ height: 60, backgroundColor: '#3498db' }`,
-      `{ flexGrow: 1, backgroundColor: '#2ecc71' }`,
-      `{ height: 40, backgroundColor: '#e67e22' }`,
+    { children: [
+      { style: `{ height: 60, backgroundColor: '#3498db', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Fixed H' },
+      { style: `{ flexGrow: 1, backgroundColor: '#2ecc71', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Grow' },
+      { style: `{ height: 40, backgroundColor: '#e67e22', display: 'flex', alignItems: 'center', justifyContent: 'center' }`, label: 'Fixed H' },
     ]},
   ];
 
@@ -251,16 +351,18 @@ function generateLayoutSizing(variant: number): string {
   const isVertical = variant > 8;
   const dir = isVertical ? 'column' : 'row';
 
-  const children = config.children.map((style) =>
-    div(style, span('Content'), 8)
+  const children = config.children.map((c) =>
+    `        <div style={${c.style}}>
+          <span style={{ color: '#fff', fontSize: 12 }}>${c.label}</span>
+        </div>`
   ).join('\n');
 
   const rootStyle = `{ display: 'flex', flexDirection: '${dir}', gap: 8, padding: 16, backgroundColor: '#f5f5f5'${isVertical ? ', height: 400' : ''} }`;
-  return wrapComponent(`layout_sizing_${pad(variant)}`, root(rootStyle, children));
+  return wrapComponentWithDeps(`layout_sizing_${pad(variant)}`, root(rootStyle, children));
 }
 
 // ---------------------------------------------------------------------------
-// Typography (20 variants)
+// Typography (20 variants) — uses SectionHeader component
 // ---------------------------------------------------------------------------
 
 function generateTypography(variant: number): string {
@@ -289,22 +391,20 @@ function generateTypography(variant: number): string {
 
   const textStyle = `{ fontSize: ${fontSize}, fontWeight: ${fontWeight}, color: '${color}', textAlign: '${textAlign}' as const, lineHeight: ${lineHeight}${letterSpacingStr}${decorationStr} }`;
 
-  const children = [
-    p(textContent, textStyle, 8),
-  ];
-
-  // Add a second line for some variants
+  let secondLine = '';
   if (variant > 5) {
-    const secondStyle = `{ fontSize: ${Math.max(12, fontSize - 4)}, fontWeight: 400, color: '#666666', marginTop: 8 }`;
-    children.push(p('Secondary text with different styling', secondStyle, 8));
+    secondLine = `\n        <p style={{ fontSize: ${Math.max(12, fontSize - 4)}, fontWeight: 400, color: '#666666', marginTop: 8 }}>Secondary text with different styling</p>`;
   }
 
-  const rootStyle = `{ padding: 24, backgroundColor: '#ffffff' }`;
-  return wrapComponent(`typography_${pad(variant)}`, root(rootStyle, children.join('\n')));
+  const children = `        <SectionHeader title="Section ${variant}" subtitle="Typography test" />
+        <p style={${textStyle}}>${textContent}</p>${secondLine}`;
+
+  const rootStyle = `{ padding: 24, backgroundColor: '#ffffff', display: 'flex', flexDirection: 'column', gap: 12 }`;
+  return wrapComponentWithDeps(`typography_${pad(variant)}`, root(rootStyle, children), [defSectionHeader()]);
 }
 
 // ---------------------------------------------------------------------------
-// Colors Solid (10 variants)
+// Colors Solid (10 variants) — uses Card and Badge
 // ---------------------------------------------------------------------------
 
 function generateColorsSolid(variant: number): string {
@@ -323,16 +423,14 @@ function generateColorsSolid(variant: number): string {
 
   const palette = palettes[(variant - 1) % palettes.length]!;
 
-  const children = palette.map((color, i) =>
-    div(
-      `{ backgroundColor: '${color}', padding: 16, marginBottom: ${i < palette.length - 1 ? 8 : 0} }`,
-      p(`Color: ${color}`, `{ color: '${isLight(color) ? '#333' : '#fff'}', fontSize: 14 }`, 10),
-      8,
-    )
+  const children = palette.map((color) =>
+    `        <div style={{ backgroundColor: '${color}', padding: 16, borderRadius: 8 }}>
+          <Badge label="${color}" color="${isLight(color) ? '#333' : '#fff'}" textColor="${isLight(color) ? '#fff' : '#333'}" />
+        </div>`
   ).join('\n');
 
-  const rootStyle = `{ padding: 16, backgroundColor: '#fafafa' }`;
-  return wrapComponent(`colors_solid_${pad(variant)}`, root(rootStyle, children));
+  const rootStyle = `{ padding: 16, backgroundColor: '#fafafa', display: 'flex', flexDirection: 'column', gap: 8 }`;
+  return wrapComponentWithDeps(`colors_solid_${pad(variant)}`, root(rootStyle, children), [defBadge()]);
 }
 
 function isLight(hex: string): boolean {
@@ -343,7 +441,7 @@ function isLight(hex: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Colors Gradient (10 variants)
+// Colors Gradient (10 variants) — uses Button
 // ---------------------------------------------------------------------------
 
 function generateColorsGradient(variant: number): string {
@@ -362,71 +460,57 @@ function generateColorsGradient(variant: number): string {
 
   const gradient = gradients[(variant - 1) % gradients.length]!;
 
-  const children = div(
-    `{ background: '${gradient}', padding: 32, borderRadius: 8 }`,
-    p('Gradient background', `{ color: '#fff', fontSize: 18, fontWeight: 600, textAlign: 'center' as const }`, 10),
-    8,
-  );
+  const children = `        <div style={{ background: '${gradient}', padding: 32, borderRadius: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+          <p style={{ color: '#fff', fontSize: 18, fontWeight: 600, textAlign: 'center' as const }}>Gradient background</p>
+          <Button color="rgba(255,255,255,0.2)" textColor="#fff">Learn More</Button>
+        </div>`;
 
   const rootStyle = `{ padding: 16, backgroundColor: '#f5f5f5' }`;
-  return wrapComponent(`colors_gradient_${pad(variant)}`, root(rootStyle, children));
+  return wrapComponentWithDeps(`colors_gradient_${pad(variant)}`, root(rootStyle, children), [defButton()]);
 }
 
 // ---------------------------------------------------------------------------
-// Borders & Strokes (10 variants)
+// Borders & Strokes (10 variants) — uses Badge
 // ---------------------------------------------------------------------------
 
 function generateBordersStrokes(variant: number): string {
   const borders = [
-    '1px solid #e74c3c',
-    '2px solid #3498db',
-    '3px solid #2ecc71',
-    '1px solid #333',
-    '2px solid #e67e22',
-    '4px solid #9b59b6',
-    '1px solid #bdc3c7',
-    '2px solid #1abc9c',
-    '3px solid #e74c3c',
-    '2px solid #2c3e50',
+    '1px solid #e74c3c', '2px solid #3498db', '3px solid #2ecc71',
+    '1px solid #333', '2px solid #e67e22', '4px solid #9b59b6',
+    '1px solid #bdc3c7', '2px solid #1abc9c', '3px solid #e74c3c', '2px solid #2c3e50',
   ];
 
   const border = borders[(variant - 1) % borders.length]!;
 
-  const children = div(
-    `{ border: '${border}', padding: 24, backgroundColor: '#fff' }`,
-    [
-      p(`Border: ${border}`, `{ fontSize: 14, color: '#333' }`, 10),
-      p('Content inside bordered container', `{ fontSize: 12, color: '#666', marginTop: 8 }`, 10),
-    ].join('\n'),
-    8,
-  );
+  const children = `        <div style={{ border: '${border}', padding: 24, backgroundColor: '#fff', borderRadius: 8 }}>
+          <Badge label="Border: ${border.split(' ')[0]}" color="#3498db" />
+          <p style={{ fontSize: 12, color: '#666', marginTop: 8 }}>Content inside bordered container</p>
+        </div>`;
 
   const rootStyle = `{ padding: 16, backgroundColor: '#f5f5f5' }`;
-  return wrapComponent(`borders_strokes_${pad(variant)}`, root(rootStyle, children));
+  return wrapComponentWithDeps(`borders_strokes_${pad(variant)}`, root(rootStyle, children), [defBadge()]);
 }
 
 // ---------------------------------------------------------------------------
-// Corner Radius (8 variants)
+// Corner Radius (8 variants) — uses Button
 // ---------------------------------------------------------------------------
 
 function generateCornerRadius(variant: number): string {
   const radii: Array<string | number> = [0, 4, 8, 12, 16, 24, 9999, '8px 16px 8px 16px'];
-
   const radius = radii[(variant - 1) % radii.length]!;
   const radiusStyle = typeof radius === 'string' ? `'${radius}'` : radius;
 
-  const children = div(
-    `{ borderRadius: ${radiusStyle}, backgroundColor: '#3498db', padding: 24 }`,
-    p(`Border radius: ${radius}${typeof radius === 'number' ? 'px' : ''}`, `{ color: '#fff', fontSize: 14, textAlign: 'center' as const }`, 10),
-    8,
-  );
+  const children = `        <div style={{ borderRadius: ${radiusStyle}, backgroundColor: '#3498db', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+          <p style={{ color: '#fff', fontSize: 14, textAlign: 'center' as const }}>Radius: ${radius}${typeof radius === 'number' ? 'px' : ''}</p>
+          <Button color="#fff" textColor="#3498db">Inside</Button>
+        </div>`;
 
   const rootStyle = `{ padding: 24, backgroundColor: '#f5f5f5' }`;
-  return wrapComponent(`corner_radius_${pad(variant)}`, root(rootStyle, children));
+  return wrapComponentWithDeps(`corner_radius_${pad(variant)}`, root(rootStyle, children), [defButton()]);
 }
 
 // ---------------------------------------------------------------------------
-// Spacing & Padding (12 variants)
+// Spacing & Padding (12 variants) — uses Badge
 // ---------------------------------------------------------------------------
 
 function generateSpacingPadding(variant: number): string {
@@ -441,43 +525,36 @@ function generateSpacingPadding(variant: number): string {
 
   const padding = paddings[(variant - 1) % paddings.length]!;
   const gap = gaps[(variant - 1) % gaps.length]!;
+  const colors = ['#e74c3c', '#3498db', '#2ecc71'];
+  const labels = ['First', 'Second', 'Third'];
 
   const children = Array.from({ length: 3 }, (_, i) => {
-    const colors = ['#e74c3c', '#3498db', '#2ecc71'];
-    return div(
-      `{ backgroundColor: '${colors[i]}', padding: 12 }`,
-      p(`Item ${i + 1}`, `{ color: '#fff', fontSize: 14 }`, 10),
-      8,
-    );
+    return `        <Badge label="${labels[i]}" color="${colors[i]}" />`;
   }).join('\n');
 
   const rootStyle = `{ display: 'flex', flexDirection: 'column', gap: ${gap}, padding: ${padding}, backgroundColor: '#f0f0f0' }`;
-  return wrapComponent(`spacing_padding_${pad(variant)}`, root(rootStyle, children));
+  return wrapComponentWithDeps(`spacing_padding_${pad(variant)}`, root(rootStyle, children), [defBadge()]);
 }
 
 // ---------------------------------------------------------------------------
-// Opacity (5 variants)
+// Opacity (5 variants) — uses Card
 // ---------------------------------------------------------------------------
 
 function generateOpacity(variant: number): string {
   const opacities = [0.2, 0.4, 0.6, 0.8, 0.5];
   const opacity = opacities[(variant - 1) % opacities.length]!;
 
-  const children = [
-    div(
-      `{ opacity: ${opacity}, backgroundColor: '#3498db', padding: 24, borderRadius: 8 }`,
-      p(`Opacity: ${opacity}`, `{ color: '#fff', fontSize: 16 }`, 10),
-      8,
-    ),
-    div(
-      `{ backgroundColor: '#e74c3c', padding: 24, borderRadius: 8, marginTop: 12 }`,
-      p('Full opacity reference', `{ color: '#fff', fontSize: 16 }`, 10),
-      8,
-    ),
-  ].join('\n');
+  const children = `        <div style={{ opacity: ${opacity} }}>
+          <Card title="Opacity ${opacity}">
+            <p style={{ fontSize: 14, color: '#666' }}>This card has opacity ${opacity}</p>
+          </Card>
+        </div>
+        <Card title="Full Opacity" accentColor="#e74c3c">
+          <p style={{ fontSize: 14, color: '#666' }}>Reference card at full opacity</p>
+        </Card>`;
 
-  const rootStyle = `{ padding: 16, backgroundColor: '#f5f5f5' }`;
-  return wrapComponent(`opacity_${pad(variant)}`, root(rootStyle, children));
+  const rootStyle = `{ padding: 16, backgroundColor: '#f5f5f5', display: 'flex', flexDirection: 'column', gap: 12 }`;
+  return wrapComponentWithDeps(`opacity_${pad(variant)}`, root(rootStyle, children), [defCard()]);
 }
 
 // ---------------------------------------------------------------------------
@@ -488,110 +565,104 @@ function generateClipContent(variant: number): string {
   const overflow = variant <= 3 ? 'hidden' : 'visible';
   const childSize = 100 + variant * 30;
 
-  const children = div(
-    `{ width: 200, height: 150, overflow: '${overflow}', backgroundColor: '#ecf0f1', border: '1px solid #bdc3c7', borderRadius: 8 }`,
-    div(
-      `{ width: ${childSize}, height: ${childSize}, backgroundColor: '#3498db', borderRadius: 4 }`,
-      p('Overflowing content', `{ color: '#fff', fontSize: 12, padding: 8 }`, 12),
-      10,
-    ),
-    8,
-  );
+  const children = `        <div style={{ width: 200, height: 150, overflow: '${overflow}', backgroundColor: '#ecf0f1', border: '1px solid #bdc3c7', borderRadius: 8 }}>
+          <div style={{ width: ${childSize}, height: ${childSize}, backgroundColor: '#3498db', borderRadius: 4 }}>
+            <Badge label="Overflowing" color="#e74c3c" />
+          </div>
+        </div>`;
 
   const rootStyle = `{ padding: 24, backgroundColor: '#f5f5f5' }`;
-  return wrapComponent(`clip_content_${pad(variant)}`, root(rootStyle, children));
+  return wrapComponentWithDeps(`clip_content_${pad(variant)}`, root(rootStyle, children), [defBadge()]);
 }
 
 // ---------------------------------------------------------------------------
-// Cards (15 variants)
+// Cards (15 variants) — uses Card, Badge, Button, Avatar, Divider
 // ---------------------------------------------------------------------------
 
 function generateCards(variant: number): string {
-  const cardColors = ['#fff', '#fafafa', '#f8f9fa', '#fff5f5', '#f0f7ff'];
   const accentColors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6'];
-
-  const bgColor = cardColors[(variant - 1) % cardColors.length]!;
   const accent = accentColors[(variant - 1) % accentColors.length]!;
-  const radius = [4, 8, 12, 16, 8][(variant - 1) % 5]!;
-  const padding = [16, 20, 24, 16, 20][(variant - 1) % 5]!;
 
   let cardContent: string;
+  let deps: string[];
 
   if (variant <= 5) {
-    // Simple card with title and body
-    cardContent = [
-      h(3, `Card Title ${variant}`, `{ fontSize: 18, fontWeight: 600, color: '#333', marginBottom: 8 }`, 10),
-      p('This is a simple card with a title and body text. It demonstrates basic card layout patterns.', `{ fontSize: 14, color: '#666', lineHeight: 1.5 }`, 10),
-    ].join('\n');
+    // Simple card with badge and button
+    cardContent = `        <Card title="Card ${variant}" accentColor="${accent}">
+          <p style={{ fontSize: 14, color: '#666', lineHeight: 1.5 }}>This is a card with nested Badge and Button components.</p>
+          <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+            <Badge label="New" color="${accent}" />
+            <Button color="${accent}">Action</Button>
+          </div>
+        </Card>`;
+    deps = [defCard(), defBadge(), defButton()];
   } else if (variant <= 10) {
-    // Card with colored top bar and content
-    cardContent = [
-      div(`{ backgroundColor: '${accent}', height: 4, borderRadius: '${radius}px ${radius}px 0 0' }`, '', 10),
-      div(`{ padding: ${padding}, display: 'flex', flexDirection: 'column', gap: 8 }`, [
-        h(3, 'Featured Card', `{ fontSize: 16, fontWeight: 600, color: '#333' }`, 12),
-        p('Card content with an accent top bar.', `{ fontSize: 14, color: '#666', lineHeight: 1.5 }`, 12),
-      ].join('\n'), 10),
-    ].join('\n');
+    // Card with avatar and stats
+    cardContent = `        <Card title="User Card ${variant}">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+            <Avatar color="${accent}" size={48} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <span style={{ fontSize: 14, fontWeight: 600, color: '#333' }}>User Name</span>
+              <span style={{ fontSize: 12, color: '#999' }}>user@example.com</span>
+            </div>
+          </div>
+          <Divider />
+          <div style={{ display: 'flex', gap: 16, marginTop: 12, justifyContent: 'center' }}>
+            <Stat value="${variant * 12}" label="Posts" color="${accent}" />
+            <Stat value="${variant * 89}" label="Followers" color="${accent}" />
+          </div>
+        </Card>`;
+    deps = [defCard(), defAvatar(), defDivider(), defStat()];
   } else {
-    // Card with footer/action area
-    cardContent = [
-      h(3, `Card ${variant}`, `{ fontSize: 18, fontWeight: 600, color: '#333', marginBottom: 8 }`, 10),
-      p('Card with action buttons at the bottom.', `{ fontSize: 14, color: '#666', lineHeight: 1.5, marginBottom: 16 }`, 10),
-      div(`{ display: 'flex', gap: 8, justifyContent: 'flex-end' }`,
-        [
-          div(`{ backgroundColor: '${accent}', padding: '8px 16px', borderRadius: 4 }`,
-            span('Action', `{ color: '#fff', fontSize: 14 }`, 14), 12),
-          div(`{ backgroundColor: '#eee', padding: '8px 16px', borderRadius: 4 }`,
-            span('Cancel', `{ color: '#333', fontSize: 14 }`, 14), 12),
-        ].join('\n'), 10),
-    ].join('\n');
+    // Card with feature items and progress bar
+    cardContent = `        <Card title="Project Card ${variant}">
+          <ProgressBar percent={${30 + variant * 4}} color="${accent}" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 12 }}>
+            <FeatureItem icon="A" title="Feature One" description="First feature description" />
+            <FeatureItem icon="B" title="Feature Two" description="Second feature description" />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+            <Button color="${accent}">View Details</Button>
+          </div>
+        </Card>`;
+    deps = [defCard(), defProgressBar(), defFeatureItem(), defButton()];
   }
 
-  const cardPadding = (variant > 5 && variant <= 10) ? 0 : padding;
-  const children = div(
-    `{ backgroundColor: '${bgColor}', borderRadius: ${radius}, padding: ${cardPadding}, border: '1px solid #e0e0e0', overflow: 'hidden' }`,
-    cardContent,
-    8,
-  );
-
   const rootStyle = `{ padding: 24, backgroundColor: '#f5f5f5' }`;
-  return wrapComponent(`cards_${pad(variant)}`, root(rootStyle, children));
+  return wrapComponentWithDeps(`cards_${pad(variant)}`, root(rootStyle, cardContent), deps);
 }
 
 // ---------------------------------------------------------------------------
-// Navigation (10 variants)
+// Navigation (10 variants) — uses NavItem, Avatar, Button
 // ---------------------------------------------------------------------------
 
 function generateNavigation(variant: number): string {
-  const navItems = ['Home', 'About', 'Products', 'Contact', 'Blog'];
   const bgColors = ['#2c3e50', '#1a1a2e', '#ffffff', '#f8f9fa', '#16213e', '#0f3460', '#2c3e50', '#ffffff', '#1a1a2e', '#f8f9fa'];
   const textColors = ['#ffffff', '#ffffff', '#333333', '#333333', '#ffffff', '#ffffff', '#ffffff', '#333333', '#ffffff', '#333333'];
+  const navLabels = ['Home', 'About', 'Products', 'Contact', 'Blog'];
 
   const bgColor = bgColors[(variant - 1) % bgColors.length]!;
   const textColor = textColors[(variant - 1) % textColors.length]!;
   const itemCount = 3 + (variant % 3);
 
-  const items = navItems.slice(0, itemCount).map((item) =>
-    span(item, `{ color: '${textColor}', fontSize: 14, fontWeight: 500, cursor: 'pointer' }`, 12)
+  const items = navLabels.slice(0, itemCount).map((item, i) =>
+    `            <NavItem label="${item}" active={${i === 0}} color="${textColor}" />`
   ).join('\n');
 
-  const logoStyle = `{ fontSize: 18, fontWeight: 700, color: '${textColor}' }`;
-
-  const children = div(
-    `{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '${bgColor}', padding: '12px 24px' }`,
-    [
-      span('Logo', logoStyle, 10),
-      div(`{ display: 'flex', flexDirection: 'row', gap: 24, alignItems: 'center' }`, items, 10),
-    ].join('\n'),
-    8,
-  );
+  const children = `        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '${bgColor}', padding: '12px 24px' }}>
+          <span style={{ fontSize: 18, fontWeight: 700, color: '${textColor}' }}>Logo</span>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+${items}
+          </div>
+          <Avatar color="${textColor === '#ffffff' ? '#fff' : '#333'}" size={32} />
+        </div>`;
 
   const rootStyle = `{ backgroundColor: '#f5f5f5' }`;
-  return wrapComponent(`navigation_${pad(variant)}`, root(rootStyle, children));
+  return wrapComponentWithDeps(`navigation_${pad(variant)}`, root(rootStyle, children), [defNavItem(), defAvatar()]);
 }
 
 // ---------------------------------------------------------------------------
-// Heroes & Banners (10 variants)
+// Heroes & Banners (10 variants) — uses Button, Badge, SectionHeader
 // ---------------------------------------------------------------------------
 
 function generateHeroesBanners(variant: number): string {
@@ -603,23 +674,22 @@ function generateHeroesBanners(variant: number): string {
     ? `background: 'linear-gradient(135deg, ${bgColor}, #333)'`
     : `backgroundColor: '${bgColor}'`;
 
-  const children = div(
-    `{ ${bgStyle}, padding: '48px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }`,
-    [
-      h(1, `Hero Title ${variant}`, `{ fontSize: 36, fontWeight: 700, color: '#fff', textAlign: 'center' as const }`, 10),
-      p('A compelling subtitle that describes the value proposition of this hero section.', `{ fontSize: 16, color: '#cccccc', textAlign: 'center' as const, maxWidth: 600, lineHeight: 1.6 }`, 10),
-      div(`{ backgroundColor: '#fff', padding: '12px 32px', borderRadius: 8 }`,
-        span('Get Started', `{ color: '${bgColor}', fontSize: 16, fontWeight: 600 }`, 12), 10),
-    ].join('\n'),
-    8,
-  );
+  const children = `        <div style={{ ${bgStyle}, padding: '48px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+          <Badge label="New Release" color="rgba(255,255,255,0.2)" textColor="#fff" />
+          <h1 style={{ fontSize: 36, fontWeight: 700, color: '#fff', textAlign: 'center' as const }}>Hero Title ${variant}</h1>
+          <p style={{ fontSize: 16, color: '#cccccc', textAlign: 'center' as const, maxWidth: 600, lineHeight: 1.6 }}>A compelling subtitle that describes the value proposition.</p>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <Button color="#fff" textColor="${bgColor}">Get Started</Button>
+            <Button color="rgba(255,255,255,0.2)" textColor="#fff">Learn More</Button>
+          </div>
+        </div>`;
 
   const rootStyle = `{ backgroundColor: '#f5f5f5' }`;
-  return wrapComponent(`heroes_banners_${pad(variant)}`, root(rootStyle, children));
+  return wrapComponentWithDeps(`heroes_banners_${pad(variant)}`, root(rootStyle, children), [defBadge(), defButton()]);
 }
 
 // ---------------------------------------------------------------------------
-// Lists & Grids (10 variants)
+// Lists & Grids (10 variants) — uses Card, Avatar, Badge, FeatureItem
 // ---------------------------------------------------------------------------
 
 function generateListsGrids(variant: number): string {
@@ -629,15 +699,15 @@ function generateListsGrids(variant: number): string {
 
   const items = Array.from({ length: itemCount }, (_, i) => {
     const color = colors[i % colors.length]!;
-    return div(
-      `{ backgroundColor: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, padding: 16 }`,
-      [
-        div(`{ width: 40, height: 40, backgroundColor: '${color}', borderRadius: 20, marginBottom: 8 }`, '', 12),
-        p(`Item ${i + 1}`, `{ fontSize: 14, fontWeight: 600, color: '#333' }`, 12),
-        p('Description text', `{ fontSize: 12, color: '#999', marginTop: 4 }`, 12),
-      ].join('\n'),
-      10,
-    );
+    if (isGrid) {
+      return `          <div style={{ backgroundColor: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, padding: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <Avatar color="${color}" />
+            <span style={{ fontSize: 14, fontWeight: 600, color: '#333' }}>Item ${i + 1}</span>
+            <Badge label="Tag" color="${color}" />
+          </div>`;
+    } else {
+      return `          <FeatureItem icon="${String.fromCharCode(65 + i)}" title="Feature ${i + 1}" description="Description for feature ${i + 1}" />`;
+    }
   }).join('\n');
 
   let containerStyle: string;
@@ -647,14 +717,21 @@ function generateListsGrids(variant: number): string {
     containerStyle = `{ display: 'flex', flexDirection: 'column', gap: 12 }`;
   }
 
-  const children = div(containerStyle, items, 8);
+  const children = `        <SectionHeader title="List ${variant}" subtitle="${isGrid ? 'Grid layout' : 'List layout'}" />
+        <div style={${containerStyle}}>
+${items}
+        </div>`;
 
-  const rootStyle = `{ padding: 24, backgroundColor: '#f5f5f5' }`;
-  return wrapComponent(`lists_grids_${pad(variant)}`, root(rootStyle, children));
+  const deps = isGrid
+    ? [defSectionHeader(), defAvatar(), defBadge()]
+    : [defSectionHeader(), defFeatureItem()];
+
+  const rootStyle = `{ padding: 24, backgroundColor: '#f5f5f5', display: 'flex', flexDirection: 'column', gap: 16 }`;
+  return wrapComponentWithDeps(`lists_grids_${pad(variant)}`, root(rootStyle, children), deps);
 }
 
 // ---------------------------------------------------------------------------
-// Badges & Tags (5 variants)
+// Badges & Tags (5 variants) — uses Badge, Tag, Chip
 // ---------------------------------------------------------------------------
 
 function generateBadgesTags(variant: number): string {
@@ -676,27 +753,40 @@ function generateBadgesTags(variant: number): string {
   const labels = badges[(variant - 1) % badges.length]!;
   const colors = colorSets[(variant - 1) % colorSets.length]!;
 
-  const items = labels.map((label, i) => {
+  const badgeItems = labels.map((label, i) => {
     const color = colors[i % colors.length]!;
-    return div(
-      `{ backgroundColor: '${color}', padding: '4px 12px', borderRadius: 9999, display: 'inline-flex' }`,
-      span(label, `{ color: '#fff', fontSize: 12, fontWeight: 600 }`, 12),
-      10,
-    );
+    return `          <Badge label="${label}" color="${color}" />`;
   }).join('\n');
 
-  const children = div(
-    `{ display: 'flex', flexDirection: 'row', gap: 8, flexWrap: 'wrap' }`,
-    items,
-    8,
-  );
+  const tagItems = labels.map((label, i) => {
+    const color = colors[i % colors.length]!;
+    return `          <Tag label="${label}" color="${color}" />`;
+  }).join('\n');
 
-  const rootStyle = `{ padding: 24, backgroundColor: '#fff' }`;
-  return wrapComponent(`badges_tags_${pad(variant)}`, root(rootStyle, children));
+  const chipItems = labels.map((label, i) => {
+    const color = colors[i % colors.length]!;
+    return `          <Chip label="${label}" selected={${i === 0}} color="${color}" />`;
+  }).join('\n');
+
+  const children = `        <SectionHeader title="Badges" />
+        <div style={{ display: 'flex', flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
+${badgeItems}
+        </div>
+        <SectionHeader title="Tags" />
+        <div style={{ display: 'flex', flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
+${tagItems}
+        </div>
+        <SectionHeader title="Chips" />
+        <div style={{ display: 'flex', flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
+${chipItems}
+        </div>`;
+
+  const rootStyle = `{ padding: 24, backgroundColor: '#fff', display: 'flex', flexDirection: 'column', gap: 16 }`;
+  return wrapComponentWithDeps(`badges_tags_${pad(variant)}`, root(rootStyle, children), [defSectionHeader(), defBadge(), defTag(), defChip()]);
 }
 
 // ---------------------------------------------------------------------------
-// Combined Complex (15 variants)
+// Combined Complex (15 variants) — heavy component composition
 // ---------------------------------------------------------------------------
 
 function generateCombinedComplex(variant: number): string {
@@ -704,81 +794,77 @@ function generateCombinedComplex(variant: number): string {
   const accent = accentColors[(variant - 1) % accentColors.length]!;
 
   if (variant <= 5) {
-    // Dashboard-style layout: sidebar + main content
-    return wrapComponent(`combined_complex_${pad(variant)}`, root(
+    // Dashboard layout: sidebar + main with stats, cards, progress
+    const sidebarItems = ['Overview', 'Analytics', 'Settings'].map((item, i) =>
+      `            <NavItem label="${item}" active={${i === 0}} color="#fff" />`
+    ).join('\n');
+
+    const statItems = ['Users', 'Revenue', 'Orders'].map((label, i) =>
+      `              <Stat value="${(i + 1) * 1234}" label="${label}" color="${accent}" />`
+    ).join('\n');
+
+    return wrapComponentWithDeps(`combined_complex_${pad(variant)}`, root(
       `{ display: 'flex', flexDirection: 'row', minHeight: 400, backgroundColor: '#f5f5f5' }`,
-      [
-        // Sidebar
-        div(`{ width: 200, backgroundColor: '#2c3e50', padding: 16, display: 'flex', flexDirection: 'column', gap: 8 }`, [
-          h(3, 'Dashboard', `{ color: '#fff', fontSize: 16, fontWeight: 700, marginBottom: 16 }`, 10),
-          ...['Overview', 'Analytics', 'Settings'].map(item =>
-            div(`{ padding: '8px 12px', borderRadius: 4, backgroundColor: '${item === 'Overview' ? accent : 'transparent'}' }`,
-              span(item, `{ color: '#fff', fontSize: 14 }`, 12), 10)
-          ),
-        ].join('\n'), 8),
-        // Main content
-        div(`{ flexGrow: 1, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }`, [
-          h(2, 'Overview', `{ fontSize: 24, fontWeight: 700, color: '#333' }`, 10),
-          div(`{ display: 'flex', flexDirection: 'row', gap: 16 }`, [
-            ...['Users', 'Revenue', 'Orders'].map((label, i) =>
-              div(`{ flexGrow: 1, backgroundColor: '#fff', borderRadius: 8, padding: 16, border: '1px solid #e0e0e0' }`, [
-                p(label, `{ fontSize: 12, color: '#999' }`, 14),
-                p(`${(i + 1) * 1234}`, `{ fontSize: 24, fontWeight: 700, color: '${accent}', marginTop: 4 }`, 14),
-              ].join('\n'), 12)
-            ),
-          ].join('\n'), 10),
-        ].join('\n'), 8),
-      ].join('\n'),
-    ));
+      `        <div style={{ width: 200, backgroundColor: '#2c3e50', padding: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <h3 style={{ color: '#fff', fontSize: 16, fontWeight: 700, marginBottom: 16 }}>Dashboard</h3>
+${sidebarItems}
+        </div>
+        <div style={{ flexGrow: 1, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <SectionHeader title="Overview" subtitle="Dashboard stats" />
+          <div style={{ display: 'flex', flexDirection: 'row', gap: 16 }}>
+${statItems}
+          </div>
+          <Card title="Recent Activity" accentColor="${accent}">
+            <ProgressBar percent={65} color="${accent}" />
+            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+              <Badge label="Active" color="#2ecc71" />
+              <Badge label="In Progress" color="#f39c12" />
+            </div>
+          </Card>
+        </div>`,
+    ), [defNavItem(), defSectionHeader(), defStat(), defCard(), defProgressBar(), defBadge()]);
   } else if (variant <= 10) {
-    // Landing page section: hero + features
-    return wrapComponent(`combined_complex_${pad(variant)}`, root(
+    // Landing page: hero + features + CTA
+    const featureItems = ['Fast', 'Secure', 'Scalable'].map((f) =>
+      `            <FeatureItem icon="${f[0]}" title="${f}" description="Lorem ipsum dolor sit amet." />`
+    ).join('\n');
+
+    return wrapComponentWithDeps(`combined_complex_${pad(variant)}`, root(
       `{ display: 'flex', flexDirection: 'column', backgroundColor: '#fff' }`,
-      [
-        // Hero
-        div(`{ backgroundColor: '${accent}', padding: '48px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }`, [
-          h(1, 'Welcome', `{ fontSize: 32, fontWeight: 700, color: '#fff' }`, 10),
-          p('Build amazing things with our platform.', `{ fontSize: 16, color: 'rgba(255,255,255,0.8)', textAlign: 'center' as const }`, 10),
-        ].join('\n'), 8),
-        // Features
-        div(`{ padding: 32, display: 'flex', flexDirection: 'row', gap: 24, justifyContent: 'center' }`, [
-          ...['Fast', 'Secure', 'Scalable'].map(feature =>
-            div(`{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: 16 }`, [
-              div(`{ width: 48, height: 48, borderRadius: 24, backgroundColor: '${accent}', opacity: 0.1 }`, '', 12),
-              p(feature, `{ fontSize: 16, fontWeight: 600, color: '#333' }`, 12),
-              p('Lorem ipsum dolor sit amet.', `{ fontSize: 13, color: '#666', textAlign: 'center' as const }`, 12),
-            ].join('\n'), 10)
-          ),
-        ].join('\n'), 8),
-      ].join('\n'),
-    ));
+      `        <div style={{ backgroundColor: '${accent}', padding: '48px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+          <Badge label="New" color="rgba(255,255,255,0.2)" textColor="#fff" />
+          <h1 style={{ fontSize: 32, fontWeight: 700, color: '#fff' }}>Welcome</h1>
+          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.8)', textAlign: 'center' as const }}>Build amazing things with our platform.</p>
+          <Button color="#fff" textColor="${accent}">Get Started</Button>
+        </div>
+        <div style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <SectionHeader title="Features" subtitle="What we offer" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+${featureItems}
+          </div>
+        </div>`,
+    ), [defBadge(), defButton(), defSectionHeader(), defFeatureItem()]);
   } else {
-    // Profile/settings page
-    return wrapComponent(`combined_complex_${pad(variant)}`, root(
+    // Profile page: avatar + info + settings sections
+    const settingsSections = ['General', 'Notifications'].map((section) =>
+      `        <Card title="${section}">
+          <ListItem label="Setting option" description="Description of this setting" />
+          <Divider />
+          <ListItem label="Another option" description="More details here" />
+        </Card>`
+    ).join('\n');
+
+    return wrapComponentWithDeps(`combined_complex_${pad(variant)}`, root(
       `{ display: 'flex', flexDirection: 'column', gap: 16, padding: 24, backgroundColor: '#f5f5f5' }`,
-      [
-        // Header
-        div(`{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16, backgroundColor: '#fff', padding: 20, borderRadius: 8, border: '1px solid #e0e0e0' }`, [
-          div(`{ width: 64, height: 64, borderRadius: 32, backgroundColor: '${accent}' }`, '', 10),
-          div(`{ display: 'flex', flexDirection: 'column', gap: 4 }`, [
-            h(2, `User ${variant}`, `{ fontSize: 20, fontWeight: 700, color: '#333' }`, 12),
-            p('user@example.com', `{ fontSize: 14, color: '#999' }`, 12),
-          ].join('\n'), 10),
-        ].join('\n'), 8),
-        // Settings sections
-        ...['General', 'Notifications'].map(section =>
-          div(`{ backgroundColor: '#fff', borderRadius: 8, padding: 20, border: '1px solid #e0e0e0' }`, [
-            h(3, section, `{ fontSize: 16, fontWeight: 600, color: '#333', marginBottom: 12 }`, 10),
-            div(`{ display: 'flex', flexDirection: 'column', gap: 8 }`, [
-              div(`{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }`, [
-                span('Setting option', `{ fontSize: 14, color: '#333' }`, 14),
-                div(`{ width: 40, height: 20, borderRadius: 10, backgroundColor: '${accent}' }`, '', 14),
-              ].join('\n'), 12),
-            ].join('\n'), 10),
-          ].join('\n'), 8)
-        ),
-      ].join('\n'),
-    ));
+      `        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 16, backgroundColor: '#fff', padding: 20, borderRadius: 8, border: '1px solid #e0e0e0' }}>
+          <Avatar color="${accent}" size={64} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: '#333' }}>User ${variant}</h2>
+            <Badge label="Pro" color="${accent}" />
+          </div>
+        </div>
+${settingsSections}`,
+    ), [defAvatar(), defBadge(), defCard(), defListItem(), defDivider()]);
   }
 }
 

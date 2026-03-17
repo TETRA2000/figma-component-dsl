@@ -1,14 +1,22 @@
+function Badge({ label, color, textColor }: { label: string; color: string; textColor?: string }) {
+  return (
+    <div style={{ backgroundColor: color, color: textColor || '#fff', padding: '4px 12px', borderRadius: 9999, fontSize: 12, fontWeight: 600, display: 'inline-flex' }}>
+      <span>{label}</span>
+    </div>
+  );
+}
+
 export default function colors_solid_01() {
   return (
-    <div data-testid="root" style={{ padding: 16, backgroundColor: '#fafafa' }}>
-        <div style={{ backgroundColor: '#e74c3c', padding: 16, marginBottom: 8 }}>
-          <p style={{ color: '#fff', fontSize: 14 }}>Color: #e74c3c</p>
+    <div data-testid="root" style={{ padding: 16, backgroundColor: '#fafafa', display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ backgroundColor: '#e74c3c', padding: 16, borderRadius: 8 }}>
+          <Badge label="#e74c3c" color="#fff" textColor="#333" />
         </div>
-        <div style={{ backgroundColor: '#c0392b', padding: 16, marginBottom: 8 }}>
-          <p style={{ color: '#fff', fontSize: 14 }}>Color: #c0392b</p>
+        <div style={{ backgroundColor: '#c0392b', padding: 16, borderRadius: 8 }}>
+          <Badge label="#c0392b" color="#fff" textColor="#333" />
         </div>
-        <div style={{ backgroundColor: '#ff6b6b', padding: 16, marginBottom: 0 }}>
-          <p style={{ color: '#333', fontSize: 14 }}>Color: #ff6b6b</p>
+        <div style={{ backgroundColor: '#ff6b6b', padding: 16, borderRadius: 8 }}>
+          <Badge label="#ff6b6b" color="#333" textColor="#fff" />
         </div>
     </div>
   );

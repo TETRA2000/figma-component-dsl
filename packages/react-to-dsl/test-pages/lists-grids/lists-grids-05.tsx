@@ -1,35 +1,35 @@
+function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <h2 style={{ fontSize: 24, fontWeight: 700, color: '#333' }}>{title}</h2>
+      {subtitle && <p style={{ fontSize: 14, color: '#666' }}>{subtitle}</p>}
+    </div>
+  );
+}
+
+function FeatureItem({ icon, title, description }: { icon: string; title: string; description: string }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+      <div style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#3498db', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ color: '#fff', fontSize: 14 }}>{icon}</span>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flexGrow: 1 }}>
+        <span style={{ fontSize: 14, fontWeight: 600, color: '#333' }}>{title}</span>
+        <span style={{ fontSize: 12, color: '#666' }}>{description}</span>
+      </div>
+    </div>
+  );
+}
+
 export default function lists_grids_05() {
   return (
-    <div data-testid="root" style={{ padding: 24, backgroundColor: '#f5f5f5' }}>
+    <div data-testid="root" style={{ padding: 24, backgroundColor: '#f5f5f5', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <SectionHeader title="List 5" subtitle="List layout" />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ backgroundColor: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, padding: 16 }}>
-            <div style={{ width: 40, height: 40, backgroundColor: '#e74c3c', borderRadius: 20, marginBottom: 8 }}>
-
-            </div>
-            <p style={{ fontSize: 14, fontWeight: 600, color: '#333' }}>Item 1</p>
-            <p style={{ fontSize: 12, color: '#999', marginTop: 4 }}>Description text</p>
-          </div>
-          <div style={{ backgroundColor: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, padding: 16 }}>
-            <div style={{ width: 40, height: 40, backgroundColor: '#3498db', borderRadius: 20, marginBottom: 8 }}>
-
-            </div>
-            <p style={{ fontSize: 14, fontWeight: 600, color: '#333' }}>Item 2</p>
-            <p style={{ fontSize: 12, color: '#999', marginTop: 4 }}>Description text</p>
-          </div>
-          <div style={{ backgroundColor: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, padding: 16 }}>
-            <div style={{ width: 40, height: 40, backgroundColor: '#2ecc71', borderRadius: 20, marginBottom: 8 }}>
-
-            </div>
-            <p style={{ fontSize: 14, fontWeight: 600, color: '#333' }}>Item 3</p>
-            <p style={{ fontSize: 12, color: '#999', marginTop: 4 }}>Description text</p>
-          </div>
-          <div style={{ backgroundColor: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, padding: 16 }}>
-            <div style={{ width: 40, height: 40, backgroundColor: '#f39c12', borderRadius: 20, marginBottom: 8 }}>
-
-            </div>
-            <p style={{ fontSize: 14, fontWeight: 600, color: '#333' }}>Item 4</p>
-            <p style={{ fontSize: 12, color: '#999', marginTop: 4 }}>Description text</p>
-          </div>
+          <FeatureItem icon="A" title="Feature 1" description="Description for feature 1" />
+          <FeatureItem icon="B" title="Feature 2" description="Description for feature 2" />
+          <FeatureItem icon="C" title="Feature 3" description="Description for feature 3" />
+          <FeatureItem icon="D" title="Feature 4" description="Description for feature 4" />
         </div>
     </div>
   );

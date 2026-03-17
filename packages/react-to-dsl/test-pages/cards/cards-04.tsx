@@ -1,10 +1,39 @@
+function Card({ title, children, accentColor }: { title: string; children?: React.ReactNode; accentColor?: string }) {
+  return (
+    <div style={{ backgroundColor: '#fff', borderRadius: 8, padding: 20, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
+      <h3 style={{ fontSize: 18, fontWeight: 600, color: '#333', marginBottom: 8 }}>{title}</h3>
+      {children}
+      {accentColor && <div style={{ height: 3, backgroundColor: accentColor, marginTop: 12, borderRadius: 2 }} />}
+    </div>
+  );
+}
+
+function Badge({ label, color, textColor }: { label: string; color: string; textColor?: string }) {
+  return (
+    <div style={{ backgroundColor: color, color: textColor || '#fff', padding: '4px 12px', borderRadius: 9999, fontSize: 12, fontWeight: 600, display: 'inline-flex' }}>
+      <span>{label}</span>
+    </div>
+  );
+}
+
+function Button({ children, color, textColor }: { children: React.ReactNode; color?: string; textColor?: string }) {
+  return (
+    <div style={{ backgroundColor: color || '#3498db', padding: '8px 16px', borderRadius: 4, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ color: textColor || '#fff', fontSize: 14, fontWeight: 600 }}>{children}</span>
+    </div>
+  );
+}
+
 export default function cards_04() {
   return (
     <div data-testid="root" style={{ padding: 24, backgroundColor: '#f5f5f5' }}>
-        <div style={{ backgroundColor: '#fff5f5', borderRadius: 16, padding: 16, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
-          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#333', marginBottom: 8 }}>Card Title 4</h3>
-          <p style={{ fontSize: 14, color: '#666', lineHeight: 1.5 }}>This is a simple card with a title and body text. It demonstrates basic card layout patterns.</p>
-        </div>
+        <Card title="Card 4" accentColor="#f39c12">
+          <p style={{ fontSize: 14, color: '#666', lineHeight: 1.5 }}>This is a card with nested Badge and Button components.</p>
+          <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+            <Badge label="New" color="#f39c12" />
+            <Button color="#f39c12">Action</Button>
+          </div>
+        </Card>
     </div>
   );
 }

@@ -1,18 +1,18 @@
+function Badge({ label, color, textColor }: { label: string; color: string; textColor?: string }) {
+  return (
+    <div style={{ backgroundColor: color, color: textColor || '#fff', padding: '4px 12px', borderRadius: 9999, fontSize: 12, fontWeight: 600, display: 'inline-flex' }}>
+      <span>{label}</span>
+    </div>
+  );
+}
+
 export default function layout_vertical_08() {
   return (
     <div data-testid="root" style={{ display: 'flex', flexDirection: 'column', gap: 32, alignItems: 'center', padding: 16, backgroundColor: '#fafafa', minWidth: 200 }}>
-        <div style={{ height: 30, backgroundColor: '#1abc9c' }}>
-
-        </div>
-        <div style={{ height: 40, backgroundColor: '#e67e22' }}>
-
-        </div>
-        <div style={{ height: 50, backgroundColor: '#3498db' }}>
-
-        </div>
-        <div style={{ height: 60, backgroundColor: '#e74c3c' }}>
-
-        </div>
+        <Badge label="First" color="#1abc9c" />
+        <Badge label="Second" color="#e67e22" />
+        <Badge label="Third" color="#3498db" />
+        <Badge label="Fourth" color="#e74c3c" />
     </div>
   );
 }

@@ -1,12 +1,24 @@
+function Card({ title, children, accentColor }: { title: string; children?: React.ReactNode; accentColor?: string }) {
+  return (
+    <div style={{ backgroundColor: '#fff', borderRadius: 8, padding: 20, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
+      <h3 style={{ fontSize: 18, fontWeight: 600, color: '#333', marginBottom: 8 }}>{title}</h3>
+      {children}
+      {accentColor && <div style={{ height: 3, backgroundColor: accentColor, marginTop: 12, borderRadius: 2 }} />}
+    </div>
+  );
+}
+
 export default function opacity_02() {
   return (
-    <div data-testid="root" style={{ padding: 16, backgroundColor: '#f5f5f5' }}>
-        <div style={{ opacity: 0.4, backgroundColor: '#3498db', padding: 24, borderRadius: 8 }}>
-          <p style={{ color: '#fff', fontSize: 16 }}>Opacity: 0.4</p>
+    <div data-testid="root" style={{ padding: 16, backgroundColor: '#f5f5f5', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ opacity: 0.4 }}>
+          <Card title="Opacity 0.4">
+            <p style={{ fontSize: 14, color: '#666' }}>This card has opacity 0.4</p>
+          </Card>
         </div>
-        <div style={{ backgroundColor: '#e74c3c', padding: 24, borderRadius: 8, marginTop: 12 }}>
-          <p style={{ color: '#fff', fontSize: 16 }}>Full opacity reference</p>
-        </div>
+        <Card title="Full Opacity" accentColor="#e74c3c">
+          <p style={{ fontSize: 14, color: '#666' }}>Reference card at full opacity</p>
+        </Card>
     </div>
   );
 }

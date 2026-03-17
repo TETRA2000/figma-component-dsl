@@ -3,6 +3,9 @@
  *
  * Takes a DslNode tree and generates valid `.dsl.ts` TypeScript source code
  * using the @figma-dsl/core builder API.
+ *
+ * Supports extracting repeated subtree patterns as within-file helper functions,
+ * matching the idiomatic DSL pattern (e.g., featureRow(), divider() helpers).
  */
 
 import type { DslNode, Fill, StrokePaint, AutoLayoutConfig, ComponentProperty } from '@figma-dsl/core';
@@ -13,6 +16,32 @@ interface ImportTracker {
   nodes: Set<string>;     // frame, text, rectangle, etc.
   colors: Set<string>;    // solid, gradient, hex
   layout: Set<string>;    // horizontal, vertical
+}
+
+/** An extracted helper function with parameterized values */
+interface ExtractedHelper {
+  name: string;
+  params: HelperParam[];
+  templateNode: DslNode;
+  /** Bindings for the template tree — which nodes have parameterized values */
+  bindings: Map<DslNode, ParamBindings>;
+  /** Map from call-site node → argument values */
+  callSites: Map<DslNode, string[]>;
+}
+
+interface HelperParam {
+  name: string;
+  type: 'string' | 'number' | 'boolean';
+}
+
+type HelperCallMap = Map<DslNode, { helperName: string; args: string[]; params: HelperParam[] }>;
+
+/** Per-node parameter bindings within a helper template */
+interface ParamBindings {
+  textContent?: string;  // param name to use for text content
+  textColor?: string;    // param name to use for text color
+  nodeName?: string;     // param name to use for node name
+  fillColor?: string;    // param name to use for fill color
 }
 
 /**
@@ -34,11 +63,28 @@ export function generateDslCode(node: DslNode, options: CodegenOptions = {}): st
     ? { ...node, type: 'COMPONENT' as const }
     : node;
 
+  // Extract repeated patterns as helper functions
+  const helpers = extractHelpers(rootNode);
+  // Build a lookup: node → { helperName, args }
+  const helperCallMap = new Map<DslNode, { helperName: string; args: string[]; params: HelperParam[] }>();
+  for (const helper of helpers) {
+    for (const [callNode, args] of helper.callSites) {
+      helperCallMap.set(callNode, { helperName: helper.name, args, params: helper.params });
+    }
+  }
+
   // Generate the node tree code
-  const body = generateNode(rootNode, 0, indent, imports);
+  const body = generateNode(rootNode, 0, indent, imports, helperCallMap);
+
+  // Generate helper function code
+  const helperCode = helpers.map(h => generateHelperFunction(h, indent, imports)).join('\n\n');
 
   // Build import statement
   const importLine = buildImports(imports);
+
+  if (helperCode) {
+    return `${importLine}\n\n${helperCode}\n\nexport default ${body};\n`;
+  }
 
   return `${importLine}\n\nexport default ${body};\n`;
 }
@@ -50,23 +96,37 @@ function generateNode(
   depth: number,
   indent: string,
   imports: ImportTracker,
+  helperCallMap?: HelperCallMap,
 ): string {
+  // Check if this node should be replaced with a helper call
+  const helperCall = helperCallMap?.get(node);
+  if (helperCall) {
+    const i = indent.repeat(depth);
+    const argsStr = helperCall.args.map((a, idx) => {
+      const paramType = helperCall.params[idx]?.type;
+      if (paramType === 'boolean') return a;
+      if (paramType === 'number') return a;
+      // String type — always quote
+      return `'${escapeString(a)}'`;
+    }).join(', ');
+    return `${i}${helperCall.helperName}(${argsStr})`;
+  }
+
   switch (node.type) {
     case 'TEXT':
       return generateTextNode(node, depth, indent, imports);
     case 'IMAGE':
       return generateImageNode(node, depth, indent, imports);
     case 'FRAME':
-      return generateFrameNode(node, 'frame', depth, indent, imports);
+      return generateFrameNode(node, 'frame', depth, indent, imports, helperCallMap);
     case 'COMPONENT':
-      return generateFrameNode(node, 'component', depth, indent, imports);
+      return generateFrameNode(node, 'component', depth, indent, imports, helperCallMap);
     case 'RECTANGLE':
       return generateRectangleNode(node, depth, indent, imports);
     case 'ELLIPSE':
       return generateEllipseNode(node, depth, indent, imports);
     default:
-      // Fallback: treat as frame
-      return generateFrameNode(node, 'frame', depth, indent, imports);
+      return generateFrameNode(node, 'frame', depth, indent, imports, helperCallMap);
   }
 }
 
@@ -75,18 +135,27 @@ function generateTextNode(
   depth: number,
   indent: string,
   imports: ImportTracker,
+  bindings?: ParamBindings,
 ): string {
   imports.nodes.add('text');
   const i = indent.repeat(depth);
-  const content = escapeString(node.characters ?? node.name);
 
-  // Build style options
+  const contentExpr = bindings?.textContent
+    ? bindings.textContent
+    : `'${escapeString(node.characters ?? node.name)}'`;
+
   const opts: string[] = [];
   const ts = node.textStyle;
   if (ts) {
     if (ts.fontSize && ts.fontSize !== 16) opts.push(`fontSize: ${ts.fontSize}`);
     if (ts.fontWeight && ts.fontWeight !== 400) opts.push(`fontWeight: ${ts.fontWeight}`);
-    if (ts.color) opts.push(`color: '${ts.color}'`);
+    if (ts.color) {
+      if (bindings?.textColor) {
+        opts.push(`color: ${bindings.textColor}`);
+      } else {
+        opts.push(`color: '${ts.color}'`);
+      }
+    }
     if (ts.textAlignHorizontal) opts.push(`textAlignHorizontal: '${ts.textAlignHorizontal}'`);
     if (ts.lineHeight) {
       opts.push(`lineHeight: { value: ${ts.lineHeight.value}, unit: '${ts.lineHeight.unit}' }`);
@@ -113,15 +182,15 @@ function generateTextNode(
   }
 
   if (opts.length === 0) {
-    return `${i}text('${content}')`;
+    return `${i}text(${contentExpr})`;
   }
 
   if (opts.length <= 3) {
-    return `${i}text('${content}', { ${opts.join(', ')} })`;
+    return `${i}text(${contentExpr}, { ${opts.join(', ')} })`;
   }
 
   const optsStr = opts.map(o => `${i}${indent}${o},`).join('\n');
-  return `${i}text('${content}', {\n${optsStr}\n${i}})`;
+  return `${i}text(${contentExpr}, {\n${optsStr}\n${i}})`;
 }
 
 function generateImageNode(
@@ -146,11 +215,17 @@ function generateFrameNode(
   depth: number,
   indent: string,
   imports: ImportTracker,
+  helperCallMap?: HelperCallMap,
+  bindings?: ParamBindings,
+  helperBindings?: Map<DslNode, ParamBindings>,
 ): string {
   imports.nodes.add(fnName);
   const i = indent.repeat(depth);
   const i1 = indent.repeat(depth + 1);
-  const name = escapeString(node.name);
+
+  const nameExpr = bindings?.nodeName
+    ? bindings.nodeName
+    : `'${escapeString(node.name)}'`;
 
   const props: string[] = [];
 
@@ -168,8 +243,13 @@ function generateFrameNode(
 
   // Fills
   if (node.fills && node.fills.length > 0) {
-    const fillStr = generateFills(node.fills, imports);
-    props.push(`${i1}fills: [${fillStr}],`);
+    if (bindings?.fillColor) {
+      imports.colors.add('solid');
+      props.push(`${i1}fills: [solid(${bindings.fillColor})],`);
+    } else {
+      const fillStr = generateFills(node.fills, imports);
+      props.push(`${i1}fills: [${fillStr}],`);
+    }
   }
 
   // Strokes
@@ -220,16 +300,22 @@ function generateFrameNode(
   // Children
   if (node.children && node.children.length > 0) {
     const childrenStr = node.children
-      .map((child: DslNode) => generateNode(child, depth + 2, indent, imports))
+      .map((child: DslNode) => {
+        // If we're inside a helper body, use bindings-aware generation
+        if (helperBindings) {
+          return generateBoundNode(child, depth + 2, indent, imports, helperBindings);
+        }
+        return generateNode(child, depth + 2, indent, imports, helperCallMap);
+      })
       .join(',\n');
     props.push(`${i1}children: [\n${childrenStr},\n${i1}],`);
   }
 
   if (props.length === 0) {
-    return `${i}${fnName}('${name}', {})`;
+    return `${i}${fnName}(${nameExpr}, {})`;
   }
 
-  return `${i}${fnName}('${name}', {\n${props.join('\n')}\n${i}})`;
+  return `${i}${fnName}(${nameExpr}, {\n${props.join('\n')}\n${i}})`;
 }
 
 function generateRectangleNode(
@@ -271,6 +357,31 @@ function generateEllipseNode(
   }
 
   return `${i}ellipse('${name}', { ${opts.join(', ')} })`;
+}
+
+/**
+ * Generate a node within a helper function body, using bindings for parameterized values.
+ */
+function generateBoundNode(
+  node: DslNode,
+  depth: number,
+  indent: string,
+  imports: ImportTracker,
+  allBindings: Map<DslNode, ParamBindings>,
+): string {
+  const bindings = allBindings.get(node);
+
+  if (node.type === 'TEXT') {
+    return generateTextNode(node, depth, indent, imports, bindings);
+  }
+
+  if (node.type === 'FRAME' || node.type === 'COMPONENT') {
+    const fnName = node.type === 'COMPONENT' ? 'component' : 'frame';
+    return generateFrameNode(node, fnName, depth, indent, imports, undefined, bindings, allBindings);
+  }
+
+  // Other node types: standard generation
+  return generateNode(node, depth, indent, imports);
 }
 
 // --- Auto-Layout ---
@@ -387,4 +498,248 @@ function extractAngleFromTransform(
 
 function round(n: number): number {
   return Math.round(n * 100) / 100;
+}
+
+// --- Helper Extraction ---
+
+/**
+ * Compute a structural fingerprint of a DslNode subtree.
+ * Captures type, structure, and property keys — ignores specific values
+ * (text content, colors) so structurally identical nodes match.
+ */
+function fingerprint(node: DslNode): string {
+  const parts: string[] = [node.type];
+
+  if (node.autoLayout) parts.push(`al:${node.autoLayout.direction}`);
+  if (node.fills?.length) parts.push(`f:${node.fills.length}`);
+  if (node.strokes?.length) parts.push(`s:${node.strokes.length}`);
+  if (node.cornerRadius !== undefined) parts.push('cr');
+  if (node.cornerRadii) parts.push('cri');
+  if (node.clipContent) parts.push('clip');
+  if (node.layoutSizingHorizontal) parts.push(`lsh:${node.layoutSizingHorizontal}`);
+  if (node.layoutSizingVertical) parts.push(`lsv:${node.layoutSizingVertical}`);
+  if (node.layoutGrow !== undefined && node.layoutGrow > 0) parts.push('lg');
+  if (node.opacity !== undefined && node.opacity !== 1) parts.push('op');
+
+  if (node.type === 'TEXT') {
+    const ts = node.textStyle;
+    if (ts) {
+      if (ts.fontSize) parts.push(`fs:${ts.fontSize}`);
+      if (ts.fontWeight) parts.push(`fw:${ts.fontWeight}`);
+      if (ts.textAlignHorizontal) parts.push(`ta:${ts.textAlignHorizontal}`);
+      if (ts.textDecoration && ts.textDecoration !== 'NONE') parts.push(`td:${ts.textDecoration}`);
+    }
+  }
+
+  if (node.children?.length) {
+    const childFps = node.children.map(c => fingerprint(c));
+    parts.push(`ch:[${childFps.join(',')}]`);
+  }
+
+  return parts.join('|');
+}
+
+/**
+ * Collect varying leaf values between structurally identical nodes.
+ * Builds both parameter definitions and per-node bindings.
+ */
+function collectVaryingValues(
+  nodes: DslNode[],
+): {
+  params: HelperParam[];
+  argsByNode: Map<DslNode, string[]>;
+  bindingsByTemplate: Map<DslNode, ParamBindings>;
+} | null {
+  if (nodes.length < 2) return null;
+
+  const params: HelperParam[] = [];
+  const argsByNode = new Map<DslNode, string[]>();
+  const bindingsByTemplate = new Map<DslNode, ParamBindings>();
+
+  for (const n of nodes) argsByNode.set(n, []);
+
+  function addParam(
+    name: string,
+    type: 'string' | 'number' | 'boolean',
+    templateNode: DslNode,
+    bindingKey: keyof ParamBindings,
+    values: string[],
+  ) {
+    // Deduplicate param name
+    let pName = name;
+    let suffix = 2;
+    while (params.some(p => p.name === pName)) {
+      pName = `${name}${suffix++}`;
+    }
+    params.push({ name: pName, type });
+
+    // Set binding on template
+    const existing = bindingsByTemplate.get(templateNode) ?? {};
+    (existing as Record<string, string>)[bindingKey] = pName;
+    bindingsByTemplate.set(templateNode, existing);
+
+    // Add arg values
+    for (let i = 0; i < nodes.length; i++) {
+      argsByNode.get(nodes[i]!)!.push(values[i]!);
+    }
+  }
+
+  function compareNodes(templateNodes: DslNode[], allNodes: DslNode[][]) {
+    for (let ti = 0; ti < templateNodes.length; ti++) {
+      const template = templateNodes[ti]!;
+      const siblings = allNodes.map(group => group[ti]!);
+
+      if (template.type === 'TEXT') {
+        // Compare text content
+        const texts = siblings.map(n => n.characters ?? n.name);
+        if (new Set(texts).size > 1) {
+          addParam('label', 'string', template, 'textContent', texts);
+        }
+
+        // Compare text colors
+        const colors = siblings.map(n => n.textStyle?.color ?? '');
+        if (colors.length > 0 && colors[0] && new Set(colors).size > 1) {
+          addParam('color', 'string', template, 'textColor', colors);
+        }
+      }
+
+      if (template.type === 'FRAME' || template.type === 'COMPONENT') {
+        // Compare node names
+        const names = siblings.map(n => n.name);
+        if (new Set(names).size > 1) {
+          addParam('name', 'string', template, 'nodeName', names);
+        }
+
+        // Compare solid fill colors
+        if (template.fills?.length === 1 && template.fills[0]!.type === 'SOLID') {
+          const fillHexes = siblings.map(n => {
+            const fill = n.fills?.[0];
+            if (fill?.type === 'SOLID') return rgbaToHex(fill.color);
+            return '';
+          });
+          if (new Set(fillHexes).size > 1) {
+            addParam('bgColor', 'string', template, 'fillColor', fillHexes);
+          }
+        }
+      }
+
+      // Recurse into children
+      if (template.children?.length) {
+        const childGroups = siblings.map(n => n.children ?? []);
+        const allSameLength = childGroups.every(cg => cg.length === template.children!.length);
+        if (allSameLength) {
+          compareNodes(template.children, childGroups);
+        }
+      }
+    }
+  }
+
+  // Start comparison: treat each top-level node as a group of 1
+  const nodeGroups = nodes.map(n => [n]);
+  compareNodes([nodes[0]!], nodeGroups);
+
+  if (params.length === 0 || params.length > 5) return null;
+  return { params, argsByNode, bindingsByTemplate };
+}
+
+/**
+ * Derive a helper function name from a group of nodes.
+ */
+function deriveHelperName(nodes: DslNode[], existingNames: Set<string>): string {
+  const firstName = nodes[0]!.name;
+  let base = firstName
+    .replace(/[^a-zA-Z0-9]/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .map((w, i) => i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join('');
+
+  const reserved = new Set([
+    'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger', 'default',
+    'delete', 'do', 'else', 'export', 'extends', 'false', 'finally', 'for',
+    'function', 'if', 'import', 'in', 'instanceof', 'let', 'new', 'null',
+    'return', 'super', 'switch', 'this', 'throw', 'true', 'try', 'typeof',
+    'var', 'void', 'while', 'with', 'yield', 'enum', 'await', 'static',
+  ]);
+  if (!base || /^\d/.test(base) || reserved.has(base)) base = 'helper';
+
+  let name = base;
+  let suffix = 2;
+  while (existingNames.has(name)) {
+    name = `${base}${suffix++}`;
+  }
+  existingNames.add(name);
+  return name;
+}
+
+/**
+ * Walk the DslNode tree and extract repeated sibling patterns as helpers.
+ */
+function extractHelpers(root: DslNode): ExtractedHelper[] {
+  const helpers: ExtractedHelper[] = [];
+  const usedNames = new Set<string>();
+  const extractedNodes = new Set<DslNode>();
+
+  function walkForPatterns(node: DslNode) {
+    if (!node.children || node.children.length < 2) return;
+
+    // Group children by fingerprint — only consider container nodes (not leaf text/rect/ellipse)
+    const groups = new Map<string, DslNode[]>();
+    for (const child of node.children) {
+      if (extractedNodes.has(child)) continue;
+      // Skip leaf nodes — they're too simple for helper extraction
+      if (!child.children || child.children.length === 0) continue;
+      const fp = fingerprint(child);
+      if (!groups.has(fp)) groups.set(fp, []);
+      groups.get(fp)!.push(child);
+    }
+
+    for (const [, group] of groups) {
+      if (group.length < 2) continue;
+
+      const result = collectVaryingValues(group);
+      if (!result) continue;
+
+      const name = deriveHelperName(group, usedNames);
+      const callSites = new Map<DslNode, string[]>();
+      for (const n of group) {
+        callSites.set(n, result.argsByNode.get(n) ?? []);
+        extractedNodes.add(n);
+      }
+
+      helpers.push({
+        name,
+        params: result.params,
+        templateNode: group[0]!,
+        bindings: result.bindingsByTemplate,
+        callSites,
+      });
+    }
+
+    // Continue walking into non-extracted children
+    for (const child of node.children) {
+      if (!extractedNodes.has(child)) {
+        walkForPatterns(child);
+      }
+    }
+  }
+
+  walkForPatterns(root);
+  return helpers;
+}
+
+/**
+ * Generate the source code for a helper function.
+ */
+function generateHelperFunction(
+  helper: ExtractedHelper,
+  indent: string,
+  imports: ImportTracker,
+): string {
+  const { name, params, templateNode, bindings } = helper;
+
+  const paramStr = params.map(p => `${p.name}: ${p.type}`).join(', ');
+  const body = generateBoundNode(templateNode, 1, indent, imports, bindings);
+
+  return `function ${name}(${paramStr}) {\n${indent}return ${body.trimStart()};\n}`;
 }
