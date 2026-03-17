@@ -17,6 +17,16 @@ export {
   isTransparent,
 } from './color-utils.js';
 
+export { buildRegistry, ALL_CATEGORIES } from './test-registry.js';
+export type { TestPageEntry } from './test-registry.js';
+export { startTestServer } from './test-server.js';
+export type { TestServerOptions } from './test-server.js';
+export { batchConvert } from './batch-convert.js';
+export type { BatchConvertOptions, BatchConvertResult } from './batch-convert.js';
+export { generateReport, formatReportMarkdown } from './report.js';
+export { generateTestPages } from './test-page-generator.js';
+export type { GenerateTestPagesOptions, GenerateTestPagesResult } from './test-page-generator.js';
+
 export type {
   DomSnapshot,
   ExtractedStyles,
