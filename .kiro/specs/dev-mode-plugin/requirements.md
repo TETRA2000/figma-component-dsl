@@ -4,6 +4,8 @@
 
 This specification covers adding **Figma Dev Mode Codegen Plugin** capabilities to the existing `@figma-dsl/plugin` package. The plugin currently supports importing DSL-defined components into Figma and real-time sync via MCP/WebSocket. This feature extends the plugin to also operate as a **Codegen Plugin** in Figma's Dev Mode, generating code snippets (React component code, CSS Module styles, and DSL definitions) from selected Figma nodes. This enables developers inspecting components in Dev Mode to instantly see the corresponding source code and DSL representation, closing the loop between design and code.
 
+**Phase 2 — DslCanvas Support**: The codegen plugin is extended to handle components containing `DslCanvas` regions. When a component includes DslCanvas sections (detected via `dsl-canvas` plugin data), the Dev Mode output includes an **HTML/CSS preview** with DslCanvas regions embedded as PNG images captured by the Figma Plugin API. This bridges the gap between Figma's visual representation and the React `<DslCanvas>` component that renders compiled DSL JSON client-side.
+
 ## Requirements
 
 ### Requirement 1: Codegen Plugin Manifest Configuration
@@ -22,8 +24,8 @@ This specification covers adding **Figma Dev Mode Codegen Plugin** capabilities 
 
 #### Acceptance Criteria
 1. When a node with DSL identity plugin data is selected, the Codegen Plugin shall generate a React TSX code snippet based on the stored component metadata (component name, props, variant properties).
-2. When a node with Code Connect bindings is selected, the Codegen Plugin shall retrieve and display the linked Code Connect snippet.
-3. When a node without DSL identity or Code Connect data is selected, the Codegen Plugin shall generate a structural React snippet inferred from the node's hierarchy, auto-layout properties, and text content.
+2. When a node with stored source snapshots (`dsl-sources` plugin data) is selected, the Codegen Plugin shall return the original stored React TSX source code verbatim.
+3. When a node without DSL identity or stored source data is selected, the Codegen Plugin shall generate a structural React snippet inferred from the node's hierarchy, auto-layout properties, and text content.
 4. The Codegen Plugin shall return `CodegenResult` objects with `language` set to `"TYPESCRIPT"` and descriptive `title` values.
 
 ### Requirement 3: CSS Module Code Generation
@@ -74,3 +76,43 @@ This specification covers adding **Figma Dev Mode Codegen Plugin** capabilities 
 2. While processing nodes with deep hierarchies (more than 50 descendants), the Codegen Plugin shall limit traversal depth and indicate truncation in the output.
 3. If the `generate` callback encounters an error, the Codegen Plugin shall return a `CodegenResult` with an error message in the code field rather than throwing an exception.
 4. The Codegen Plugin shall not call `figma.showUI()` inside the `generate` callback.
+
+### Requirement 8: DslCanvas Detection in Dev Mode Codegen
+
+**Objective:** As a developer inspecting a component in Dev Mode, I want the codegen plugin to detect DslCanvas regions within the selected component, so that the generated code accurately represents the component's structure including its dynamic canvas sections.
+
+#### Acceptance Criteria
+1. When a component node containing children with `dsl-canvas` plugin data is selected, the Codegen Plugin shall detect all DslCanvas regions using the existing `detectCanvasRegions` function.
+2. When a child node marked as DslCanvas is directly selected, the Codegen Plugin shall identify it as a DslCanvas region and generate canvas-specific output instead of generic structural code.
+3. When a component contains no DslCanvas regions, the Codegen Plugin shall fall back to the standard codegen pipeline (Requirements 2–4) without modification.
+
+### Requirement 9: HTML/CSS Preview with Embedded Canvas Images
+
+**Objective:** As a developer using Dev Mode, I want to see an HTML/CSS preview of the selected component where DslCanvas sections are rendered as embedded PNG images, so that I can visualize the complete component layout including its dynamic canvas areas.
+
+#### Acceptance Criteria
+1. The plugin manifest shall declare an `"HTML"` entry in the `codegenLanguages` array for HTML/CSS preview output.
+2. When a component containing DslCanvas regions is selected and the HTML language is chosen, the Codegen Plugin shall generate a self-contained HTML snippet with inline CSS representing the component's layout.
+3. When generating HTML output, the Codegen Plugin shall capture each DslCanvas region as a PNG image using the Figma Plugin API `exportAsync` method and embed the resulting image as a base64 data URI within an `<img>` tag.
+4. The Codegen Plugin shall generate CSS for the HTML preview that reflects the component's auto-layout properties (flexbox direction, gap, padding, alignment) and visual properties (background, borders, corner radius).
+5. When a component contains no DslCanvas regions, the Codegen Plugin shall still generate a valid HTML/CSS preview based on the component's structural properties.
+
+### Requirement 10: DslCanvas React Integration Code
+
+**Objective:** As a developer using Dev Mode, I want the React codegen to produce correct `<DslCanvas>` usage code for canvas regions, so that I can integrate the DslCanvas component into my React code with the right props.
+
+#### Acceptance Criteria
+1. When a component containing DslCanvas regions is selected and the React language is chosen, the Codegen Plugin shall generate `<DslCanvas>` JSX elements for each detected canvas region instead of generic `<div>` elements.
+2. The generated React code shall include the correct `import` statement for the `DslCanvas` component (e.g., `import { DslCanvas } from './DslCanvas/DslCanvas'`).
+3. When the DslCanvas region has associated `dsl-canvas` plugin data with a `canvasName`, the Codegen Plugin shall include a `dsl` prop placeholder referencing the compiled DSL JSON for that canvas name.
+4. The generated `<DslCanvas>` element shall include `width` and `alt` props derived from the Figma node's dimensions and name.
+
+### Requirement 11: Canvas Image Capture Performance
+
+**Objective:** As a developer, I want canvas image capture during codegen to be fast enough that the Dev Mode experience remains responsive, even for components with multiple DslCanvas regions.
+
+#### Acceptance Criteria
+1. While capturing canvas images for HTML preview, the Codegen Plugin shall use a scale factor of 1 (not 2) to minimize capture time within the 3-second codegen timeout.
+2. When a component contains more than 3 DslCanvas regions, the Codegen Plugin shall capture only the first 3 regions and append a comment indicating that additional regions were omitted.
+3. If a canvas image capture fails (e.g., node inaccessible), the Codegen Plugin shall substitute a placeholder element in the HTML output and continue processing remaining regions.
+4. The Codegen Plugin shall not invoke `figma.showUI()` or display progress notifications during canvas image capture within the codegen callback.
