@@ -14,6 +14,7 @@ const STYLE_PROPERTIES: (keyof ExtractedStyles)[] = [
   'display', 'flexDirection', 'gap', 'rowGap', 'columnGap',
   'justifyContent', 'alignItems', 'flexGrow', 'flexShrink', 'flexBasis',
   'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+  'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
   'width', 'height', 'minWidth', 'minHeight', 'maxWidth', 'maxHeight', 'boxSizing',
   'backgroundColor', 'backgroundImage', 'opacity', 'overflow',
   'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',

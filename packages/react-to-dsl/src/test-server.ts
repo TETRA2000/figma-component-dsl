@@ -22,6 +22,86 @@ export interface TestServerOptions {
 // HTML templates
 // ---------------------------------------------------------------------------
 
+/**
+ * Inline minimal React shim that creates real DOM elements.
+ * This avoids needing to load React from a CDN, making the test
+ * server work in offline / sandboxed environments.
+ */
+const REACT_SHIM = `
+var React = {
+  createElement: function(tag, props) {
+    var children = Array.prototype.slice.call(arguments, 2);
+    if (typeof tag === 'function') {
+      var p = props || {};
+      p.children = children.length === 1 ? children[0] : children.length ? children : undefined;
+      return tag(p);
+    }
+    var el = document.createElement(tag);
+    if (props) {
+      Object.keys(props).forEach(function(key) {
+        if (key === 'style' && typeof props[key] === 'object') {
+          var unitless = {opacity:1,flexGrow:1,flexShrink:1,fontWeight:1,lineHeight:1,zIndex:1,order:1,orphans:1,widows:1,columns:1,flex:1};
+          var styleObj = props[key];
+          Object.keys(styleObj).forEach(function(sk) {
+            var sv = styleObj[sk];
+            el.style[sk] = (typeof sv === 'number' && !unitless[sk]) ? sv + 'px' : sv;
+          });
+        } else if (key === 'className') {
+          el.className = props[key];
+        } else if (key === 'dangerouslySetInnerHTML') {
+          el.innerHTML = props[key].__html;
+        } else if (key.startsWith('on')) {
+          // skip event handlers
+        } else if (key === 'children') {
+          // handled below
+        } else {
+          el.setAttribute(key === 'htmlFor' ? 'for' : key.replace(/([A-Z])/g, function(m) { return '-' + m.toLowerCase(); }), props[key]);
+        }
+      });
+    }
+    function appendChildren(parent, ch) {
+      if (ch == null || ch === false || ch === true) return;
+      if (Array.isArray(ch)) {
+        ch.forEach(function(c) { appendChildren(parent, c); });
+      } else if (typeof ch === 'object' && ch.nodeType) {
+        parent.appendChild(ch);
+      } else {
+        parent.appendChild(document.createTextNode(String(ch)));
+      }
+    }
+    appendChildren(el, children);
+    return el;
+  },
+  Fragment: function(props) {
+    var frag = document.createDocumentFragment();
+    if (props && props.children) {
+      var ch = Array.isArray(props.children) ? props.children : [props.children];
+      ch.forEach(function(c) {
+        if (c != null && c !== false && c !== true) {
+          if (typeof c === 'object' && (c.nodeType === 1 || c.nodeType === 11)) {
+            frag.appendChild(c);
+          } else {
+            frag.appendChild(document.createTextNode(String(c)));
+          }
+        }
+      });
+    }
+    return frag;
+  }
+};
+var ReactDOM = {
+  createRoot: function(container) {
+    return {
+      render: function(element) {
+        if (element && element.nodeType) {
+          container.appendChild(element);
+        }
+      }
+    };
+  }
+};
+`;
+
 function buildPageHtml(componentCode: string, title: string): string {
   return `<!DOCTYPE html>
 <html><head>
@@ -29,13 +109,12 @@ function buildPageHtml(componentCode: string, title: string): string {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHtml(title)}</title>
 <style>* { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: Inter, system-ui, sans-serif; }</style>
-<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 </head><body>
 <div id="root"></div>
 <script>
+${REACT_SHIM}
 ${componentCode}
-const root = ReactDOM.createRoot(document.getElementById('root'));
+var root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(Component));
 </script>
 </body></html>`;

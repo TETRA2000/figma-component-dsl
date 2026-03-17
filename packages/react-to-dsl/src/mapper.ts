@@ -81,11 +81,12 @@ function mapText(snap: DomSnapshot, _name: string): DslNode {
     opacity: 1,
   };
 
-  // Text color as fill
+  // Text color as fill (preserve alpha/opacity)
   if (color) {
     const hex = cssColorToHex(s.color)!;
     const rgba = hexToRgba(hex);
-    node.fills = [{ type: 'SOLID', color: rgba, opacity: 1, visible: true }];
+    const colorOpacity = cssColorToOpacity(s.color);
+    node.fills = [{ type: 'SOLID', color: rgba, opacity: colorOpacity, visible: true }];
   }
 
   // Size for constrained text
@@ -116,16 +117,24 @@ function mapImage(snap: DomSnapshot, name: string): DslNode {
 function mapContainer(snap: DomSnapshot, name: string): DslNode {
   const s = snap.styles;
   const isFlex = s.display === 'flex' || s.display === 'inline-flex';
+  const isGrid = s.display === 'grid';
 
   // Map children
   const children: DslNode[] = snap.children.map((child, i) =>
     mapElement(child, i)
   );
 
-  // Build auto-layout config if flex
+  // Build auto-layout config
   let autoLayout: AutoLayoutConfig | undefined;
   if (isFlex) {
     autoLayout = mapAutoLayout(s);
+  } else if (isGrid) {
+    warnings.push(`Grid layout not supported on "${name}" — converted to vertical stack`);
+    autoLayout = mapBlockAutoLayout(s);
+  } else if (children.length > 0) {
+    // Block layout with children → treat as vertical auto-layout
+    // Block-level elements stack vertically by default
+    autoLayout = mapBlockAutoLayout(s, snap.children);
   }
 
   // Fills
@@ -143,23 +152,15 @@ function mapContainer(snap: DomSnapshot, name: string): DslNode {
   // Clip content
   const clipContent = s.overflow === 'hidden' ? true : undefined;
 
-  // Size
-  const size = isFlex
-    ? mapFlexSize(snap, s)
-    : { x: snap.rect.width, y: snap.rect.height };
-
-  // Warn about unsupported features
-  if (s.display === 'grid') {
-    warnings.push(`Grid layout not supported on "${name}" — converted to vertical stack`);
-    autoLayout = { direction: 'VERTICAL' };
-  }
+  // Size — use bounding rect for all containers
+  const size = { x: Math.round(snap.rect.width), y: Math.round(snap.rect.height) };
 
   const node: DslNode = {
     type: 'FRAME',
     name,
     visible: true,
     opacity: opacity !== 1 ? opacity : 1,
-    ...(size && { size }),
+    ...(size.x > 0 && { size }),
     ...(autoLayout && { autoLayout }),
     ...(fills && fills.length > 0 && { fills }),
     ...(strokes && strokes.length > 0 && { strokes }),
@@ -217,12 +218,63 @@ function mapAutoLayout(s: ExtractedStyles): AutoLayoutConfig {
   return config;
 }
 
+/**
+ * Create auto-layout config for block-level containers (non-flex).
+ * Block elements stack vertically, so we use VERTICAL direction
+ * and capture padding. Also infer spacing from child margins.
+ */
+function mapBlockAutoLayout(s: ExtractedStyles, children?: DomSnapshot[]): AutoLayoutConfig {
+  const config: AutoLayoutConfig = { direction: 'VERTICAL' };
+
+  // Padding
+  const padTop = parsePx(s.paddingTop) ?? 0;
+  const padRight = parsePx(s.paddingRight) ?? 0;
+  const padBottom = parsePx(s.paddingBottom) ?? 0;
+  const padLeft = parsePx(s.paddingLeft) ?? 0;
+
+  if (padTop === padBottom && padLeft === padRight) {
+    if (padTop > 0) config.padY = padTop;
+    if (padLeft > 0) config.padX = padLeft;
+  } else {
+    if (padTop > 0) config.padTop = padTop;
+    if (padRight > 0) config.padRight = padRight;
+    if (padBottom > 0) config.padBottom = padBottom;
+    if (padLeft > 0) config.padLeft = padLeft;
+  }
+
+  // Infer spacing from child margins (marginBottom is most common)
+  if (children && children.length > 1) {
+    const margins: number[] = [];
+    for (const child of children) {
+      const mb = parsePx(child.styles.marginBottom) ?? 0;
+      const mt = parsePx(child.styles.marginTop) ?? 0;
+      const gap = mb > 0 ? mb : mt;
+      if (gap > 0) margins.push(gap);
+    }
+    if (margins.length > 0) {
+      // Use the most common margin value as spacing
+      const freq = new Map<number, number>();
+      for (const m of margins) freq.set(m, (freq.get(m) ?? 0) + 1);
+      let bestMargin = margins[0]!;
+      let bestCount = 0;
+      for (const [m, c] of freq) {
+        if (c > bestCount) { bestMargin = m; bestCount = c; }
+      }
+      config.spacing = bestMargin;
+    }
+  }
+
+  return config;
+}
+
 function mapJustifyContent(jc: string): 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN' {
   switch (jc) {
     case 'center': return 'CENTER';
     case 'flex-end':
     case 'end': return 'MAX';
     case 'space-between': return 'SPACE_BETWEEN';
+    case 'space-around':
+    case 'space-evenly': return 'SPACE_BETWEEN'; // closest DSL approximation
     case 'flex-start':
     case 'start':
     case 'normal':
@@ -366,17 +418,6 @@ function mapCornerRadius(s: ExtractedStyles): {
 
 // --- Size Mapping ---
 
-function mapFlexSize(snap: DomSnapshot, _s: ExtractedStyles): { x: number; y: number } | undefined {
-  const width = snap.rect.width;
-  const height = snap.rect.height;
-
-  // If explicit width/height set, use it
-  if (width > 0 || height > 0) {
-    return { x: Math.round(width), y: Math.round(height) };
-  }
-
-  return undefined;
-}
 
 // --- Child Layout Sizing ---
 

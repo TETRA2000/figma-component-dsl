@@ -65,6 +65,12 @@ export interface ExtractedStyles {
   borderBottomLeftRadius: string;
   borderBottomRightRadius: string;
 
+  // Margin (for inferring spacing in block layout)
+  marginTop: string;
+  marginRight: string;
+  marginBottom: string;
+  marginLeft: string;
+
   // Typography
   fontFamily: string;
   fontSize: string;

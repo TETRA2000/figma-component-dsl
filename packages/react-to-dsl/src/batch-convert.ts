@@ -34,6 +34,8 @@ export interface BatchConvertOptions {
   selector?: string;
   /** Optional: comparison threshold (default: 85) */
   threshold?: number;
+  /** Optional: path to Chromium executable for Playwright */
+  executablePath?: string;
 }
 
 export interface BatchConvertResult {
@@ -52,11 +54,6 @@ function findFontDir(): string {
     if (existsSync(c)) return c;
   }
   return candidates[0]!;
-}
-
-async function waitForPageReady(page: Page): Promise<void> {
-  await page.waitForLoadState('networkidle');
-  await page.evaluate(() => document.fonts.ready);
 }
 
 async function convertSinglePage(
@@ -79,15 +76,16 @@ async function convertSinglePage(
 
     // Navigate and wait for load
     const url = baseUrl.replace(/\/$/, '') + entry.path;
-    await page.goto(url, { waitUntil: 'domcontentloaded' });
-    await waitForPageReady(page);
+    await page.goto(url, { waitUntil: 'load', timeout: 10000 });
+    // Give inline React shim time to render
+    await page.waitForTimeout(200);
 
     // Screenshot the root element
     const rootHandle = await page.$(selector);
     if (!rootHandle) {
       throw new Error(`Root element not found for selector: ${selector}`);
     }
-    const reactPngBuffer = await rootHandle.screenshot({ type: 'png' });
+    const reactPngBuffer = await rootHandle.screenshot({ type: 'png', timeout: 10000 });
     writeFileSync(join(pageDir, 'react.png'), reactPngBuffer);
 
     // Extract DOM snapshot
@@ -176,6 +174,7 @@ export async function batchConvert(options: BatchConvertOptions): Promise<BatchC
     outputDir,
     selector = '[data-testid="root"]',
     threshold = 85,
+    executablePath,
   } = options;
 
   // Ensure output directory exists
@@ -187,7 +186,11 @@ export async function batchConvert(options: BatchConvertOptions): Promise<BatchC
   initializeRenderer(fontDir);
 
   // Launch a single browser instance
-  const browser = await chromium.launch({ headless: true });
+  const launchOptions: Record<string, unknown> = { headless: true };
+  if (executablePath) {
+    launchOptions.executablePath = executablePath;
+  }
+  const browser = await chromium.launch(launchOptions);
   const page = await browser.newPage();
 
   const results: ComparisonResult[] = [];

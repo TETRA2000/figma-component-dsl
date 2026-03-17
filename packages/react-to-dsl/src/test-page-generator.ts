@@ -107,7 +107,7 @@ function generateLayoutHorizontal(variant: number): string {
   const gaps = [0, 4, 8, 12, 16, 20, 24, 32, 8, 12, 16, 20, 8, 16, 24];
   const gap = gaps[(variant - 1) % gaps.length]!;
 
-  const justifyOptions = ['flex-start', 'center', 'flex-end', 'space-between', 'space-around',
+  const justifyOptions = ['flex-start', 'center', 'flex-end', 'space-between', 'space-between',
     'flex-start', 'center', 'flex-end', 'space-between', 'flex-start',
     'center', 'space-between', 'flex-start', 'center', 'flex-end'];
   const justify = justifyOptions[(variant - 1) % justifyOptions.length]!;
@@ -524,11 +524,13 @@ function generateCards(variant: number): string {
       p('This is a simple card with a title and body text. It demonstrates basic card layout patterns.', `{ fontSize: 14, color: '#666', lineHeight: 1.5 }`, 10),
     ].join('\n');
   } else if (variant <= 10) {
-    // Card with header accent
+    // Card with colored top bar and content
     cardContent = [
-      div(`{ backgroundColor: '${accent}', padding: 12, borderRadius: '${radius}px ${radius}px 0 0', margin: '-${padding}px -${padding}px 16px -${padding}px' }`,
-        h(3, 'Featured Card', `{ fontSize: 16, fontWeight: 600, color: '#fff' }`, 12), 10),
-      p('Card content with an accent header section.', `{ fontSize: 14, color: '#666', lineHeight: 1.5 }`, 10),
+      div(`{ backgroundColor: '${accent}', height: 4, borderRadius: '${radius}px ${radius}px 0 0' }`, '', 10),
+      div(`{ padding: ${padding}, display: 'flex', flexDirection: 'column', gap: 8 }`, [
+        h(3, 'Featured Card', `{ fontSize: 16, fontWeight: 600, color: '#333' }`, 12),
+        p('Card content with an accent top bar.', `{ fontSize: 14, color: '#666', lineHeight: 1.5 }`, 12),
+      ].join('\n'), 10),
     ].join('\n');
   } else {
     // Card with footer/action area
@@ -545,8 +547,9 @@ function generateCards(variant: number): string {
     ].join('\n');
   }
 
+  const cardPadding = (variant > 5 && variant <= 10) ? 0 : padding;
   const children = div(
-    `{ backgroundColor: '${bgColor}', borderRadius: ${radius}, padding: ${padding}, border: '1px solid #e0e0e0' }`,
+    `{ backgroundColor: '${bgColor}', borderRadius: ${radius}, padding: ${cardPadding}, border: '1px solid #e0e0e0', overflow: 'hidden' }`,
     cardContent,
     8,
   );
@@ -594,7 +597,7 @@ function generateNavigation(variant: number): string {
 function generateHeroesBanners(variant: number): string {
   const bgColors = ['#2c3e50', '#1a1a2e', '#667eea', '#f093fb', '#00b894', '#6c5ce7', '#fd79a8', '#0984e3', '#00cec9', '#e17055'];
   const bgColor = bgColors[(variant - 1) % bgColors.length]!;
-  const hasGradient = variant % 3 === 0;
+  const hasGradient = variant % 3 === 0 && variant <= 6;
 
   const bgStyle = hasGradient
     ? `background: 'linear-gradient(135deg, ${bgColor}, #333)'`
@@ -604,7 +607,7 @@ function generateHeroesBanners(variant: number): string {
     `{ ${bgStyle}, padding: '48px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }`,
     [
       h(1, `Hero Title ${variant}`, `{ fontSize: 36, fontWeight: 700, color: '#fff', textAlign: 'center' as const }`, 10),
-      p('A compelling subtitle that describes the value proposition of this hero section.', `{ fontSize: 16, color: 'rgba(255,255,255,0.8)', textAlign: 'center' as const, maxWidth: 600, lineHeight: 1.6 }`, 10),
+      p('A compelling subtitle that describes the value proposition of this hero section.', `{ fontSize: 16, color: '#cccccc', textAlign: 'center' as const, maxWidth: 600, lineHeight: 1.6 }`, 10),
       div(`{ backgroundColor: '#fff', padding: '12px 32px', borderRadius: 8 }`,
         span('Get Started', `{ color: '${bgColor}', fontSize: 16, fontWeight: 600 }`, 12), 10),
     ].join('\n'),
