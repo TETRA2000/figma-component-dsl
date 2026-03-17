@@ -168,6 +168,12 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
     }
   }
 
+  // Canvas metadata
+  if (node.isCanvas) {
+    result.isCanvas = true;
+    result.canvasName = node.canvasName;
+  }
+
   // Instance
   if (node.componentId) {
     result.componentId = node.componentId;

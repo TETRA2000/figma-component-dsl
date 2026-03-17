@@ -65,6 +65,10 @@ export interface PluginNodeDef {
   readonly imageDimensions?: { width: number; height: number };
   readonly imageError?: string;
 
+  // Canvas
+  readonly isCanvas?: boolean;
+  readonly canvasName?: string;
+
   // Instance
   readonly componentId?: string;
   readonly overriddenProperties?: Record<string, string | boolean>;
@@ -86,6 +90,7 @@ export interface PluginInput {
   readonly schemaVersion: string;
   readonly targetPage: string;
   readonly components: ReadonlyArray<PluginNodeDef>;
+  readonly resolveExisting?: boolean;
 }
 
 // --- Edit Tracker Types ---

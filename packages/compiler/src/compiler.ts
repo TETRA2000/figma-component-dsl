@@ -198,6 +198,7 @@ function compileNode(
   childIndex: number,
   path: string,
   errors: CompileError[],
+  insideComponent: boolean = false,
   validationLevel?: CompilerValidationLevel,
 ): FigmaNodeDict {
   validateNode(node, path, errors, validationLevel);
@@ -255,6 +256,15 @@ function compileNode(
       ? { guid: parentGuid, position: String(childIndex) }
       : undefined,
   };
+
+  // Canvas passthrough (no component context restriction)
+  if (node.isCanvas) {
+    result.isCanvas = true;
+    result.canvasName = node.canvasName ?? node.name;
+    if (node.canvasScale !== undefined) {
+      result.canvasScale = node.canvasScale;
+    }
+  }
 
   // Image passthrough
   if (node.type === 'IMAGE') {
@@ -420,8 +430,9 @@ function compileNode(
 
   // Compile children
   if (node.children) {
+    const childInsideComponent = insideComponent || node.type === 'COMPONENT' || node.type === 'COMPONENT_SET';
     result.children = node.children.map((child, idx) =>
-      compileNode(child, guid, idx, `${path} > ${child.name}`, errors, validationLevel)
+      compileNode(child, guid, idx, `${path} > ${child.name}`, errors, childInsideComponent, validationLevel)
     );
   }
 
@@ -431,7 +442,7 @@ function compileNode(
 export function compile(node: DslNode, options?: CompilerOptions): CompileResult {
   resetGuidCounter();
   const errors: CompileError[] = [];
-  const root = compileNode(node, undefined, 0, node.name, errors, options?.validationLevel);
+  const root = compileNode(node, undefined, 0, node.name, errors, false, options?.validationLevel);
   return {
     root,
     nodeCount: guidCounter,
@@ -458,7 +469,7 @@ function compileNodeWithLayout(
   parentTransform: [number, number, number, number, number, number],
   validationLevel?: CompilerValidationLevel,
 ): FigmaNodeDict {
-  const result = compileNode(node, parentGuid, childIndex, path, errors, validationLevel);
+  const result = compileNode(node, parentGuid, childIndex, path, errors, false, validationLevel);
 
   // Apply resolved size
   const resolvedSize = sizes.get(node);

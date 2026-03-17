@@ -1,7 +1,7 @@
 import type {
   DslNode, FrameProps, RectangleProps, EllipseProps,
   ComponentProps, ComponentSetProps, TextStyle, ChildLayoutProps,
-  ImageProps,
+  ImageProps, CanvasProps,
   LineProps, SectionProps, PolygonProps, StarProps, BooleanOperationProps,
   BooleanOperationType,
 } from './types.js';
@@ -181,6 +181,28 @@ export function image(name: string, props: ImageProps): DslNode {
     imageScaleMode: props.fit ?? 'FILL',
     layoutSizingHorizontal: props.layoutSizingHorizontal,
     layoutSizingVertical: props.layoutSizingVertical,
+  };
+}
+
+export function canvas(name: string, props?: CanvasProps): DslNode {
+  if (!name) {
+    throw new Error('Canvas name must be a non-empty string.');
+  }
+  return {
+    type: 'FRAME',
+    name,
+    isCanvas: true,
+    canvasName: name,
+    canvasScale: props?.scale,
+    visible: true,
+    opacity: 1,
+    size: props?.size,
+    fills: props?.fills ? [...props.fills] : undefined,
+    cornerRadius: props?.cornerRadius,
+    autoLayout: props?.autoLayout,
+    layoutSizingHorizontal: props?.layoutSizingHorizontal,
+    layoutSizingVertical: props?.layoutSizingVertical,
+    children: props?.children ? [...props.children] : undefined,
   };
 }
 

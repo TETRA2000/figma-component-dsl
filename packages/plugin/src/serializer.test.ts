@@ -746,6 +746,113 @@ describe('serializeNode — BOOLEAN_OPERATION', () => {
 });
 
 // =================================================================
+// serializeNode — canvas metadata from plugin data
+// =================================================================
+
+describe('serializeNode — canvas metadata', () => {
+  it('serializes isCanvas and canvasName from plugin data', () => {
+    const node = mockNode({
+      type: 'FRAME',
+      name: 'HeroBanner',
+      getPluginData: (key: string) => {
+        if (key === 'dsl-canvas') return JSON.stringify({ isCanvas: true, canvasName: 'HeroBanner' });
+        return '';
+      },
+    });
+
+    const result = serializeNode(node);
+    expect((result as any).isCanvas).toBe(true);
+    expect((result as any).canvasName).toBe('HeroBanner');
+  });
+
+  it('serializes isCanvas without canvasName when canvasName is absent', () => {
+    const node = mockNode({
+      type: 'FRAME',
+      name: 'Canvas',
+      getPluginData: (key: string) => {
+        if (key === 'dsl-canvas') return JSON.stringify({ isCanvas: true });
+        return '';
+      },
+    });
+
+    const result = serializeNode(node);
+    expect((result as any).isCanvas).toBe(true);
+    expect((result as any).canvasName).toBeUndefined();
+  });
+
+  it('does not set canvas fields when plugin data is empty', () => {
+    const node = mockNode({
+      type: 'FRAME',
+      name: 'RegularFrame',
+      getPluginData: () => '',
+    });
+
+    const result = serializeNode(node);
+    expect((result as any).isCanvas).toBeUndefined();
+    expect((result as any).canvasName).toBeUndefined();
+  });
+
+  it('does not set canvas fields when no getPluginData method', () => {
+    const node = mockNode({ type: 'FRAME', name: 'NormalFrame' });
+
+    const result = serializeNode(node);
+    expect((result as any).isCanvas).toBeUndefined();
+    expect((result as any).canvasName).toBeUndefined();
+  });
+
+  it('handles malformed plugin data gracefully', () => {
+    const node = mockNode({
+      type: 'FRAME',
+      name: 'BadData',
+      getPluginData: (key: string) => {
+        if (key === 'dsl-canvas') return 'not valid json';
+        return '';
+      },
+    });
+
+    const result = serializeNode(node);
+    expect((result as any).isCanvas).toBeUndefined();
+    expect((result as any).canvasName).toBeUndefined();
+  });
+
+  it('does not set isCanvas when plugin data has isCanvas: false', () => {
+    const node = mockNode({
+      type: 'FRAME',
+      name: 'NonCanvas',
+      getPluginData: (key: string) => {
+        if (key === 'dsl-canvas') return JSON.stringify({ isCanvas: false });
+        return '';
+      },
+    });
+
+    const result = serializeNode(node);
+    expect((result as any).isCanvas).toBeUndefined();
+  });
+
+  it('preserves canvas metadata through recursive child serialization', () => {
+    const child = mockNode({
+      type: 'FRAME',
+      name: 'CanvasChild',
+      getPluginData: (key: string) => {
+        if (key === 'dsl-canvas') return JSON.stringify({ isCanvas: true, canvasName: 'NestedCanvas' });
+        return '';
+      },
+    });
+
+    const parent = mockNode({
+      type: 'FRAME',
+      name: 'Parent',
+      children: [child],
+    });
+
+    const result = serializeNode(parent);
+    expect(result.children).toHaveLength(1);
+    expect((result.children[0] as any).isCanvas).toBe(true);
+    expect((result.children[0] as any).canvasName).toBe('NestedCanvas');
+  });
+});
+
+// =================================================================
 // calculateGridColumns
 // =================================================================
 

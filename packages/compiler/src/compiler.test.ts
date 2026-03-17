@@ -719,6 +719,9 @@ describe('compile() — IMAGE fills', () => {
     expect(result.root.fillPaints[0]!.opacity).toBe(0.5);
   });
 
+  // IMPORTANT: This is intentionally placed here to maintain test file structure
+  // Slot compiler tests are at the end of the file
+
   it('handles mixed solid and image fills', () => {
     const node = frame('Mixed', {
       size: { x: 400, y: 300 },
@@ -742,3 +745,4 @@ describe('compile() — IMAGE fills', () => {
     expect(result.root.fillPaints[0]!.imageScaleMode).toBe('FIT');
   });
 });
+

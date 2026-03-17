@@ -100,6 +100,12 @@ export interface FigmaNodeDict {
 
   // Section
   sectionContentsHidden?: boolean;
+
+  // Canvas
+  isCanvas?: boolean;
+  canvasName?: string;
+  canvasScale?: number;
+
 }
 
 export type CompilerValidationLevel = 'strict' | 'normal' | 'loose';

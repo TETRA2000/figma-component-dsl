@@ -47,10 +47,12 @@ Key characteristics:
 ```
 packages/renderer/
 ├── src/
-│   ├── index.ts              # Barrel export (re-exports renderer.ts + image-loader.ts)
+│   ├── index.ts              # Barrel export (re-exports renderer.ts + image-loader.ts + canvas-renderer.ts)
 │   ├── renderer.ts           # Core rendering implementation (~440 lines)
+│   ├── canvas-renderer.ts    # Canvas node extraction and per-canvas rendering
 │   ├── image-loader.ts       # Image source collection, resolution, and preloading
 │   ├── renderer.test.ts      # Renderer test suite (208 lines)
+│   ├── canvas-renderer.test.ts # Canvas renderer test suite (5 tests)
 │   └── image-loader.test.ts  # Image loader test suite (18 test statements)
 ├── dist/                     # Compiled output (ESM + types)
 ├── package.json
@@ -133,6 +135,19 @@ Core rendering function. Creates canvas at node dimensions × scale, renders the
 
 #### `renderToFile(node: FigmaNodeDict, outputPath: string, options?: Partial<RenderOptions>): RenderResult`
 Convenience wrapper: calls `render()` → writes PNG to disk via `writeFileSync()` → returns same `RenderResult`.
+
+### Canvas Rendering Functions
+
+#### `renderCanvasNodes(root: FigmaNodeDict, options?: Partial<RenderOptions>): Map<string, RenderResultMeta>`
+Extracts all nodes with `isCanvas: true` from a compiled tree and renders each independently as a standalone PNG. Returns a Map keyed by `canvasName` (or node name as fallback) with `RenderResultMeta` values (extends `RenderResult` with a `scale` field). Each canvas node uses its `canvasScale` property if set, falling back to `options.scale`, then to `1`.
+
+```typescript
+interface RenderResultMeta extends RenderResult {
+  scale: number;
+}
+```
+
+Used by the CLI `render` command for per-canvas PNG extraction and by the batch processor.
 
 ### Image Loading Functions
 
@@ -427,9 +442,9 @@ Custom error class with `nodePath` (tree path string) and `nodeType` (Figma node
 
 The renderer is used in multiple CLI commands:
 
-1. **`figma-dsl render`**: Compile DSL → render to PNG file
+1. **`figma-dsl render`**: Compile DSL → render to PNG file. Also calls `renderCanvasNodes()` for per-canvas PNG extraction (unless `--no-canvas` is used)
 2. **`figma-dsl pipeline`**: Compile → Render → Capture → Compare pipeline
-3. **`figma-dsl batch`**: Batch-process multiple DSL files to PNG
+3. **`figma-dsl batch`**: Batch-process multiple DSL files to PNG, including per-canvas PNG extraction via `renderCanvasNodes()`
 
 ### Service Initialization
 ```typescript
@@ -452,7 +467,7 @@ FigmaNodeDict (compiled tree)
 @figma-dsl/comparator (compare → similarity score)
 ```
 
-The renderer is a **terminal module** — it produces PNG output and does not feed data to other packages within the rendering path.
+The renderer is a **terminal module** — it produces PNG output and does not feed data to other packages within the rendering path. The `renderCanvasNodes()` utility also feeds the Vite dev server plugin (`vite-plugin-dsl-canvas`) for the `<DslCanvas>` React component preview.
 
 **Evidence**: CLI `src/cli.ts:8,34-38,96-132`, `src/batch-processor.ts:6,59-99`
 

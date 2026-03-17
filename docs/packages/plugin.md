@@ -97,6 +97,8 @@ The `createNode()` async function dispatches by node type:
 
 Each node follows: create → set name/size → apply fills/strokes/opacity → set auto-layout config → append to parent → set layout sizing (FILL/HUG) → recurse children. The two-phase layout setup ensures `layoutSizingHorizontal: 'FILL'` is set after the node is appended to its auto-layout parent.
 
+For canvas-flagged nodes (`isCanvas: true`), `setPluginData('dsl-canvas', ...)` stores canvas metadata (isCanvas, canvasName) on the created frame. This metadata is recovered during serialization for changeset export round-trips.
+
 **Evidence**: `src/code.ts:107-292`
 
 ---
@@ -163,7 +165,7 @@ If the font is unavailable, `loadFontAsync` throws — caught by `createNode`'s 
 **Confidence**: 0.92 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
 ### Component Registration
-When creating a COMPONENT node, it's stored in `componentMap` by name (line 213). Component properties are registered via `addComponentProperty()` before children are appended.
+When creating a COMPONENT node, it's stored in `componentMap` by name. Component properties (TEXT, BOOLEAN, INSTANCE_SWAP) are registered via `addComponentProperty()` before children are appended.
 
 ### Instance Resolution
 INSTANCE nodes look up `componentMap[def.componentId ?? def.name]`. If not found, an error is logged and null is returned. Property overrides are applied via `setProperties()` with per-property try-catch.
@@ -279,7 +281,9 @@ The edit log provides real-time feedback, but the final changeset is computed vi
 
 `serializeNode()` is the inverse of `createNode()`: it reads a Figma `SceneNode` and produces a `PluginNodeDef`. Handles all supported node types (FRAME, RECTANGLE, ELLIPSE, TEXT, GROUP, COMPONENT, COMPONENT_SET, INSTANCE) and recursively serializes children.
 
-Properties serialized: type, name, size, opacity, visible, fills (SOLID + GRADIENT_LINEAR), strokes, cornerRadius, clipContent, auto-layout (stackMode, spacing, padding, alignment, sizing), text (characters, fontSize, fontFamily, fontStyle, textAlignHorizontal, textAutoResize), component property definitions, instance component references.
+Properties serialized: type, name, size, opacity, visible, fills (SOLID + GRADIENT_LINEAR), strokes, cornerRadius, clipContent, auto-layout (stackMode, spacing, padding, alignment, sizing), text (characters, fontSize, fontFamily, fontStyle, textAlignHorizontal, textAutoResize), component property definitions, instance component references, canvas metadata (`isCanvas`, `canvasName`).
+
+**Canvas metadata round-trip**: When a node has `dsl-canvas` plugin data (set during import for canvas frames), `serializeNode()` recovers `isCanvas` and `canvasName` fields from the JSON-encoded plugin data. This enables changeset export to correctly identify canvas nodes after Figma edits. Malformed plugin data is silently ignored.
 
 **Variant component safety**: `componentPropertyDefinitions` is only read from standalone `COMPONENT` nodes and `COMPONENT_SET` nodes. Variant components (children of a `COMPONENT_SET`, created by `combineAsVariants()`) are skipped because Figma's Plugin API throws `"Can only get component property definitions of a component set or non-variant component"` when accessing this property on variant children.
 

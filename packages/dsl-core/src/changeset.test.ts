@@ -182,4 +182,5 @@ describe('Changeset Types', () => {
     };
     expect(doc.warnings).toBeUndefined();
   });
+
 });

@@ -320,3 +320,4 @@ describe('generatePluginInput() — IMAGE nodes', () => {
     expect(imgNode.imageScaleMode).toBe('FIT');
   });
 });
+

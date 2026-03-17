@@ -160,6 +160,9 @@ The internal `convertToPluginNode()` function performs a single recursive tree t
 | `derivedTextData.fontMetaData[0]` | `fontWeight`, `fontStyle` | Index exists |
 | `componentPropertyDefinitions` | Same (VARIANT filtered for COMPONENT) | Truthy |
 | `componentId` | + `overriddenProperties` | Truthy |
+| `isCanvas` | `isCanvas`, `canvasName` | Truthy |
+
+**Canvas metadata**: When a node has `isCanvas: true`, the exporter sets `isCanvas` and `canvasName` on the output node.
 
 **Complexity**: O(n) single-pass traversal where n = total nodes in tree.
 

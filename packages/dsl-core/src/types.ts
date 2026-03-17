@@ -150,6 +150,11 @@ export interface DslNode {
   // Component Set (COMPONENT_SET only)
   variantAxes?: Record<string, string[]>;
 
+  // Canvas (FRAME with canvas semantics, renders as image)
+  isCanvas?: boolean;
+  canvasName?: string;
+  canvasScale?: number;
+
   // Instance (INSTANCE only)
   componentRef?: string;
   propertyOverrides?: Record<string, string | boolean>;
@@ -280,6 +285,17 @@ export interface StarProps {
   layoutGrow?: number;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+}
+
+export interface CanvasProps {
+  size?: { x: number; y: number };
+  autoLayout?: AutoLayoutConfig;
+  fills?: Fill[];
+  cornerRadius?: number;
+  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+  scale?: number;
+  children?: DslNode[];
 }
 
 export interface BooleanOperationProps {

@@ -26,7 +26,7 @@ The DSL is implemented as a TypeScript monorepo with npm workspaces under `packa
 
 ### Reference: figma_design_playground
 - **Language**: TypeScript 5.9 (strict mode)
-- **Framework**: React 19, Vite 8
+- **Framework**: React 19, Vite 7
 - **Styling**: CSS Modules with design tokens as CSS custom properties
 - **Figma Integration**: Figma Plugin API (`@figma/plugin-typings`), Code Connect (`@figma/code-connect`)
 - **Bundler**: esbuild (for plugin), Vite (for app)
@@ -48,7 +48,7 @@ The DSL is implemented as a TypeScript monorepo with npm workspaces under `packa
 | Browser automation | Playwright | React screenshot capture |
 | Figma node creation | Figma Plugin API | Export DSL to Figma via plugin |
 | Design-to-code mapping | @figma/code-connect | Dev Mode integration (reference app) |
-| Testing | vitest | All packages use vitest |
+| Testing | vitest | DSL packages use vitest ^3.0; preview uses vitest ^4.1 |
 | Plugin bundling | esbuild | IIFE bundle for Figma sandbox |
 | WebSocket server | ws | MCP server ↔ Figma plugin bridge |
 | MCP protocol | @modelcontextprotocol/sdk | Stdio-based MCP server for Claude Code integration |

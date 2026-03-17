@@ -8,6 +8,7 @@ import type {
   EditLogEntry,
   ChangesetDocument,
   ComponentChangeEntry,
+  PropertyChange,
 } from '@figma-dsl/core';
 import { diffNodes } from '@figma-dsl/core';
 import {
@@ -19,9 +20,19 @@ import {
   COMPONENT_SET_PAD,
 } from './serializer.js';
 import type { SerializableNode } from './serializer.js';
+import {
+  formatCanvasName,
+} from './slot-utils.js';
+import { detectCanvasRegions } from './canvas-detector.js';
+import type { CanvasDetectableComponent } from './canvas-detector.js';
+import { captureCanvasImages } from './image-capture.js';
+import { bundleExport } from './export-bundler.js';
+import type { BundledExport } from './export-bundler.js';
 import uiHtml from './ui.html';
 
 const componentMap = new Map<string, ComponentNode>();
+const fileScannedComponents = new Map<string, ComponentNode>();
+const PLUGIN_DATA_CANVAS = 'dsl-canvas';
 const errors: string[] = [];
 
 // --- Edit Tracker State ---
@@ -260,6 +271,22 @@ function setLayoutSizing(node: SceneNode, def: PluginNodeDef): void {
   }
 }
 
+function scanFileForComponents(): void {
+  fileScannedComponents.clear();
+  const allComponents = figma.root.findAll(n => n.type === 'COMPONENT') as ComponentNode[];
+  const duplicateNames: string[] = [];
+  for (const comp of allComponents) {
+    if (fileScannedComponents.has(comp.name)) {
+      duplicateNames.push(comp.name);
+      continue; // First match wins
+    }
+    fileScannedComponents.set(comp.name, comp);
+  }
+  if (duplicateNames.length > 0) {
+    console.warn(`[DSL] Duplicate component names found during file scan: ${duplicateNames.join(', ')}. Using first match.`);
+  }
+}
+
 async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin): Promise<SceneNode | null> {
   try {
     let node: SceneNode;
@@ -268,7 +295,13 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
       case 'FRAME':
       case 'ROUNDED_RECTANGLE': {
         const frame = figma.createFrame();
-        frame.name = def.name;
+        // Canvas frame naming convention: [Canvas] {name}
+        if (def.isCanvas && def.canvasName) {
+          frame.name = formatCanvasName(def.canvasName);
+          frame.setPluginData(PLUGIN_DATA_CANVAS, JSON.stringify({ isCanvas: true, canvasName: def.canvasName }));
+        } else {
+          frame.name = def.name;
+        }
         frame.resize(def.size.x, def.size.y);
         await applyFillsWithImages(frame, def.fills);
         if (def.cornerRadius) frame.cornerRadius = def.cornerRadius;
@@ -384,8 +417,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         comp.visible = def.visible;
         setAutoLayoutConfig(comp, def);
 
-        // Register component properties
-        // Skip VARIANT properties — they are only valid on COMPONENT_SET nodes.
+        // Register component properties (non-VARIANT).
         if (def.componentPropertyDefinitions) {
           for (const [propName, propDef] of Object.entries(def.componentPropertyDefinitions)) {
             if (propDef.type === 'VARIANT') continue;
@@ -398,6 +430,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         for (const child of def.children) {
           await createNode(child, comp);
         }
+
         componentMap.set(def.name, comp);
         node = comp;
         break;
@@ -471,10 +504,18 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
       }
 
       case 'INSTANCE': {
-        const refComp = componentMap.get(def.componentId ?? def.name);
+        // Standard instance
+        const refComp = componentMap.get(def.componentId ?? def.name)
+          ?? fileScannedComponents.get(def.componentId ?? def.name);
         if (!refComp) {
-          errors.push(`Component not found for instance: ${def.name}`);
-          return null;
+          // Fall back to FRAME with warning
+          const fallback = figma.createFrame();
+          fallback.name = def.name;
+          fallback.resize(def.size.x, def.size.y);
+          errors.push(`Component "${def.name}" not found in local or file-scanned components — created as FRAME fallback`);
+          parent.appendChild(fallback);
+          node = fallback;
+          break;
         }
         const inst = refComp.createInstance();
         inst.name = def.name;
@@ -653,7 +694,7 @@ async function embedImageDataForChange(
       for (const fill of fills) {
         if (fill.type === 'IMAGE') {
           const imgPaint = fill as ImagePaint;
-          const image = figma.getImageByHash(imgPaint.imageHash);
+          const image = imgPaint.imageHash ? figma.getImageByHash(imgPaint.imageHash) : null;
           if (image) {
             const bytes = await image.getBytesAsync();
             const base64 = figma.base64Encode(bytes);
@@ -812,9 +853,10 @@ async function computeChangeset(nodeIds: ReadonlyArray<string>): Promise<Changes
 
     if (changes.length > 0) {
       // Embed image data for image-related changes
-      const enrichedChanges = await Promise.all(
+      let enrichedChanges = await Promise.all(
         changes.map(c => embedImageDataForChange(c, node)),
       );
+
       components.push({
         componentName: identity.componentName,
         componentId: nodeId,
@@ -849,6 +891,77 @@ function computeCompleteExport(nodeIds: ReadonlyArray<string>, pageName: string)
     targetPage: pageName,
     components,
   };
+}
+
+// --- Image Bundle Pipeline ---
+
+// Minimal AbortController polyfill for Figma plugin sandbox
+class PluginAbortSignal {
+  aborted = false;
+}
+class PluginAbortController {
+  signal = new PluginAbortSignal();
+  abort() { this.signal.aborted = true; }
+}
+
+let exportAbortController: PluginAbortController | null = null;
+
+/**
+ * Run canvas detection → image capture → export bundling pipeline on exported nodes.
+ * Returns a BundledExport with either JSON+base64 or ZIP.
+ */
+async function runCanvasImagePipeline(
+  nodeIds: ReadonlyArray<string>,
+  exportJson: Record<string, unknown>,
+  scale: number = 2,
+): Promise<BundledExport> {
+  exportAbortController = new PluginAbortController();
+
+  // Detect canvas regions in all exported component nodes
+  const allDetected: import('./canvas-detector.js').CanvasRegion[] = [];
+  for (const nodeId of nodeIds) {
+    const node = figma.getNodeById(nodeId);
+    if (!node) continue;
+
+    // Resolve InstanceNodes to their main component
+    let componentNode: BaseNode | null = node;
+    if (node.type === 'INSTANCE') {
+      componentNode = (node as InstanceNode).mainComponent;
+      if (!componentNode) continue; // Remote component — skip
+    }
+
+    // Only detect canvas regions on component-like nodes
+    if (componentNode.type === 'COMPONENT' || componentNode.type === 'COMPONENT_SET') {
+      const detected = detectCanvasRegions(componentNode as unknown as CanvasDetectableComponent);
+      allDetected.push(...detected);
+    }
+  }
+
+  if (allDetected.length === 0) {
+    // No canvas regions found — return plain JSON
+    return {
+      format: 'json',
+      json: JSON.stringify(exportJson),
+      imageCount: 0,
+      totalImageBytes: 0,
+    };
+  }
+
+  // Capture images with progress reporting
+  figma.ui.postMessage({ type: 'export-progress', current: 0, total: allDetected.length, canvasName: '' });
+
+  const captured = await captureCanvasImages(allDetected, {
+    scale,
+    signal: exportAbortController.signal,
+    onProgress: (current, total, canvasName) => {
+      figma.ui.postMessage({ type: 'export-progress', current, total, canvasName });
+    },
+  });
+
+  // Bundle
+  const bundled = bundleExport(exportJson, captured);
+  exportAbortController = null;
+  return bundled;
 }
 
 function getTrackedNodeIdsOnPage(): string[] {
@@ -899,6 +1012,12 @@ async function handleWsMessage(payload: { type: string; requestId?: string; plug
         const input = payload.pluginInput!;
         errors.length = 0;
         componentMap.clear();
+        fileScannedComponents.clear();
+
+        // Scan file for existing components when resolveExisting is enabled
+        if (input.resolveExisting) {
+          scanFileForComponents();
+        }
 
         let page = figma.root.children.find(p => p.name === input.targetPage);
         if (!page) {
@@ -1000,10 +1119,14 @@ async function handleWsMessage(payload: { type: string; requestId?: string; plug
         }
 
         const changeset = await computeChangeset(nodeIds);
+        const bundled = await runCanvasImagePipeline(nodeIds, changeset as unknown as Record<string, unknown>);
         wsSend({
           type: 'changeset-result',
           requestId: payload.requestId,
           changeset,
+          bundleFormat: bundled.format,
+          bundleImageCount: bundled.imageCount,
+          ...(bundled.format === 'json' && bundled.json ? { bundledJson: bundled.json } : {}),
         });
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : String(err);
@@ -1033,10 +1156,14 @@ async function handleWsMessage(payload: { type: string; requestId?: string; plug
 
         const pageName = payload.pageName ?? figma.currentPage.name;
         const pluginInput = computeCompleteExport(nodeIds, pageName);
+        const bundled = await runCanvasImagePipeline(nodeIds, pluginInput as unknown as Record<string, unknown>);
         wsSend({
           type: 'export-result',
           requestId: payload.requestId,
           pluginInput,
+          bundleFormat: bundled.format,
+          bundleImageCount: bundled.imageCount,
+          ...(bundled.format === 'json' && bundled.json ? { bundledJson: bundled.json } : {}),
         });
       } catch (_err) {
         wsSend({
@@ -1069,7 +1196,7 @@ function filterTrackedByNames(names: string[]): string[] {
   return result;
 }
 
-figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean; scope?: string; payload?: Record<string, unknown> }) => {
+figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean; scope?: string; scale?: number; canvasExportMode?: 'images' | 'nodes'; payload?: Record<string, unknown> }) => {
   // Handle WebSocket messages relayed from UI
   if (msg.type === 'ws-connected') {
     // Send handshake with file key
@@ -1089,6 +1216,15 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
 
   if (msg.type === 'ws-disconnected') {
     // Connection lost — UI handles reconnection
+    return;
+  }
+
+  // Handle export cancellation
+  if (msg.type === 'export-cancel') {
+    if (exportAbortController) {
+      exportAbortController.abort();
+      exportAbortController = null;
+    }
     return;
   }
 
@@ -1114,23 +1250,55 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
         }
       }
 
+      let exportJson: Record<string, unknown>;
+      let baseSummary: string;
+
       if (msg.type === 'export-changeset') {
         const changeset = await computeChangeset(nodeIds);
         const totalChanges = changeset.components.reduce((sum, c) => sum + c.changes.length, 0);
-        const json = JSON.stringify(changeset, null, 2);
-        figma.ui.postMessage({
-          type: 'export-result',
-          json,
-          summary: `Changeset: ${changeset.components.length} components, ${totalChanges} changes`,
-        });
+        exportJson = changeset as unknown as Record<string, unknown>;
+        baseSummary = `Changeset: ${changeset.components.length} components, ${totalChanges} changes`;
       } else {
         const pageName = figma.currentPage.name;
         const complete = computeCompleteExport(nodeIds, pageName);
-        const json = JSON.stringify(complete, null, 2);
+        exportJson = complete as unknown as Record<string, unknown>;
+        baseSummary = `Complete export: ${complete.components.length} components`;
+      }
+
+      // Run canvas image pipeline when canvasExportMode is 'images'
+      const canvasExportMode = msg.canvasExportMode ?? 'nodes';
+      let bundled: BundledExport;
+      if (canvasExportMode === 'images') {
+        figma.ui.postMessage({ type: 'progress', text: 'Capturing canvas images...' });
+        const exportScale = typeof msg.scale === 'number' ? msg.scale : 2;
+        bundled = await runCanvasImagePipeline(nodeIds, exportJson, exportScale);
+      } else {
+        bundled = {
+          format: 'json',
+          json: JSON.stringify(exportJson),
+          imageCount: 0,
+          totalImageBytes: 0,
+        };
+      }
+
+      const imageSummary = bundled.imageCount > 0
+        ? ` | ${bundled.imageCount} images (${bundled.format})`
+        : '';
+
+      if (bundled.format === 'zip') {
         figma.ui.postMessage({
           type: 'export-result',
-          json,
-          summary: `Complete export: ${complete.components.length} components`,
+          format: 'zip',
+          zipBytes: bundled.zipBytes,
+          json: '',
+          summary: `${baseSummary}${imageSummary}`,
+        });
+      } else {
+        figma.ui.postMessage({
+          type: 'export-result',
+          format: 'json',
+          json: bundled.json ?? JSON.stringify(exportJson, null, 2),
+          summary: `${baseSummary}${imageSummary}`,
         });
       }
     } catch (err) {
@@ -1146,6 +1314,12 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
     const input: PluginInput = JSON.parse(msg.data);
     errors.length = 0;
     componentMap.clear();
+    fileScannedComponents.clear();
+
+    // Scan file for existing components when resolveExisting is enabled
+    if (input.resolveExisting) {
+      scanFileForComponents();
+    }
 
     // Create or find target page
     let page = figma.root.children.find(p => p.name === input.targetPage);
