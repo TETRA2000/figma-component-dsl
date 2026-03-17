@@ -322,11 +322,13 @@ interface CodegenContext {
 }
 
 // Simplified canvas region info for generators (no Figma node reference)
+// Derived from CanvasRegion by extracting canvasName and node dimensions.
+// Matched to child nodes by canvasName (not positional index) for robustness.
 interface CanvasRegionInfo {
   readonly canvasName: string;
+  readonly nodeId: string;
   readonly width: number;
   readonly height: number;
-  readonly nodeIndex: number;
 }
 
 // Dispatcher function — now async for image capture
@@ -371,7 +373,7 @@ function generateReact(context: CodegenContext): CodegenResultEntry[];
 - Postconditions: Returns 1–3 `CodegenResultEntry` items; DslCanvas children rendered as `<DslCanvas>` elements when `context.canvasRegions` contains matching entries
 
 **Implementation Notes**
-- Match child nodes to canvas regions by comparing node index in the children array with `CanvasRegionInfo.nodeIndex`
+- Match child nodes to canvas regions by comparing the child's `canvasName` (from `dsl-canvas` plugin data) with `CanvasRegionInfo.canvasName`. This is robust against child reordering or filtering.
 - When a child matches a canvas region: emit `<DslCanvas dsl={/* canvasName */} width={...} alt="..." />` instead of `<div>...</div>`
 - When DslCanvas elements are present, prepend `import { DslCanvas } from './DslCanvas/DslCanvas';` to the imports section
 
@@ -525,7 +527,7 @@ Phase 2 introduces no new persistent data types. It reuses:
 
 **Canvas Image Encoding**:
 - PNG bytes from `exportAsync` → base64 string → `data:image/png;base64,...` data URI
-- Base64 encoding in Figma sandbox: use `figma.base64Encode(pngBytes)` (available in plugin API)
+- `figma.base64Encode()` accepts a `Uint8Array` directly (Figma Plugin API ≥1.0.0). If the runtime signature only accepts `string`, convert via `String.fromCharCode(...pngBytes)` first. Alternatively, implement a manual base64 encoder over the `Uint8Array` to avoid string intermediate. The implementation should verify the actual API signature at build time via `@figma/plugin-typings`.
 
 ## Error Handling
 
