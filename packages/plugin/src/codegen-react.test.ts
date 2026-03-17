@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateReact } from './codegen-react.js';
-import type { CodegenContext } from './codegen-types.js';
+import type { CodegenContext, CanvasRegionInfo } from './codegen-types.js';
 import type { PluginNodeDef } from '@figma-dsl/core';
 
 function makeContext(node: PluginNodeDef, overrides?: Partial<CodegenContext>): CodegenContext {
@@ -11,6 +11,8 @@ function makeContext(node: PluginNodeDef, overrides?: Partial<CodegenContext>): 
     sources: null,
     preferences: { unit: 'px', scaleFactor: 16, naming: 'camelCase' },
     truncated: false,
+    canvasRegions: [],
+    canvasImages: null,
     ...overrides,
   };
 }
@@ -108,5 +110,76 @@ describe('generateReact', () => {
     const results = generateReact(ctx);
     const body = results.find(r => r.title === 'Card');
     expect(body!.code).toContain('truncated');
+  });
+
+  describe('DslCanvas support', () => {
+    const canvasChild: PluginNodeDef = {
+      type: 'FRAME',
+      name: 'hero-canvas',
+      size: { x: 400, y: 200 },
+      opacity: 1,
+      visible: true,
+      children: [],
+    };
+
+    const regularChild: PluginNodeDef = {
+      type: 'TEXT',
+      name: 'Label',
+      size: { x: 100, y: 20 },
+      opacity: 1,
+      visible: true,
+      children: [],
+      characters: 'Hello',
+    };
+
+    const componentWithCanvas: PluginNodeDef = {
+      ...minimalNode,
+      children: [canvasChild, regularChild],
+    };
+
+    const canvasRegions: CanvasRegionInfo[] = [
+      { canvasName: 'hero-canvas', nodeId: '1:1', width: 400, height: 200 },
+    ];
+
+    it('generates DslCanvas JSX for matched canvas regions', () => {
+      const ctx = makeContext(componentWithCanvas, { canvasRegions });
+      const results = generateReact(ctx);
+      const body = results.find(r => r.title === 'Card');
+      expect(body!.code).toContain('<DslCanvas');
+      expect(body!.code).toContain('width={400}');
+      expect(body!.code).toContain('alt="hero-canvas"');
+    });
+
+    it('includes DslCanvas import when canvas regions are present', () => {
+      const ctx = makeContext(componentWithCanvas, { canvasRegions });
+      const results = generateReact(ctx);
+      const imports = results.find(r => r.title === 'Imports');
+      expect(imports!.code).toContain("import { DslCanvas } from './DslCanvas/DslCanvas'");
+    });
+
+    it('includes dsl prop placeholder referencing canvas name', () => {
+      const ctx = makeContext(componentWithCanvas, { canvasRegions });
+      const results = generateReact(ctx);
+      const body = results.find(r => r.title === 'Card');
+      expect(body!.code).toContain('dsl={');
+      expect(body!.code).toContain('hero-canvas');
+    });
+
+    it('generates regular JSX for non-canvas children alongside DslCanvas', () => {
+      const ctx = makeContext(componentWithCanvas, { canvasRegions });
+      const results = generateReact(ctx);
+      const body = results.find(r => r.title === 'Card');
+      expect(body!.code).toContain('<DslCanvas');
+      expect(body!.code).toContain('<span>Hello</span>');
+    });
+
+    it('produces unchanged output when no canvas regions exist', () => {
+      const ctx = makeContext(componentWithCanvas);
+      const results = generateReact(ctx);
+      const body = results.find(r => r.title === 'Card');
+      expect(body!.code).not.toContain('<DslCanvas');
+      const imports = results.find(r => r.title === 'Imports');
+      expect(imports!.code).not.toContain('DslCanvas');
+    });
   });
 });

@@ -1,5 +1,5 @@
 import type { PluginNodeDef } from '@figma-dsl/core';
-import type { CodegenContext, CodegenResultEntry } from './codegen-types.js';
+import type { CodegenContext, CodegenResultEntry, CanvasRegionInfo } from './codegen-types.js';
 
 function toPascalCase(name: string): string {
   return name
@@ -10,13 +10,32 @@ function toPascalCase(name: string): string {
     .join('');
 }
 
-function nodeToJsx(node: PluginNodeDef, indent: number): string {
+function findCanvasRegion(
+  node: PluginNodeDef,
+  canvasRegions: readonly CanvasRegionInfo[],
+): CanvasRegionInfo | undefined {
+  return canvasRegions.find(r => r.canvasName === node.name);
+}
+
+function nodeToJsx(
+  node: PluginNodeDef,
+  indent: number,
+  canvasRegions: readonly CanvasRegionInfo[],
+  hasDslCanvas: { value: boolean },
+): string {
   const pad = '  '.repeat(indent);
   const type = node.type;
 
   if (type === 'TEXT') {
     const tag = 'span';
     return `${pad}<${tag}>${node.characters ?? ''}</${tag}>`;
+  }
+
+  // Check if this child matches a canvas region
+  const canvasInfo = findCanvasRegion(node, canvasRegions);
+  if (canvasInfo) {
+    hasDslCanvas.value = true;
+    return `${pad}<DslCanvas dsl={/* ${canvasInfo.canvasName} */} width={${canvasInfo.width}} alt="${canvasInfo.canvasName}" />`;
   }
 
   const tag = getJsxTag(node);
@@ -26,7 +45,7 @@ function nodeToJsx(node: PluginNodeDef, indent: number): string {
     return `${pad}<${tag} />`;
   }
 
-  const childJsx = children.map(c => nodeToJsx(c, indent + 1)).join('\n');
+  const childJsx = children.map(c => nodeToJsx(c, indent + 1, canvasRegions, hasDslCanvas)).join('\n');
   return `${pad}<${tag}>\n${childJsx}\n${pad}</${tag}>`;
 }
 
@@ -73,12 +92,23 @@ export function generateReact(context: CodegenContext): CodegenResultEntry[] {
     : toPascalCase(node.name);
 
   const results: CodegenResultEntry[] = [];
+  const hasDslCanvas = { value: false };
+
+  // Component body (generate first to detect DslCanvas usage)
+  const body = nodeToJsx(node, 1, context.canvasRegions, hasDslCanvas);
+  const truncationComment = context.truncated
+    ? '\n    {/* ... truncated (exceeded depth limit) */}'
+    : '';
 
   // Imports section
+  const importLines = [`import styles from './${componentName}.module.css';`];
+  if (hasDslCanvas.value) {
+    importLines.push(`import { DslCanvas } from './DslCanvas/DslCanvas';`);
+  }
   results.push({
     title: 'Imports',
     language: 'TYPESCRIPT',
-    code: `import styles from './${componentName}.module.css';`,
+    code: importLines.join('\n'),
   });
 
   // Props interface (for component sets with variants)
@@ -90,12 +120,6 @@ export function generateReact(context: CodegenContext): CodegenResultEntry[] {
       code: variantProps,
     });
   }
-
-  // Component body
-  const body = nodeToJsx(node, 1);
-  const truncationComment = context.truncated
-    ? '\n    {/* ... truncated (exceeded depth limit) */}'
-    : '';
 
   const propsParam = variantProps ? `props: ${componentName}Props` : '';
   const componentCode = `export function ${componentName}(${propsParam}) {\n  return (\n${body}${truncationComment}\n  );\n}`;

@@ -11,6 +11,8 @@ function makeContext(node: PluginNodeDef, overrides?: Partial<CodegenContext>): 
     sources: null,
     preferences: { unit: 'px', scaleFactor: 16, naming: 'camelCase' },
     truncated: false,
+    canvasRegions: [],
+    canvasImages: null,
     ...overrides,
   };
 }

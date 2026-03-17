@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateCSS } from './codegen-css.js';
-import type { CodegenContext, CodegenPreferences } from './codegen-types.js';
+import type { CodegenContext } from './codegen-types.js';
 import type { PluginNodeDef } from '@figma-dsl/core';
 
 function makeContext(node: PluginNodeDef, overrides?: Partial<CodegenContext>): CodegenContext {
@@ -11,6 +11,8 @@ function makeContext(node: PluginNodeDef, overrides?: Partial<CodegenContext>): 
     sources: null,
     preferences: { unit: 'px', scaleFactor: 16, naming: 'camelCase' },
     truncated: false,
+    canvasRegions: [],
+    canvasImages: null,
     ...overrides,
   };
 }
