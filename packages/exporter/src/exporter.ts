@@ -182,6 +182,38 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
   if (node.strokeCap) result.strokeCap = node.strokeCap;
   if (node.sectionContentsHidden !== undefined) result.sectionContentsHidden = node.sectionContentsHidden;
 
+  // Banner Mode: effects
+  if (node.effects?.length) {
+    result.effects = node.effects.map(effect => {
+      if (effect.type === 'DROP_SHADOW') {
+        return {
+          type: 'DROP_SHADOW',
+          visible: true,
+          color: { r: effect.color.r, g: effect.color.g, b: effect.color.b, a: effect.color.a },
+          offset: { x: effect.offsetX, y: effect.offsetY },
+          radius: effect.blur,
+          spread: effect.spread ?? 0,
+        };
+      }
+      // LAYER_BLUR
+      return {
+        type: 'LAYER_BLUR',
+        visible: true,
+        radius: effect.radius,
+      };
+    });
+  }
+
+  // Banner Mode: blendMode
+  if (node.blendMode) {
+    result.blendMode = node.blendMode;
+  }
+
+  // Banner Mode: text style extensions
+  if (node.textTransform) result.textTransform = node.textTransform;
+  if (node.textStroke) result.textStroke = node.textStroke;
+  if (node.textShadow) result.textShadow = node.textShadow;
+
   return result as unknown as PluginNodeDef;
 }
 
@@ -200,11 +232,18 @@ export function generatePluginInput(
       ? [rootNode]
       : [rootNode];
 
-  return {
+  const result: PluginInput = {
     schemaVersion: '1.0.0',
     targetPage: pageName,
     components,
   };
+
+  // Propagate mode to export output
+  if (compileResult.mode) {
+    (result as Record<string, unknown>).mode = compileResult.mode;
+  }
+
+  return result;
 }
 
 export function exportToFile(

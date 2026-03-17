@@ -4,8 +4,10 @@ import { readFileSync, writeFileSync, existsSync, statSync } from 'fs';
 import { pathToFileURL } from 'url';
 import { compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
 import type { CompileResult } from '@figma-dsl/compiler';
-import type { DslNode } from '@figma-dsl/core';
-import { renderToFile, initializeRenderer, collectImageSources, preloadImages } from '@figma-dsl/renderer';
+import type { DslNode, FontDeclaration } from '@figma-dsl/core';
+import type { CompilerMode } from '@figma-dsl/compiler';
+import { renderToFile, initializeRenderer, collectImageSources, preloadImages, initializeFontManager } from '@figma-dsl/renderer';
+import type { FontRegistration } from '@figma-dsl/renderer';
 import { compareFiles } from '@figma-dsl/comparator';
 import { captureUrl } from '@figma-dsl/capturer';
 import { exportToFile } from '@figma-dsl/exporter';
@@ -31,20 +33,70 @@ function findFontDir(): string {
   return candidates[0]!;
 }
 
-function initServices(): void {
+function initServices(customFonts?: FontRegistration[], assetDir?: string): string[] {
   const fontDir = findFontDir();
   textMeasurer.initialize(fontDir);
   initializeRenderer(fontDir);
+
+  // Initialize font manager with custom fonts if provided
+  if (customFonts?.length) {
+    return initializeFontManager({
+      fontDir,
+      assetDir,
+      customFonts,
+    });
+  }
+  return [];
 }
 
-async function loadDslModule(dslPath: string): Promise<DslNode> {
+interface DslModuleResult {
+  node: DslNode;
+  mode: CompilerMode;
+  fonts: FontRegistration[];
+}
+
+async function loadDslModule(dslPath: string): Promise<DslModuleResult> {
   const absolutePath = resolve(dslPath);
   const fileUrl = pathToFileURL(absolutePath).href;
-  const mod = await import(fileUrl) as { default?: DslNode };
+  const mod = await import(fileUrl) as {
+    default?: DslNode;
+    mode?: string;
+    fonts?: FontDeclaration[];
+  };
   if (!mod.default) {
     throw new Error(`DSL module must export a default DslNode: ${dslPath}`);
   }
-  return mod.default;
+
+  // Detect mode
+  let mode: CompilerMode = 'standard';
+  if (mod.mode) {
+    if (mod.mode === 'banner') {
+      mode = 'banner';
+    } else {
+      console.warn(`Warning: Unknown mode '${mod.mode}' in ${dslPath}, using standard mode`);
+    }
+  }
+
+  // Read font declarations
+  const fonts: FontRegistration[] = [];
+  if (mod.fonts && Array.isArray(mod.fonts)) {
+    const validExtensions = ['.ttf', '.otf', '.woff2'];
+    for (const decl of mod.fonts) {
+      const ext = decl.path.toLowerCase().slice(decl.path.lastIndexOf('.'));
+      if (!validExtensions.includes(ext)) {
+        console.warn(`Warning: Unsupported font extension '${ext}' for ${decl.path}, skipping`);
+        continue;
+      }
+      fonts.push({
+        path: decl.path,
+        family: decl.family,
+        weight: decl.weight ?? 400,
+        style: decl.style ?? 'normal',
+      });
+    }
+  }
+
+  return { node: mod.default, mode, fonts };
 }
 
 function loadCompiledJson(jsonPath: string): CompileResult {
@@ -83,9 +135,11 @@ Options:
   }
 
   try {
-    initServices();
-    const dslNode = await loadDslModule(dslPath);
-    const result = compileWithLayout(dslNode, textMeasurer);
+    const { node: dslNode, mode, fonts } = await loadDslModule(dslPath);
+    const fontErrors = initServices(fonts, dirname(resolve(dslPath)));
+    for (const fe of fontErrors) console.error(`Font error: ${fe}`);
+
+    const result = compileWithLayout(dslNode, textMeasurer, { mode });
 
     if (result.errors.length > 0) {
       console.error('Compilation errors:');
@@ -147,19 +201,21 @@ Options:
   }
 
   try {
-    initServices();
-
     let compiled: CompileResult;
+    const assetDir = values['asset-dir'] ? resolve(values['asset-dir']) : dirname(resolve(inputPath));
+
     if (inputPath.endsWith('.json')) {
+      initServices();
       compiled = loadCompiledJson(inputPath);
     } else {
-      const dslNode = await loadDslModule(inputPath);
-      compiled = compileWithLayout(dslNode, textMeasurer);
+      const { node: dslNode, mode, fonts } = await loadDslModule(inputPath);
+      const fontErrors = initServices(fonts, assetDir);
+      for (const fe of fontErrors) console.error(`Font error: ${fe}`);
+      compiled = compileWithLayout(dslNode, textMeasurer, { mode });
     }
 
     const scale = values.scale ? parseFloat(values.scale) : 1;
     const debugLayout = values['debug-layout'] ?? false;
-    const assetDir = values['asset-dir'] ? resolve(values['asset-dir']) : dirname(resolve(inputPath));
 
     // Pre-load images
     const imageSources = collectImageSources(compiled.root);
@@ -315,7 +371,7 @@ Options:
   }
 
   const dslPath = positionals[0];
-  if (!dslPath || !values.url) {
+  if (!dslPath) {
     console.error('Usage: figma-dsl pipeline <file.dsl.ts> -u <react-url> [-o dir] [-t threshold]');
     return 2;
   }
@@ -325,9 +381,11 @@ Options:
   try {
     // Stage 1: Compile
     console.log('[1/4] Compiling...');
-    initServices();
-    const dslNode = await loadDslModule(dslPath);
-    const compiled = compileWithLayout(dslNode, textMeasurer);
+    const { node: dslNode, mode, fonts } = await loadDslModule(dslPath);
+    const fontErrors = initServices(fonts, dirname(resolve(dslPath)));
+    for (const fe of fontErrors) console.error(`Font error: ${fe}`);
+
+    const compiled = compileWithLayout(dslNode, textMeasurer, { mode });
     if (compiled.errors.length > 0) {
       console.error('Compilation errors:');
       for (const err of compiled.errors) {
@@ -341,7 +399,19 @@ Options:
     const dslPngPath = resolve(outputDir, 'dsl-render.png');
     renderToFile(compiled.root, dslPngPath);
 
-    // Stage 3: Capture
+    // Banner Mode: skip capture & compare (no React component)
+    if (mode === 'banner') {
+      console.log('[3/4] Skipping capture (Banner Mode — no React component)');
+      console.log('[4/4] Skipping compare (Banner Mode)');
+      console.log(`\nBanner Mode pipeline complete. DSL render: ${dslPngPath}`);
+      return 0;
+    }
+
+    // Stage 3: Capture (requires URL for standard mode)
+    if (!values.url) {
+      console.error('Standard mode pipeline requires -u <react-url> for capture & compare');
+      return 2;
+    }
     console.log('[3/4] Capturing React component...');
     const [w, h] = (values.viewport ?? '1280x720').split('x').map(Number);
     const reactPngPath = resolve(outputDir, 'react-capture.png');
@@ -402,10 +472,12 @@ Options:
   }
 
   try {
-    initServices();
-    const dslNode = await loadDslModule(dslPath);
-    const compiled = compileWithLayout(dslNode, textMeasurer);
     const assetDir = values['asset-dir'] ? resolve(values['asset-dir']) : dirname(resolve(dslPath));
+    const { node: dslNode, mode, fonts } = await loadDslModule(dslPath);
+    const fontErrors = initServices(fonts, assetDir);
+    for (const fe of fontErrors) console.error(`Font error: ${fe}`);
+
+    const compiled = compileWithLayout(dslNode, textMeasurer, { mode });
     exportToFile(compiled, resolve(values.output), values.page, { assetDir });
     console.log(`Exported: ${values.output}`);
     return 0;

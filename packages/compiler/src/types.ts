@@ -1,3 +1,5 @@
+import type { EffectDefinition, BlendMode } from '@figma-dsl/core';
+
 export type FigmaNodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ROUNDED_RECTANGLE'
   | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'VECTOR' | 'IMAGE'
   | 'LINE' | 'SECTION' | 'POLYGON' | 'STAR' | 'BOOLEAN_OPERATION';
@@ -100,6 +102,13 @@ export interface FigmaNodeDict {
 
   // Section
   sectionContentsHidden?: boolean;
+
+  // Banner Mode
+  effects?: EffectDefinition[];
+  blendMode?: BlendMode;
+  textTransform?: 'UPPERCASE' | 'LOWERCASE' | 'CAPITALIZE';
+  textStroke?: { color: string; width: number };
+  textShadow?: { color: string; offsetX: number; offsetY: number; blur: number };
 }
 
 export type CompilerValidationLevel = 'strict' | 'normal' | 'loose';
@@ -111,14 +120,18 @@ export interface CompileError {
   severity?: 'error' | 'warning';
 }
 
+export type CompilerMode = 'standard' | 'banner';
+
 export interface CompilerOptions {
   validationLevel?: CompilerValidationLevel;
+  mode?: CompilerMode;
 }
 
 export interface CompileResult {
   root: FigmaNodeDict;
   nodeCount: number;
   errors: CompileError[];
+  mode?: CompilerMode;
 }
 
 export interface TextMeasurement {

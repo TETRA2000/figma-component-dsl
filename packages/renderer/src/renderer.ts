@@ -4,6 +4,7 @@ import { readdirSync, writeFileSync } from 'fs';
 import type { FigmaNodeDict } from '@figma-dsl/compiler';
 import { computeDrawInstruction } from '@figma-dsl/core';
 import type { ImageCache } from './image-loader.js';
+import { applyEffects } from './effects.js';
 
 export interface RgbaColor {
   r: number;
@@ -491,6 +492,10 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, image
 
   ctx.save();
 
+  // Apply Banner Mode effects (shadow, blend mode) before transform
+  // Shadow must be applied before coordinate transforms to avoid @napi-rs/canvas translate bug
+  const cleanupEffects = applyEffects(ctx, node.effects, node.blendMode);
+
   // Apply transform
   const [[a, c, tx], [b, d, ty]] = node.transform;
   ctx.setTransform(a, b, c, d, tx, ty);
@@ -679,6 +684,9 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, image
     renderNode(ctx, child, `${path} > ${child.name}`, imageCache);
   }
 
+  // Clean up Banner Mode effects
+  cleanupEffects();
+
   ctx.restore();
 }
 
@@ -721,6 +729,19 @@ function drawTextDecoration(
   ctx.stroke();
 }
 
+/**
+ * Apply text transform (uppercase, lowercase, capitalize) to a string.
+ */
+function applyTextTransform(text: string, transform?: 'UPPERCASE' | 'LOWERCASE' | 'CAPITALIZE'): string {
+  if (!transform) return text;
+  switch (transform) {
+    case 'UPPERCASE': return text.toUpperCase();
+    case 'LOWERCASE': return text.toLowerCase();
+    case 'CAPITALIZE': return text.replace(/\b\w/g, c => c.toUpperCase());
+    default: return text;
+  }
+}
+
 function renderText(ctx: SKRSContext2D, node: FigmaNodeDict): void {
   if (!node.textData || !node.derivedTextData) return;
 
@@ -732,16 +753,46 @@ function renderText(ctx: SKRSContext2D, node: FigmaNodeDict): void {
   ctx.font = `${fontWeightToCss(fontWeight)} ${fontSize}px "${fontFamily}"`;
   ctx.textBaseline = 'top';
 
-  // Apply text color from first fill
-  if (node.fillPaints.length > 0 && node.fillPaints[0]!.color) {
-    ctx.fillStyle = rgbaToString(node.fillPaints[0]!.color);
+  // Apply text color from first fill (or gradient)
+  const firstFill = node.fillPaints.length > 0 ? node.fillPaints[0]! : null;
+  if (firstFill?.type === 'GRADIENT_LINEAR' && firstFill.gradientStops) {
+    // Gradient text fill
+    const grad = ctx.createLinearGradient(0, 0, node.size.x, 0);
+    for (const stop of firstFill.gradientStops) {
+      grad.addColorStop(stop.position, rgbaToString(stop.color));
+    }
+    ctx.fillStyle = grad;
+  } else if (firstFill?.color) {
+    ctx.fillStyle = rgbaToString(firstFill.color);
   } else {
     ctx.fillStyle = 'rgba(0, 0, 0, 1)';
   }
 
   ctx.globalAlpha = node.opacity ?? 1;
 
-  const { lines } = node.textData;
+  // Banner Mode: text shadow (applied before fillText)
+  if (node.textShadow) {
+    ctx.shadowColor = node.textShadow.color;
+    ctx.shadowOffsetX = node.textShadow.offsetX;
+    ctx.shadowOffsetY = node.textShadow.offsetY;
+    ctx.shadowBlur = node.textShadow.blur;
+  }
+
+  // Apply text transform
+  const textTransform = node.textTransform;
+  const originalLines = node.textData.lines;
+  const lines: string[] = textTransform
+    ? originalLines.map(l => applyTextTransform(l, textTransform))
+    : originalLines;
+
+  // Banner Mode: text stroke setup
+  const textStroke = node.textStroke;
+  const shouldStroke = textStroke && textStroke.width > 0;
+  if (shouldStroke) {
+    ctx.strokeStyle = textStroke.color;
+    ctx.lineWidth = textStroke.width;
+  }
+
   const baselines = node.derivedTextData.baselines;
   const align = node.textAlignHorizontal ?? 'LEFT';
   const w = node.size.x;
@@ -801,8 +852,17 @@ function renderText(ctx: SKRSContext2D, node: FigmaNodeDict): void {
       }
 
       ctx.fillText(line, xOffset, baseline.lineY);
+      if (shouldStroke) ctx.strokeText(line, xOffset, baseline.lineY);
       drawTextDecoration(ctx, decoration, xOffset, baseline.lineY, measured.width, fontSize);
     }
+  }
+
+  // Clear text shadow if applied
+  if (node.textShadow) {
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
   }
 }
 
