@@ -101,18 +101,11 @@ export interface FigmaNodeDict {
   // Section
   sectionContentsHidden?: boolean;
 
-  // Slot
-  isSlot?: boolean;
-  slotName?: string;
-  preferredInstances?: string[];
-
   // Canvas
   isCanvas?: boolean;
   canvasName?: string;
   canvasScale?: number;
 
-  // Instance slot overrides
-  slotOverrides?: Record<string, FigmaNodeDict[]>;
 }
 
 export type CompilerValidationLevel = 'strict' | 'normal' | 'loose';

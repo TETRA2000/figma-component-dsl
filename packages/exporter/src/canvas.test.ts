@@ -16,15 +16,15 @@ describe('generatePluginInput() — canvas nodes', () => {
     expect(root.canvasName).toBe('Banner');
   });
 
-  it('marks canvas nodes as slots for Figma compatibility', () => {
+  it('does not set slot fields on canvas nodes', () => {
     const node = canvas('Banner', {
       size: { x: 300, y: 200 },
     });
     const compiled = compile(node);
     const input = generatePluginInput(compiled);
     const root = input.components[0]!;
-    expect(root.isSlot).toBe(true);
-    expect(root.slotPropertyName).toBe('Banner');
+    expect((root as Record<string, unknown>).isSlot).toBeUndefined();
+    expect((root as Record<string, unknown>).slotPropertyName).toBeUndefined();
   });
 
   it('preserves canvas children in export', () => {
@@ -54,6 +54,5 @@ describe('generatePluginInput() — canvas nodes', () => {
     const heroNode = cardNode.children[0]!;
     expect(heroNode.isCanvas).toBe(true);
     expect(heroNode.canvasName).toBe('Hero');
-    expect(heroNode.isSlot).toBe(true);
   });
 });

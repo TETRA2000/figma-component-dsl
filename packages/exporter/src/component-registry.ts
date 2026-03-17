@@ -12,7 +12,6 @@ export interface RegistryEntry {
   figmaNodeId?: string;
   structuralHash: string;
   propertyDefinitions?: Record<string, { type: string; defaultValue: string | boolean }>;
-  slotNames?: string[];
 }
 
 export interface RegistryData {
@@ -50,19 +49,12 @@ export class ComponentRegistry {
 
   register(node: PluginNodeDef, figmaNodeId?: string): RegistryEntry {
     const hash = computeStructuralHash(node);
-    const slotNames: string[] = [];
-    for (const child of node.children) {
-      if (child.isSlot && child.slotPropertyName) {
-        slotNames.push(child.slotPropertyName);
-      }
-    }
 
     const entry: RegistryEntry = {
       name: node.name,
       figmaNodeId,
       structuralHash: hash,
       propertyDefinitions: node.componentPropertyDefinitions,
-      slotNames: slotNames.length > 0 ? slotNames : undefined,
     };
 
     this.entries.set(node.name, entry);

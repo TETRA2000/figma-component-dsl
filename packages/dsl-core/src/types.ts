@@ -104,7 +104,7 @@ export interface TextStyle {
 }
 
 // --- Component Properties ---
-export type ComponentPropertyType = 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP' | 'SLOT';
+export type ComponentPropertyType = 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP';
 
 export interface ComponentProperty {
   name: string;
@@ -150,11 +150,6 @@ export interface DslNode {
   // Component Set (COMPONENT_SET only)
   variantAxes?: Record<string, string[]>;
 
-  // Slot (FRAME with slot semantics, inside COMPONENT only)
-  isSlot?: boolean;
-  slotName?: string;
-  preferredInstances?: string[];
-
   // Canvas (FRAME with canvas semantics, renders as image)
   isCanvas?: boolean;
   canvasName?: string;
@@ -163,7 +158,6 @@ export interface DslNode {
   // Instance (INSTANCE only)
   componentRef?: string;
   propertyOverrides?: Record<string, string | boolean>;
-  slotOverrides?: Record<string, DslNode[]>;
 
   // Geometry (POLYGON, STAR)
   pointCount?: number;
@@ -291,17 +285,6 @@ export interface StarProps {
   layoutGrow?: number;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
-}
-
-export interface SlotProps {
-  size?: { x: number; y: number };
-  autoLayout?: AutoLayoutConfig;
-  fills?: Fill[];
-  cornerRadius?: number;
-  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
-  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
-  defaultChildren?: DslNode[];
-  preferredInstances?: string[];
 }
 
 export interface CanvasProps {

@@ -90,7 +90,6 @@ const PROPS_TO_COMPARE: ReadonlyArray<keyof PluginNodeDef> = [
   'paddingBottom', 'paddingLeft', 'primaryAxisAlignItems', 'counterAxisAlignItems',
   'layoutSizingHorizontal', 'layoutSizingVertical', 'characters', 'fontSize',
   'fontFamily', 'fontWeight', 'fontStyle', 'textAlignHorizontal', 'textAutoResize',
-  'isSlot', 'slotPropertyName',
 ];
 
 export function diffNodes(baseline: PluginNodeDef, current: PluginNodeDef): PropertyChange[] {

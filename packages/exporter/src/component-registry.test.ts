@@ -34,19 +34,6 @@ describe('ComponentRegistry', () => {
     expect(entry.structuralHash).toMatch(/^[a-f0-9]{64}$/);
   });
 
-  it('records slot names', () => {
-    const node = mockNode({
-      type: 'COMPONENT', name: 'Card',
-      children: [
-        mockNode({ type: 'FRAME', name: 'Header', isSlot: true, slotPropertyName: 'Header' }),
-        mockNode({ type: 'TEXT', name: 'Body' }),
-        mockNode({ type: 'FRAME', name: 'Footer', isSlot: true, slotPropertyName: 'Footer' }),
-      ],
-    });
-    const entry = registry.register(node);
-    expect(entry.slotNames).toEqual(['Header', 'Footer']);
-  });
-
   it('matches by name and validates structural hash', () => {
     const node = mockNode({
       type: 'COMPONENT', name: 'Card',
