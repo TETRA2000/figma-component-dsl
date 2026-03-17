@@ -1,25 +1,25 @@
-// --- Slot Utilities ---
+// --- Canvas & Component Utilities ---
 // Extracted from plugin code for testability.
-// Handles slot naming, file scanning map building, instance resolution strategy,
+// Handles canvas naming, file scanning map building, instance resolution strategy,
 // and detached copy structure generation.
 
 import type { PluginNodeDef } from '@figma-dsl/core';
 
-// --- Slot Naming Convention ---
+// --- Canvas Naming Convention ---
 
-const SLOT_PREFIX = '[Slot] ';
+const CANVAS_PREFIX = '[Canvas] ';
 
-export function formatSlotName(slotName: string): string {
-  return `${SLOT_PREFIX}${slotName}`;
+export function formatCanvasName(canvasName: string): string {
+  return `${CANVAS_PREFIX}${canvasName}`;
 }
 
-export function isSlotFrameName(name: string): boolean {
-  return name.startsWith(SLOT_PREFIX);
+export function isCanvasFrameName(name: string): boolean {
+  return name.startsWith(CANVAS_PREFIX);
 }
 
-export function extractSlotName(frameName: string): string | undefined {
-  if (!isSlotFrameName(frameName)) return undefined;
-  return frameName.slice(SLOT_PREFIX.length);
+export function extractCanvasName(frameName: string): string | undefined {
+  if (!isCanvasFrameName(frameName)) return undefined;
+  return frameName.slice(CANVAS_PREFIX.length);
 }
 
 // --- File Scanner Map ---
@@ -31,11 +31,9 @@ export interface ComponentEntry {
 
 export function buildComponentMap(entries: readonly ComponentEntry[]): Map<string, ComponentEntry> {
   const map = new Map<string, ComponentEntry>();
-  const duplicates: string[] = [];
 
   for (const entry of entries) {
     if (map.has(entry.name)) {
-      duplicates.push(entry.name);
       continue; // First match wins
     }
     map.set(entry.name, entry);
@@ -104,16 +102,15 @@ export function buildDetachedCopy(
 ): PluginNodeDef {
   const name = formatDetachedCopyName(componentDef.name);
 
-  // Deep copy children, replacing slot frames with override content
+  // Deep copy children, replacing canvas frames with override content
   const children = componentDef.children.map(child => {
-    if (child.isSlot && child.slotPropertyName) {
-      const overrideContent = slotOverrides[child.slotPropertyName];
+    if (child.isCanvas && child.canvasName) {
+      const overrideContent = slotOverrides[child.canvasName];
       if (overrideContent) {
-        // Replace the slot's children with override content
         return {
           ...child,
           children: overrideContent,
-          name: formatSlotName(child.slotPropertyName),
+          name: formatCanvasName(child.canvasName),
         } as PluginNodeDef;
       }
     }
@@ -128,23 +125,4 @@ export function buildDetachedCopy(
     // Store reference for future re-import
     componentId: componentDef.name,
   } as PluginNodeDef;
-}
-
-// --- Slot Plugin Data ---
-
-export interface SlotPluginData {
-  readonly isSlot: true;
-  readonly slotName: string;
-  readonly preferredInstances?: readonly string[];
-}
-
-export function buildSlotPluginData(
-  slotName: string,
-  preferredInstances?: readonly string[],
-): SlotPluginData {
-  return {
-    isSlot: true,
-    slotName,
-    ...(preferredInstances?.length ? { preferredInstances } : {}),
-  };
 }

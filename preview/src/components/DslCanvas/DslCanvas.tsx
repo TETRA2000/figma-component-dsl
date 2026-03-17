@@ -17,8 +17,6 @@ export interface BundledImage {
   width: number;
   /** Pixel height of the image */
   height: number;
-  /** Source classification */
-  sourceType: 'dslCanvas' | 'nativeSlot';
 }
 
 export interface DslCanvasProps {
@@ -26,8 +24,6 @@ export interface DslCanvasProps {
   dsl?: FigmaNodeDict;
   /** Pre-bundled image from export package — takes priority over dsl */
   bundledImage?: BundledImage;
-  /** Slot override content keyed by slot name — compiled node arrays merged into DSL children before rendering */
-  slotOverrides?: Record<string, FigmaNodeDict[]>;
   /** Display width in pixels; height auto-calculated from aspect ratio */
   width?: number;
   /** Render scale factor for high-DPI (default: 1) */
@@ -40,28 +36,9 @@ export interface DslCanvasProps {
   alt?: string;
 }
 
-/**
- * Apply slot overrides by replacing slot placeholder children with override content.
- * Walks the DSL tree and replaces children of nodes whose name matches a slot key.
- */
-function applySlotOverrides(
-  node: FigmaNodeDict,
-  overrides: Record<string, FigmaNodeDict[]>,
-): FigmaNodeDict {
-  const children = (node as { children?: FigmaNodeDict[] }).children;
-  const newChildren = children?.map((child) => {
-    if (child.name && overrides[child.name]) {
-      return { ...child, children: overrides[child.name] };
-    }
-    return applySlotOverrides(child, overrides);
-  });
-  return newChildren ? { ...node, children: newChildren } : node;
-}
-
 export function DslCanvas({
   dsl,
   bundledImage,
-  slotOverrides,
   width,
   scale = 1,
   className,
@@ -86,11 +63,6 @@ export function DslCanvas({
       return;
     }
 
-    // Merge slot overrides into DSL tree if provided
-    const resolvedDsl = slotOverrides && Object.keys(slotOverrides).length > 0
-      ? applySlotOverrides(dsl, slotOverrides)
-      : dsl;
-
     // Cancel previous request
     abortRef.current?.abort();
     const controller = new AbortController();
@@ -102,7 +74,7 @@ export function DslCanvas({
     fetch('/api/dsl-canvas/render', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dsl: resolvedDsl, scale }),
+      body: JSON.stringify({ dsl, scale }),
       signal: controller.signal,
     })
       .then(res => {
@@ -123,10 +95,9 @@ export function DslCanvas({
       });
 
     return () => { controller.abort(); };
-  }, [dsl, bundledImage, slotOverrides, scale]);
+  }, [dsl, bundledImage, scale]);
 
   // When bundledImage is provided, use it directly — no server-side render needed.
-  // This is the only rendering path for nativeSlot images (no DSL representation).
   if (bundledImage) {
     const bundledAspectRatio = bundledImage.width / bundledImage.height;
     const bundledContainerStyle: CSSProperties = {

@@ -1,16 +1,14 @@
 // --- Image Capture ---
-// Captures rendered images of detected slots and DslCanvas regions
+// Captures rendered images of detected DslCanvas regions
 // via Figma's exportAsync API with progress reporting and cancellation.
 
-import type { SlotDetectionResult, SlotSourceType } from './slot-detector.js';
+import type { CanvasRegion } from './canvas-detector.js';
 
 // --- Types ---
 
-export interface CapturedSlotImage {
+export interface CapturedCanvasImage {
   /** Raw PNG bytes from exportAsync */
   pngBytes: Uint8Array;
-  /** Slot source classification */
-  sourceType: SlotSourceType;
   /** Scale factor used for capture */
   scale: number;
   /** Pixel dimensions of captured image */
@@ -22,7 +20,7 @@ export interface CaptureOptions {
   /** Scale factor for PNG export (default: 2) */
   scale?: number;
   /** Progress callback */
-  onProgress?: (current: number, total: number, slotName: string) => void;
+  onProgress?: (current: number, total: number, canvasName: string) => void;
   /** Abort signal for cancellation — checked between captures */
   signal?: { aborted: boolean };
 }
@@ -44,25 +42,25 @@ function clampScale(value: number): number {
 // --- Capture ---
 
 /**
- * Capture images for all detected slots.
- * Returns Map keyed by slotName. Failed captures are omitted with error logged.
+ * Capture images for all detected canvas regions.
+ * Returns Map keyed by canvasName. Failed captures are omitted with error logged.
  */
-export async function captureSlotImages(
-  detectedSlots: SlotDetectionResult[],
+export async function captureCanvasImages(
+  regions: CanvasRegion[],
   options?: CaptureOptions,
-): Promise<Map<string, CapturedSlotImage>> {
+): Promise<Map<string, CapturedCanvasImage>> {
   const scale = clampScale(options?.scale ?? 2);
-  const total = detectedSlots.length;
-  const results = new Map<string, CapturedSlotImage>();
+  const total = regions.length;
+  const results = new Map<string, CapturedCanvasImage>();
 
-  for (let i = 0; i < detectedSlots.length; i++) {
+  for (let i = 0; i < regions.length; i++) {
     // Check abort signal before each capture
     if (options?.signal?.aborted) {
       return results; // Return partial results
     }
 
-    const slot = detectedSlots[i]!;
-    const node = slot.node as unknown as ExportableNode;
+    const region = regions[i]!;
+    const node = region.node as unknown as ExportableNode;
 
     try {
       const pngBytes = await node.exportAsync({
@@ -73,22 +71,21 @@ export async function captureSlotImages(
       const width = Math.round(node.width * scale);
       const height = Math.round(node.height * scale);
 
-      results.set(slot.slotName, {
+      results.set(region.canvasName, {
         pngBytes,
-        sourceType: slot.sourceType,
         scale,
         width,
         height,
       });
 
       // Report progress after successful capture
-      options?.onProgress?.(i + 1, total, slot.slotName);
+      options?.onProgress?.(i + 1, total, region.canvasName);
     } catch (error) {
       console.error(
-        `[ImageCapture] Failed to capture slot "${slot.slotName}":`,
+        `[ImageCapture] Failed to capture canvas "${region.canvasName}":`,
         error instanceof Error ? error.message : error,
       );
-      // Continue with remaining slots
+      // Continue with remaining regions
     }
   }
 

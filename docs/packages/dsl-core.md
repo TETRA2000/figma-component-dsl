@@ -97,7 +97,7 @@ All factories validate inputs, apply defaults (`visible: true`, `opacity: 1`), d
 |----------|------|-----------|
 | `canvas` | FRAME (with `isCanvas: true`) | `canvas(name: string, props?: CanvasProps): DslNode` |
 
-The `canvas()` builder creates a FRAME node marked for image rendering. Canvas nodes are extracted by `renderCanvasNodes()` and rendered as standalone PNGs. Props include all `slot()` layout fields plus an optional `scale` property for high-DPI output. Canvas nodes can be used outside COMPONENT/COMPONENT_SET context.
+The `canvas()` builder creates a FRAME node marked for image rendering. Canvas nodes are extracted by `renderCanvasNodes()` and rendered as standalone PNGs. Props include layout fields plus an optional `scale` property for high-DPI output. Canvas nodes can be used both inside and outside COMPONENT/COMPONENT_SET context.
 
 ### Component Factories
 
