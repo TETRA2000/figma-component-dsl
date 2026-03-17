@@ -19,7 +19,8 @@
 - Animation or interactive effects
 - SVG export format
 - Per-glyph mixed-script font fallback (deferred to phase 2)
-- Runtime font discovery (fonts must be explicitly registered)
+- `BACKGROUND_BLUR` effect (deferred to phase 2 — requires two-pass rendering with ambiguous sibling-order semantics; `DROP_SHADOW` and `LAYER_BLUR` are included)
+- Runtime font discovery (fonts must be explicitly declared via `fonts` export)
 - Backwards compatibility with React screenshot capture workflows
 
 ## Architecture
@@ -39,7 +40,7 @@ graph TB
     subgraph DSL_File[DSL File]
         ModeExport[mode export]
         DefaultExport[default export]
-        FontReg[registerFont calls]
+        FontsExport[fonts export]
     end
 
     subgraph CLI_Layer[CLI Layer]
@@ -97,7 +98,7 @@ graph TB
 
 | Layer | Choice / Version | Role in Feature | Notes |
 |-------|------------------|-----------------|-------|
-| DSL Core | @figma-dsl/core (existing) | Extended DslNode types, registerFont API | New properties: effects, textTransform, textStroke, textShadow |
+| DSL Core | @figma-dsl/core (existing) | Extended DslNode types, FontDeclaration type | New properties: effects, textTransform, textStroke, textShadow |
 | Compiler | @figma-dsl/compiler (existing) | Mode-aware layout resolution | Absolute positioning branch for banner mode |
 | Renderer | @napi-rs/canvas 0.1.96 | Shadow, blur, blendMode, gradient text | Uses native canvas API: shadowBlur, filter, globalCompositeOperation |
 | Font Decompression | @woff2/woff2-rs (new optional dep) | WOFF2 → TTF conversion | Peer dependency; graceful error if absent |
@@ -119,7 +120,7 @@ sequenceDiagram
     Author->>CLI: bin/figma-dsl compile banner.dsl.ts
     CLI->>Loader: dynamic import
     Loader->>Loader: detect mode export
-    Loader->>Loader: collect registerFont calls
+    Loader->>Loader: read fonts export
     Loader-->>CLI: DslNode + mode + fonts
     CLI->>Compiler: compileWithLayout(node, options with mode)
     Compiler->>Compiler: mode=banner? absolute layout branch
@@ -133,7 +134,7 @@ sequenceDiagram
     Exporter-->>CLI: .figma.json output
 ```
 
-Key decisions: Mode is detected once at load time and threaded through the entire pipeline via `CompilerOptions.mode`. Font registration happens before rendering. Effects are applied per-node during the render tree traversal.
+Key decisions: Mode is detected once at load time and threaded through the entire pipeline via `CompilerOptions.mode`. Font declarations are read from the `fonts` export and passed to the renderer before rendering. Effects are applied per-node during the render tree traversal.
 
 ### Absolute Positioning Layout Flow
 
@@ -158,7 +159,7 @@ flowchart TD
 | 2.1–2.5 | Absolute positioning | LayoutResolver | AbsoluteLayoutContext | Absolute Positioning Flow |
 | 3.1–3.5 | Extended typography | TextRenderer, DslNode TextStyle | BannerTextStyle | Pipeline Flow |
 | 4.1–4.4 | Japanese font support | FontManager, DslNode | FontRegistration | Pipeline Flow |
-| 5.1–5.5 | Local font loading | FontManager, registerFont API | FontRegistration | Pipeline Flow |
+| 5.1–5.5 | Local font loading | FontManager, fonts export | FontDeclaration, FontRegistration | Pipeline Flow |
 | 6.1–6.5 | Enhanced visual effects | EffectsHelper, DslNode | EffectDefinition, BlendMode | Pipeline Flow |
 | 7.1–7.5 | Figma export compatibility | EffectsMapper, NodeConverter | PluginNodeDef | Pipeline Flow |
 | 8.1–8.4 | React compatibility exclusion | BannerPreset, CLI commands | ValidatorPreset | Pipeline Flow |
@@ -168,7 +169,7 @@ flowchart TD
 | Component | Domain/Layer | Intent | Req Coverage | Key Dependencies | Contracts |
 |-----------|--------------|--------|--------------|------------------|-----------|
 | DslNode Extensions | dsl-core | Add Banner Mode properties to node types | 1, 2, 3, 5, 6 | None | Service |
-| registerFont API | dsl-core | Expose font registration to DSL authors | 5 | @woff2/woff2-rs (P2) | Service |
+| FontDeclaration Type | dsl-core | Declarative font declaration for DSL authors | 5 | @woff2/woff2-rs (P2) | Service |
 | CompilerOptions Extension | compiler | Thread mode through compilation | 1 | DslNode (P0) | Service |
 | Layout Resolver Extension | compiler | Absolute positioning for banner frames | 2 | CompilerOptions (P0) | Service |
 | Effects Helper | renderer | Shadow, blur, blend mode rendering | 6 | @napi-rs/canvas (P0) | Service |
@@ -212,8 +213,8 @@ interface DslNode {
 // New types
 type EffectDefinition =
   | DropShadowEffect
-  | LayerBlurEffect
-  | BackgroundBlurEffect;
+  | LayerBlurEffect;
+  // BackgroundBlurEffect deferred to phase 2
 
 interface DropShadowEffect {
   type: 'DROP_SHADOW';
@@ -226,11 +227,6 @@ interface DropShadowEffect {
 
 interface LayerBlurEffect {
   type: 'LAYER_BLUR';
-  radius: number;
-}
-
-interface BackgroundBlurEffect {
-  type: 'BACKGROUND_BLUR';
   radius: number;
 }
 
@@ -258,53 +254,55 @@ interface TextStyle {
 - Integration: Add types to `packages/dsl-core/src/types.ts`; update factory functions in `nodes.ts` to accept and pass through new properties
 - Validation: Compiler validates effect values (e.g., blur radius >= 0, shadow color valid RGBA)
 
-#### registerFont API
+#### Font Declaration (Declarative Export)
 
 | Field | Detail |
 |-------|--------|
-| Intent | Allow DSL authors to register custom local fonts for rendering |
+| Intent | Allow DSL authors to declare custom local fonts for rendering |
 | Requirements | 5.1–5.5 |
 
 **Responsibilities & Constraints**
-- Collect font registrations at module load time
-- Store registrations in a module-level registry for later use by compiler and renderer
+- Fonts declared as a named `fonts` export array in `.dsl.ts` files (alongside `mode` and `default` exports)
+- CLI reads the `fonts` export per-file after dynamic import — no module-level side-effects
 - Validate file extension (`.ttf`, `.otf`, `.woff2`)
-- Do NOT perform file I/O at registration time (deferred to compilation)
+- Do NOT perform file I/O at declaration time (deferred to compilation)
+- Batch-safe: each file's `fonts` export is self-contained; no shared mutable state between files
 
 **Contracts**: Service [x]
 
 ##### Service Interface
 
 ```typescript
-// Exported from @figma-dsl/core
-interface FontRegistrationOptions {
+// Exported from @figma-dsl/core — type only
+interface FontDeclaration {
+  path: string;       // relative to --asset-dir or absolute
   family: string;
   weight?: number;    // 100–900, default 400
-  style?: 'normal' | 'italic';
+  style?: 'normal' | 'italic';  // default 'normal'
 }
 
-function registerFont(path: string, options: FontRegistrationOptions): void;
+// DSL authors export a fonts array from their .dsl.ts file:
+//   export const fonts: FontDeclaration[] = [
+//     { path: './fonts/NotoSansJP.woff2', family: 'Noto Sans JP', weight: 400 },
+//   ];
 
-// Internal: collected registrations
+// Internal: resolved registration used by renderer
 interface FontRegistration {
-  path: string;
+  path: string;       // resolved absolute path
   family: string;
   weight: number;
   style: 'normal' | 'italic';
 }
-
-function getRegisteredFonts(): FontRegistration[];
-function clearRegisteredFonts(): void;
 ```
 
-- Preconditions: `path` ends with `.ttf`, `.otf`, or `.woff2`
-- Postconditions: Registration stored in module-level array; retrievable via `getRegisteredFonts()`
-- Invariants: Font file existence is NOT validated at registration time (validated at compilation)
+- Preconditions: Each `path` ends with `.ttf`, `.otf`, or `.woff2`
+- Postconditions: CLI reads `fonts` export after dynamic import and passes to renderer as `FontRegistration[]`
+- Invariants: Font file existence is NOT validated at declaration time (validated at compilation); no module-level side-effects
 
 **Implementation Notes**
-- Integration: Export `registerFont` from `@figma-dsl/core` public API; CLI calls `getRegisteredFonts()` after dynamic import
-- Validation: Extension check at registration time; file existence check deferred to compiler
-- Risks: Side-effect at module load time; order-dependent if multiple DSL files share fonts in batch mode — mitigate by calling `clearRegisteredFonts()` between files
+- Integration: Export `FontDeclaration` type from `@figma-dsl/core` public API; CLI reads `mod.fonts` after dynamic import alongside `mod.mode`
+- Validation: Extension check when CLI reads the array; file existence check deferred to compiler
+- Batch safety: No `clearRegisteredFonts()` needed — each file's `fonts` export is independent, eliminating ordering fragility in batch mode
 
 ### Compiler Layer
 
@@ -388,9 +386,9 @@ interface AbsoluteLayoutContext {
 **Responsibilities & Constraints**
 - Drop shadow: Set `shadowColor`, `shadowBlur`, `shadowOffsetX`, `shadowOffsetY` before drawing node
 - Layer blur: Use `ctx.filter = 'blur(Xpx)'` on off-screen canvas, composite result
-- Background blur: Render background region to off-screen canvas, apply blur, composite back
 - Blend mode: Set `globalCompositeOperation` before drawing node
 - Apply shadow before coordinate transforms to avoid known @napi-rs/canvas translate bug
+- Note: Background blur deferred to phase 2 (requires two-pass rendering with ambiguous sibling-order semantics)
 
 **Contracts**: Service [x]
 
@@ -412,11 +410,7 @@ function applyLayerBlur(
   renderFn: () => void,
   bounds: { x: number; y: number; width: number; height: number }
 ): void;
-function applyBackgroundBlur(
-  ctx: CanvasRenderingContext2D,
-  effect: BackgroundBlurEffect,
-  bounds: { x: number; y: number; width: number; height: number }
-): void;
+// applyBackgroundBlur — deferred to phase 2
 function applyBlendMode(ctx: CanvasRenderingContext2D, blendMode: BlendMode): void;
 function resetBlendMode(ctx: CanvasRenderingContext2D): void;
 ```
@@ -427,7 +421,6 @@ function resetBlendMode(ctx: CanvasRenderingContext2D): void;
 
 **Implementation Notes**
 - Integration: Called from `renderNode()` in renderer.ts before/after node content rendering
-- Risks: Background blur performance on large areas; mitigate with size limits or quality settings
 
 #### Text Renderer Extension
 
@@ -516,7 +509,7 @@ function resolveFontFamily(text: string, requestedFamily?: string): string;
 ```typescript
 // Within exporter — mapping functions
 interface FigmaEffect {
-  type: 'DROP_SHADOW' | 'LAYER_BLUR' | 'BACKGROUND_BLUR';
+  type: 'DROP_SHADOW' | 'LAYER_BLUR';  // BACKGROUND_BLUR deferred to phase 2
   visible: boolean;
   radius?: number;
   color?: { r: number; g: number; b: number; a: number };
@@ -576,7 +569,7 @@ const bannerPreset: PresetConfig = {
 
 **Responsibilities & Constraints**
 - After dynamic import, check for `mod.mode` named export
-- Collect `getRegisteredFonts()` results
+- Read `mod.fonts` declarative export (array of `FontDeclaration`)
 - Pass mode to `compileWithLayout()` and rendering functions
 - Skip `capture` command for Banner Mode files with informational message
 
@@ -601,7 +594,7 @@ All three levels require extension with effects, blend mode, and text enhancemen
 ### Error Categories
 
 **Compilation Errors** (Banner-specific):
-- Missing font file referenced by `registerFont()` → `CompileError` with path and suggestion
+- Missing font file referenced by `fonts` export → `CompileError` with path and suggestion
 - Invalid effect values (negative blur, out-of-range color) → `CompileError` with node path
 - `x`/`y` used in standard mode on non-auto-layout children → warning (not error)
 
@@ -626,7 +619,7 @@ All three levels require extension with effects, blend mode, and text enhancemen
 ### Integration Tests
 - **Full pipeline**: Banner Mode DSL file → compile → render → verify PNG output has effects
 - **Figma export**: Banner Mode file → export → verify `.figma.json` contains effects array
-- **Font loading**: DSL file with `registerFont()` → compile/render with custom font
+- **Font loading**: DSL file with `fonts` export → compile/render with custom font
 - **Mode detection**: CLI correctly detects mode from module export and threads through pipeline
 
 ### Visual Regression Tests
@@ -636,7 +629,6 @@ All three levels require extension with effects, blend mode, and text enhancemen
 
 ## Performance & Scalability
 
-- **Background blur**: Most expensive operation. Off-screen canvas allocation + blur filter + composite. Limit to reasonable area sizes; emit warning for blur on frames > 2000x2000px
 - **Font loading**: WOFF2 decompression adds ~10–50ms per font file. Cache decompressed buffers for batch operations
 - **Canvas pool**: Existing canvas pool mechanism applies to Banner Mode; no changes needed
-- **Batch processing**: `clearRegisteredFonts()` between files prevents font accumulation
+- **Batch processing**: Declarative `fonts` export per file — no shared mutable state between files in batch mode
