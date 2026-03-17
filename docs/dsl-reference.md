@@ -10,20 +10,26 @@
    - [Fill & Stroke Builders](#fill--stroke-builders)
    - [Token System](#token-system)
    - [Component Properties](#component-properties)
-4. [CLI Commands](#cli-commands)
+4. [Banner Mode](#banner-mode)
+   - [Enabling Banner Mode](#enabling-banner-mode)
+   - [Absolute Positioning](#absolute-positioning)
+   - [Visual Effects](#visual-effects)
+   - [Extended Typography](#extended-typography)
+   - [Custom Fonts](#custom-fonts)
+5. [CLI Commands](#cli-commands)
    - [Validator Severity Presets](#validator-severity-presets)
    - [Compiler Validation Levels](#compiler-validation-levels)
-5. [Figma Plugin Export](#figma-plugin-export)
+6. [Figma Plugin Export](#figma-plugin-export)
    - [Single Component Export](#single-component-export)
    - [Page-Level Export (Multiple Sections)](#page-level-export-multiple-sections)
    - [Exported JSON Schema](#exported-json-schema)
-6. [Authoring Patterns](#authoring-patterns)
+7. [Authoring Patterns](#authoring-patterns)
    - [Helper Functions](#helper-functions)
    - [Section Layout Template](#section-layout-template)
    - [Common UI Patterns](#common-ui-patterns)
    - [Dark Theme Color Palette](#dark-theme-color-palette)
-7. [Figma Plugin Constraints](#figma-plugin-constraints)
-8. [Troubleshooting](#troubleshooting)
+8. [Figma Plugin Constraints](#figma-plugin-constraints)
+9. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -594,6 +600,180 @@ export default componentSet('Button', { children });
 
 ---
 
+## Banner Mode
+
+Banner Mode is a rendering mode that prioritizes visual richness over React code compatibility. It enables absolute positioning, visual effects (shadows, blur, blend modes), extended typography (text transform, stroke, shadow), and custom font loading — features excluded from standard mode.
+
+### Enabling Banner Mode
+
+Add a `mode` named export to your `.dsl.ts` file:
+
+```ts
+// Opt into Banner Mode — drops React compatibility
+export const mode = 'banner';
+
+export default frame('Banner', {
+  size: { x: 1200, y: 630 },
+  fills: [solid('#000000')],
+  children: [/* ... */],
+});
+```
+
+When `mode: 'banner'` is exported:
+- The compiler uses Banner Mode rules (absolute positioning, effects passthrough)
+- The validator applies the `banner` preset (all React rules disabled)
+- The renderer enables effects, rotation, and extended typography
+- The exporter includes `"mode": "banner"` and effects in the Figma JSON
+- The `capture` command is skipped (no React component)
+
+Files without a `mode` export use standard mode (backward compatible).
+
+### Absolute Positioning
+
+In Banner Mode, frames without `autoLayout` position children using their `x` and `y` coordinates relative to the frame's top-left corner. Children overlap in source order (later children on top).
+
+```ts
+export const mode = 'banner';
+
+export default frame('Poster', {
+  size: { x: 800, y: 600 },
+  fills: [solid('#1a1a2e')],
+  // No autoLayout → absolute positioning
+  children: [
+    rectangle('Background', { size: { x: 800, y: 600 }, x: 0, y: 0, fills: [solid('#16213e')] }),
+    text('Title', { fontSize: 48, fontWeight: 700, color: '#e94560', x: 100, y: 200 }),
+    rectangle('Accent', {
+      size: { x: 150, y: 150 },
+      x: 600, y: 50,
+      rotation: 30,  // Rotate 30° around center
+      fills: [solid('#7c3aed')],
+    }),
+  ],
+});
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `x` | `number` | X position relative to parent frame (default 0) |
+| `y` | `number` | Y position relative to parent frame (default 0) |
+| `rotation` | `number` | Rotation in degrees around node center |
+
+> **Note:** Using `x`/`y` in standard mode on non-auto-layout children emits a warning.
+
+### Visual Effects
+
+Banner Mode nodes support drop shadows, layer blur, and blend modes.
+
+#### Drop Shadow
+
+```ts
+rectangle('Card', {
+  size: { x: 300, y: 200 },
+  fills: [solid('#ffffff')],
+  cornerRadius: 16,
+  effects: [{
+    type: 'DROP_SHADOW',
+    color: { r: 0, g: 0, b: 0, a: 0.25 },
+    offsetX: 0,
+    offsetY: 4,
+    blur: 12,
+    spread: 0,  // optional, default 0
+  }],
+})
+```
+
+#### Layer Blur
+
+```ts
+rectangle('Frosted', {
+  size: { x: 300, y: 200 },
+  fills: [solid('#ffffff', 0.5)],
+  effects: [{
+    type: 'LAYER_BLUR',
+    radius: 10,
+  }],
+})
+```
+
+> **Note:** `BACKGROUND_BLUR` is deferred to phase 2.
+
+#### Blend Modes
+
+```ts
+rectangle('Overlay', {
+  size: { x: 400, y: 400 },
+  fills: [solid('#ff0000')],
+  blendMode: 'MULTIPLY',
+})
+```
+
+Available blend modes: `'NORMAL'`, `'MULTIPLY'`, `'SCREEN'`, `'OVERLAY'`, `'DARKEN'`, `'LIGHTEN'`, `'COLOR_DODGE'`, `'COLOR_BURN'`, `'HARD_LIGHT'`, `'SOFT_LIGHT'`, `'DIFFERENCE'`, `'EXCLUSION'`.
+
+#### Node Opacity
+
+All nodes support `opacity` (0–1) for semi-transparent layering in both standard and Banner Mode.
+
+> **Warning:** Using Banner Mode-only properties (`effects`, `blendMode`, `rotation`) in standard mode emits a compiler warning. The properties are ignored during rendering.
+
+### Extended Typography
+
+Banner Mode text nodes support additional styling properties:
+
+```ts
+text('SALE', {
+  fontSize: 64,
+  fontWeight: 700,
+  color: '#ffffff',
+  textTransform: 'UPPERCASE',
+  textStroke: { color: '#ff6b35', width: 2 },
+  textShadow: { color: '#00000080', offsetX: 4, offsetY: 4, blur: 8 },
+})
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `textTransform` | `'UPPERCASE' \| 'LOWERCASE' \| 'CAPITALIZE'` | Transform text before rendering |
+| `textStroke` | `{ color: string; width: number }` | Outline stroke around text glyphs |
+| `textShadow` | `{ color: string; offsetX: number; offsetY: number; blur: number }` | Drop shadow behind text |
+
+Gradient fills on text nodes are also supported in Banner Mode — use the existing `fills` property with a gradient type. Text `opacity` controls semi-transparent text layering.
+
+### Custom Fonts
+
+Banner Mode supports loading custom local fonts via a declarative `fonts` export:
+
+```ts
+import type { FontDeclaration } from '@figma-dsl/core';
+
+export const mode = 'banner';
+
+export const fonts: FontDeclaration[] = [
+  { path: './fonts/CustomFont-Bold.ttf', family: 'Custom Font', weight: 700 },
+  { path: './fonts/CustomFont-Regular.otf', family: 'Custom Font', weight: 400 },
+  { path: './fonts/NotoSansJP-Bold.woff2', family: 'Noto Sans JP', weight: 700 },
+];
+
+export default frame('Banner', {
+  size: { x: 800, y: 400 },
+  children: [
+    text('Custom Typography', { fontSize: 48, fontFamily: 'Custom Font', fontWeight: 700 }),
+  ],
+});
+```
+
+| FontDeclaration Field | Type | Default | Description |
+|----------------------|------|---------|-------------|
+| `path` | `string` | *(required)* | Path to font file (relative to `--asset-dir` or absolute) |
+| `family` | `string` | *(required)* | Font family name for reference in `fontFamily` |
+| `weight` | `number` | `400` | Font weight (100–900) |
+| `style` | `'normal' \| 'italic'` | `'normal'` | Font style |
+
+**Supported formats:** `.ttf`, `.otf`, `.woff2` (WOFF2 requires `@woff2/woff2-rs` peer dependency).
+
+**Bundled fonts:** Inter (400–700) for Latin text, Noto Sans JP (400, 700) for Japanese/CJK text. CJK characters are auto-detected and rendered with Noto Sans JP when no explicit `fontFamily` is set.
+
+---
+
 ## CLI Commands
 
 All commands use the `bin/figma-dsl` binary.
@@ -666,6 +846,7 @@ The validator supports three severity presets that control how strictly rules ar
 | `strict` | All rules at original severity (default) |
 | `normal` | Relaxes structural/boilerplate rules (`three-file`, `barrel-export` off; `css-modules`, `no-inline-style` downgraded to warning) |
 | `loose` | Maximum flexibility — most rules off, only `image-refs` as warning |
+| `banner` | All React-specific rules disabled; only `image-refs` as warning. Auto-applied when `mode: 'banner'` is detected |
 
 **Programmatic usage:**
 
@@ -1196,9 +1377,9 @@ These are limitations of the DSL pipeline itself (compiler/renderer), distinct f
 
 | Limitation | Description | Workaround |
 |------------|-------------|------------|
-| No absolute positioning in auto-layout | DSL auto-layout does not support overlapping children like CSS `position: absolute`. | Use invisible spacers (`opacity: 0` rectangles) to push content, or use separate stacked frames. |
+| No absolute positioning in auto-layout (standard mode) | Standard mode auto-layout does not support overlapping children like CSS `position: absolute`. | Use invisible spacers (`opacity: 0` rectangles) to push content, use separate stacked frames, or switch to Banner Mode (`export const mode = 'banner'`) for absolute positioning with `x`/`y` coordinates. |
 | Gradient angle differs from CSS | DSL gradient angles follow Figma convention (0°=L→R, 90°=B→T, 270°=T→B), not CSS convention (180deg=T→B). | See gradient angle convention table in Fill & Stroke Builders section. |
-| No shadow/blur effects | Drop shadows, inner shadows, and blur effects are not supported. | Use layered frames with gradient fills to approximate shadow effects. |
+| No shadow/blur effects (standard mode) | Drop shadows and blur effects are not supported in standard mode. | Switch to Banner Mode for `effects` support (DROP_SHADOW, LAYER_BLUR), or use layered frames with gradient fills to approximate shadows. |
 | No dashed/dotted strokes | Stroke dash patterns are not supported. | Use rectangles as visual separators. |
 | CJK font coverage | CJK text uses Noto Sans JP; other CJK scripts (Chinese, Korean) may render with fallback glyphs. | Stick to Japanese text for best results. |
 
@@ -1216,6 +1397,9 @@ These limitations from earlier versions have been fixed:
 | ~~No canvas reuse~~ | Canvas pooling (`acquireCanvas`/`releaseCanvas`) is now used in batch operations. |
 | ~~No text decoration~~ | `textDecoration: 'UNDERLINE' \| 'STRIKETHROUGH'` is now supported. |
 | ~~No compiler validation~~ | `validateNode()` now checks cornerRadius, RGBA bounds, strokeWeight, fontSize. Supports configurable `validationLevel` (`strict`/`normal`/`loose`) via `CompilerOptions`. |
+| ~~No absolute positioning~~ | Banner Mode enables absolute `x`/`y` positioning and `rotation` for free-form layouts. |
+| ~~No shadow/blur effects~~ | Banner Mode adds `DROP_SHADOW` and `LAYER_BLUR` effects, plus `blendMode` for compositing. |
+| ~~Inter font only (no custom fonts)~~ | Banner Mode supports custom font loading via declarative `fonts` export (`.ttf`, `.otf`, `.woff2`). |
 
 ---
 

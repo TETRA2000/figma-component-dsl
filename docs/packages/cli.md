@@ -165,19 +165,24 @@ Validates components for DSL compatibility. Supports single component or directo
 ## Module Loading & Dynamic Imports
 **Confidence**: 0.97 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-DSL files are dynamically imported at runtime using Node's ES module loader:
+DSL files are dynamically imported at runtime using Node's ES module loader. The loader extracts three exports:
+
+1. **`default`** (required): The root `DslNode`
+2. **`mode`** (optional): `'banner'` to enable Banner Mode pipeline
+3. **`fonts`** (optional): Array of `FontDeclaration` for custom font loading
 
 ```typescript
-async function loadDslModule(dslPath: string): Promise<DslNode> {
-  const absolutePath = resolve(dslPath);
-  const fileUrl = pathToFileURL(absolutePath).href;
-  const mod = await import(fileUrl) as { default?: DslNode };
-  if (!mod.default) {
-    throw new Error(`DSL module must export a default DslNode: ${dslPath}`);
-  }
-  return mod.default;
+async function loadDslModule(dslPath: string): Promise<{ node: DslNode; mode: CompilerMode; fonts: FontRegistration[] }> {
+  const mod = await import(fileUrl);
+  // Detect mode: 'banner' or 'standard'
+  // Read fonts: validate extensions (.ttf, .otf, .woff2), resolve paths
+  // Return { node: mod.default, mode, fonts }
 }
 ```
+
+**Banner Mode detection**: If `mod.mode === 'banner'`, the CLI enables Banner Mode pipeline. If `mod.mode` is present but not `'banner'`, a warning is emitted and standard mode is used.
+
+**Font validation**: Font declaration extensions are validated at load time (`.ttf`, `.otf`, `.woff2`). Unsupported extensions emit a warning and are skipped. Relative font paths are resolved against `--asset-dir`.
 
 **Requirements**:
 - File must be a valid ES module (TypeScript `.dsl.ts` or JavaScript)
@@ -218,10 +223,17 @@ Returns the first existing path. If none exists, returns the first candidate any
 **Confidence**: 0.97 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
 Commands that compile DSL follow this pattern:
-1. Load DSL module via `loadDslModule()`
-2. Compile with `compileWithLayout(dslNode, textMeasurer)` — produces `CompileResult { root, errors }`
-3. Report compilation errors to stderr with `[nodeType] nodePath: message` format
-4. Proceed with compiled output or fail based on error severity
+1. Load DSL module via `loadDslModule()` — extracts node, mode, and font declarations
+2. Initialize font manager with bundled fonts + custom fonts from `fonts` export
+3. Compile with `compileWithLayout(dslNode, textMeasurer, { mode })` — produces `CompileResult { root, errors, mode }`
+4. Report compilation errors to stderr with `[nodeType] nodePath: message` format
+5. Proceed with compiled output or fail based on error severity
+
+**Banner Mode pipeline behavior**:
+- Mode is detected from `mod.mode` export and threaded through compilation, rendering, and export
+- Custom fonts from `mod.fonts` are registered with the font manager before rendering
+- The `pipeline` command skips capture and compare stages for Banner Mode files (no React component), exiting with code 0
+- The `capture` command prints an informational message and exits 0 for Banner Mode files
 
 Compilation errors are non-fatal for the output (errors included in JSON), but logged for developer visibility. The `pipeline` command returns exit code 2 if compilation errors exist.
 

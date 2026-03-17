@@ -71,16 +71,16 @@ External dependencies: `@figma-dsl/core` (DSL AST) and `@napi-rs/canvas` (font r
 #### `compile(node: DslNode): CompileResult`
 Basic compilation without layout resolution. Converts DSL nodes to FigmaNodeDict tree with identity transforms. Useful for serialization without geometric layout.
 
-#### `compileWithLayout(node: DslNode, measurer: TextMeasurer): CompileResult`
-Layout-aware compilation. Calls `resolveLayout()` to compute sizes and offsets, then applies resolved dimensions and 2D affine transforms to all nodes. Required for export-ready geometry.
+#### `compileWithLayout(node: DslNode, measurer: TextMeasurer, options?: CompilerOptions): CompileResult`
+Layout-aware compilation. Calls `resolveLayout()` to compute sizes and offsets, then applies resolved dimensions and 2D affine transforms to all nodes. Required for export-ready geometry. When `options.mode` is `'banner'`, enables absolute positioning and passes through Banner Mode properties (effects, blendMode, rotation, extended text styles).
 
 #### `compileToJson(node: DslNode): string`
 Convenience wrapper — calls `compile()` and returns `JSON.stringify(result, null, 2)`.
 
 ### Layout Resolution
 
-#### `resolveLayout(root: DslNode, measurer: TextMeasurer): LayoutResult`
-Two-pass layout algorithm returning `{ sizes: Map<DslNode, ResolvedSize>, offsets: Map<DslNode, {x, y}> }`.
+#### `resolveLayout(root: DslNode, measurer: TextMeasurer, mode?: CompilerMode): LayoutResult`
+Two-pass layout algorithm returning `{ sizes: Map<DslNode, ResolvedSize>, offsets: Map<DslNode, {x, y}> }`. When `mode` is `'banner'`, frames without `autoLayout` use absolute positioning — children are placed at their declared `x`/`y` coordinates instead of (0, 0).
 
 ### Text Measurement
 
@@ -241,10 +241,15 @@ Computes child offsets into `Map<DslNode, {x, y}>`:
 5. Apply counter-axis alignment (MIN/CENTER/MAX)
 6. Recurse into children
 
+### Banner Mode Absolute Positioning
+
+When `mode` is `'banner'` and a frame has no `autoLayout`, children are positioned using their declared `x`/`y` coordinates relative to the parent frame's top-left corner. Rotation is applied as a transform matrix rotation around each child's center point. Children without explicit `x`/`y` default to (0, 0). Standard-mode behavior remains unchanged.
+
 ### Key Behaviors
 - **Visibility filtering**: `visible: false` children excluded from all layout calculations
 - **SPACE_BETWEEN**: Recalculates spacing as `availableSpace / (childCount - 1)`
 - **CENTER counter-axis**: `offset = (available - childSize) / 2`
+- **Banner Mode warnings**: Using `x`/`y` outside an absolute positioning context emits a warning (not error)
 
 **Evidence**: `src/layout-resolver.ts:47-318`
 
@@ -332,9 +337,22 @@ Root node always has identity (no parent). Translation is additive through the t
 ## Type System & Data Structures
 **Confidence**: 0.95 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
+### CompilerMode
+```typescript
+type CompilerMode = 'standard' | 'banner';
+```
+
+### CompilerOptions
+```typescript
+interface CompilerOptions {
+  validationLevel?: 'strict' | 'normal' | 'loose';
+  mode?: CompilerMode;  // default 'standard'
+}
+```
+
 ### CompileResult
 ```typescript
-{ root: FigmaNodeDict, nodeCount: number, errors: CompileError[] }
+{ root: FigmaNodeDict, nodeCount: number, errors: CompileError[], mode?: CompilerMode }
 ```
 
 ### FigmaNodeDict (key fields)

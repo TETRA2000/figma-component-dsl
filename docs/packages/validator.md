@@ -343,6 +343,31 @@ This dual-level system supports:
 
 ---
 
+## Banner Mode Preset
+**Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
+
+When the detected mode is `'banner'`, the validator applies the `banner` preset which disables all React-specific validation rules:
+
+```typescript
+banner: {
+  'three-file':            'off',
+  'barrel-export':         'off',
+  'css-modules':           'off',
+  'no-inline-style':       'off',
+  'design-tokens':         'off',
+  'token-exists':          'off',
+  'classname-prop':        'off',
+  'variant-union':         'off',
+  'html-attrs':            'off',
+  'dsl-compatible-layout': 'off',
+  'image-refs':            'warning',  // keep image validation
+}
+```
+
+This ensures Banner Mode files (which have no React component counterpart) are not subjected to React-centric validation rules.
+
+---
+
 ## Configuration & Extensibility
 **Confidence**: 0.94 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
@@ -351,6 +376,7 @@ This dual-level system supports:
 - Rule whitelist: `options.rules` — run only specified rules
 - Rule blacklist: `options.skipRules` — exclude specified rules
 - Token path: `options.tokensPath` — override auto-detection
+- Preset: `options.preset` — severity preset (`strict`, `normal`, `loose`, `banner`)
 - CLI flags: `--format`, `--strict` — output control
 
 ### Adding a New Rule
