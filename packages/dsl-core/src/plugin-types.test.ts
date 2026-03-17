@@ -4,7 +4,9 @@ import type {
   PluginInput,
   ComponentIdentity,
   EditLogEntry,
+  SourceSnapshots,
 } from './plugin-types.js';
+import { PLUGIN_DATA_SOURCES } from './plugin-types.js';
 
 describe('PluginNodeDef', () => {
   it('represents a minimal frame node', () => {
@@ -138,5 +140,121 @@ describe('EditLogEntry', () => {
       origin: 'LOCAL',
     };
     expect(entry.changeType).toBe('CREATE');
+  });
+});
+
+describe('SourceSnapshots', () => {
+  it('represents snapshots with all three source files', () => {
+    const snapshots: SourceSnapshots = {
+      react: 'export function Button() { return <button>Click</button>; }',
+      css: '.button { color: red; }',
+      dsl: 'export default component("Button", frame())',
+      paths: {
+        react: 'src/components/Button.tsx',
+        css: 'src/components/Button.module.css',
+        dsl: 'examples/button.dsl.ts',
+      },
+    };
+    expect(snapshots.react).toContain('Button');
+    expect(snapshots.css).toContain('.button');
+    expect(snapshots.dsl).toContain('component');
+    expect(snapshots.paths?.react).toBe('src/components/Button.tsx');
+    expect(snapshots.paths?.css).toBe('src/components/Button.module.css');
+    expect(snapshots.paths?.dsl).toBe('examples/button.dsl.ts');
+  });
+
+  it('allows partial snapshots (not all files present)', () => {
+    const snapshots: SourceSnapshots = {
+      react: 'export function Card() { return <div />; }',
+    };
+    expect(snapshots.react).toBeDefined();
+    expect(snapshots.css).toBeUndefined();
+    expect(snapshots.dsl).toBeUndefined();
+    expect(snapshots.paths).toBeUndefined();
+  });
+
+  it('allows empty snapshots', () => {
+    const snapshots: SourceSnapshots = {};
+    expect(snapshots.react).toBeUndefined();
+    expect(snapshots.css).toBeUndefined();
+    expect(snapshots.dsl).toBeUndefined();
+  });
+});
+
+describe('ComponentIdentity with sources', () => {
+  it('supports optional sources field (backward-compatible)', () => {
+    const identity: ComponentIdentity = {
+      componentName: 'Button',
+      dslSourcePath: 'examples/button.dsl.ts',
+      importTimestamp: '2026-03-14T00:00:00.000Z',
+      originalNodeId: '123:456',
+    };
+    expect(identity.sources).toBeUndefined();
+  });
+
+  it('includes source snapshots when provided', () => {
+    const identity: ComponentIdentity = {
+      componentName: 'Button',
+      dslSourcePath: 'examples/button.dsl.ts',
+      importTimestamp: '2026-03-14T00:00:00.000Z',
+      originalNodeId: '123:456',
+      sources: {
+        react: 'export function Button() {}',
+        css: '.button {}',
+        dsl: 'export default component("Button", frame())',
+      },
+    };
+    expect(identity.sources?.react).toContain('Button');
+    expect(identity.sources?.css).toContain('.button');
+  });
+});
+
+describe('PluginInput with componentSources', () => {
+  it('supports optional componentSources field (backward-compatible)', () => {
+    const input: PluginInput = {
+      schemaVersion: '1.0.0',
+      targetPage: 'Component Library',
+      components: [],
+    };
+    expect(input.componentSources).toBeUndefined();
+  });
+
+  it('includes component sources map when provided', () => {
+    const input: PluginInput = {
+      schemaVersion: '1.0.0',
+      targetPage: 'Component Library',
+      components: [],
+      componentSources: {
+        Button: {
+          react: 'export function Button() {}',
+          css: '.button {}',
+        },
+        Card: {
+          dsl: 'export default component("Card", frame())',
+        },
+      },
+    };
+    expect(input.componentSources?.Button?.react).toContain('Button');
+    expect(input.componentSources?.Card?.dsl).toContain('Card');
+  });
+
+  it('serializes to JSON correctly (Record, not Map)', () => {
+    const input: PluginInput = {
+      schemaVersion: '1.0.0',
+      targetPage: 'Test',
+      components: [],
+      componentSources: {
+        Button: { react: 'code here' },
+      },
+    };
+    const json = JSON.stringify(input);
+    const parsed = JSON.parse(json);
+    expect(parsed.componentSources.Button.react).toBe('code here');
+  });
+});
+
+describe('PLUGIN_DATA_SOURCES', () => {
+  it('exports the plugin data key constant', () => {
+    expect(PLUGIN_DATA_SOURCES).toBe('dsl-sources');
   });
 });

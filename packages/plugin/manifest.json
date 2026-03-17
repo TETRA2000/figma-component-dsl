@@ -3,7 +3,34 @@
   "id": "figma-dsl-import-plugin",
   "api": "1.0.0",
   "main": "dist/code.js",
-  "editorType": ["figma"],
+  "editorType": ["figma", "dev"],
+  "capabilities": ["codegen"],
+  "codegenLanguages": [
+    { "label": "React TSX", "value": "react" },
+    { "label": "CSS Module", "value": "css" },
+    { "label": "DSL Definition", "value": "dsl" },
+    { "label": "HTML Preview", "value": "html" }
+  ],
+  "codegenPreferences": [
+    {
+      "name": "Unit",
+      "itemType": "unit",
+      "includedDimensions": ["width", "height", "font-size", "padding", "margin", "gap", "border-radius"],
+      "units": [
+        { "name": "px", "scaleFactor": 1 },
+        { "name": "rem", "scaleFactor": 16 }
+      ],
+      "default": "px"
+    },
+    {
+      "name": "CSS Class Naming",
+      "itemType": "select",
+      "options": [
+        { "label": "camelCase", "value": "camelCase", "isDefault": true },
+        { "label": "kebab-case", "value": "kebab-case" }
+      ]
+    }
+  ],
   "permissions": ["currentuser"],
   "networkAccess": {
     "allowedDomains": ["http://localhost", "ws://localhost:9800"],

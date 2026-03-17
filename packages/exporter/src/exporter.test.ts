@@ -321,3 +321,37 @@ describe('generatePluginInput() — IMAGE nodes', () => {
   });
 });
 
+// --- Task 3.1: Source snapshots in PluginInput ---
+
+describe('generatePluginInput() — componentSources', () => {
+  it('includes componentSources when sources map is provided', () => {
+    const node = component('Button', { size: { x: 100, y: 40 } });
+    const compiled = compile(node);
+    const sources = {
+      Button: {
+        react: 'export function Button() {}',
+        css: '.button {}',
+        dsl: 'export default component("Button", frame())',
+      },
+    };
+    const input = generatePluginInput(compiled, 'Test', undefined, sources);
+    expect(input.componentSources).toBeDefined();
+    expect(input.componentSources!['Button']!.react).toBe('export function Button() {}');
+  });
+
+  it('omits componentSources when no sources provided', () => {
+    const node = component('Button', { size: { x: 100, y: 40 } });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled, 'Test');
+    expect(input.componentSources).toBeUndefined();
+  });
+
+  it('preserves backward compatibility with existing callers', () => {
+    const node = frame('Box', { size: { x: 100, y: 50 }, fills: [solid('#ff0000')] });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled);
+    expect(input.schemaVersion).toBe('1.0.0');
+    expect(input.components).toHaveLength(1);
+    expect(input.componentSources).toBeUndefined();
+  });
+});

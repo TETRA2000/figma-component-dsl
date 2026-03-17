@@ -91,7 +91,24 @@ export interface PluginInput {
   readonly targetPage: string;
   readonly components: ReadonlyArray<PluginNodeDef>;
   readonly resolveExisting?: boolean;
+  readonly componentSources?: Readonly<Record<string, SourceSnapshots>>;
 }
+
+// --- Source Snapshots ---
+// Stores original source code embedded at export time for Dev Mode codegen.
+
+export interface SourceSnapshots {
+  readonly react?: string;
+  readonly css?: string;
+  readonly dsl?: string;
+  readonly paths?: {
+    readonly react?: string;
+    readonly css?: string;
+    readonly dsl?: string;
+  };
+}
+
+export const PLUGIN_DATA_SOURCES = 'dsl-sources';
 
 // --- Edit Tracker Types ---
 
@@ -100,6 +117,7 @@ export interface ComponentIdentity {
   readonly dslSourcePath: string;
   readonly importTimestamp: string;
   readonly originalNodeId: string;
+  readonly sources?: SourceSnapshots;
 }
 
 export interface EditLogEntry {

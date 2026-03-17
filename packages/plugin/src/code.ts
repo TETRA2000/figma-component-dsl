@@ -9,7 +9,9 @@ import type {
   ChangesetDocument,
   ComponentChangeEntry,
   PropertyChange,
+  SourceSnapshots,
 } from '@figma-dsl/core';
+import { PLUGIN_DATA_SOURCES } from '@figma-dsl/core';
 import { diffNodes } from '@figma-dsl/core';
 import {
   serializeNode as serializeNodeImpl,
@@ -29,6 +31,7 @@ import { captureCanvasImages } from './image-capture.js';
 import { bundleExport } from './export-bundler.js';
 import type { BundledExport } from './export-bundler.js';
 import uiHtml from './ui.html';
+import { registerCodegenHandler } from './codegen.js';
 
 const componentMap = new Map<string, ComponentNode>();
 const fileScannedComponents = new Map<string, ComponentNode>();
@@ -63,6 +66,23 @@ function storeIdentity(node: SceneNode, componentName: string, dslSourcePath: st
     originalNodeId: node.id,
   };
   node.setPluginData(PLUGIN_DATA_IDENTITY, JSON.stringify(identity));
+}
+
+function storeSources(node: SceneNode, sources: SourceSnapshots): void {
+  const json = JSON.stringify(sources);
+  if (json.length > PLUGIN_DATA_SIZE_LIMIT) {
+    // If too large, store only DSL source and log warning
+    const dslOnly: SourceSnapshots = sources.dsl ? { dsl: sources.dsl } : {};
+    const fallbackJson = JSON.stringify(dslOnly);
+    if (fallbackJson.length <= PLUGIN_DATA_SIZE_LIMIT) {
+      errors.push(`Sources for "${node.name}" exceed 100KB limit, storing DSL source only`);
+      node.setPluginData(PLUGIN_DATA_SOURCES, fallbackJson);
+    } else {
+      errors.push(`Sources for "${node.name}" exceed 100KB limit even for DSL-only, skipping`);
+    }
+  } else {
+    node.setPluginData(PLUGIN_DATA_SOURCES, json);
+  }
 }
 
 function findTrackedAncestor(node: BaseNode | null): { node: SceneNode; identity: ComponentIdentity } | null {
@@ -980,6 +1000,9 @@ const GRID_SPACING = 50;
 
 figma.showUI(uiHtml, { width: 500, height: 560 });
 
+// Register codegen handler for Dev Mode
+registerCodegenHandler();
+
 // Helper to send a message via the WebSocket through the UI bridge
 function wsSend(payload: Record<string, unknown>): void {
   figma.ui.postMessage({ type: 'ws-send', payload });
@@ -1075,6 +1098,9 @@ async function handleWsMessage(payload: { type: string; requestId?: string; plug
               nodeIds[compDef.name] = node.id;
               storeBaseline(node, serializeNode(node));
               storeIdentity(node, compDef.name, `${compDef.name}.dsl.ts`);
+              if (input.componentSources?.[compDef.name]) {
+                storeSources(node, input.componentSources[compDef.name]!);
+              }
               trackedNodeIds.add(node.id);
             }
           } catch (err) {
@@ -1370,6 +1396,9 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
           // float precision, and property normalization differences.
           storeBaseline(node, serializeNode(node));
           storeIdentity(node, compDef.name, `${compDef.name}.dsl.ts`);
+          if (input.componentSources?.[compDef.name]) {
+            storeSources(node, input.componentSources[compDef.name]!);
+          }
           trackedNodeIds.add(node.id);
         }
       } catch (err) {
