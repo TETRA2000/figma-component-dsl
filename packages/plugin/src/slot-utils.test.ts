@@ -132,7 +132,7 @@ describe('resolveInstance()', () => {
 
 describe('formatDetachedCopyName()', () => {
   it('formats with detached suffix', () => {
-    expect(formatDetachedCopyName('Card')).toBe('Card (detached — slot override)');
+    expect(formatDetachedCopyName('Card')).toBe('Card (detached — canvas override)');
   });
 });
 
@@ -168,7 +168,7 @@ describe('buildDetachedCopy()', () => {
     });
 
     expect(copy.type).toBe('FRAME');
-    expect(copy.name).toBe('Card (detached — slot override)');
+    expect(copy.name).toBe('Card (detached — canvas override)');
     expect(copy.children).toHaveLength(2);
     // First child unchanged
     expect(copy.children[0]!.name).toBe('Title');

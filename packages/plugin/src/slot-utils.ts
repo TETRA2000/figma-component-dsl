@@ -89,23 +89,23 @@ export function resolveInstance(
 // --- Detached Copy Naming ---
 
 export function formatDetachedCopyName(componentName: string): string {
-  return `${componentName} (detached — slot override)`;
+  return `${componentName} (detached — canvas override)`;
 }
 
 // --- Detached Copy Structure ---
-// When an instance has slot overrides, we create a detached FRAME copy
-// of the component's structure and replace slot children with overrides.
+// When an instance has canvas overrides, we create a detached FRAME copy
+// of the component's structure and replace canvas children with overrides.
 
 export function buildDetachedCopy(
   componentDef: PluginNodeDef,
-  slotOverrides: Record<string, readonly PluginNodeDef[]>,
+  canvasOverrides: Record<string, readonly PluginNodeDef[]>,
 ): PluginNodeDef {
   const name = formatDetachedCopyName(componentDef.name);
 
   // Deep copy children, replacing canvas frames with override content
   const children = componentDef.children.map(child => {
     if (child.isCanvas && child.canvasName) {
-      const overrideContent = slotOverrides[child.canvasName];
+      const overrideContent = canvasOverrides[child.canvasName];
       if (overrideContent) {
         return {
           ...child,
