@@ -21,8 +21,6 @@ interface StructuralDescriptor {
   counterAxisAlignItems?: string;
   layoutSizingHorizontal?: string;
   layoutSizingVertical?: string;
-  isSlot?: boolean;
-  slotPropertyName?: string;
   childHashes: string[];
 }
 
@@ -48,8 +46,6 @@ function buildDescriptor(node: PluginNodeDef): StructuralDescriptor {
     counterAxisAlignItems: node.counterAxisAlignItems,
     layoutSizingHorizontal: node.layoutSizingHorizontal,
     layoutSizingVertical: node.layoutSizingVertical,
-    isSlot: node.isSlot,
-    slotPropertyName: node.slotPropertyName,
     childHashes: node.children.map(child => computeStructuralHash(child)),
   };
 }

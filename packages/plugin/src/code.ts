@@ -23,13 +23,11 @@ import {
 } from './serializer.js';
 import type { SerializableNode } from './serializer.js';
 import {
-  formatSlotName,
-  buildSlotPluginData,
-  formatDetachedCopyName,
+  formatCanvasName,
 } from './slot-utils.js';
-import { detectSlots } from './slot-detector.js';
-import type { SlotDetectableComponent } from './slot-detector.js';
-import { captureSlotImages } from './image-capture.js';
+import { detectCanvasRegions } from './canvas-detector.js';
+import type { CanvasDetectableComponent } from './canvas-detector.js';
+import { captureCanvasImages } from './image-capture.js';
 import { bundleExport } from './export-bundler.js';
 import type { BundledExport } from './export-bundler.js';
 import uiHtml from './ui.html';
@@ -37,7 +35,6 @@ import { registerCodegenHandler } from './codegen.js';
 
 const componentMap = new Map<string, ComponentNode>();
 const fileScannedComponents = new Map<string, ComponentNode>();
-const PLUGIN_DATA_SLOT = 'dsl-slot';
 const PLUGIN_DATA_CANVAS = 'dsl-canvas';
 const errors: string[] = [];
 
@@ -318,26 +315,12 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
       case 'FRAME':
       case 'ROUNDED_RECTANGLE': {
         const frame = figma.createFrame();
-        // Slot frame naming convention: [Slot] {name}
-        if (def.isSlot && def.slotPropertyName) {
-          frame.name = formatSlotName(def.slotPropertyName);
-          // Store slot metadata in plugin data for changeset tracking
-          const slotData = buildSlotPluginData(
-            def.slotPropertyName,
-            def.slotProperties?.[def.slotPropertyName]?.preferredInstances as string[] | undefined,
-          );
-          frame.setPluginData(PLUGIN_DATA_SLOT, JSON.stringify(slotData));
-          // Store canvas metadata if this is a canvas-slot
-          if (def.isCanvas && def.canvasName) {
-            frame.setPluginData(PLUGIN_DATA_CANVAS, JSON.stringify({ isCanvas: true, canvasName: def.canvasName }));
-          }
-          console.log(`[DSL] Slot "${def.slotPropertyName}" created as frame. Manual conversion to slot property may be needed (Figma API lacks SLOT support).`);
+        // Canvas frame naming convention: [Canvas] {name}
+        if (def.isCanvas && def.canvasName) {
+          frame.name = formatCanvasName(def.canvasName);
+          frame.setPluginData(PLUGIN_DATA_CANVAS, JSON.stringify({ isCanvas: true, canvasName: def.canvasName }));
         } else {
           frame.name = def.name;
-          // Standalone canvas frame (not inside a component as slot)
-          if (def.isCanvas && def.canvasName) {
-            frame.setPluginData(PLUGIN_DATA_CANVAS, JSON.stringify({ isCanvas: true, canvasName: def.canvasName }));
-          }
         }
         frame.resize(def.size.x, def.size.y);
         await applyFillsWithImages(frame, def.fills);
@@ -454,17 +437,10 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         comp.visible = def.visible;
         setAutoLayoutConfig(comp, def);
 
-        // Register component properties (non-VARIANT, non-SLOT).
-        // SLOT properties require a child node ID as defaultValue, so they
-        // are deferred until after children are created.
-        const deferredSlotProps: Array<[string, { type: string }]> = [];
+        // Register component properties (non-VARIANT).
         if (def.componentPropertyDefinitions) {
           for (const [propName, propDef] of Object.entries(def.componentPropertyDefinitions)) {
             if (propDef.type === 'VARIANT') continue;
-            if (propDef.type === 'SLOT') {
-              deferredSlotProps.push([propName, propDef]);
-              continue;
-            }
             comp.addComponentProperty(propName, propDef.type as 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', propDef.defaultValue as string);
           }
         }
@@ -473,21 +449,6 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         setLayoutSizing(comp, def);
         for (const child of def.children) {
           await createNode(child, comp);
-        }
-
-        // Now register deferred SLOT properties using created child node IDs
-        for (const [propName] of deferredSlotProps) {
-          // Extract layer name from property key format "LayerName#nodeId"
-          const hashIdx = propName.lastIndexOf('#');
-          const slotLayerName = hashIdx > 0 ? propName.slice(0, hashIdx) : propName;
-          const matchingChild = comp.children.find(c => c.name === slotLayerName);
-          if (matchingChild) {
-            try {
-              comp.addComponentProperty(slotLayerName, 'SLOT' as ComponentPropertyType, matchingChild.id);
-            } catch (e) {
-              errors.push(`Failed to add SLOT property "${slotLayerName}" to "${def.name}": ${e instanceof Error ? e.message : String(e)}`);
-            }
-          }
         }
 
         componentMap.set(def.name, comp);
@@ -545,11 +506,9 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
 
           // Register shared component properties on the set (not on variant children).
           // Uses extracted helpers from serializer.ts for testability.
-          // SLOT properties are skipped — they require child node IDs and belong on individual components.
           const sharedPropDefs = collectSharedPropDefs(def.children);
           if (sharedPropDefs) {
             for (const [propName, propDef] of getRegistrableProperties(sharedPropDefs)) {
-              if (propDef.type === 'SLOT') continue;
               try {
                 set.addComponentProperty(propName, propDef.type as 'TEXT' | 'BOOLEAN' | 'INSTANCE_SWAP', propDef.defaultValue as string);
               } catch (e) {
@@ -565,67 +524,7 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
       }
 
       case 'INSTANCE': {
-        // If instance has slot overrides, create detached FRAME copy instead
-        if (def.slotOverrides && Object.keys(def.slotOverrides).length > 0) {
-          const refComp = componentMap.get(def.componentId ?? def.name);
-          if (refComp) {
-            // Create detached frame copy with slot overrides
-            const detachedFrame = figma.createFrame();
-            detachedFrame.name = formatDetachedCopyName(def.componentId ?? def.name);
-            detachedFrame.resize(refComp.width, refComp.height);
-            // Store original component reference for future re-import
-            detachedFrame.setPluginData('dsl-detached-ref', def.componentId ?? def.name);
-            parent.appendChild(detachedFrame);
-
-            // Copy component's auto-layout config
-            if (refComp.layoutMode && refComp.layoutMode !== 'NONE') {
-              detachedFrame.layoutMode = refComp.layoutMode as 'HORIZONTAL' | 'VERTICAL';
-              detachedFrame.itemSpacing = refComp.itemSpacing;
-              detachedFrame.paddingTop = refComp.paddingTop;
-              detachedFrame.paddingRight = refComp.paddingRight;
-              detachedFrame.paddingBottom = refComp.paddingBottom;
-              detachedFrame.paddingLeft = refComp.paddingLeft;
-            }
-
-            // Recreate children, replacing slot frames with override content
-            for (const child of refComp.children) {
-              const slotPluginData = child.getPluginData(PLUGIN_DATA_SLOT);
-              if (slotPluginData) {
-                try {
-                  const slotData = JSON.parse(slotPluginData);
-                  const overrideContent = def.slotOverrides[slotData.slotName];
-                  if (overrideContent) {
-                    // Create slot frame with override children
-                    const slotFrame = figma.createFrame();
-                    slotFrame.name = formatSlotName(slotData.slotName);
-                    slotFrame.resize(child.width, child.height);
-                    slotFrame.setPluginData(PLUGIN_DATA_SLOT, slotPluginData);
-                    detachedFrame.appendChild(slotFrame);
-                    for (const overrideChild of overrideContent) {
-                      await createNode(overrideChild, slotFrame);
-                    }
-                    continue;
-                  }
-                } catch { /* fall through to clone */ }
-              }
-              // Non-slot child or no override — clone from component
-              const cloned = child.clone();
-              detachedFrame.appendChild(cloned);
-            }
-
-            node = detachedFrame;
-          } else {
-            // Component not found — fall back to frame
-            const fallback = figma.createFrame();
-            fallback.name = `${def.name} (unresolved)`;
-            errors.push(`Component not found for detached instance: ${def.name}`);
-            parent.appendChild(fallback);
-            node = fallback;
-          }
-          break;
-        }
-
-        // Standard instance (no slot overrides)
+        // Standard instance
         const refComp = componentMap.get(def.componentId ?? def.name)
           ?? fileScannedComponents.get(def.componentId ?? def.name);
         if (!refComp) {
@@ -978,23 +877,6 @@ async function computeChangeset(nodeIds: ReadonlyArray<string>): Promise<Changes
         changes.map(c => embedImageDataForChange(c, node)),
       );
 
-      // Enrich slot-related changes with serialized slot content
-      enrichedChanges = enrichedChanges.map(change => {
-        if (change.propertyPath.includes('children')) {
-          // Check if this change is within a slot frame
-          const slotInfo = findSlotContext(node, change.propertyPath);
-          if (slotInfo) {
-            return {
-              ...change,
-              slotName: slotInfo.slotName,
-              slotChangeType: inferSlotChangeType(change),
-              slotContent: slotInfo.currentChildren,
-            };
-          }
-        }
-        return change;
-      });
-
       components.push({
         componentName: identity.componentName,
         componentId: nodeId,
@@ -1045,18 +927,18 @@ class PluginAbortController {
 let exportAbortController: PluginAbortController | null = null;
 
 /**
- * Run slot detection → image capture → export bundling pipeline on exported nodes.
+ * Run canvas detection → image capture → export bundling pipeline on exported nodes.
  * Returns a BundledExport with either JSON+base64 or ZIP.
  */
-async function runImageBundlePipeline(
+async function runCanvasImagePipeline(
   nodeIds: ReadonlyArray<string>,
   exportJson: Record<string, unknown>,
   scale: number = 2,
 ): Promise<BundledExport> {
   exportAbortController = new PluginAbortController();
 
-  // Detect slots in all exported component nodes
-  const allDetected: import('./slot-detector.js').SlotDetectionResult[] = [];
+  // Detect canvas regions in all exported component nodes
+  const allDetected: import('./canvas-detector.js').CanvasRegion[] = [];
   for (const nodeId of nodeIds) {
     const node = figma.getNodeById(nodeId);
     if (!node) continue;
@@ -1068,15 +950,15 @@ async function runImageBundlePipeline(
       if (!componentNode) continue; // Remote component — skip
     }
 
-    // Only detect slots on component-like nodes
+    // Only detect canvas regions on component-like nodes
     if (componentNode.type === 'COMPONENT' || componentNode.type === 'COMPONENT_SET') {
-      const detected = detectSlots(componentNode as unknown as SlotDetectableComponent);
+      const detected = detectCanvasRegions(componentNode as unknown as CanvasDetectableComponent);
       allDetected.push(...detected);
     }
   }
 
   if (allDetected.length === 0) {
-    // No slots found — return plain JSON
+    // No canvas regions found — return plain JSON
     return {
       format: 'json',
       json: JSON.stringify(exportJson),
@@ -1086,13 +968,13 @@ async function runImageBundlePipeline(
   }
 
   // Capture images with progress reporting
-  figma.ui.postMessage({ type: 'export-progress', current: 0, total: allDetected.length, slotName: '' });
+  figma.ui.postMessage({ type: 'export-progress', current: 0, total: allDetected.length, canvasName: '' });
 
-  const captured = await captureSlotImages(allDetected, {
+  const captured = await captureCanvasImages(allDetected, {
     scale,
     signal: exportAbortController.signal,
-    onProgress: (current, total, slotName) => {
-      figma.ui.postMessage({ type: 'export-progress', current, total, slotName });
+    onProgress: (current, total, canvasName) => {
+      figma.ui.postMessage({ type: 'export-progress', current, total, canvasName });
     },
   });
 
@@ -1130,12 +1012,6 @@ function wsSend(payload: Record<string, unknown>): void {
 function categorizeChanges(entries: EditLogEntry[]): string[] {
   const categories = new Set<string>();
   for (const entry of entries) {
-    // Check if changes occurred within a slot frame
-    const isSlotChange = isChangeInSlotFrame(entry.nodeId);
-    if (isSlotChange) {
-      categories.add('slot-structure');
-    }
-
     for (const prop of entry.properties) {
       if (prop.includes('fill') || prop.includes('color')) categories.add('fills');
       else if (prop.includes('font') || prop.includes('text') || prop.includes('character')) categories.add('typography');
@@ -1149,57 +1025,6 @@ function categorizeChanges(entries: EditLogEntry[]): string[] {
     if (entry.changeType === 'DELETE') categories.add('structure');
   }
   return [...categories];
-}
-
-// Find slot context for a change path within a node
-function findSlotContext(
-  rootNode: SceneNode,
-  _propertyPath: string,
-): { slotName: string; currentChildren: PluginNodeDef[] } | undefined {
-  // Walk through children to find a slot frame matching the property path
-  if (!('children' in rootNode)) return undefined;
-  const parent = rootNode as FrameNode;
-  for (const child of parent.children) {
-    const slotData = child.getPluginData(PLUGIN_DATA_SLOT);
-    if (slotData) {
-      try {
-        const parsed = JSON.parse(slotData) as { slotName: string };
-        // Serialize current slot children
-        const serializedChildren: PluginNodeDef[] = [];
-        if ('children' in child) {
-          for (const grandchild of (child as FrameNode).children) {
-            serializedChildren.push(serializeNode(grandchild));
-          }
-        }
-        return {
-          slotName: parsed.slotName,
-          currentChildren: serializedChildren,
-        };
-      } catch { /* skip malformed data */ }
-    }
-  }
-  return undefined;
-}
-
-function inferSlotChangeType(
-  change: PropertyChange,
-): 'child-added' | 'child-removed' | 'child-reordered' {
-  if (change.changeType === 'added') return 'child-added';
-  if (change.changeType === 'removed') return 'child-removed';
-  return 'child-reordered';
-}
-
-// Check if a node or any of its ancestors is a slot frame
-function isChangeInSlotFrame(nodeId: string): boolean {
-  let node = figma.getNodeById(nodeId);
-  while (node) {
-    if ('getPluginData' in node) {
-      const slotData = (node as SceneNode).getPluginData(PLUGIN_DATA_SLOT);
-      if (slotData) return true;
-    }
-    node = node.parent;
-  }
-  return false;
 }
 
 // Handle WebSocket messages relayed from the UI iframe
@@ -1320,7 +1145,7 @@ async function handleWsMessage(payload: { type: string; requestId?: string; plug
         }
 
         const changeset = await computeChangeset(nodeIds);
-        const bundled = await runImageBundlePipeline(nodeIds, changeset as unknown as Record<string, unknown>);
+        const bundled = await runCanvasImagePipeline(nodeIds, changeset as unknown as Record<string, unknown>);
         wsSend({
           type: 'changeset-result',
           requestId: payload.requestId,
@@ -1357,7 +1182,7 @@ async function handleWsMessage(payload: { type: string; requestId?: string; plug
 
         const pageName = payload.pageName ?? figma.currentPage.name;
         const pluginInput = computeCompleteExport(nodeIds, pageName);
-        const bundled = await runImageBundlePipeline(nodeIds, pluginInput as unknown as Record<string, unknown>);
+        const bundled = await runCanvasImagePipeline(nodeIds, pluginInput as unknown as Record<string, unknown>);
         wsSend({
           type: 'export-result',
           requestId: payload.requestId,
@@ -1397,7 +1222,7 @@ function filterTrackedByNames(names: string[]): string[] {
   return result;
 }
 
-figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean; scope?: string; scale?: number; payload?: Record<string, unknown> }) => {
+figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: boolean; scope?: string; scale?: number; canvasExportMode?: 'images' | 'nodes'; payload?: Record<string, unknown> }) => {
   // Handle WebSocket messages relayed from UI
   if (msg.type === 'ws-connected') {
     // Send handshake with file key
@@ -1466,10 +1291,21 @@ figma.ui.onmessage = async (msg: { type: string; data: string; autoExport?: bool
         baseSummary = `Complete export: ${complete.components.length} components`;
       }
 
-      // Run image bundle pipeline (slot detection + image capture + bundling)
-      figma.ui.postMessage({ type: 'progress', text: 'Capturing slot images...' });
-      const exportScale = typeof msg.scale === 'number' ? msg.scale : 2;
-      const bundled = await runImageBundlePipeline(nodeIds, exportJson, exportScale);
+      // Run canvas image pipeline when canvasExportMode is 'images'
+      const canvasExportMode = msg.canvasExportMode ?? 'nodes';
+      let bundled: BundledExport;
+      if (canvasExportMode === 'images') {
+        figma.ui.postMessage({ type: 'progress', text: 'Capturing canvas images...' });
+        const exportScale = typeof msg.scale === 'number' ? msg.scale : 2;
+        bundled = await runCanvasImagePipeline(nodeIds, exportJson, exportScale);
+      } else {
+        bundled = {
+          format: 'json',
+          json: JSON.stringify(exportJson),
+          imageCount: 0,
+          totalImageBytes: 0,
+        };
+      }
 
       const imageSummary = bundled.imageCount > 0
         ? ` | ${bundled.imageCount} images (${bundled.format})`

@@ -1,7 +1,7 @@
 import type {
   DslNode, FrameProps, RectangleProps, EllipseProps,
   ComponentProps, ComponentSetProps, TextStyle, ChildLayoutProps,
-  ImageProps, SlotProps, CanvasProps,
+  ImageProps, CanvasProps,
   LineProps, SectionProps, PolygonProps, StarProps, BooleanOperationProps,
   BooleanOperationType,
 } from './types.js';
@@ -184,28 +184,6 @@ export function image(name: string, props: ImageProps): DslNode {
   };
 }
 
-export function slot(name: string, props?: SlotProps): DslNode {
-  if (!name) {
-    throw new Error('Slot name must be a non-empty string.');
-  }
-  return {
-    type: 'FRAME',
-    name,
-    isSlot: true,
-    slotName: name,
-    visible: true,
-    opacity: 1,
-    size: props?.size,
-    fills: props?.fills ? [...props.fills] : undefined,
-    cornerRadius: props?.cornerRadius,
-    autoLayout: props?.autoLayout,
-    layoutSizingHorizontal: props?.layoutSizingHorizontal,
-    layoutSizingVertical: props?.layoutSizingVertical,
-    children: props?.defaultChildren ? [...props.defaultChildren] : undefined,
-    preferredInstances: props?.preferredInstances ? [...props.preferredInstances] : undefined,
-  };
-}
-
 export function canvas(name: string, props?: CanvasProps): DslNode {
   if (!name) {
     throw new Error('Canvas name must be a non-empty string.');
@@ -231,7 +209,6 @@ export function canvas(name: string, props?: CanvasProps): DslNode {
 export function instance(
   componentRef: string,
   overrides?: Record<string, string | boolean>,
-  slotOverrides?: Record<string, DslNode[]>,
 ): DslNode {
   if (!componentRef) {
     throw new Error('Instance componentRef must be a non-empty string.');
@@ -241,7 +218,6 @@ export function instance(
     name: componentRef,
     componentRef,
     propertyOverrides: overrides,
-    slotOverrides,
     visible: true,
     opacity: 1,
   };

@@ -71,12 +71,6 @@ describe('canvas()', () => {
     expect(node.canvasScale).toBeUndefined();
   });
 
-  it('is distinct from slot nodes (isSlot is not set)', () => {
-    const node = canvas('Banner');
-    expect(node.isSlot).toBeUndefined();
-    expect(node.slotName).toBeUndefined();
-  });
-
   it('regular frame does not have canvas fields', () => {
     const node = frame('Regular', {});
     expect(node.isCanvas).toBeUndefined();

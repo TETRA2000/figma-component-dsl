@@ -5,89 +5,10 @@ import { deduplicateNodes } from './deduplicator.js';
 import { ComponentRegistry } from './component-registry.js';
 import { generateCodeConnect } from './code-connect.js';
 import {
-  component, componentSet, frame, text, rectangle, slot, instance,
+  component, componentSet, frame, text, rectangle, instance,
 } from '@figma-dsl/core';
 import { solid } from '@figma-dsl/core';
 import { vertical, horizontal } from '@figma-dsl/core';
-
-// --- Task 9.1: Full pipeline integration test: DSL with slots through to plugin JSON ---
-
-describe('Integration — slots full pipeline', () => {
-  it('compiles and exports a component with two named slots and default content', () => {
-    const node = component('Card', {
-      size: { x: 300, y: 200 },
-      autoLayout: vertical({ spacing: 8, padX: 16, padY: 12 }),
-      children: [
-        slot('Header', {
-          autoLayout: horizontal({ spacing: 4 }),
-          defaultChildren: [text('Default Title', { fontSize: 18, fontWeight: 700 })],
-        }),
-        text('Body text'),
-        slot('Footer', {
-          autoLayout: horizontal({ spacing: 8, align: 'MAX' }),
-          defaultChildren: [text('Default action')],
-          preferredInstances: ['Button', 'IconButton'],
-        }),
-      ],
-    });
-
-    const compiled = compile(node);
-    expect(compiled.errors).toEqual([]);
-
-    const input = generatePluginInput(compiled);
-    const comp = input.components[0]!;
-
-    // Verify component-level slot metadata
-    expect(comp.slotProperties).toBeDefined();
-    expect(comp.slotProperties!['Header']).toBeDefined();
-    expect(comp.slotProperties!['Header']!.defaultContentNodeIndex).toBe(0);
-    expect(comp.slotProperties!['Footer']).toBeDefined();
-    expect(comp.slotProperties!['Footer']!.defaultContentNodeIndex).toBe(2);
-    expect(comp.slotProperties!['Footer']!.preferredInstances).toEqual(['Button', 'IconButton']);
-
-    // Verify slot child nodes have isSlot and slotPropertyName
-    const headerSlot = comp.children[0]!;
-    expect(headerSlot.isSlot).toBe(true);
-    expect(headerSlot.slotPropertyName).toBe('Header');
-    expect(headerSlot.children).toHaveLength(1);
-    expect(headerSlot.children[0]!.characters).toBe('Default Title');
-
-    const footerSlot = comp.children[2]!;
-    expect(footerSlot.isSlot).toBe(true);
-    expect(footerSlot.slotPropertyName).toBe('Footer');
-
-    // Verify component property definitions include SLOT entries
-    expect(comp.componentPropertyDefinitions).toBeDefined();
-    expect(comp.componentPropertyDefinitions!['Header']?.type).toBe('SLOT');
-    expect(comp.componentPropertyDefinitions!['Footer']?.type).toBe('SLOT');
-  });
-
-  it('compiles instance with slot overrides producing override content', () => {
-    const page = frame('Page', {
-      children: [
-        instance('Card', undefined, {
-          Header: [text('Custom Header', { fontSize: 24, fontWeight: 700 })],
-          Footer: [
-            text('Cancel'),
-            text('Submit'),
-          ],
-        }),
-      ],
-    });
-
-    const compiled = compile(page);
-    expect(compiled.errors).toEqual([]);
-
-    const input = generatePluginInput(compiled);
-    const inst = input.components[0]!.children[0]!;
-
-    // Instance should have slot overrides
-    expect(inst.slotOverrides).toBeDefined();
-    expect(inst.slotOverrides!['Header']).toHaveLength(1);
-    expect(inst.slotOverrides!['Header']![0]!.characters).toBe('Custom Header');
-    expect(inst.slotOverrides!['Footer']).toHaveLength(2);
-  });
-});
 
 // --- Task 9.2: Deduplication integration test ---
 
@@ -212,7 +133,7 @@ describe('Integration — registry with cross-file reuse', () => {
     // Simulate batch: register each component as it's exported
     const button = component('Button', { children: [text('Click')] });
     const card = component('Card', {
-      children: [text('Title'), slot('Content')],
+      children: [text('Title'), text('Content')],
     });
 
     registry.register(generatePluginInput(compile(button)).components[0]!);
@@ -221,46 +142,25 @@ describe('Integration — registry with cross-file reuse', () => {
     expect(registry.size).toBe(2);
     expect(registry.has('Button')).toBe(true);
     expect(registry.has('Card')).toBe(true);
-
-    // Card should have slot registered
-    const cardEntry = registry.get('Card')!;
-    expect(cardEntry.slotNames).toEqual(['Content']);
   });
 });
 
 // --- Task 9.4: Code Connect integration test ---
 
 describe('Integration — Code Connect generation', () => {
-  it('generates Code Connect for component with 2 named slots', () => {
+  it('generates Code Connect with TEXT and BOOLEAN properties', () => {
     const result = generateCodeConnect({
       fileKey: 'abc123',
       componentName: 'Card',
       nodeId: '1:1',
-      slots: [
-        { name: 'Header' },
-        { name: 'Footer' },
+      properties: [
+        { name: 'Title', type: 'TEXT' },
+        { name: 'ShowBadge', type: 'BOOLEAN' },
       ],
-      properties: [],
     });
 
-    expect(result).toContain("figma.slot('Header')");
-    expect(result).toContain("figma.slot('Footer')");
-    // Multiple slots → named props, not children
-    expect(result).toContain('header:');
-    expect(result).toContain('footer:');
-    expect(result).not.toContain('children:');
-  });
-
-  it('maps single-slot component to children prop', () => {
-    const result = generateCodeConnect({
-      fileKey: 'abc123',
-      componentName: 'Container',
-      nodeId: '2:2',
-      slots: [{ name: 'Content' }],
-      properties: [],
-    });
-
-    expect(result).toContain("children: figma.slot('Content')");
+    expect(result).toContain("title: figma.string('Title')");
+    expect(result).toContain("showBadge: figma.boolean('ShowBadge')");
   });
 
   it('includes Figma URL in figma.connect() call', () => {
@@ -268,7 +168,6 @@ describe('Integration — Code Connect generation', () => {
       fileKey: 'myFileKey',
       componentName: 'Button',
       nodeId: '10:20',
-      slots: [],
       properties: [{ name: 'Label', type: 'TEXT' }],
     });
 

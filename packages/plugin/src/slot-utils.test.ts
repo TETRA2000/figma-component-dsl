@@ -1,52 +1,55 @@
 import { describe, it, expect } from 'vitest';
 import {
-  formatSlotName,
-  isSlotFrameName,
-  extractSlotName,
+  formatCanvasName,
+  isCanvasFrameName,
+  extractCanvasName,
   buildComponentMap,
   findDuplicateNames,
   resolveInstance,
   formatDetachedCopyName,
   buildDetachedCopy,
-  buildSlotPluginData,
 } from './slot-utils.js';
 import type { ComponentEntry } from './slot-utils.js';
 import type { PluginNodeDef } from '@figma-dsl/core';
 
-// --- Task 4.3: Slot frame naming convention ---
+// --- Canvas frame naming convention ---
 
-describe('formatSlotName()', () => {
-  it('prefixes with [Slot]', () => {
-    expect(formatSlotName('Content')).toBe('[Slot] Content');
+describe('formatCanvasName()', () => {
+  it('prefixes with [Canvas]', () => {
+    expect(formatCanvasName('Content')).toBe('[Canvas] Content');
   });
 
   it('works with multi-word names', () => {
-    expect(formatSlotName('Action Bar')).toBe('[Slot] Action Bar');
+    expect(formatCanvasName('Action Bar')).toBe('[Canvas] Action Bar');
   });
 });
 
-describe('isSlotFrameName()', () => {
-  it('returns true for slot-named frames', () => {
-    expect(isSlotFrameName('[Slot] Content')).toBe(true);
+describe('isCanvasFrameName()', () => {
+  it('returns true for canvas-named frames', () => {
+    expect(isCanvasFrameName('[Canvas] Content')).toBe(true);
   });
 
   it('returns false for regular frame names', () => {
-    expect(isSlotFrameName('Content')).toBe(false);
-    expect(isSlotFrameName('Slot Content')).toBe(false);
+    expect(isCanvasFrameName('Content')).toBe(false);
+    expect(isCanvasFrameName('Canvas Content')).toBe(false);
+  });
+
+  it('returns false for old slot-named frames', () => {
+    expect(isCanvasFrameName('[Slot] Content')).toBe(false);
   });
 });
 
-describe('extractSlotName()', () => {
-  it('extracts slot name from frame name', () => {
-    expect(extractSlotName('[Slot] Content')).toBe('Content');
+describe('extractCanvasName()', () => {
+  it('extracts canvas name from frame name', () => {
+    expect(extractCanvasName('[Canvas] Content')).toBe('Content');
   });
 
-  it('returns undefined for non-slot names', () => {
-    expect(extractSlotName('Regular Frame')).toBeUndefined();
+  it('returns undefined for non-canvas names', () => {
+    expect(extractCanvasName('Regular Frame')).toBeUndefined();
   });
 });
 
-// --- Task 4.1: File scanner map building ---
+// --- File scanner map building ---
 
 describe('buildComponentMap()', () => {
   it('builds map from entries', () => {
@@ -95,7 +98,7 @@ describe('findDuplicateNames()', () => {
   });
 });
 
-// --- Task 4.2: Instance resolution ---
+// --- Instance resolution ---
 
 describe('resolveInstance()', () => {
   const localMap = new Map([
@@ -125,7 +128,7 @@ describe('resolveInstance()', () => {
   });
 });
 
-// --- Task 4.4: Detached copy ---
+// --- Detached copy ---
 
 describe('formatDetachedCopyName()', () => {
   it('formats with detached suffix', () => {
@@ -153,8 +156,8 @@ describe('buildDetachedCopy()', () => {
         mockPluginNodeDef({
           type: 'FRAME',
           name: 'Content',
-          isSlot: true,
-          slotPropertyName: 'Content',
+          isCanvas: true,
+          canvasName: 'Content',
           children: [mockPluginNodeDef({ type: 'TEXT', name: 'Default' })],
         }),
       ],
@@ -169,13 +172,13 @@ describe('buildDetachedCopy()', () => {
     expect(copy.children).toHaveLength(2);
     // First child unchanged
     expect(copy.children[0]!.name).toBe('Title');
-    // Slot child has override content
-    expect(copy.children[1]!.name).toBe('[Slot] Content');
+    // Canvas child has override content
+    expect(copy.children[1]!.name).toBe('[Canvas] Content');
     expect(copy.children[1]!.children).toHaveLength(1);
     expect(copy.children[1]!.children[0]!.name).toBe('Custom');
   });
 
-  it('preserves original children when no override for slot', () => {
+  it('preserves original children when no override for canvas', () => {
     const compDef = mockPluginNodeDef({
       type: 'COMPONENT',
       name: 'Card',
@@ -183,8 +186,8 @@ describe('buildDetachedCopy()', () => {
         mockPluginNodeDef({
           type: 'FRAME',
           name: 'Header',
-          isSlot: true,
-          slotPropertyName: 'Header',
+          isCanvas: true,
+          canvasName: 'Header',
           children: [mockPluginNodeDef({ type: 'TEXT', name: 'Default Header' })],
         }),
       ],
@@ -199,24 +202,5 @@ describe('buildDetachedCopy()', () => {
     const compDef = mockPluginNodeDef({ type: 'COMPONENT', name: 'Card' });
     const copy = buildDetachedCopy(compDef, {});
     expect(copy.componentId).toBe('Card');
-  });
-});
-
-// --- Slot Plugin Data ---
-
-describe('buildSlotPluginData()', () => {
-  it('builds slot plugin data', () => {
-    const data = buildSlotPluginData('Content');
-    expect(data).toEqual({ isSlot: true, slotName: 'Content' });
-  });
-
-  it('includes preferredInstances when provided', () => {
-    const data = buildSlotPluginData('Actions', ['Button', 'IconButton']);
-    expect(data.preferredInstances).toEqual(['Button', 'IconButton']);
-  });
-
-  it('omits preferredInstances when empty', () => {
-    const data = buildSlotPluginData('Content', []);
-    expect(data.preferredInstances).toBeUndefined();
   });
 });

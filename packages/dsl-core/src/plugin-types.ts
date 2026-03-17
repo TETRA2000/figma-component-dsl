@@ -65,22 +65,13 @@ export interface PluginNodeDef {
   readonly imageDimensions?: { width: number; height: number };
   readonly imageError?: string;
 
-  // Slot
-  readonly isSlot?: boolean;
-  readonly slotPropertyName?: string;
-
   // Canvas
   readonly isCanvas?: boolean;
   readonly canvasName?: string;
-  readonly slotProperties?: Record<string, {
-    readonly defaultContentNodeIndex?: number;
-    readonly preferredInstances?: ReadonlyArray<string>;
-  }>;
 
   // Instance
   readonly componentId?: string;
   readonly overriddenProperties?: Record<string, string | boolean>;
-  readonly slotOverrides?: Record<string, ReadonlyArray<PluginNodeDef>>;
 
   // Shape-specific (LINE, POLYGON, STAR)
   readonly pointCount?: number;

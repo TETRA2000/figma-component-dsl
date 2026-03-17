@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { compile } from './compiler.js';
-import { canvas, text, frame, component, slot } from '@figma-dsl/core';
-import type { DslNode } from '@figma-dsl/core';
+import { canvas, text, frame, component } from '@figma-dsl/core';
 
 describe('compile() — canvas nodes', () => {
   it('preserves isCanvas and canvasName on compiled output', () => {
@@ -72,43 +71,4 @@ describe('compile() — canvas nodes', () => {
     expect(result.root.children[0]!.isCanvas).toBe(true);
   });
 
-  it('canvas with nested slots compiles slots according to slot rules', () => {
-    const node = component('Card', {
-      size: { x: 300, y: 400 },
-      children: [
-        canvas('Content', {
-          size: { x: 300, y: 200 },
-          children: [
-            slot('Actions', { size: { x: 100, y: 40 } }),
-          ],
-        }),
-      ],
-    });
-    const result = compile(node);
-    expect(result.errors).toHaveLength(0);
-    const canvasNode = result.root.children[0]!;
-    expect(canvasNode.isCanvas).toBe(true);
-    expect(canvasNode.children[0]!.isSlot).toBe(true);
-  });
-
-  it('emits error when node has both isSlot and isCanvas', () => {
-    // Manually construct a node with both flags
-    const badNode: DslNode = {
-      type: 'FRAME',
-      name: 'Bad',
-      isSlot: true,
-      slotName: 'Bad',
-      isCanvas: true,
-      canvasName: 'Bad',
-    };
-    const wrapper = component('Wrapper', {
-      size: { x: 100, y: 100 },
-      children: [badNode],
-    });
-    const result = compile(wrapper);
-    const canvasSlotErrors = result.errors.filter(e =>
-      e.message.includes('cannot be both a slot and a canvas')
-    );
-    expect(canvasSlotErrors).toHaveLength(1);
-  });
 });

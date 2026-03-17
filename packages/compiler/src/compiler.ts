@@ -257,31 +257,6 @@ function compileNode(
       : undefined,
   };
 
-  // Mutual exclusivity: canvas and slot
-  if (node.isSlot && node.isCanvas) {
-    errors.push({
-      message: `Node "${node.name}" cannot be both a slot and a canvas. Found at "${path}".`,
-      nodePath: path,
-      nodeType: node.type,
-    });
-  }
-
-  // Slot validation and passthrough
-  if (node.isSlot) {
-    if (!insideComponent) {
-      errors.push({
-        message: `A slot node "${node.name}" must be a descendant of a COMPONENT or COMPONENT_SET. Found at "${path}".`,
-        nodePath: path,
-        nodeType: node.type,
-      });
-    }
-    result.isSlot = true;
-    result.slotName = node.slotName ?? node.name;
-    if (node.preferredInstances?.length) {
-      result.preferredInstances = [...node.preferredInstances];
-    }
-  }
-
   // Canvas passthrough (no component context restriction)
   if (node.isCanvas) {
     result.isCanvas = true;
@@ -391,7 +366,7 @@ function compileNode(
 
   // Component property definitions
   if (node.type === 'COMPONENT' && node.componentProperties) {
-    const validTypes = new Set(['TEXT', 'BOOLEAN', 'INSTANCE_SWAP', 'SLOT']);
+    const validTypes = new Set(['TEXT', 'BOOLEAN', 'INSTANCE_SWAP']);
     const defs: Record<string, { type: string; defaultValue: string | boolean }> = {};
     for (const prop of node.componentProperties) {
       if (!validTypes.has(prop.type)) {
@@ -412,39 +387,11 @@ function compileNode(
     }
   }
 
-  // Inject SLOT property definitions from slot children
-  if (node.type === 'COMPONENT' && node.children) {
-    const slotChildren = node.children.filter(c => c.isSlot);
-    if (slotChildren.length > 0) {
-      if (!result.componentPropertyDefinitions) {
-        result.componentPropertyDefinitions = {};
-      }
-      for (const sc of slotChildren) {
-        const slotName = sc.slotName ?? sc.name;
-        result.componentPropertyDefinitions[slotName] = {
-          type: 'SLOT',
-          defaultValue: '',
-        };
-      }
-    }
-  }
-
   // Instance compilation
   if (node.type === 'INSTANCE' && node.componentRef) {
     result.componentId = node.componentRef;
     if (node.propertyOverrides) {
       result.overriddenProperties = { ...node.propertyOverrides };
-    }
-    // Compile slot overrides
-    if (node.slotOverrides) {
-      const compiledOverrides: Record<string, FigmaNodeDict[]> = {};
-      for (const slotName of Object.keys(node.slotOverrides)) {
-        const overrideNodes = node.slotOverrides[slotName]!;
-        compiledOverrides[slotName] = overrideNodes.map((child: DslNode, idx: number) =>
-          compileNode(child, guid, idx, `${path} > [slot:${slotName}] > ${child.name}`, errors, false)
-        );
-      }
-      result.slotOverrides = compiledOverrides;
     }
   }
 

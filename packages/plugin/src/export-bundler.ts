@@ -1,20 +1,17 @@
 // --- Export Bundler ---
-// Bundles export JSON and captured images into base64-inline JSON or ZIP archive
+// Bundles export JSON and captured canvas images into base64-inline JSON or ZIP archive
 // based on total payload size.
 
 import { zipSync } from 'fflate';
-import type { CapturedSlotImage } from './image-capture.js';
-import type { SlotSourceType } from './slot-detector.js';
+import type { CapturedCanvasImage } from './image-capture.js';
 
 // --- Types ---
 
 export type ExportFormat = 'json' | 'zip';
 
-export interface SlotImageEntry {
+export interface CanvasImageEntry {
   /** Base64 data URI (json mode) or relative file path (zip mode) */
   data: string;
-  /** Source classification */
-  sourceType: SlotSourceType;
   /** Scale factor */
   scale: number;
   /** Pixel dimensions */
@@ -22,13 +19,13 @@ export interface SlotImageEntry {
   height: number;
 }
 
-/** Map of slot/canvas names to their image entries */
-export type SlotImageMap = Record<string, SlotImageEntry>;
+/** Map of canvas names to their image entries */
+export type CanvasImageMap = Record<string, CanvasImageEntry>;
 
 export interface BundledExport {
   /** Output format */
   format: ExportFormat;
-  /** For json format: complete JSON string with embedded slotImages */
+  /** For json format: complete JSON string with embedded canvasImages */
   json?: string;
   /** For zip format: ZIP archive bytes */
   zipBytes?: Uint8Array;
@@ -61,13 +58,13 @@ function uint8ArrayToBase64(bytes: Uint8Array): string {
 // --- Bundler ---
 
 /**
- * Bundle export JSON with captured slot images.
+ * Bundle export JSON with captured canvas images.
  * Below threshold: embeds images as base64 data URIs.
  * Above threshold: packages as ZIP archive.
  */
 export function bundleExport(
   exportJson: Record<string, unknown>,
-  capturedImages: Map<string, CapturedSlotImage>,
+  capturedImages: Map<string, CapturedCanvasImage>,
   options?: BundleOptions,
 ): BundledExport {
   const threshold = options?.sizeThreshold ?? 1_048_576;
@@ -115,23 +112,22 @@ export function bundleExport(
 
 function bundleAsBase64(
   exportJson: Record<string, unknown>,
-  capturedImages: Map<string, CapturedSlotImage>,
+  capturedImages: Map<string, CapturedCanvasImage>,
   totalImageBytes: number,
 ): BundledExport {
-  const slotImages: SlotImageMap = {};
+  const canvasImages: CanvasImageMap = {};
 
   for (const [name, img] of capturedImages) {
     const base64 = uint8ArrayToBase64(img.pngBytes);
-    slotImages[name] = {
+    canvasImages[name] = {
       data: `data:image/png;base64,${base64}`,
-      sourceType: img.sourceType,
       scale: img.scale,
       width: img.width,
       height: img.height,
     };
   }
 
-  const enrichedJson = { ...exportJson, slotImages };
+  const enrichedJson = { ...exportJson, canvasImages };
 
   return {
     format: 'json',
@@ -143,18 +139,17 @@ function bundleAsBase64(
 
 function bundleAsZip(
   exportJson: Record<string, unknown>,
-  capturedImages: Map<string, CapturedSlotImage>,
+  capturedImages: Map<string, CapturedCanvasImage>,
   totalImageBytes: number,
 ): BundledExport {
-  // Build slotImages map with file paths instead of data URIs
-  const slotImages: SlotImageMap = {};
+  // Build canvasImages map with file paths instead of data URIs
+  const canvasImages: CanvasImageMap = {};
   const zipEntries: Record<string, Uint8Array> = {};
 
   for (const [name, img] of capturedImages) {
     const filePath = `images/${name}.png`;
-    slotImages[name] = {
+    canvasImages[name] = {
       data: filePath,
-      sourceType: img.sourceType,
       scale: img.scale,
       width: img.width,
       height: img.height,
@@ -162,7 +157,7 @@ function bundleAsZip(
     zipEntries[filePath] = img.pngBytes;
   }
 
-  const enrichedJson = { ...exportJson, slotImages };
+  const enrichedJson = { ...exportJson, canvasImages };
   const jsonBytes = new TextEncoder().encode(JSON.stringify(enrichedJson));
   zipEntries['export.json'] = jsonBytes;
 

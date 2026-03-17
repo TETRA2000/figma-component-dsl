@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { generatePluginInput, exportToFile } from './exporter.js';
 import { compile } from '@figma-dsl/compiler';
-import { frame, text, component, componentSet, instance, image, line, section, polygon, star, subtract, rectangle, ellipse, slot } from '@figma-dsl/core';
+import { frame, text, component, componentSet, instance, image, line, section, polygon, star, subtract, rectangle, ellipse } from '@figma-dsl/core';
 import { solid, imageFill } from '@figma-dsl/core';
 import { horizontal } from '@figma-dsl/core';
 import { join, dirname } from 'path';
@@ -318,74 +318,6 @@ describe('generatePluginInput() — IMAGE nodes', () => {
     const input = generatePluginInput(compiled, 'Test', { assetDir: testAssetDir });
     const imgNode = input.components[0]!.children[0]!;
     expect(imgNode.imageScaleMode).toBe('FIT');
-  });
-});
-
-// --- Task 3.1: Slot metadata encoding ---
-
-describe('generatePluginInput() — slot metadata', () => {
-  it('encodes isSlot and slotPropertyName on slot nodes', () => {
-    const node = component('Card', {
-      children: [slot('Content')],
-    });
-    const compiled = compile(node);
-    const input = generatePluginInput(compiled);
-    const slotNode = input.components[0]!.children[0]!;
-    expect(slotNode.isSlot).toBe(true);
-    expect(slotNode.slotPropertyName).toBe('Content');
-  });
-
-  it('produces slotProperties map on COMPONENT nodes', () => {
-    const node = component('Card', {
-      children: [
-        slot('Header', { defaultChildren: [text('Default Header')] }),
-        text('Body text'),
-        slot('Footer'),
-      ],
-    });
-    const compiled = compile(node);
-    const input = generatePluginInput(compiled);
-    const comp = input.components[0]!;
-    expect(comp.slotProperties).toBeDefined();
-    expect(comp.slotProperties!['Header']).toBeDefined();
-    expect(comp.slotProperties!['Header']!.defaultContentNodeIndex).toBe(0);
-    expect(comp.slotProperties!['Footer']).toBeDefined();
-    expect(comp.slotProperties!['Footer']!.defaultContentNodeIndex).toBe(2);
-  });
-
-  it('includes preferredInstances in slotProperties', () => {
-    const node = component('Card', {
-      children: [slot('Actions', { preferredInstances: ['Button', 'IconButton'] })],
-    });
-    const compiled = compile(node);
-    const input = generatePluginInput(compiled);
-    const comp = input.components[0]!;
-    expect(comp.slotProperties!['Actions']!.preferredInstances).toEqual(['Button', 'IconButton']);
-  });
-
-  it('encodes instance slotOverrides as nested PluginNodeDef arrays', () => {
-    const node = frame('Page', {
-      children: [
-        instance('Card', undefined, {
-          Content: [text('Custom')],
-        }),
-      ],
-    });
-    const compiled = compile(node);
-    const input = generatePluginInput(compiled);
-    const inst = input.components[0]!.children[0]!;
-    expect(inst.slotOverrides).toBeDefined();
-    expect(inst.slotOverrides!['Content']).toHaveLength(1);
-    expect(inst.slotOverrides!['Content']![0]!.characters).toBe('Custom');
-  });
-
-  it('does not set slotProperties on non-component nodes', () => {
-    const node = frame('Page', {
-      children: [text('Hello')],
-    });
-    const compiled = compile(node);
-    const input = generatePluginInput(compiled);
-    expect(input.components[0]!.slotProperties).toBeUndefined();
   });
 });
 
