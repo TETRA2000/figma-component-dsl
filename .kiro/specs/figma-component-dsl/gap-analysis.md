@@ -6,7 +6,7 @@
 - **Status**: Implementation is substantially complete with 152 tests passing across 11 test files
 - **Key Gap**: Image asset rendering (Req 6.3) is declared but not functionally implemented — `loadImage` is absent from the renderer
 - **Steering Drift**: `tech.md` still references Python/PyCairo as the rendering stack; implementation correctly uses TypeScript/@napi-rs/canvas per the approved design
-- **Remaining Work**: Optional task 11.5 (visual regression against React screenshots) is deferred; requires running reference React app
+- **Completed**: Task 11.5 — visual regression tests with committed baselines (18 test pages, React + DSL baseline comparison, CI integration)
 
 ---
 
@@ -115,11 +115,14 @@ No test file exists for the capturer package. Playwright/Chromium-based testing 
 
 **Resolution**: Update `tech.md` to reflect the single-language TypeScript stack.
 
-### Gap 8: Optional Task 11.5 — Visual Regression Not Executed
+### ~~Gap 8: Optional Task 11.5 — Visual Regression Not Executed~~ **RESOLVED**
 
-The deferred optional task requires the reference React app (`figma_design_playground`) to be running. No baseline similarity scores have been established.
-
-**Impact**: Low — this validates cross-pipeline fidelity (DSL render vs React screenshot). All individual pipeline stages are tested.
+Visual regression tests are now implemented in `packages/react-to-dsl/src/__tests__/`:
+- `visual-regression-react.test.ts` — Playwright screenshots vs committed baselines (18 pages)
+- `visual-regression-dsl.test.ts` — Full React→DSL pipeline renders vs committed baselines (18 pages)
+- Baselines committed to `baselines/react/` and `baselines/dsl/`
+- CI: Dedicated `visual-regression` job in `.github/workflows/test.yml`
+- Thresholds: React 99.0%, DSL 99.5%
 
 ---
 
@@ -155,6 +158,6 @@ The implementation created 8 new packages from scratch, following the design doc
 
 6. **Steering update** (Gap 7): Update `tech.md` to reflect TypeScript/@napi-rs/canvas stack. Quick fix.
 
-7. **Visual regression** (Gap 8): Execute task 11.5 when the reference React app is available.
+7. ~~**Visual regression** (Gap 8)~~: Resolved — visual regression tests with committed baselines implemented.
 
 8. **No blocking gaps**: All 10 requirements are functionally covered. Gaps are rendering fidelity refinements and test coverage improvements.
