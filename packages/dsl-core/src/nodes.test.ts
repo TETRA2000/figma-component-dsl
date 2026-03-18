@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { frame, text, rectangle, ellipse, group, line, section, polygon, star, union, subtract, intersect, exclude } from './nodes.js';
+import { frame, text, rectangle, ellipse, group, line, section, polygon, star, union, subtract, intersect, exclude, svg } from './nodes.js';
 import type { DslNode, EffectDefinition, BlendMode, FontDeclaration } from './types.js';
 import { solid } from './colors.js';
 
@@ -473,5 +473,88 @@ describe('Banner Mode: FontDeclaration type', () => {
     };
     expect(decl.weight).toBeUndefined();
     expect(decl.style).toBeUndefined();
+  });
+});
+
+describe('svg()', () => {
+  const sampleSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"/></svg>';
+
+  it('creates an SVG node with inline svgContent', () => {
+    const node = svg('Icon', { svgContent: sampleSvg, size: { x: 100, y: 100 } });
+    expect(node.type).toBe('SVG');
+    expect(node.name).toBe('Icon');
+    expect(node.svgContent).toBe(sampleSvg);
+    expect(node.svgSrc).toBeUndefined();
+    expect(node.size).toEqual({ x: 100, y: 100 });
+  });
+
+  it('creates an SVG node with src file reference', () => {
+    const node = svg('Logo', { src: './assets/logo.svg', size: { x: 200, y: 50 } });
+    expect(node.type).toBe('SVG');
+    expect(node.svgSrc).toBe('./assets/logo.svg');
+    expect(node.svgContent).toBeUndefined();
+  });
+
+  it('accepts both svgContent and src (svgContent takes precedence at runtime)', () => {
+    const node = svg('Both', { svgContent: sampleSvg, src: './fallback.svg', size: { x: 100, y: 100 } });
+    expect(node.svgContent).toBe(sampleSvg);
+    expect(node.svgSrc).toBe('./fallback.svg');
+  });
+
+  it('throws when neither svgContent nor src is provided', () => {
+    expect(() => svg('Empty', { size: { x: 100, y: 100 } })).toThrow('SVG node must have svgContent or src.');
+  });
+
+  it('throws on empty name', () => {
+    expect(() => svg('', { svgContent: sampleSvg, size: { x: 100, y: 100 } })).toThrow('Node name must be a non-empty string.');
+  });
+
+  it('sets default fit mode to FIT', () => {
+    const node = svg('Icon', { svgContent: sampleSvg, size: { x: 100, y: 100 } });
+    expect(node.svgScaleMode).toBe('FIT');
+  });
+
+  it('respects custom fit mode', () => {
+    const node = svg('Icon', { svgContent: sampleSvg, size: { x: 100, y: 100 }, fit: 'FILL' });
+    expect(node.svgScaleMode).toBe('FILL');
+  });
+
+  it('sets default opacity and visibility', () => {
+    const node = svg('Icon', { svgContent: sampleSvg, size: { x: 100, y: 100 } });
+    expect(node.opacity).toBe(1);
+    expect(node.visible).toBe(true);
+  });
+
+  it('passes through visual properties', () => {
+    const effects: EffectDefinition[] = [{ type: 'DROP_SHADOW', color: { r: 0, g: 0, b: 0, a: 0.5 }, offsetX: 2, offsetY: 2, blur: 4 }];
+    const node = svg('Styled', {
+      svgContent: sampleSvg,
+      size: { x: 100, y: 100 },
+      cornerRadius: 8,
+      clipContent: true,
+      opacity: 0.8,
+      visible: false,
+      rotation: 45,
+      effects,
+      blendMode: 'MULTIPLY' as BlendMode,
+      layoutSizingHorizontal: 'FILL',
+      layoutSizingVertical: 'HUG',
+    });
+    expect(node.cornerRadius).toBe(8);
+    expect(node.clipContent).toBe(true);
+    expect(node.opacity).toBe(0.8);
+    expect(node.visible).toBe(false);
+    expect(node.rotation).toBe(45);
+    expect(node.effects).toHaveLength(1);
+    expect(node.blendMode).toBe('MULTIPLY');
+    expect(node.layoutSizingHorizontal).toBe('FILL');
+    expect(node.layoutSizingVertical).toBe('HUG');
+  });
+
+  it('defensively copies effects array', () => {
+    const effects: EffectDefinition[] = [{ type: 'LAYER_BLUR', radius: 10 }];
+    const node = svg('Blur', { svgContent: sampleSvg, size: { x: 100, y: 100 }, effects });
+    effects.push({ type: 'LAYER_BLUR', radius: 20 });
+    expect(node.effects).toHaveLength(1);
   });
 });

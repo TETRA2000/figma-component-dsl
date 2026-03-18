@@ -65,6 +65,10 @@ export interface PluginNodeDef {
   readonly imageDimensions?: { width: number; height: number };
   readonly imageError?: string;
 
+  // SVG (SVG node)
+  readonly svgContent?: string;
+  readonly svgScaleMode?: string;
+
   // Instance
   readonly componentId?: string;
   readonly overriddenProperties?: Record<string, string | boolean>;
@@ -86,7 +90,7 @@ export interface PluginInput {
   readonly schemaVersion: string;
   readonly targetPage: string;
   readonly components: ReadonlyArray<PluginNodeDef>;
-  readonly mode?: 'standard' | 'banner';
+  readonly mode?: 'standard' | 'canvas';
 }
 
 // --- Edit Tracker Types ---

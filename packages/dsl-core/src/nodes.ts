@@ -1,7 +1,7 @@
 import type {
   DslNode, FrameProps, RectangleProps, EllipseProps,
   ComponentProps, ComponentSetProps, TextStyle, ChildLayoutProps,
-  ImageProps,
+  ImageProps, SvgProps,
   LineProps, SectionProps, PolygonProps, StarProps, BooleanOperationProps,
   BooleanOperationType,
 } from './types.js';
@@ -191,6 +191,30 @@ export function image(name: string, props: ImageProps): DslNode {
     cornerRadius: props.cornerRadius,
     imageSrc: props.src,
     imageScaleMode: props.fit ?? 'FILL',
+    layoutSizingHorizontal: props.layoutSizingHorizontal,
+    layoutSizingVertical: props.layoutSizingVertical,
+  };
+}
+
+export function svg(name: string, props: SvgProps): DslNode {
+  validateName(name);
+  if (!props.svgContent && !props.src) {
+    throw new Error('SVG node must have svgContent or src.');
+  }
+  return {
+    type: 'SVG',
+    name,
+    visible: props.visible ?? true,
+    opacity: props.opacity ?? 1,
+    size: props.size,
+    cornerRadius: props.cornerRadius,
+    clipContent: props.clipContent,
+    svgContent: props.svgContent,
+    svgSrc: props.src,
+    svgScaleMode: props.fit ?? 'FIT',
+    rotation: props.rotation,
+    effects: props.effects ? [...props.effects] : undefined,
+    blendMode: props.blendMode,
     layoutSizingHorizontal: props.layoutSizingHorizontal,
     layoutSizingVertical: props.layoutSizingVertical,
   };

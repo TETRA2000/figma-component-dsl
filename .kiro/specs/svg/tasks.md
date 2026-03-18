@@ -23,15 +23,15 @@
   - Update the Known Pipeline Limitations table to reference "Canvas Mode" instead of "Banner Mode"
   - _Requirements: 6.5_
 
-- [ ] 2. Define SVG node type in dsl-core
-- [ ] 2.1 Add SVG type definitions
+- [x] 2. Define SVG node type in dsl-core
+- [x] 2.1 Add SVG type definitions
   - Add `'SVG'` to the `NodeType` union type
   - Define `SvgProps` interface with `svgContent`, `src`, `size`, `fit` (defaulting to `'FIT'`), `cornerRadius`, `clipContent`, `opacity`, `visible`, `x`, `y`, `rotation`, `effects`, `blendMode`, and layout sizing modes
   - Add `svgContent`, `svgSrc`, and `svgScaleMode` fields to the `DslNode` interface
   - Add `svgContent` and `svgScaleMode` fields to the `PluginNodeDef` interface
   - _Requirements: 1.1, 1.2, 1.3, 1.5, 1.6, 1.7_
 
-- [ ] 2.2 Implement the svg() factory function and tests
+- [x] 2.2 Implement the svg() factory function and tests
   - Create the `svg(name, props)` factory function following the `image()` pattern
   - Validate that `name` is non-empty, and at least one of `svgContent` or `src` is provided — throw an error if neither is present
   - Map `props.src` to `svgSrc`, `props.svgContent` to `svgContent`, and `props.fit` to `svgScaleMode` (default `'FIT'`) on the returned DslNode
