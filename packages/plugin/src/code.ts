@@ -24,6 +24,16 @@ import uiHtml from './ui.html';
 const componentMap = new Map<string, ComponentNode>();
 const errors: string[] = [];
 
+// Simple FNV-1a hash for plugin sandbox (no node:crypto available)
+function simpleHash(str: string): string {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    hash ^= str.charCodeAt(i);
+    hash = (hash * 0x01000193) >>> 0;
+  }
+  return hash.toString(16).padStart(8, '0');
+}
+
 // --- Edit Tracker State ---
 const PLUGIN_DATA_BASELINE = 'dsl-baseline';
 const PLUGIN_DATA_IDENTITY = 'dsl-identity';
@@ -355,6 +365,37 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         parent.appendChild(imgRect);
         setLayoutSizing(imgRect, def);
         node = imgRect;
+        break;
+      }
+
+      case 'SVG': {
+        if (def.svgContent) {
+          const svgFrame = figma.createNodeFromSvg(def.svgContent);
+          svgFrame.name = def.name;
+          svgFrame.resize(def.size.x, def.size.y);
+          if (def.cornerRadius) svgFrame.cornerRadius = def.cornerRadius;
+          svgFrame.opacity = def.opacity;
+          svgFrame.visible = def.visible;
+          parent.appendChild(svgFrame);
+          setLayoutSizing(svgFrame, def);
+
+          // Store SVG identity for bidirectional sync
+          const svgHash = simpleHash(def.svgContent);
+          svgFrame.setPluginData('dsl-svg-hash', svgHash);
+
+          // Export normalized SVG and store baseline hash
+          try {
+            const normalizedSvg = await svgFrame.exportAsync({ format: 'SVG_STRING' });
+            svgFrame.setPluginData('dsl-svg-baseline-hash', simpleHash(normalizedSvg));
+          } catch {
+            // exportAsync may fail in some contexts; skip baseline
+          }
+
+          node = svgFrame;
+        } else {
+          errors.push(`SVG node "${def.name}" has no svgContent`);
+          node = null;
+        }
         break;
       }
 
@@ -805,6 +846,25 @@ async function computeChangeset(nodeIds: ReadonlyArray<string>): Promise<Changes
 
     const current = serializeNode(node);
     const changes = diffNodes(baseline, current);
+
+    // SVG changeset detection: compare exported SVG against stored baseline hash
+    const svgBaselineHash = node.getPluginData('dsl-svg-baseline-hash');
+    if (svgBaselineHash) {
+      try {
+        const currentSvg = await (node as FrameNode).exportAsync({ format: 'SVG_STRING' });
+        const currentHash = simpleHash(currentSvg);
+        if (currentHash !== svgBaselineHash) {
+          changes.push({
+            propertyPath: 'svgContent',
+            changeType: 'modified',
+            newValue: currentSvg,
+            description: 'SVG content modified in Figma',
+          });
+        }
+      } catch {
+        // exportAsync may fail; skip SVG change detection
+      }
+    }
 
     // Detect unsyncable properties
     const nodeWarnings = detectUnsyncableProperties(node);

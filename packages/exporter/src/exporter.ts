@@ -150,6 +150,22 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
     if (embedded.imageError) result.imageError = embedded.imageError;
   }
 
+  // SVG node passthrough — embed SVG content as text
+  if (node.type === 'SVG') {
+    if (node.svgContent) {
+      result.svgContent = node.svgContent;
+    } else if (node.svgSrc) {
+      // Read SVG file and embed content
+      try {
+        const resolvedPath = resolve(assetDir, node.svgSrc);
+        result.svgContent = readFileSync(resolvedPath, 'utf-8');
+      } catch {
+        result.svgContent = undefined;
+      }
+    }
+    if (node.svgScaleMode) result.svgScaleMode = node.svgScaleMode;
+  }
+
   // Component properties
   // Filter out VARIANT properties for standalone COMPONENT nodes — Figma only
   // allows VARIANT properties on COMPONENT_SET nodes.

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { generatePluginInput, exportToFile } from './exporter.js';
 import { compile } from '@figma-dsl/compiler';
-import { frame, text, component, componentSet, instance, image, line, section, polygon, star, subtract, rectangle, ellipse } from '@figma-dsl/core';
+import { frame, text, component, componentSet, instance, image, svg, line, section, polygon, star, subtract, rectangle, ellipse } from '@figma-dsl/core';
 import { solid, imageFill } from '@figma-dsl/core';
 import { horizontal } from '@figma-dsl/core';
 import { join, dirname } from 'path';
@@ -378,5 +378,41 @@ describe('generatePluginInput() — Canvas Mode effects', () => {
     const compiled = compile(node, { mode: 'canvas' });
     const input = generatePluginInput(compiled);
     expect(input.mode).toBe('canvas');
+  });
+});
+
+describe('SVG node export', () => {
+  const sampleSvg = '<svg xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40"/></svg>';
+
+  it('exports SVG node with inline svgContent', () => {
+    const node = svg('Icon', { svgContent: sampleSvg, size: { x: 100, y: 100 } });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled);
+    const root = input.components[0]! as Record<string, unknown>;
+    expect(root.type).toBe('SVG');
+    expect(root.svgContent).toBe(sampleSvg);
+    expect(root.svgScaleMode).toBe('FIT');
+  });
+
+  it('exports SVG node with custom scale mode', () => {
+    const node = svg('Icon', { svgContent: sampleSvg, size: { x: 100, y: 100 }, fit: 'FILL' });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled);
+    const root = input.components[0]! as Record<string, unknown>;
+    expect(root.svgScaleMode).toBe('FILL');
+  });
+
+  it('preserves SVG visual properties in export', () => {
+    const node = svg('Styled', {
+      svgContent: sampleSvg,
+      size: { x: 100, y: 100 },
+      opacity: 0.5,
+      cornerRadius: 8,
+    });
+    const compiled = compile(node);
+    const input = generatePluginInput(compiled);
+    const root = input.components[0]! as Record<string, unknown>;
+    expect(root.opacity).toBe(0.5);
+    expect(root.cornerRadius).toBe(8);
   });
 });
