@@ -92,11 +92,11 @@ async function convertSinglePage(
     const snapshot = await extractFromPage(page, selector);
 
     // Map to DslNode tree
-    const { node: dslNode, warnings: mapWarnings } = mapToDsl(snapshot, name);
+    const { node: dslNode, warnings: mapWarnings, canvasMode } = mapToDsl(snapshot, name);
     warnings.push(...mapWarnings);
 
     // Generate DSL code
-    const dslCode = generateDslCode(dslNode, { componentName: name, asComponent: true });
+    const dslCode = generateDslCode(dslNode, { componentName: name, asComponent: true, canvasMode });
     const dslFilePath = join(pageDir, 'script.dsl.ts');
     writeFileSync(dslFilePath, dslCode);
 

@@ -82,11 +82,16 @@ export function generateDslCode(node: DslNode, options: CodegenOptions = {}): st
   // Build import statement
   const importLine = buildImports(imports);
 
+  // Canvas Mode preamble
+  const canvasPreamble = options.canvasMode
+    ? `\nimport type { FontDeclaration } from '@figma-dsl/core';\n\nexport const mode = 'canvas';\nexport const fonts: FontDeclaration[] = [];\n`
+    : '';
+
   if (helperCode) {
-    return `${importLine}\n\n${helperCode}\n\nexport default ${body};\n`;
+    return `${importLine}${canvasPreamble}\n\n${helperCode}\n\nexport default ${body};\n`;
   }
 
-  return `${importLine}\n\nexport default ${body};\n`;
+  return `${importLine}${canvasPreamble}\n\nexport default ${body};\n`;
 }
 
 // --- Node Generation ---
@@ -117,6 +122,8 @@ function generateNode(
       return generateTextNode(node, depth, indent, imports);
     case 'IMAGE':
       return generateImageNode(node, depth, indent, imports);
+    case 'SVG':
+      return generateSvgNode(node, depth, indent, imports);
     case 'FRAME':
       return generateFrameNode(node, 'frame', depth, indent, imports, helperCallMap);
     case 'COMPONENT':
@@ -166,6 +173,14 @@ function generateTextNode(
     if (ts.textDecoration && ts.textDecoration !== 'NONE') {
       opts.push(`textDecoration: '${ts.textDecoration}'`);
     }
+    // Canvas Mode text features
+    if (ts.textTransform) {
+      opts.push(`textTransform: '${ts.textTransform}'`);
+    }
+    if (ts.textShadow) {
+      const { color, offsetX, offsetY, blur } = ts.textShadow as { color: string; offsetX: number; offsetY: number; blur: number };
+      opts.push(`textShadow: { color: '${color}', offsetX: ${offsetX}, offsetY: ${offsetY}, blur: ${blur} }`);
+    }
   }
 
   if (node.textAutoResize) {
@@ -207,6 +222,22 @@ function generateImageNode(
   const h = node.size?.y ?? 100;
 
   return `${i}image('${name}', { src: '${src}', size: { x: ${w}, y: ${h} } })`;
+}
+
+function generateSvgNode(
+  node: DslNode,
+  depth: number,
+  indent: string,
+  imports: ImportTracker,
+): string {
+  imports.nodes.add('svg');
+  const i = indent.repeat(depth);
+  const name = escapeString(node.name);
+  const svgContent = escapeString(node.svgContent ?? '');
+  const w = node.size?.x ?? 24;
+  const h = node.size?.y ?? 24;
+
+  return `${i}svg('${name}', { svgContent: '${svgContent}', size: { x: ${w}, y: ${h} } })`;
 }
 
 function generateFrameNode(
@@ -275,6 +306,43 @@ function generateFrameNode(
   // Clip content
   if (node.clipContent) {
     props.push(`${i1}clipContent: true,`);
+  }
+
+  // Canvas Mode: effects
+  if (node.effects && node.effects.length > 0) {
+    const effectsStr = node.effects.map(e => {
+      if (e.type === 'DROP_SHADOW') {
+        const c = e.color;
+        const r = Math.round(c.r * 1000) / 1000;
+        const g = Math.round(c.g * 1000) / 1000;
+        const b = Math.round(c.b * 1000) / 1000;
+        const a = Math.round(c.a * 1000) / 1000;
+        const parts = [`type: 'DROP_SHADOW'`, `color: { r: ${r}, g: ${g}, b: ${b}, a: ${a} }`, `offsetX: ${e.offsetX}`, `offsetY: ${e.offsetY}`, `blur: ${e.blur}`];
+        if (e.spread) parts.push(`spread: ${e.spread}`);
+        return `{ ${parts.join(', ')} }`;
+      }
+      return `{ type: 'LAYER_BLUR', radius: ${(e as { radius: number }).radius} }`;
+    }).join(', ');
+    props.push(`${i1}effects: [${effectsStr}],`);
+  }
+
+  // Canvas Mode: blend mode
+  if (node.blendMode) {
+    props.push(`${i1}blendMode: '${node.blendMode}',`);
+  }
+
+  // Canvas Mode: rotation
+  if (node.rotation !== undefined) {
+    props.push(`${i1}rotation: ${node.rotation},`);
+  }
+
+  // Canvas Mode: absolute positioning (via type cast)
+  const nodeAny = node as unknown as Record<string, unknown>;
+  if (nodeAny.x !== undefined) {
+    props.push(`${i1}x: ${nodeAny.x},`);
+  }
+  if (nodeAny.y !== undefined) {
+    props.push(`${i1}y: ${nodeAny.y},`);
   }
 
   // Layout sizing

@@ -235,6 +235,154 @@ function splitGradientParts(str: string): string[] {
   return parts;
 }
 
+/** Parsed box-shadow entry */
+export interface ParsedBoxShadow {
+  offsetX: number;
+  offsetY: number;
+  blur: number;
+  spread: number;
+  color: { r: number; g: number; b: number; a: number };
+}
+
+/** Parsed text-shadow entry */
+export interface ParsedTextShadow {
+  color: string;
+  offsetX: number;
+  offsetY: number;
+  blur: number;
+}
+
+/**
+ * Parse CSS box-shadow into DSL effect definitions.
+ * Supports multiple comma-separated shadows. Skips inset shadows.
+ * Format: [inset] offsetX offsetY [blur [spread]] color
+ */
+export function parseBoxShadow(cssValue: string): ParsedBoxShadow[] {
+  if (!cssValue || cssValue === 'none') return [];
+
+  const shadows = splitGradientParts(cssValue); // reuse comma splitter
+  const results: ParsedBoxShadow[] = [];
+
+  for (const raw of shadows) {
+    const shadow = raw.trim();
+    if (!shadow || shadow.includes('inset')) continue;
+
+    // Extract color portion (rgb/rgba/hex/named) from the shadow string
+    const { colorStr, numericPart } = extractShadowColor(shadow);
+    if (!colorStr) continue;
+
+    // Parse numeric values: offsetX offsetY [blur [spread]]
+    const nums = numericPart.trim().split(/\s+/).map(s => parseFloat(s)).filter(n => !isNaN(n));
+    if (nums.length < 2) continue;
+
+    const hex = cssColorToHex(colorStr);
+    if (!hex) continue;
+
+    const opacity = cssColorToOpacity(colorStr);
+    const hexClean = hex.replace('#', '');
+    const r = parseInt(hexClean.slice(0, 2), 16) / 255;
+    const g = parseInt(hexClean.slice(2, 4), 16) / 255;
+    const b = parseInt(hexClean.slice(4, 6), 16) / 255;
+
+    results.push({
+      offsetX: nums[0]!,
+      offsetY: nums[1]!,
+      blur: nums[2] ?? 0,
+      spread: nums[3] ?? 0,
+      color: { r, g, b, a: opacity },
+    });
+  }
+
+  return results;
+}
+
+/**
+ * Parse CSS text-shadow into DSL text shadow definition.
+ * Only the first shadow is used (DSL supports single text shadow).
+ * Format: offsetX offsetY [blur] color
+ */
+export function parseTextShadow(cssValue: string): ParsedTextShadow | null {
+  if (!cssValue || cssValue === 'none') return null;
+
+  // Take only the first shadow
+  const first = splitGradientParts(cssValue)[0]?.trim();
+  if (!first) return null;
+
+  const { colorStr, numericPart } = extractShadowColor(first);
+  if (!colorStr) return null;
+
+  const nums = numericPart.trim().split(/\s+/).map(s => parseFloat(s)).filter(n => !isNaN(n));
+  if (nums.length < 2) return null;
+
+  const hex = cssColorToHex(colorStr);
+  if (!hex) return null;
+
+  const opacity = cssColorToOpacity(colorStr);
+  // Build color string: use hex if fully opaque, otherwise rgba
+  let color: string;
+  if (opacity < 1) {
+    const hexClean = hex.replace('#', '');
+    const r = parseInt(hexClean.slice(0, 2), 16);
+    const g = parseInt(hexClean.slice(2, 4), 16);
+    const b = parseInt(hexClean.slice(4, 6), 16);
+    color = `rgba(${r},${g},${b},${opacity})`;
+  } else {
+    color = hex;
+  }
+
+  return {
+    offsetX: nums[0]!,
+    offsetY: nums[1]!,
+    blur: nums[2] ?? 0,
+    color,
+  };
+}
+
+/**
+ * Extract the color portion and numeric portion from a shadow string.
+ * Handles color at start or end, rgb/rgba/hex/named colors.
+ */
+function extractShadowColor(shadow: string): { colorStr: string | null; numericPart: string } {
+  // Try rgb/rgba at start
+  const rgbStartMatch = shadow.match(/^(rgba?\([^)]+\))\s*(.*)/);
+  if (rgbStartMatch) {
+    return { colorStr: rgbStartMatch[1]!, numericPart: rgbStartMatch[2]! };
+  }
+
+  // Try rgb/rgba at end
+  const rgbEndMatch = shadow.match(/(.*?)\s+(rgba?\([^)]+\))$/);
+  if (rgbEndMatch) {
+    return { colorStr: rgbEndMatch[2]!, numericPart: rgbEndMatch[1]! };
+  }
+
+  // Try hex at start
+  const hexStartMatch = shadow.match(/^(#[0-9a-fA-F]{3,8})\s+(.*)/);
+  if (hexStartMatch) {
+    return { colorStr: hexStartMatch[1]!, numericPart: hexStartMatch[2]! };
+  }
+
+  // Try hex at end
+  const hexEndMatch = shadow.match(/(.*?)\s+(#[0-9a-fA-F]{3,8})$/);
+  if (hexEndMatch) {
+    return { colorStr: hexEndMatch[2]!, numericPart: hexEndMatch[1]! };
+  }
+
+  // Try named color at end (last word)
+  const parts = shadow.split(/\s+/);
+  const lastWord = parts[parts.length - 1]!.toLowerCase();
+  if (NAMED_COLORS[lastWord]) {
+    return { colorStr: lastWord, numericPart: parts.slice(0, -1).join(' ') };
+  }
+
+  // Try named color at start
+  const firstWord = parts[0]!.toLowerCase();
+  if (NAMED_COLORS[firstWord]) {
+    return { colorStr: firstWord, numericPart: parts.slice(1).join(' ') };
+  }
+
+  return { colorStr: null, numericPart: shadow };
+}
+
 const NAMED_COLORS: Record<string, string> = {
   white: '#ffffff',
   black: '#000000',

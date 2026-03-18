@@ -39,6 +39,8 @@ export const ALL_CATEGORIES: string[] = [
   'lists-grids',
   'badges-tags',
   'combined-complex',
+  'svg-basic',
+  'canvas-effects',
 ];
 
 /** Number of test pages per category (1 representative page each). */
@@ -61,6 +63,8 @@ const CATEGORY_COUNTS: Record<string, number> = {
   'lists-grids': 1,
   'badges-tags': 1,
   'combined-complex': 1,
+  'svg-basic': 1,
+  'canvas-effects': 1,
 };
 
 /** Human-readable descriptions per category (templates). */
@@ -83,6 +87,8 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
   'lists-grids': 'Repeated list items and grid layouts',
   'badges-tags': 'Small badge and tag pill components',
   'combined-complex': 'Complex pages combining multiple DSL features',
+  'svg-basic': 'Inline SVG elements with paths, shapes, and icons',
+  'canvas-effects': 'Canvas Mode features: box-shadow, text-shadow, rotation, blend mode, text-transform',
 };
 
 /** Expected DSL features per category. */
@@ -108,6 +114,8 @@ const CATEGORY_FEATURES: Record<string, string[]> = {
     'horizontal', 'vertical', 'gap', 'padding', 'border-radius',
     'typography', 'background-color', 'opacity', 'gradient',
   ],
+  'svg-basic': ['svg', 'svgContent', 'inline-svg'],
+  'canvas-effects': ['box-shadow', 'text-shadow', 'rotation', 'blend-mode', 'text-transform', 'canvas-mode'],
 };
 
 /** Pad a number to two digits. */

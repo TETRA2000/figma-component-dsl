@@ -54,6 +54,18 @@ function makeStyles(overrides: Partial<ExtractedStyles> = {}): ExtractedStyles {
     letterSpacing: 'normal',
     textDecoration: 'none',
     whiteSpace: 'normal',
+    boxShadow: 'none',
+    textShadow: 'none',
+    transform: 'none',
+    mixBlendMode: 'normal',
+    textTransform: 'none',
+    position: 'static',
+    top: 'auto',
+    left: 'auto',
+    marginTop: '0px',
+    marginRight: '0px',
+    marginBottom: '0px',
+    marginLeft: '0px',
     ...overrides,
   };
 }
@@ -285,5 +297,89 @@ describe('mapToDsl', () => {
     expect(node.autoLayout!.padRight).toBe(16);
     expect(node.autoLayout!.padBottom).toBe(24);
     expect(node.autoLayout!.padLeft).toBe(32);
+  });
+
+  // --- Canvas Mode Features ---
+
+  it('maps SVG element to SVG node type', () => {
+    const snap = makeSnapshot({
+      tag: 'svg',
+      svgContent: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><circle cx="12" cy="12" r="10" fill="red"/></svg>',
+      isTextOnly: false,
+      children: [],
+    });
+    const { node, canvasMode } = mapToDsl(snap);
+    expect(node.type).toBe('SVG');
+    expect(node.svgContent).toContain('<svg');
+    expect(node.size).toEqual({ x: 100, y: 50 });
+    expect(canvasMode).toBe(true);
+  });
+
+  it('maps box-shadow to effects (DROP_SHADOW)', () => {
+    const snap = makeSnapshot({
+      styles: makeStyles({ boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.25)' }),
+      children: [],
+    });
+    const { node, canvasMode } = mapToDsl(snap);
+    expect(node.effects).toHaveLength(1);
+    expect(node.effects![0]!.type).toBe('DROP_SHADOW');
+    expect(node.effects![0]!.offsetY).toBe(4);
+    expect(node.effects![0]!.blur).toBe(12);
+    expect(canvasMode).toBe(true);
+  });
+
+  it('maps text-shadow to textStyle.textShadow', () => {
+    const snap = makeSnapshot({
+      isTextOnly: true,
+      textContent: 'Shadow',
+      styles: makeStyles({ textShadow: '2px 3px 4px rgba(0, 0, 0, 0.5)' }),
+    });
+    const { node, canvasMode } = mapToDsl(snap);
+    expect(node.textStyle?.textShadow).toBeDefined();
+    const ts = node.textStyle!.textShadow as { offsetX: number; offsetY: number; blur: number };
+    expect(ts.offsetX).toBe(2);
+    expect(ts.offsetY).toBe(3);
+    expect(ts.blur).toBe(4);
+    expect(canvasMode).toBe(true);
+  });
+
+  it('maps transform rotate to rotation', () => {
+    const snap = makeSnapshot({
+      styles: makeStyles({ transform: 'rotate(15deg)' }),
+      children: [],
+    });
+    const { node, canvasMode } = mapToDsl(snap);
+    expect(node.rotation).toBe(15);
+    expect(canvasMode).toBe(true);
+  });
+
+  it('maps mix-blend-mode to blendMode', () => {
+    const snap = makeSnapshot({
+      styles: makeStyles({ mixBlendMode: 'multiply' }),
+      children: [],
+    });
+    const { node, canvasMode } = mapToDsl(snap);
+    expect(node.blendMode).toBe('MULTIPLY');
+    expect(canvasMode).toBe(true);
+  });
+
+  it('maps text-transform to textStyle.textTransform', () => {
+    const snap = makeSnapshot({
+      isTextOnly: true,
+      textContent: 'hello',
+      styles: makeStyles({ textTransform: 'uppercase' }),
+    });
+    const { node, canvasMode } = mapToDsl(snap);
+    expect(node.textStyle?.textTransform).toBe('UPPERCASE');
+    expect(canvasMode).toBe(true);
+  });
+
+  it('does not set canvasMode for standard features only', () => {
+    const snap = makeSnapshot({
+      styles: makeStyles({ backgroundColor: 'rgb(255, 0, 0)' }),
+      children: [],
+    });
+    const { canvasMode } = mapToDsl(snap);
+    expect(canvasMode).toBe(false);
   });
 });

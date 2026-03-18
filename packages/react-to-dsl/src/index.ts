@@ -57,10 +57,10 @@ export async function convert(
   const snapshot = await extractDom(extractOptions);
 
   // 2. Map to DslNode tree
-  const { node, warnings } = mapToDsl(snapshot, codegenOptions.componentName);
+  const { node, warnings, canvasMode } = mapToDsl(snapshot, codegenOptions.componentName);
 
-  // 3. Generate DSL source code
-  const dslCode = generateDslCode(node, codegenOptions);
+  // 3. Generate DSL source code (pass canvas mode through)
+  const dslCode = generateDslCode(node, { ...codegenOptions, canvasMode });
 
   // Count nodes
   let nodeCount = 0;
