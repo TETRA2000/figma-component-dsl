@@ -5,6 +5,10 @@
  * (extract DOM → map → codegen → compile → render) and compares
  * the rendered PNG against committed baseline PNGs.
  *
+ * Golden file pattern:
+ * - If baseline doesn't exist: saves the render AS the baseline (test passes)
+ * - If baseline exists: compares render against it (test fails on mismatch)
+ *
  * Skipped when Chromium is not installed (e.g., local dev without Playwright).
  * Run `npx playwright install chromium` to enable.
  */
@@ -108,13 +112,12 @@ describe('DSL visual regression', () => {
       const renderResult = render(compiled.root);
       const renderedBuffer = Buffer.from(renderResult.pngBuffer);
 
-      // Compare against baseline
+      // Golden file: if baseline doesn't exist, create it
       const baselinePath = join(DSL_BASELINES_DIR, `${pageName}.png`);
       if (!existsSync(baselinePath)) {
-        console.warn(
-          `DSL baseline missing: ${baselinePath}\n` +
-            'Run: npx tsx packages/react-to-dsl/src/__tests__/update-baselines.ts',
-        );
+        mkdirSync(DSL_BASELINES_DIR, { recursive: true });
+        writeFileSync(baselinePath, renderedBuffer);
+        console.log(`Created DSL baseline: ${pageName}.png`);
         return;
       }
 

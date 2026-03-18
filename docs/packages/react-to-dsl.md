@@ -62,6 +62,14 @@ Two test suites compare rendered output against committed baseline PNGs:
 - Rendered PNG compared against `baselines/dsl/{name}.png`
 - Threshold: 99.5% similarity (configurable via `DSL_SIMILARITY_THRESHOLD` env var)
 
+### Golden file pattern
+
+Both test suites use a self-bootstrapping golden file approach:
+- **No baseline exists**: the test generates the baseline PNG and passes
+- **Baseline exists**: the test compares against it and fails on mismatch
+
+This means the first CI run after clearing baselines auto-generates them. Subsequent runs detect regressions.
+
 ### Updating baselines
 
 ```bash
@@ -69,9 +77,11 @@ npx playwright install chromium     # one-time setup
 npm run update-baselines            # regenerates all 36 baseline PNGs
 ```
 
+Or simply delete the baseline PNGs and re-run the tests — they will regenerate automatically.
+
 ### CI
 
-Visual regression tests run in a dedicated GitHub Actions job (`visual-regression`) that installs Chromium and uploads diff images as artifacts on failure.
+Visual regression tests run in a dedicated GitHub Actions job (`visual-regression`) that installs Chromium, uploads generated baselines as artifacts, and uploads diff images on failure.
 
 ## API
 

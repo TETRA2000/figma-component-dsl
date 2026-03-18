@@ -4,6 +4,10 @@
  * Screenshots each of the 18 test pages via Playwright/Chromium and
  * compares against committed baseline PNGs.
  *
+ * Golden file pattern:
+ * - If baseline doesn't exist: saves the screenshot AS the baseline (test passes)
+ * - If baseline exists: compares screenshot against it (test fails on mismatch)
+ *
  * Skipped when Chromium is not installed (e.g., local dev without Playwright).
  * Run `npx playwright install chromium` to enable.
  */
@@ -78,11 +82,12 @@ describe('React visual regression', () => {
       );
 
       const baselinePath = join(REACT_BASELINES_DIR, `${pageName}.png`);
+
+      // Golden file: if baseline doesn't exist, create it
       if (!existsSync(baselinePath)) {
-        console.warn(
-          `React baseline missing: ${baselinePath}\n` +
-            'Run: npx tsx packages/react-to-dsl/src/__tests__/update-baselines.ts',
-        );
+        mkdirSync(REACT_BASELINES_DIR, { recursive: true });
+        writeFileSync(baselinePath, screenshotBuffer);
+        console.log(`Created React baseline: ${pageName}.png`);
         return;
       }
 
