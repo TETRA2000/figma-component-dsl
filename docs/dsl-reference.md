@@ -243,6 +243,47 @@ image('Avatar', {
 
 > **Note:** Use `--asset-dir` in CLI commands to set the base directory for resolving relative image paths. Supported formats: PNG, JPG, JPEG, WebP.
 
+#### `svg(name, options)`
+
+Creates an SVG node from inline SVG markup or an external `.svg` file. SVG content is rendered to PNG via `@resvg/resvg-js` and exported to Figma via `figma.createNodeFromSvg()`.
+
+```ts
+// Inline SVG content
+svg('Icon', {
+  svgContent: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L2 22h20z"/></svg>',
+  size: { x: 24, y: 24 },
+})
+
+// External SVG file
+svg('Logo', {
+  src: './assets/logo.svg',
+  size: { x: 200, y: 50 },
+  fit: 'FIT',
+})
+```
+
+**Options:**
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `svgContent` | `string` | | Inline SVG markup (takes precedence over `src` if both provided) |
+| `src` | `string` | | Path to external `.svg` file (relative to `--asset-dir`) |
+| `size` | `{ x: number, y: number }` | *(required)* | Bounding box dimensions |
+| `fit` | `ImageScaleMode` | `'FIT'` | How SVG fills its bounding box. Default `'FIT'` (contain) preserves vector precision |
+| `cornerRadius` | `number` | | Border radius |
+| `clipContent` | `boolean` | | Clip SVG to bounding box |
+| `opacity` | `number` | `1` | Opacity (0–1) |
+| `visible` | `boolean` | `true` | Visibility |
+| `x` | `number` | | Absolute X position (Canvas Mode) |
+| `y` | `number` | | Absolute Y position (Canvas Mode) |
+| `rotation` | `number` | | Rotation in degrees (Canvas Mode) |
+| `effects` | `EffectDefinition[]` | | Drop shadow / blur effects (Canvas Mode) |
+| `blendMode` | `BlendMode` | | Compositing blend mode (Canvas Mode) |
+| `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | | Horizontal sizing in auto-layout |
+| `layoutSizingVertical` | `'FIXED' \| 'HUG' \| 'FILL'` | | Vertical sizing in auto-layout |
+
+> **Note:** At least one of `svgContent` or `src` must be provided. If both are specified, `svgContent` takes precedence and the compiler emits a warning. SVG nodes are treated as opaque vector content — the DSL does not parse or manipulate the SVG internals.
+
 #### `component(name, options)`
 
 Creates a Figma component node. Same options as `frame()` plus `componentProperties`.

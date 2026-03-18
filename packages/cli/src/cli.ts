@@ -6,7 +6,7 @@ import { compileWithLayout, textMeasurer } from '@figma-dsl/compiler';
 import type { CompileResult } from '@figma-dsl/compiler';
 import type { DslNode, FontDeclaration } from '@figma-dsl/core';
 import type { CompilerMode } from '@figma-dsl/compiler';
-import { renderToFile, initializeRenderer, collectImageSources, preloadImages, initializeFontManager } from '@figma-dsl/renderer';
+import { renderToFile, initializeRenderer, collectImageSources, preloadImages, preloadSvgContent, initializeFontManager } from '@figma-dsl/renderer';
 import type { FontRegistration } from '@figma-dsl/renderer';
 import { compareFiles } from '@figma-dsl/comparator';
 import { captureUrl } from '@figma-dsl/capturer';
@@ -226,7 +226,10 @@ Options:
       ? await preloadImages(imageSources, assetDir)
       : undefined;
 
-    const result = renderToFile(compiled.root, resolve(values.output), { scale, debugLayout, imageCache });
+    // Pre-load SVGs
+    const svgCache = await preloadSvgContent(compiled.root, assetDir);
+
+    const result = renderToFile(compiled.root, resolve(values.output), { scale, debugLayout, imageCache, svgCache });
     console.log(`Rendered: ${values.output} (${result.width}×${result.height})`);
     return 0;
   } catch (err) {
@@ -400,7 +403,13 @@ Options:
     // Stage 2: Render
     console.log('[2/4] Rendering DSL...');
     const dslPngPath = resolve(outputDir, 'dsl-render.png');
-    renderToFile(compiled.root, dslPngPath);
+    const pipelineAssetDir = dirname(resolve(dslPath));
+    const pipelineImageSources = collectImageSources(compiled.root);
+    const pipelineImageCache = pipelineImageSources.size > 0
+      ? await preloadImages(pipelineImageSources, pipelineAssetDir)
+      : undefined;
+    const pipelineSvgCache = await preloadSvgContent(compiled.root, pipelineAssetDir);
+    renderToFile(compiled.root, dslPngPath, { imageCache: pipelineImageCache, svgCache: pipelineSvgCache });
 
     // Canvas Mode: skip capture & compare (no React component)
     if (mode === 'canvas') {

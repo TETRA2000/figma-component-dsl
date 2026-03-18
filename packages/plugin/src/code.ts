@@ -662,6 +662,34 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
       (node as GeometryMixin).strokeWeight = def.strokes[0]!.weight;
     }
 
+    // Apply Canvas Mode visual properties generically
+    if (def.effects && 'effects' in node) {
+      (node as FrameNode).effects = (def.effects as ReadonlyArray<Record<string, unknown>>).map(e => {
+        if (e.type === 'DROP_SHADOW') {
+          const c = e.color as { r: number; g: number; b: number; a: number };
+          return {
+            type: 'DROP_SHADOW' as const,
+            visible: true,
+            color: { r: c.r, g: c.g, b: c.b, a: c.a },
+            offset: { x: (e.offset as { x: number }).x, y: (e.offset as { y: number }).y },
+            radius: e.radius as number,
+            spread: (e.spread as number) ?? 0,
+          };
+        }
+        return {
+          type: 'LAYER_BLUR' as const,
+          visible: true,
+          radius: e.radius as number,
+        };
+      }) as Effect[];
+    }
+    if (def.blendMode && 'blendMode' in node) {
+      (node as FrameNode).blendMode = def.blendMode as BlendMode;
+    }
+    if (def.rotation !== undefined && 'rotation' in node) {
+      (node as FrameNode).rotation = def.rotation;
+    }
+
     return node;
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
