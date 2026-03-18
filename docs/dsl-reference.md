@@ -1369,6 +1369,19 @@ frame('Button', {
 
 **Solution:** Wrap sections in a parent frame with vertical auto-layout in the merged JSON. See [Page-Level Export](#page-level-export-multiple-sections).
 
+### 5. Plugin data size limit (100KB per key)
+
+**Constraint:** Figma's `setPluginData()` API has a practical size limit of ~100KB per key-value entry. The DSL plugin enforces this via `PLUGIN_DATA_SIZE_LIMIT` (100,000 bytes) in `plugin/src/code.ts`.
+
+**Impact:** Any data stored per-node via `setPluginData` — baselines, identity metadata, SVG content hashes — must fit within this limit. Large payloads (e.g., full SVG strings, deeply nested component baselines) will be truncated or rejected.
+
+**Design restriction:** Never store raw content (full SVG markup, large JSON snapshots) directly in plugin data. Instead:
+- Store **hashes** (SHA-256, 64 chars) for content comparison
+- Store **minimal metadata** (identifiers, timestamps, flags)
+- Use **truncation strategies** for baselines (e.g., strip `children` arrays)
+
+The existing `storeBaseline()` function already handles oversized baselines by truncating children. Any new plugin data keys must follow the same size-aware pattern.
+
 ---
 
 ## Known Pipeline Limitations

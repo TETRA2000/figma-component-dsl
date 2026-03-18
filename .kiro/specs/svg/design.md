@@ -106,7 +106,8 @@ sequenceDiagram
   ResvgJS-->>Renderer: PNG Buffer
   Renderer->>Canvas: loadImage(pngBuffer)
   Canvas-->>Renderer: Image object
-  Renderer->>Canvas: drawImage within bounding box
+  Renderer->>Renderer: computeDrawInstruction(fitMode, imgW, imgH, nodeW, nodeH)
+  Renderer->>Canvas: drawImage with fit/fill/crop positioning
   Note over Renderer: Apply effects, blend mode, rotation via existing applyEffects
 ```
 
@@ -122,12 +123,14 @@ sequenceDiagram
   Plugin->>Figma: figma.createNodeFromSvg(svgString)
   Figma-->>Plugin: FrameNode with vector children
   Plugin->>Plugin: setPluginData dsl-svg-hash, dsl-identity
-  Plugin->>Plugin: Store normalized SVG baseline
+  Plugin->>Figma: node.exportAsync format SVG_STRING
+  Figma-->>Plugin: Normalized SVG string
+  Plugin->>Plugin: Hash normalized SVG, store as dsl-svg-baseline-hash
 
   Note over Plugin: Changeset flow
   Plugin->>Figma: node.exportAsync format SVG_STRING
   Figma-->>Plugin: Current SVG string
-  Plugin->>Plugin: Compare against stored baseline
+  Plugin->>Plugin: Hash current SVG, compare against dsl-svg-baseline-hash
   Plugin->>MCP: PropertyChange propertyPath svgContent, newValue updated SVG
 ```
 
@@ -187,6 +190,7 @@ export interface SvgProps {
   svgContent?: string;
   src?: string;
   size: { x: number; y: number };
+  fit?: ImageScaleMode;  // How SVG fills its bounding box (default: 'FIT')
   cornerRadius?: number;
   clipContent?: boolean;
   opacity?: number;
@@ -203,6 +207,7 @@ export interface SvgProps {
 // New DslNode fields (types.ts, added to DslNode interface)
 // svgContent?: string;
 // svgSrc?: string;
+// svgScaleMode?: ImageScaleMode;
 
 // Factory function (nodes.ts)
 export function svg(name: string, props: SvgProps): DslNode;
@@ -289,8 +294,16 @@ export async function preloadSvgContent(
 ): Promise<SvgCache>;
 
 // Rasterization (internal)
-// Uses: new Resvg(svgString, { fitTo: { mode: 'width', value: width } }).render().asPng()
-// Then: loadImage(pngBuffer) → Image
+// Step 1: Rasterize SVG at its intrinsic aspect ratio, scaled to fit the larger
+//         dimension of the bounding box: max(width, height) for pixel accuracy.
+//         Uses: new Resvg(svgString, { fitTo: { mode: 'width', value } }).render().asPng()
+// Step 2: loadImage(pngBuffer) → Image
+// Step 3: Draw on canvas using computeDrawInstruction(scaleMode, imgW, imgH, nodeW, nodeH)
+//         to apply the node's fit mode (FIT/FILL/CROP/TILE), consistent with IMAGE rendering.
+//
+// Default fit mode for SVG is 'FIT' (contain without cropping), unlike IMAGE which defaults
+// to 'FILL' (cover with cropping). This preserves SVG vector precision by default.
+// Users can override via the `fit` property on SvgProps.
 ```
 - Preconditions: SVG content is a valid SVG string or file path resolves to valid SVG
 - Postconditions: Cache contains `Image` objects keyed by SVG content hash or source path
@@ -299,7 +312,7 @@ export async function preloadSvgContent(
 **Implementation Notes**
 - Add `@resvg/resvg-js` to `packages/renderer/package.json` dependencies
 - SVG preloading can extend or parallel the existing `preloadImages()` in image-loader.ts
-- Rasterization target size comes from the node's `size.x` and `size.y` for pixel-accurate output
+- Rasterization target size: SVG is rasterized at intrinsic aspect ratio scaled to the bounding box's larger dimension, then drawn using `computeDrawInstruction()` with the node's `svgScaleMode` (default `'FIT'`) for proper fit/fill/crop behavior within the bounding box
 - Cache key: use `svgSrc` for file-based SVGs, content hash for inline SVGs
 
 ### exporter Layer
@@ -361,8 +374,8 @@ case 'SVG': {
 ```
 
 ##### State Management
-- `dsl-svg-hash`: SHA-256 hash of original SVG content string
-- `dsl-svg-baseline`: Figma-normalized SVG string (captured via `exportAsync` after creation)
+- `dsl-svg-hash`: SHA-256 hash of original SVG content string (64 chars)
+- `dsl-svg-baseline-hash`: SHA-256 hash of the Figma-normalized SVG (captured via `exportAsync` after creation). **Note:** The full Figma-normalized SVG string is NOT stored in plugin data due to the 100KB per-key size limit (see `docs/dsl-reference.md` § Figma Plugin Constraints). Only the hash is stored; during changeset export, the current SVG is re-exported and hashed for comparison.
 - `dsl-identity`: Standard identity object (component name, DSL path, timestamp, node ID)
 - Persistence: Figma plugin data API (`setPluginData`/`getPluginData`)
 
@@ -376,8 +389,8 @@ case 'SVG': {
 **Responsibilities & Constraints**
 - During changeset export, check SVG-tagged nodes for modifications
 - Export current SVG via `exportAsync({ format: 'SVG_STRING' })`
-- Compare against stored `dsl-svg-baseline`
-- If different, emit `PropertyChange` with `propertyPath: 'svgContent'`, `newValue: currentSvg`
+- Hash the exported SVG and compare against stored `dsl-svg-baseline-hash`
+- If hashes differ, emit `PropertyChange` with `propertyPath: 'svgContent'`, `newValue: currentSvg`
 
 **Contracts**: Service [x]
 
@@ -452,8 +465,8 @@ case 'SVG': {
 - Invariant: at least one must be defined
 
 **SVG Identity** (plugin-side, stored as plugin data):
-- `dsl-svg-hash: string` — SHA-256 of original SVG content
-- `dsl-svg-baseline: string` — Figma-normalized SVG (post-createNodeFromSvg export)
+- `dsl-svg-hash: string` — SHA-256 of original SVG content (64 chars, constant size)
+- `dsl-svg-baseline-hash: string` — SHA-256 of Figma-normalized SVG (64 chars, constant size). Full SVG is NOT stored due to the 100KB plugin data size limit.
 
 ### Data Contracts & Integration
 
@@ -464,6 +477,7 @@ case 'SVG': {
   name: string,
   size: { x: number, y: number },
   svgContent: string,       // Full SVG markup
+  svgScaleMode?: ImageScaleMode,  // Default: 'FIT'
   opacity?: number,
   visible?: boolean,
   cornerRadius?: number,

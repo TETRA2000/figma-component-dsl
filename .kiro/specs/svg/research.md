@@ -101,7 +101,9 @@
 - **Trade-offs**: Temporary dual-string support at entry points; clean internally
 
 ## Risks & Mitigations
-- **SVG round-trip fidelity** — Figma normalizes SVG paths, so exported SVG differs from input. Mitigation: store Figma-normalized baseline for comparison, not original source.
+- **SVG round-trip fidelity** — Figma normalizes SVG paths, so exported SVG differs from input. Mitigation: store hash of Figma-normalized baseline for comparison (not full SVG string, due to 100KB plugin data limit).
+- **Plugin data size limit** — Figma `setPluginData` has a 100KB per-key limit. Complex SVGs can easily exceed this. Mitigation: store only SHA-256 hashes (64 chars, constant size) for both original and baseline SVG content. Full SVG is only embedded in changeset payloads, not in plugin data.
+- **SVG aspect ratio mismatch** — SVG viewBox may have different aspect ratio than the node's declared size. Mitigation: use `computeDrawInstruction()` with configurable scale mode (`fit` prop, default `'FIT'`) to handle fit/fill/crop, consistent with IMAGE node behavior.
 - **Large SVG performance** — Very complex SVGs may slow rasterization. Mitigation: log render time, add optional size limit warning in validator.
 - **@resvg/resvg-js platform support** — NAPI binary must be available for all target platforms. Mitigation: resvg-js supports all major platforms (Linux, macOS, Windows, ARM) and has WASM fallback.
 
