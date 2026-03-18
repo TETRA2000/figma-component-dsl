@@ -26,3 +26,42 @@ jobs:
       - run: npm run build
 
       - run: npx vitest run
+
+  visual-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - run: npx playwright install chromium
+
+      - name: Run visual regression tests
+        run: npx vitest run packages/react-to-dsl/src/__tests__/visual-regression-react.test.ts packages/react-to-dsl/src/__tests__/visual-regression-dsl.test.ts
+
+      - name: Upload baselines (for initial generation or review)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visual-regression-baselines
+          path: |
+            packages/react-to-dsl/src/__tests__/baselines/react/*.png
+            packages/react-to-dsl/src/__tests__/baselines/dsl/*.png
+          retention-days: 30
+
+      - name: Upload diffs on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: visual-regression-diffs
+          path: packages/react-to-dsl/src/__tests__/baselines/diffs/
+          retention-days: 7

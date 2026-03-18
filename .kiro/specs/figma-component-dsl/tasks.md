@@ -267,9 +267,12 @@
   - These page-level compositions exercise: layoutGrow spacers, INSTANCE nodes with overrides, multi-column layouts, dark backgrounds, fixed-width containers, and deeply nested auto-layout trees (3+ levels)
   - _Requirements: 1.6, 2.5, 2.6, 3.6, 4.3, 4.4, 4.6, 5.3, 5.4, 5.5, 6.1, 6.2_
 
-- [x]* 11.5 Run full visual regression comparison against React component screenshots
-  - Capture React component screenshots for all 16 reference components using the screenshot capturer with matching viewport sizes
-  - Run visual comparison (DSL render vs React screenshot) for each component and establish baseline similarity scores
-  - Document expected similarity ranges per component type: simple shapes (>98%), text-heavy layouts (>92%), gradient components (>90%)
-  - Track regression over time by committing baseline scores and diffing against subsequent runs
+- [x] 11.5 Visual regression tests with committed baselines (experimental)
+  - Note: The automated React-to-DSL converter is experimental. Regular workflow should use AI-based conversion (Claude reads React source and writes idiomatic DSL). This package is for benchmarking and pipeline fidelity testing.
+  - Reduced test pages from 200 to 18 (one per category) in `packages/react-to-dsl/test-pages/`
+  - React visual regression: Playwright screenshots of 18 test pages compared against committed baselines (`visual-regression-react.test.ts`)
+  - DSL visual regression: Full React→DSL pipeline renders compared against committed baselines (`visual-regression-dsl.test.ts`)
+  - Baseline update script: `npm run update-baselines` regenerates all 36 PNGs
+  - CI: Separate `visual-regression` job in `.github/workflows/test.yml` with Playwright install and diff artifact upload
+  - Thresholds: React 99.0%, DSL 99.5% (configurable via env vars)
   - _Requirements: 6.2, 7.1, 8.1, 8.2, 8.3, 8.4_

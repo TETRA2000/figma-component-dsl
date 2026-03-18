@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc -b && npm run build -w packages/plugin",
     "test": "npm run test --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run lint --workspaces --if-present",
+    "update-baselines": "npx tsx packages/react-to-dsl/src/__tests__/update-baselines.ts"
   },
   "bin": {
     "figma-dsl": "bin/figma-dsl",
@@ -25,7 +26,8 @@
     "figma-dsl-capture-figma": "bin/figma-dsl-capture-figma",
     "figma-dsl-calibrate": "bin/figma-dsl-calibrate",
     "figma-dsl-validate": "bin/figma-dsl-validate",
-    "figma-dsl-sync": "bin/figma-dsl-sync"
+    "figma-dsl-sync": "bin/figma-dsl-sync",
+    "figma-dsl-convert": "bin/figma-dsl-convert"
   },
   "engines": {
     "node": ">=22.0.0"

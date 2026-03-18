@@ -18,6 +18,7 @@ import { batchCompare, formatReportMarkdown } from './calibration-reporter.js';
 import { captureFigmaImages, loadNodeIdMap } from './figma-capturer.js';
 import { runCalibration } from './calibrate-orchestrator.js';
 import { validateComponent, validateAll } from '@figma-dsl/validator';
+import { convert } from '@figma-dsl/react-to-dsl';
 
 // Find font directory relative to packages
 function findFontDir(): string {
@@ -918,6 +919,8 @@ export async function run(args: string[]): Promise<number> {
       return cmdCalibrate(subArgs);
     case 'validate':
       return cmdValidate(subArgs);
+    case 'convert':
+      return cmdConvert(subArgs);
     case 'help':
     case '--help':
     case '-h':
@@ -928,6 +931,89 @@ export async function run(args: string[]): Promise<number> {
       console.error(`Unknown command: ${command}`);
       printHelp();
       return 2;
+  }
+}
+
+async function cmdConvert(args: string[]): Promise<number> {
+  const { values, positionals } = parseArgs({
+    args,
+    options: {
+      output: { type: 'string', short: 'o' },
+      selector: { type: 'string', short: 's' },
+      viewport: { type: 'string', short: 'v' },
+      component: { type: 'boolean', short: 'c' },
+      name: { type: 'string', short: 'n' },
+      help: { type: 'boolean', short: 'h' },
+    },
+    allowPositionals: true,
+  });
+
+  if (values.help) {
+    console.log(`figma-dsl convert — Convert React component to DSL
+
+Usage: figma-dsl convert <url> [-o output.dsl.ts] [options]
+
+Arguments:
+  url                    URL of the React component to convert
+
+Options:
+  -o, --output <path>    Write DSL code to file (default: stdout)
+  -s, --selector <sel>   CSS selector for root element (default: '#root > *')
+  -v, --viewport <WxH>   Viewport size (default: 1280x720)
+  -c, --component        Use component() instead of frame() for root
+  -n, --name <name>      Component name (default: derived from DOM)
+  -h, --help             Show this help message`);
+    return 0;
+  }
+
+  const url = positionals[0];
+  if (!url) {
+    console.error('Usage: figma-dsl convert <url> [-o output.dsl.ts]');
+    return 2;
+  }
+
+  let viewportWidth = 1280;
+  let viewportHeight = 720;
+  if (values.viewport) {
+    const parts = values.viewport.split('x');
+    if (parts.length === 2) {
+      viewportWidth = parseInt(parts[0]!, 10);
+      viewportHeight = parseInt(parts[1]!, 10);
+    }
+  }
+
+  try {
+    const result = await convert(
+      {
+        url,
+        selector: values.selector,
+        viewportWidth,
+        viewportHeight,
+      },
+      {
+        componentName: values.name,
+        asComponent: values.component,
+      },
+    );
+
+    if (result.warnings.length > 0) {
+      console.error('Warnings:');
+      for (const w of result.warnings) {
+        console.error(`  ⚠ ${w}`);
+      }
+    }
+
+    if (values.output) {
+      writeFileSync(resolve(values.output), result.dslCode);
+      console.log(`Converted to: ${values.output} (${result.nodeCount} nodes)`);
+    } else {
+      console.log(result.dslCode);
+    }
+
+    return 0;
+  } catch (err) {
+    console.error('Conversion failed:', err instanceof Error ? err.message : err);
+    return 2;
   }
 }
 
@@ -944,6 +1030,9 @@ Commands:
 
 Validation:
   validate <path> [--tokens path] [--format ..]  Validate components for DSL compatibility
+
+Conversion:
+  convert    <url> -o <file.dsl.ts> [opts]      Convert React component to DSL
 
 Calibration:
   generate-test-suite -o <dir> [--property ..]  Generate test .dsl.ts files
