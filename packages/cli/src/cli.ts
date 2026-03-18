@@ -70,8 +70,11 @@ async function loadDslModule(dslPath: string): Promise<DslModuleResult> {
   // Detect mode
   let mode: CompilerMode = 'standard';
   if (mod.mode) {
-    if (mod.mode === 'banner') {
-      mode = 'banner';
+    if (mod.mode === 'canvas') {
+      mode = 'canvas';
+    } else if (mod.mode === 'banner') {
+      mode = 'canvas';
+      console.warn(`Warning: mode 'banner' is deprecated. Use 'canvas' instead. (${dslPath})`);
     } else {
       console.warn(`Warning: Unknown mode '${mod.mode}' in ${dslPath}, using standard mode`);
     }
@@ -399,11 +402,11 @@ Options:
     const dslPngPath = resolve(outputDir, 'dsl-render.png');
     renderToFile(compiled.root, dslPngPath);
 
-    // Banner Mode: skip capture & compare (no React component)
-    if (mode === 'banner') {
-      console.log('[3/4] Skipping capture (Banner Mode — no React component)');
-      console.log('[4/4] Skipping compare (Banner Mode)');
-      console.log(`\nBanner Mode pipeline complete. DSL render: ${dslPngPath}`);
+    // Canvas Mode: skip capture & compare (no React component)
+    if (mode === 'canvas') {
+      console.log('[3/4] Skipping capture (Canvas Mode — no React component)');
+      console.log('[4/4] Skipping compare (Canvas Mode)');
+      console.log(`\nCanvas Mode pipeline complete. DSL render: ${dslPngPath}`);
       return 0;
     }
 

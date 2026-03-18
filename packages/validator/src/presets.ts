@@ -50,6 +50,21 @@ export const presets: Record<ValidationPreset, Record<string, SeverityLevel>> = 
     'image-refs':            'warning',
   },
 
+  canvas: {
+    'three-file':            'off',
+    'barrel-export':         'off',
+    'css-modules':           'off',
+    'no-inline-style':       'off',
+    'design-tokens':         'off',
+    'token-exists':          'off',
+    'classname-prop':        'off',
+    'variant-union':         'off',
+    'html-attrs':            'off',
+    'dsl-compatible-layout': 'off',
+    'image-refs':            'warning',
+  },
+
+  // Backward-compatible alias for 'canvas' (deprecated)
   banner: {
     'three-file':            'off',
     'barrel-export':         'off',

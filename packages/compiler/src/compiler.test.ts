@@ -743,12 +743,12 @@ describe('compile() — IMAGE fills', () => {
   });
 });
 
-// --- Banner Mode Compiler Tests ---
-describe('compile() — Banner Mode', () => {
+// --- Canvas Mode Compiler Tests ---
+describe('compile() — Canvas Mode', () => {
   it('propagates mode to CompileResult', () => {
     const node = frame('Root', { size: { x: 800, y: 400 } });
-    const result = compile(node, { mode: 'banner' });
-    expect(result.mode).toBe('banner');
+    const result = compile(node, { mode: 'canvas' });
+    expect(result.mode).toBe('canvas');
   });
 
   it('defaults to standard mode', () => {
@@ -762,7 +762,7 @@ describe('compile() — Banner Mode', () => {
       size: { x: 800, y: 400 },
       effects: [{ type: 'DROP_SHADOW', color: { r: 0, g: 0, b: 0, a: 0.5 }, offsetX: 0, offsetY: 4, blur: 8 }],
     });
-    const result = compile(node, { mode: 'banner' });
+    const result = compile(node, { mode: 'canvas' });
     expect(result.root.effects).toHaveLength(1);
     expect(result.root.effects![0]!.type).toBe('DROP_SHADOW');
   });
@@ -772,7 +772,7 @@ describe('compile() — Banner Mode', () => {
       size: { x: 100, y: 100 },
       blendMode: 'MULTIPLY',
     });
-    const result = compile(node, { mode: 'banner' });
+    const result = compile(node, { mode: 'canvas' });
     expect(result.root.blendMode).toBe('MULTIPLY');
   });
 
@@ -781,7 +781,7 @@ describe('compile() — Banner Mode', () => {
       size: { x: 200, y: 100 },
       rotation: 15,
     });
-    const result = compile(node, { mode: 'banner' });
+    const result = compile(node, { mode: 'canvas' });
     expect(result.root.rotation).toBe(15);
   });
 
@@ -792,13 +792,13 @@ describe('compile() — Banner Mode', () => {
       textStroke: { color: '#fff', width: 2 },
       textShadow: { color: '#000', offsetX: 1, offsetY: 1, blur: 3 },
     });
-    const result = compile(node, { mode: 'banner' });
+    const result = compile(node, { mode: 'canvas' });
     expect(result.root.textTransform).toBe('UPPERCASE');
     expect(result.root.textStroke).toEqual({ color: '#fff', width: 2 });
     expect(result.root.textShadow).toEqual({ color: '#000', offsetX: 1, offsetY: 1, blur: 3 });
   });
 
-  it('emits warning for Banner Mode properties in standard mode', () => {
+  it('emits warning for Canvas Mode properties in standard mode', () => {
     const node = frame('Root', {
       size: { x: 100, y: 100 },
       effects: [{ type: 'LAYER_BLUR', radius: 5 }],
@@ -806,6 +806,6 @@ describe('compile() — Banner Mode', () => {
     });
     const result = compile(node, { mode: 'standard' });
     const warnings = result.errors.filter(e => e.severity === 'warning');
-    expect(warnings.some(w => w.message.includes('Banner Mode'))).toBe(true);
+    expect(warnings.some(w => w.message.includes('Canvas Mode'))).toBe(true);
   });
 });

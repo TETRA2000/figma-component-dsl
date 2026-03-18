@@ -370,8 +370,8 @@ describe('node hierarchy', () => {
   });
 });
 
-// --- Banner Mode Types Tests ---
-describe('Banner Mode: effects and blendMode', () => {
+// --- Canvas Mode Types Tests ---
+describe('Canvas Mode: effects and blendMode', () => {
   it('frame accepts effects array and blendMode', () => {
     const shadow: EffectDefinition = {
       type: 'DROP_SHADOW',
@@ -431,7 +431,7 @@ describe('Banner Mode: effects and blendMode', () => {
   });
 });
 
-describe('Banner Mode: extended typography', () => {
+describe('Canvas Mode: extended typography', () => {
   it('text accepts textTransform, textStroke, textShadow', () => {
     const node = text('HELLO WORLD', {
       fontSize: 48,
@@ -444,7 +444,7 @@ describe('Banner Mode: extended typography', () => {
     expect(node.textStyle?.textShadow).toEqual({ color: '#000000', offsetX: 2, offsetY: 2, blur: 4 });
   });
 
-  it('text without banner props has undefined banner text style fields', () => {
+  it('text without canvas props has undefined canvas text style fields', () => {
     const node = text('Normal text', { fontSize: 14 });
     expect(node.textStyle?.textTransform).toBeUndefined();
     expect(node.textStyle?.textStroke).toBeUndefined();
@@ -452,7 +452,7 @@ describe('Banner Mode: extended typography', () => {
   });
 });
 
-describe('Banner Mode: FontDeclaration type', () => {
+describe('Canvas Mode: FontDeclaration type', () => {
   it('FontDeclaration type is correctly structured', () => {
     const decl: FontDeclaration = {
       path: './fonts/NotoSansJP.woff2',

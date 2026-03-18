@@ -1,7 +1,7 @@
 # Implementation Plan
 
-- [ ] 1. Rename banner mode to canvas mode across all packages
-- [ ] 1.1 Update type definitions and internal mode handling
+- [x] 1. Rename banner mode to canvas mode across all packages
+- [x] 1.1 Update type definitions and internal mode handling
   - Change `CompilerMode` from `'standard' | 'banner'` to `'standard' | 'canvas'` in the compiler types
   - Update `PluginInput.mode` in dsl-core plugin-types to accept `'canvas'` instead of `'banner'`
   - Update `ValidationPreset` to use `'canvas'` instead of `'banner'` in the validator types and presets
@@ -9,14 +9,14 @@
   - Update all test assertions referencing `'banner'` to `'canvas'`
   - _Requirements: 6.3_
 
-- [ ] 1.2 Add backward-compatible banner alias with deprecation warning in CLI
+- [x] 1.2 Add backward-compatible banner alias with deprecation warning in CLI
   - Accept both `'canvas'` and `'banner'` as valid mode exports in DSL module loading
   - When `'banner'` is detected, normalize to `'canvas'` internally and emit a deprecation warning recommending migration
   - Update all user-facing CLI log messages, help text, and pipeline stage output to use "canvas mode" terminology
   - Verify existing `.dsl.ts` files with `export const mode = 'banner'` still work correctly with a deprecation warning
   - _Requirements: 6.1, 6.2, 6.4_
 
-- [ ] 1.3 Update DSL reference documentation
+- [x] 1.3 Update DSL reference documentation
   - Rename the "Banner Mode" section heading to "Canvas Mode" throughout `docs/dsl-reference.md`
   - Update all code examples to use `export const mode = 'canvas'`
   - Add a note about the deprecated `'banner'` alias at the top of the Canvas Mode section

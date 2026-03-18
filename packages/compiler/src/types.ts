@@ -103,7 +103,7 @@ export interface FigmaNodeDict {
   // Section
   sectionContentsHidden?: boolean;
 
-  // Banner Mode
+  // Canvas Mode
   effects?: EffectDefinition[];
   blendMode?: BlendMode;
   textTransform?: 'UPPERCASE' | 'LOWERCASE' | 'CAPITALIZE';
@@ -120,7 +120,7 @@ export interface CompileError {
   severity?: 'error' | 'warning';
 }
 
-export type CompilerMode = 'standard' | 'banner';
+export type CompilerMode = 'standard' | 'canvas';
 
 export interface CompilerOptions {
   validationLevel?: CompilerValidationLevel;

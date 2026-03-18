@@ -182,7 +182,7 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
   if (node.strokeCap) result.strokeCap = node.strokeCap;
   if (node.sectionContentsHidden !== undefined) result.sectionContentsHidden = node.sectionContentsHidden;
 
-  // Banner Mode: effects
+  // Canvas Mode: effects
   if (node.effects?.length) {
     result.effects = node.effects.map(effect => {
       if (effect.type === 'DROP_SHADOW') {
@@ -204,12 +204,12 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
     });
   }
 
-  // Banner Mode: blendMode
+  // Canvas Mode: blendMode
   if (node.blendMode) {
     result.blendMode = node.blendMode;
   }
 
-  // Banner Mode: text style extensions
+  // Canvas Mode: text style extensions
   if (node.textTransform) result.textTransform = node.textTransform;
   if (node.textStroke) result.textStroke = node.textStroke;
   if (node.textShadow) result.textShadow = node.textShadow;
@@ -236,7 +236,7 @@ export function generatePluginInput(
     schemaVersion: '1.0.0',
     targetPage: pageName,
     components,
-    mode: compileResult.mode === 'banner' ? 'banner' : undefined,
+    mode: compileResult.mode === 'canvas' ? 'canvas' : undefined,
   };
 
   return result;

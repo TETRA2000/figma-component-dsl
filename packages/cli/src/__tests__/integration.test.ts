@@ -332,10 +332,10 @@ describe('DSL test definitions: Instance references', () => {
   });
 });
 
-// --- Banner Mode Integration Tests ---
+// --- Canvas Mode Integration Tests ---
 
-describe('Integration: Banner Mode full pipeline (DSL → compile → render → export)', () => {
-  it('compiles, renders, and exports a Banner Mode frame with effects and absolute positioning', () => {
+describe('Integration: Canvas Mode full pipeline (DSL → compile → render → export)', () => {
+  it('compiles, renders, and exports a Canvas Mode frame with effects and absolute positioning', () => {
     const shadow: DropShadowEffect = {
       type: 'DROP_SHADOW',
       color: { r: 0, g: 0, b: 0, a: 0.5 },
@@ -379,8 +379,8 @@ describe('Integration: Banner Mode full pipeline (DSL → compile → render →
     });
 
     // Stage 1: Compile
-    const compiled = compileWithLayout(banner, textMeasurer, { mode: 'banner' });
-    expect(compiled.mode).toBe('banner');
+    const compiled = compileWithLayout(banner, textMeasurer, { mode: 'canvas' });
+    expect(compiled.mode).toBe('canvas');
     expect(compiled.errors).toHaveLength(0);
     expect(compiled.root.size.x).toBe(800);
     expect(compiled.root.size.y).toBe(400);
@@ -408,7 +408,7 @@ describe('Integration: Banner Mode full pipeline (DSL → compile → render →
 
     // Stage 3: Export
     const pluginInput = generatePluginInput(compiled);
-    expect(pluginInput.mode).toBe('banner');
+    expect(pluginInput.mode).toBe('canvas');
     expect(pluginInput.components).toHaveLength(1);
 
     const root = pluginInput.components[0]!;
@@ -420,7 +420,7 @@ describe('Integration: Banner Mode full pipeline (DSL → compile → render →
     expect(effects[0]!.radius).toBe(12);
   });
 
-  it('handles Banner Mode with layer blur effect', () => {
+  it('handles Canvas Mode with layer blur effect', () => {
     const blur: LayerBlurEffect = { type: 'LAYER_BLUR', radius: 8 };
 
     const blurredFrame = frame('Blurred', {
@@ -429,7 +429,7 @@ describe('Integration: Banner Mode full pipeline (DSL → compile → render →
       effects: [blur],
     });
 
-    const compiled = compileWithLayout(blurredFrame, textMeasurer, { mode: 'banner' });
+    const compiled = compileWithLayout(blurredFrame, textMeasurer, { mode: 'canvas' });
     expect(compiled.root.effects).toHaveLength(1);
     expect(compiled.root.effects![0]!.type).toBe('LAYER_BLUR');
 
@@ -442,16 +442,16 @@ describe('Integration: Banner Mode full pipeline (DSL → compile → render →
     expect(effects[0]!.radius).toBe(8);
   });
 
-  it('exports mode field in plugin input for Banner Mode', () => {
+  it('exports mode field in plugin input for Canvas Mode', () => {
     const simple = frame('Simple', { size: { x: 100, y: 100 } });
-    const compiled = compileWithLayout(simple, textMeasurer, { mode: 'banner' });
+    const compiled = compileWithLayout(simple, textMeasurer, { mode: 'canvas' });
     const pluginInput = generatePluginInput(compiled);
-    expect(pluginInput.mode).toBe('banner');
+    expect(pluginInput.mode).toBe('canvas');
   });
 });
 
 describe('Integration: Standard mode backward compatibility', () => {
-  it('standard mode produces identical output without Banner Mode features', () => {
+  it('standard mode produces identical output without Canvas Mode features', () => {
     const dsl = frame('StandardBox', {
       size: { x: 200, y: 100 },
       fills: [solid('#7c3aed')],
@@ -467,7 +467,7 @@ describe('Integration: Standard mode backward compatibility', () => {
     expect(compiled1.root.size).toEqual(compiled2.root.size);
     expect(compiled1.root.type).toEqual(compiled2.root.type);
 
-    // No Banner Mode properties should be present
+    // No Canvas Mode properties should be present
     expect(compiled1.root.effects).toBeUndefined();
     expect(compiled1.root.blendMode).toBeUndefined();
     expect(compiled2.root.effects).toBeUndefined();
@@ -499,8 +499,8 @@ describe('Integration: Standard mode backward compatibility', () => {
     expect(result.pngBuffer.length).toBeGreaterThan(100);
 
     const pluginInput = generatePluginInput(compiled);
-    // Standard mode should not set 'banner' mode in plugin input
-    expect(pluginInput.mode).not.toBe('banner');
+    // Standard mode should not set 'canvas' mode in plugin input
+    expect(pluginInput.mode).not.toBe('canvas');
     expect(pluginInput.components[0]!.stackMode).toBe('HORIZONTAL');
   });
 

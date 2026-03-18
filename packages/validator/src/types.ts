@@ -1,6 +1,6 @@
 export type SeverityLevel = 'error' | 'warning' | 'off';
 
-export type ValidationPreset = 'strict' | 'normal' | 'loose' | 'banner';
+export type ValidationPreset = 'strict' | 'normal' | 'loose' | 'canvas' | 'banner';
 
 export interface ValidationError {
   rule: string;

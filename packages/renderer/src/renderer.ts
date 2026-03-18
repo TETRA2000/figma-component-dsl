@@ -492,7 +492,7 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, image
 
   ctx.save();
 
-  // Apply Banner Mode effects (shadow, blend mode) before transform
+  // Apply Canvas Mode effects (shadow, blend mode) before transform
   // Shadow must be applied before coordinate transforms to avoid @napi-rs/canvas translate bug
   const cleanupEffects = applyEffects(ctx, node.effects, node.blendMode);
 
@@ -684,7 +684,7 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, image
     renderNode(ctx, child, `${path} > ${child.name}`, imageCache);
   }
 
-  // Clean up Banner Mode effects
+  // Clean up Canvas Mode effects
   cleanupEffects();
 
   ctx.restore();
@@ -770,7 +770,7 @@ function renderText(ctx: SKRSContext2D, node: FigmaNodeDict): void {
 
   ctx.globalAlpha = node.opacity ?? 1;
 
-  // Banner Mode: text shadow (applied before fillText)
+  // Canvas Mode: text shadow (applied before fillText)
   if (node.textShadow) {
     ctx.shadowColor = node.textShadow.color;
     ctx.shadowOffsetX = node.textShadow.offsetX;
@@ -785,7 +785,7 @@ function renderText(ctx: SKRSContext2D, node: FigmaNodeDict): void {
     ? originalLines.map(l => applyTextTransform(l, textTransform))
     : originalLines;
 
-  // Banner Mode: text stroke setup
+  // Canvas Mode: text stroke setup
   const textStroke = node.textStroke;
   const shouldStroke = textStroke && textStroke.width > 0;
   if (shouldStroke) {

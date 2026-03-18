@@ -321,8 +321,8 @@ describe('generatePluginInput() — IMAGE nodes', () => {
   });
 });
 
-// --- Banner Mode Exporter Tests ---
-describe('generatePluginInput() — Banner Mode effects', () => {
+// --- Canvas Mode Exporter Tests ---
+describe('generatePluginInput() — Canvas Mode effects', () => {
   it('maps DROP_SHADOW effects to Figma format', () => {
     const node = frame('Banner', {
       size: { x: 800, y: 400 },
@@ -335,7 +335,7 @@ describe('generatePluginInput() — Banner Mode effects', () => {
         spread: 1,
       }],
     });
-    const compiled = compile(node, { mode: 'banner' });
+    const compiled = compile(node, { mode: 'canvas' });
     const input = generatePluginInput(compiled);
     const root = input.components[0]!;
     expect((root as Record<string, unknown>).effects).toBeDefined();
@@ -353,7 +353,7 @@ describe('generatePluginInput() — Banner Mode effects', () => {
       size: { x: 100, y: 100 },
       effects: [{ type: 'LAYER_BLUR', radius: 10 }],
     });
-    const compiled = compile(node, { mode: 'banner' });
+    const compiled = compile(node, { mode: 'canvas' });
     const input = generatePluginInput(compiled);
     const root = input.components[0]!;
     const effects = (root as Record<string, unknown>).effects as Array<Record<string, unknown>>;
@@ -367,7 +367,7 @@ describe('generatePluginInput() — Banner Mode effects', () => {
       size: { x: 100, y: 100 },
       blendMode: 'MULTIPLY',
     });
-    const compiled = compile(node, { mode: 'banner' });
+    const compiled = compile(node, { mode: 'canvas' });
     const input = generatePluginInput(compiled);
     const root = input.components[0]! as Record<string, unknown>;
     expect(root.blendMode).toBe('MULTIPLY');
@@ -375,8 +375,8 @@ describe('generatePluginInput() — Banner Mode effects', () => {
 
   it('propagates mode to export output', () => {
     const node = frame('Root', { size: { x: 100, y: 100 } });
-    const compiled = compile(node, { mode: 'banner' });
+    const compiled = compile(node, { mode: 'canvas' });
     const input = generatePluginInput(compiled);
-    expect(input.mode).toBe('banner');
+    expect(input.mode).toBe('canvas');
   });
 });
