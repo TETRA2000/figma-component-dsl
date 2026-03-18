@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc -b && npm run build -w packages/plugin",
     "test": "npm run test --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run lint --workspaces --if-present",
+    "update-baselines": "npx tsx packages/react-to-dsl/src/__tests__/update-baselines.ts"
   },
   "bin": {
     "figma-dsl": "bin/figma-dsl",

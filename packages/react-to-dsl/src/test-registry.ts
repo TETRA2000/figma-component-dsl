@@ -1,6 +1,6 @@
 /**
- * Test page registry — manifest of all 200 test pages used by the
- * batch converter and test server.
+ * Test page registry — manifest of all 18 test pages (one per category)
+ * used by the batch converter, test server, and visual regression tests.
  */
 
 export interface TestPageEntry {
@@ -41,26 +41,26 @@ export const ALL_CATEGORIES: string[] = [
   'combined-complex',
 ];
 
-/** Number of test pages per category. */
+/** Number of test pages per category (1 representative page each). */
 const CATEGORY_COUNTS: Record<string, number> = {
-  'layout-horizontal': 15,
-  'layout-vertical': 15,
-  'layout-nested': 15,
-  'layout-sizing': 10,
-  'typography': 20,
-  'colors-solid': 10,
-  'colors-gradient': 10,
-  'borders-strokes': 10,
-  'corner-radius': 8,
-  'spacing-padding': 12,
-  'opacity': 5,
-  'clip-content': 5,
-  'cards': 15,
-  'navigation': 10,
-  'heroes-banners': 10,
-  'lists-grids': 10,
-  'badges-tags': 5,
-  'combined-complex': 15,
+  'layout-horizontal': 1,
+  'layout-vertical': 1,
+  'layout-nested': 1,
+  'layout-sizing': 1,
+  'typography': 1,
+  'colors-solid': 1,
+  'colors-gradient': 1,
+  'borders-strokes': 1,
+  'corner-radius': 1,
+  'spacing-padding': 1,
+  'opacity': 1,
+  'clip-content': 1,
+  'cards': 1,
+  'navigation': 1,
+  'heroes-banners': 1,
+  'lists-grids': 1,
+  'badges-tags': 1,
+  'combined-complex': 1,
 };
 
 /** Human-readable descriptions per category (templates). */
@@ -117,7 +117,7 @@ function pad(n: number): string {
 
 /**
  * Build the full test page registry.
- * Returns entries for all 200 test pages with consistent naming.
+ * Returns entries for all 18 test pages (one per category).
  */
 export function buildRegistry(): TestPageEntry[] {
   const entries: TestPageEntry[] = [];
