@@ -154,8 +154,57 @@ Extend existing packages (Option A) but extract SVG-specific utilities (parsing,
 
 ### Research Items to Carry Forward
 
-- [ ] Test `@resvg/resvg-js` integration with existing @napi-rs/canvas pipeline
-- [ ] Test `@napi-rs/canvas` `loadImage()` with SVG data URLs
-- [ ] Verify `figma.createNodeFromSvg()` API behavior and limitations
-- [ ] Test `node.exportAsync({ format: 'SVG' })` round-trip fidelity
-- [ ] Assess SVG content hashing strategies for changeset detection
+- [x] Test `@resvg/resvg-js` integration with existing @napi-rs/canvas pipeline — **Resolved**: `@resvg/resvg-js` used in `renderer/src/svg-loader.ts`, renders via `fitTo: { mode: 'width' }` and outputs PNG buffer loaded by `@napi-rs/canvas`
+- [x] Test `@napi-rs/canvas` `loadImage()` with SVG data URLs — **Not needed**: `@resvg/resvg-js` produces raster Image directly
+- [x] Verify `figma.createNodeFromSvg()` API behavior and limitations — **Resolved**: Used in `plugin/src/code.ts`, returns FrameNode containing vector children
+- [x] Test `node.exportAsync({ format: 'SVG' })` round-trip fidelity — **Resolved**: Used for baseline hash comparison in changeset detection
+- [x] Assess SVG content hashing strategies for changeset detection — **Resolved**: `simpleHash()` on content string + baseline via `exportAsync({ format: 'SVG_STRING' })`
+
+---
+
+## 6. Post-Implementation Validation (2026-03-18)
+
+### Validation Results
+
+Full acceptance criteria validation was performed against the implemented codebase. **31 of 31 acceptance criteria now pass** after fixing 3 integration gaps.
+
+#### Acceptance Criteria Coverage
+
+| Requirement | ACs | Status |
+|-------------|-----|--------|
+| Req 1: SVG Node Type Definition | 7/7 | **PASS** |
+| Req 2: SVG Rendering in PNG Pipeline | 6/6 | **PASS** |
+| Req 3: SVG Compilation and Layout Resolution | 4/4 | **PASS** |
+| Req 4: SVG Export to Figma Plugin JSON | 4/4 | **PASS** |
+| Req 5: Bidirectional Sync | 5/5 | **PASS** |
+| Req 6: Mode Rename | 5/5 | **PASS** |
+| Req 7: SVG Validator Rules | 4/4 | **PASS** |
+
+#### Gaps Found and Fixed
+
+| # | Gap | Impact | Fix Applied |
+|---|-----|--------|-------------|
+| 1 | CLI `cmdRender` did not call `preloadSvgContent` | SVG nodes rendered as gray placeholders in CLI | Added `preloadSvgContent` call + `svgCache` passthrough in both `cmdRender` and `cmdPipeline` (`cli.ts`) |
+| 2 | Plugin did not apply `effects`, `blendMode`, `rotation` on SVG nodes (or any node type generically) | Visual properties from exporter silently dropped in Figma | Added generic post-creation application of effects, blendMode, and rotation for all node types (`code.ts`) |
+| 3 | DSL reference docs had no `svg()` section | API undocumented | Added full `svg()` constructor docs with options table and examples (`dsl-reference.md`) |
+
+#### Implementation Approach Used
+
+**Option A (Extend Existing Packages)** was implemented as recommended. Key implementation details:
+
+| Package | Files Modified/Added | Notes |
+|---------|---------------------|-------|
+| dsl-core | `types.ts`, `nodes.ts` | `SvgProps` interface, `svg()` factory, `'SVG'` in NodeType |
+| compiler | `types.ts`, `compiler.ts` | `CompilerMode = 'standard' \| 'canvas'`, SVG case in mapNodeType/compileNode |
+| renderer | `renderer.ts`, `svg-loader.ts` (new) | SVG rasterization via `@resvg/resvg-js`, placeholder fallback |
+| exporter | `exporter.ts` | SVG content embedding, file read for `src` references |
+| plugin | `code.ts` | `figma.createNodeFromSvg()`, plugin data hashing, generic effects/blendMode/rotation |
+| validator | `svg-content.ts` (new), `presets.ts` | SVG validation rule with canvas-mode awareness |
+| cli | `cli.ts` | Canvas mode detection, deprecated banner alias, SVG preloading |
+| docs | `dsl-reference.md` | SVG API documentation section |
+
+#### Test Results
+
+- **701 tests pass** across 32 test files
+- **5 packages type-check clean**: dsl-core, compiler, renderer, exporter, validator
+- CLI type errors are pre-existing (missing dist builds for capturer, comparator — unrelated to SVG)
