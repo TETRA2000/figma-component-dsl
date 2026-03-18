@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { compile, compileToJson } from './compiler.js';
-import { frame, text, rectangle, ellipse, group, component, componentSet, instance, image, line, section, polygon, star, union, subtract, intersect, exclude } from '@figma-dsl/core';
+import { frame, text, rectangle, ellipse, group, component, componentSet, instance, image, svg, line, section, polygon, star, union, subtract, intersect, exclude } from '@figma-dsl/core';
 import { solid, gradient, radialGradient, imageFill, defineTokens, token } from '@figma-dsl/core';
 import { horizontal, vertical } from '@figma-dsl/core';
 
@@ -807,5 +807,80 @@ describe('compile() — Canvas Mode', () => {
     const result = compile(node, { mode: 'standard' });
     const warnings = result.errors.filter(e => e.severity === 'warning');
     expect(warnings.some(w => w.message.includes('Canvas Mode'))).toBe(true);
+  });
+});
+
+// --- SVG Compiler Tests ---
+describe('compile() — SVG node', () => {
+  it('SVG node with svgContent compiles correctly', () => {
+    const node = svg('Icon', { svgContent: '<svg><circle r="10"/></svg>', size: { x: 24, y: 24 } });
+    const result = compile(node);
+    expect(result.root.type).toBe('SVG');
+    expect(result.root.svgContent).toBe('<svg><circle r="10"/></svg>');
+    expect(result.root.svgSrc).toBeUndefined();
+    expect(result.errors).toEqual([]);
+  });
+
+  it('SVG node with svgSrc compiles correctly', () => {
+    const node = svg('Icon', { src: './icon.svg', size: { x: 24, y: 24 } });
+    const result = compile(node);
+    expect(result.root.type).toBe('SVG');
+    expect(result.root.svgSrc).toBe('./icon.svg');
+    expect(result.root.svgContent).toBeUndefined();
+    expect(result.errors).toEqual([]);
+  });
+
+  it('SVG node with both svgContent and svgSrc emits warning and uses svgContent', () => {
+    const node = svg('Icon', { svgContent: '<svg/>', src: './icon.svg', size: { x: 24, y: 24 } });
+    const result = compile(node);
+    expect(result.root.svgContent).toBe('<svg/>');
+    expect(result.root.svgSrc).toBe('./icon.svg');
+    const warnings = result.errors.filter(e => e.severity === 'warning');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0]!.message).toContain('svgContent');
+  });
+
+  it('SVG node with neither svgContent nor svgSrc emits compile error', () => {
+    // Build manually since the svg() factory throws
+    const node = {
+      type: 'SVG' as const,
+      name: 'Empty',
+      size: { x: 24, y: 24 },
+    };
+    const result = compile(node as any);
+    const errors = result.errors.filter(e => !e.severity || e.severity === 'error');
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0]!.message).toContain('svgContent or svgSrc');
+  });
+
+  it('SVG node preserves svgScaleMode', () => {
+    const node = svg('Icon', { src: './icon.svg', size: { x: 48, y: 48 }, fit: 'FILL' });
+    const result = compile(node);
+    expect(result.root.svgScaleMode).toBe('FILL');
+  });
+
+  it('SVG in canvas mode compiles without warnings', () => {
+    const node = svg('Icon', { svgContent: '<svg/>', size: { x: 24, y: 24 } });
+    const result = compile(node, { mode: 'canvas' });
+    expect(result.root.type).toBe('SVG');
+    expect(result.errors).toEqual([]);
+  });
+
+  it('SVG in standard mode compiles as leaf node in auto-layout', () => {
+    const node = frame('Container', {
+      autoLayout: horizontal({ spacing: 8 }),
+      children: [svg('Icon', { src: './icon.svg', size: { x: 24, y: 24 } })],
+    });
+    const result = compile(node);
+    expect(result.root.children).toHaveLength(1);
+    expect(result.root.children[0]!.type).toBe('SVG');
+    expect(result.root.children[0]!.svgSrc).toBe('./icon.svg');
+    expect(result.errors).toEqual([]);
+  });
+
+  it('preserves size on SVG nodes', () => {
+    const node = svg('Icon', { src: './icon.svg', size: { x: 64, y: 64 } });
+    const result = compile(node);
+    expect(result.root.size).toEqual({ x: 64, y: 64 });
   });
 });

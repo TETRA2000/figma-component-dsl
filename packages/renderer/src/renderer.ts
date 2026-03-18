@@ -4,6 +4,8 @@ import { readdirSync, writeFileSync } from 'fs';
 import type { FigmaNodeDict } from '@figma-dsl/compiler';
 import { computeDrawInstruction } from '@figma-dsl/core';
 import type { ImageCache } from './image-loader.js';
+import type { SvgCache } from './svg-loader.js';
+import { svgCacheKey } from './svg-loader.js';
 import { applyEffects } from './effects.js';
 
 export interface RgbaColor {
@@ -19,6 +21,7 @@ export interface RenderOptions {
   assetDir?: string;
   debugLayout?: boolean;
   imageCache?: ImageCache;
+  svgCache?: SvgCache;
 }
 
 export interface RenderResult {
@@ -451,7 +454,7 @@ function renderStar(ctx: SKRSContext2D, node: FigmaNodeDict): void {
   ctx.restore();
 }
 
-function renderBooleanOperation(ctx: SKRSContext2D, node: FigmaNodeDict, imageCache?: ImageCache): void {
+function renderBooleanOperation(ctx: SKRSContext2D, node: FigmaNodeDict, imageCache?: ImageCache, svgCache?: SvgCache): void {
   const w = node.size.x;
   const h = node.size.y;
 
@@ -473,13 +476,13 @@ function renderBooleanOperation(ctx: SKRSContext2D, node: FigmaNodeDict, imageCa
 
   // Render first child normally
   if (node.children.length > 0) {
-    renderNode(offCtx as unknown as SKRSContext2D, node.children[0]!, '', imageCache);
+    renderNode(offCtx as unknown as SKRSContext2D, node.children[0]!, '', imageCache, svgCache);
   }
 
   // Render subsequent children with composite operation
   for (let i = 1; i < node.children.length; i++) {
     offCtx.globalCompositeOperation = compositeMap[operation] ?? 'source-over';
-    renderNode(offCtx as unknown as SKRSContext2D, node.children[i]!, '', imageCache);
+    renderNode(offCtx as unknown as SKRSContext2D, node.children[i]!, '', imageCache, svgCache);
   }
 
   // Composite result onto main canvas
@@ -487,7 +490,7 @@ function renderBooleanOperation(ctx: SKRSContext2D, node: FigmaNodeDict, imageCa
   ctx.drawImage(offscreen, 0, 0);
 }
 
-function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, imageCache?: ImageCache): void {
+function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, imageCache?: ImageCache, svgCache?: SvgCache): void {
   if (!node.visible) return;
 
   ctx.save();
@@ -568,6 +571,29 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, image
       break;
     }
 
+    case 'SVG': {
+      // Clip to node bounds (with optional cornerRadius)
+      ctx.save();
+      ctx.beginPath();
+      if (hasCornerRadius(radius)) {
+        ctx.roundRect(0, 0, w, h, radius!);
+      } else {
+        ctx.rect(0, 0, w, h);
+      }
+      ctx.clip();
+
+      ctx.globalAlpha = node.opacity ?? 1;
+      const svgKey = svgCacheKey(node);
+      const svgImg = svgKey ? svgCache?.get(svgKey) : undefined;
+      if (svgImg) {
+        drawImageOnNode(ctx, svgImg, node, node.svgScaleMode ?? 'FIT');
+      } else {
+        drawImagePlaceholder(ctx, node);
+      }
+      ctx.restore();
+      break;
+    }
+
     case 'TEXT':
       renderText(ctx, node);
       break;
@@ -593,7 +619,7 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, image
       break;
 
     case 'BOOLEAN_OPERATION':
-      renderBooleanOperation(ctx, node, imageCache);
+      renderBooleanOperation(ctx, node, imageCache, svgCache);
       break;
 
     default:
@@ -681,7 +707,7 @@ function renderNode(ctx: SKRSContext2D, node: FigmaNodeDict, path: string, image
 
   // Render children
   for (const child of node.children) {
-    renderNode(ctx, child, `${path} > ${child.name}`, imageCache);
+    renderNode(ctx, child, `${path} > ${child.name}`, imageCache, svgCache);
   }
 
   // Clean up Canvas Mode effects
@@ -958,7 +984,7 @@ export function render(
   ctx.fillRect(0, 0, node.size.x, node.size.y);
 
   // Render the tree
-  renderNode(ctx, node, node.name, opts.imageCache);
+  renderNode(ctx, node, node.name, opts.imageCache, opts.svgCache);
 
   // Debug layout overlay
   if (opts.debugLayout) {

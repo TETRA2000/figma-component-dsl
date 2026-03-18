@@ -9,6 +9,7 @@ export { variantUnionRule } from './variant-union.js';
 export { htmlAttrsRule } from './html-attrs.js';
 export { dslCompatibleLayoutRule } from './dsl-compatible-layout.js';
 export { imageRefsRule } from './image-refs.js';
+export { svgContentRule } from './svg-content.js';
 
 import type { ValidationRule } from '../types.js';
 import { threeFileRule } from './three-file.js';
@@ -22,6 +23,7 @@ import { variantUnionRule } from './variant-union.js';
 import { htmlAttrsRule } from './html-attrs.js';
 import { dslCompatibleLayoutRule } from './dsl-compatible-layout.js';
 import { imageRefsRule } from './image-refs.js';
+import { svgContentRule } from './svg-content.js';
 
 export const allRules: ValidationRule[] = [
   threeFileRule,
@@ -35,4 +37,5 @@ export const allRules: ValidationRule[] = [
   htmlAttrsRule,
   dslCompatibleLayoutRule,
   imageRefsRule,
+  svgContentRule,
 ];

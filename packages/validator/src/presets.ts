@@ -20,6 +20,7 @@ export const presets: Record<ValidationPreset, Record<string, SeverityLevel>> = 
     'html-attrs':            'warning',
     'dsl-compatible-layout': 'warning',
     'image-refs':            'error',
+    'svg-content':           'warning',
   },
 
   normal: {
@@ -34,6 +35,7 @@ export const presets: Record<ValidationPreset, Record<string, SeverityLevel>> = 
     'html-attrs':            'off',
     'dsl-compatible-layout': 'warning',
     'image-refs':            'warning',
+    'svg-content':           'warning',
   },
 
   loose: {
@@ -48,6 +50,7 @@ export const presets: Record<ValidationPreset, Record<string, SeverityLevel>> = 
     'html-attrs':            'off',
     'dsl-compatible-layout': 'off',
     'image-refs':            'warning',
+    'svg-content':           'off',
   },
 
   canvas: {
@@ -62,6 +65,7 @@ export const presets: Record<ValidationPreset, Record<string, SeverityLevel>> = 
     'html-attrs':            'off',
     'dsl-compatible-layout': 'off',
     'image-refs':            'warning',
+    'svg-content':           'off',
   },
 
   // Backward-compatible alias for 'canvas' (deprecated)
@@ -77,6 +81,7 @@ export const presets: Record<ValidationPreset, Record<string, SeverityLevel>> = 
     'html-attrs':            'off',
     'dsl-compatible-layout': 'off',
     'image-refs':            'warning',
+    'svg-content':           'off',
   },
 };
 

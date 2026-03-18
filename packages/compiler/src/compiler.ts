@@ -24,6 +24,7 @@ function mapNodeType(node: DslNode): FigmaNodeType | null {
         ? 'ROUNDED_RECTANGLE'
         : 'RECTANGLE';
     case 'IMAGE':
+    case 'SVG':
     case 'FRAME':
     case 'TEXT':
     case 'ELLIPSE':
@@ -170,6 +171,16 @@ function validateNode(
     }
   }
 
+  // Validate SVG — must have svgContent or svgSrc
+  if (node.type === 'SVG') {
+    if (!node.svgContent && !node.svgSrc) {
+      push('SVG node must have svgContent or svgSrc');
+    }
+    if (node.svgContent && node.svgSrc) {
+      push('SVG node has both svgContent and svgSrc; svgContent will be used', 'warning');
+    }
+  }
+
   // Validate fills for image type — always required
   if (node.fills) {
     for (const fill of node.fills) {
@@ -260,6 +271,13 @@ function compileNode(
   if (node.type === 'IMAGE') {
     result.imageSrc = node.imageSrc;
     result.imageScaleMode = node.imageScaleMode;
+  }
+
+  // SVG passthrough
+  if (node.type === 'SVG') {
+    result.svgContent = node.svgContent;
+    result.svgSrc = node.svgSrc;
+    result.svgScaleMode = node.svgScaleMode;
   }
 
   // Auto-layout passthrough
