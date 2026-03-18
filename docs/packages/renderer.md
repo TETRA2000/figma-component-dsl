@@ -538,10 +538,10 @@ npm run test     # vitest run
 
 ---
 
-## Effects System (Banner Mode)
+## Effects System (Canvas Mode)
 **Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
 
-The `effects.ts` module provides visual effects rendering for Banner Mode nodes:
+The `effects.ts` module provides visual effects rendering for Canvas Mode nodes:
 
 ### Functions
 
@@ -569,7 +569,7 @@ function applyEffects(
 
 ---
 
-## Font Manager (Banner Mode)
+## Font Manager (Canvas Mode)
 **Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
 
 The `font-manager.ts` module manages bundled and custom font registration:
@@ -599,10 +599,10 @@ interface FontManagerOptions {
 
 ---
 
-## Extended Text Rendering (Banner Mode)
+## Extended Text Rendering (Canvas Mode)
 **Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
 
-Banner Mode extends text rendering with:
+Canvas Mode extends text rendering with:
 
 - **Text transform**: `applyTextTransform()` converts text before measuring and rendering (UPPERCASE, LOWERCASE, CAPITALIZE)
 - **Text stroke**: After `fillText()`, applies `strokeText()` with specified color and width
@@ -610,14 +610,14 @@ Banner Mode extends text rendering with:
 - **Gradient text**: Creates `CanvasGradient` matching text bounds when gradient fills are used
 - **Text opacity**: Applied via `globalAlpha` for semi-transparent text layering
 
-All enhancements are conditional — standard text rendering is unchanged when Banner properties are absent.
+All enhancements are conditional — standard text rendering is unchanged when Canvas Mode properties are absent.
 
 ---
 
 ## Known Limitations
 **Confidence**: 0.92 | **Consensus**: Full | **Sources**: Architect, Developer, Analyst
 
-1. ~~**No shadow/blur effects**~~: **Resolved** — Banner Mode adds DROP_SHADOW and LAYER_BLUR effects via the effects helper.
+1. ~~**No shadow/blur effects**~~: **Resolved** — Canvas Mode adds DROP_SHADOW and LAYER_BLUR effects via the effects helper.
 2. **No dashed/dotted strokes**: Stroke dash patterns not supported.
 3. ~~**Unused `assetDir` option**~~: **Resolved** — Image loading now uses `imageCache` (pre-loaded via `preloadImages()`) for rendering IMAGE nodes and fills.
 4. **Silent text failure**: Text nodes without `textData`/`derivedTextData` render as blank without error.

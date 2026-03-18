@@ -343,10 +343,10 @@ This dual-level system supports:
 
 ---
 
-## Banner Mode Preset
+## Canvas Mode Preset
 **Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
 
-When the detected mode is `'banner'`, the validator applies the `banner` preset which disables all React-specific validation rules:
+When the detected mode is `'canvas'`, the validator applies the `banner` preset which disables all React-specific validation rules:
 
 ```typescript
 banner: {
@@ -364,7 +364,7 @@ banner: {
 }
 ```
 
-This ensures Banner Mode files (which have no React component counterpart) are not subjected to React-centric validation rules.
+This ensures Canvas Mode files (which have no React component counterpart) are not subjected to React-centric validation rules.
 
 ---
 

@@ -311,10 +311,10 @@ Schema validation, auto-layout preservation, component properties, instance refe
 
 ---
 
-## Banner Mode Effects Export
+## Canvas Mode Effects Export
 **Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
 
-When exporting Banner Mode files, the exporter maps DSL effects to Figma-compatible JSON:
+When exporting Canvas Mode files, the exporter maps DSL effects to Figma-compatible JSON:
 
 ### Effects Mapping
 
@@ -324,11 +324,11 @@ When exporting Banner Mode files, the exporter maps DSL effects to Figma-compati
 
 ### Text Style Extensions
 
-Banner Mode text properties (`textTransform`, `textStroke`, `textShadow`) are passed through to the exported JSON for Figma plugin consumption.
+Canvas Mode text properties (`textTransform`, `textStroke`, `textShadow`) are passed through to the exported JSON for Figma plugin consumption.
 
 ### Mode Propagation
 
-When `compileResult.mode` is `'banner'`, the exported `PluginInput` includes a `mode: 'banner'` field at the root level.
+When `compileResult.mode` is `'canvas'`, the exported `PluginInput` includes a `mode: 'canvas'` field at the root level.
 
 **Evidence**: `src/exporter.ts:186-239`
 

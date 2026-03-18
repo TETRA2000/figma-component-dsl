@@ -6,8 +6,8 @@ import {
 
 import type { FontDeclaration } from '@figma-dsl/core';
 
-// Enable Banner Mode
-export const mode = 'banner';
+// Enable Canvas Mode
+export const mode = 'canvas';
 
 // Font declarations
 export const fonts: FontDeclaration[] = [];

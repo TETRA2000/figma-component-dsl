@@ -168,19 +168,19 @@ Validates components for DSL compatibility. Supports single component or directo
 DSL files are dynamically imported at runtime using Node's ES module loader. The loader extracts three exports:
 
 1. **`default`** (required): The root `DslNode`
-2. **`mode`** (optional): `'banner'` to enable Banner Mode pipeline
+2. **`mode`** (optional): `'canvas'` to enable Canvas Mode pipeline
 3. **`fonts`** (optional): Array of `FontDeclaration` for custom font loading
 
 ```typescript
 async function loadDslModule(dslPath: string): Promise<{ node: DslNode; mode: CompilerMode; fonts: FontRegistration[] }> {
   const mod = await import(fileUrl);
-  // Detect mode: 'banner' or 'standard'
+  // Detect mode: 'canvas' or 'standard'
   // Read fonts: validate extensions (.ttf, .otf, .woff2), resolve paths
   // Return { node: mod.default, mode, fonts }
 }
 ```
 
-**Banner Mode detection**: If `mod.mode === 'banner'`, the CLI enables Banner Mode pipeline. If `mod.mode` is present but not `'banner'`, a warning is emitted and standard mode is used.
+**Canvas Mode detection**: If `mod.mode === 'canvas'`, the CLI enables Canvas Mode pipeline. If `mod.mode` is present but not `'canvas'`, a warning is emitted and standard mode is used.
 
 **Font validation**: Font declaration extensions are validated at load time (`.ttf`, `.otf`, `.woff2`). Unsupported extensions emit a warning and are skipped. Relative font paths are resolved against `--asset-dir`.
 
@@ -229,11 +229,11 @@ Commands that compile DSL follow this pattern:
 4. Report compilation errors to stderr with `[nodeType] nodePath: message` format
 5. Proceed with compiled output or fail based on error severity
 
-**Banner Mode pipeline behavior**:
+**Canvas Mode pipeline behavior**:
 - Mode is detected from `mod.mode` export and threaded through compilation, rendering, and export
 - Custom fonts from `mod.fonts` are registered with the font manager before rendering
-- The `pipeline` command skips capture and compare stages for Banner Mode files (no React component), exiting with code 0
-- The `capture` command prints an informational message and exits 0 for Banner Mode files
+- The `pipeline` command skips capture and compare stages for Canvas Mode files (no React component), exiting with code 0
+- The `capture` command prints an informational message and exits 0 for Canvas Mode files
 
 Compilation errors are non-fatal for the output (errors included in JSON), but logged for developer visibility. The `pipeline` command returns exit code 2 if compilation errors exist.
 
