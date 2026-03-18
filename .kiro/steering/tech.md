@@ -20,6 +20,9 @@ The DSL is implemented as a TypeScript monorepo with npm workspaces under `packa
 - `validator` — DSL compatibility validation with 10 rules (file structure, styling, AST-based checks) and Banner Mode preset
 - `mcp-server` — MCP (Model Context Protocol) server for real-time Figma sync via stdio + WebSocket bridge
 
+**Conversion & Testing Packages** (experimental):
+- `react-to-dsl` — Experimental rule-based React-to-DSL converter (extractor, mapper, codegen) with Playwright-driven visual regression tests (18 test pages, one per category). For production use, prefer AI-based conversion (Claude reads React source and writes idiomatic DSL). This package is for batch benchmarking and pipeline fidelity testing.
+
 **Reference implementations** (git submodules in `references/`):
 - **figma_design_playground**: React 19 component library → Figma plugin → Figma component
 - **figma-html-renderer**: Figma binary → parsed tree → classified nodes → rendered PNG → HTML output (Python)
@@ -74,6 +77,7 @@ Both references are minimalist — CSS Modules (not Tailwind), stdlib HTTP serve
 
 ### Testing
 - **DSL packages**: vitest for all packages (unit + integration)
+- **Visual regression** (experimental): Playwright-based baseline tests in `react-to-dsl` package — React screenshots and DSL pipeline renders compared against committed PNGs (18 test pages, 1 per category). Baselines updated via `npm run update-baselines`. CI runs in a dedicated `visual-regression` job. Note: the automated React-to-DSL conversion is a research tool; regular workflow uses AI-based conversion.
 - React reference: No test infrastructure yet (gap identified)
 - Python reference: pytest with Playwright for browser tests
 
