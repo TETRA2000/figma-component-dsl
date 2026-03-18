@@ -6,7 +6,7 @@
 - **Status**: Implementation is substantially complete with 152 tests passing across 11 test files
 - **Key Gap**: Image asset rendering (Req 6.3) is declared but not functionally implemented — `loadImage` is absent from the renderer
 - **Steering Drift**: `tech.md` still references Python/PyCairo as the rendering stack; implementation correctly uses TypeScript/@napi-rs/canvas per the approved design
-- **Completed**: Task 11.5 — visual regression tests with committed baselines (18 test pages, React + DSL baseline comparison, CI integration)
+- **Completed**: Task 11.5 — experimental visual regression tests with committed baselines (18 test pages, React + DSL baseline comparison, CI integration). Note: the automated React-to-DSL converter is experimental; regular workflow uses AI-based conversion.
 
 ---
 

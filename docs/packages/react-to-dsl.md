@@ -1,5 +1,7 @@
 # @figma-dsl/react-to-dsl
 
+> **Experimental** — This package is a research prototype for automated, rule-based React-to-DSL conversion. It uses DOM extraction and CSS-to-DSL property mapping, which works for simple layouts but loses semantic intent on complex components. **The regular workflow should use AI-based conversion** (e.g., Claude reading the React source and writing idiomatic DSL), which produces higher-quality, human-readable output. Use this package for batch benchmarking, visual regression testing, and measuring pipeline fidelity — not as the primary conversion method.
+
 Browser-based React-to-DSL converter. Extracts DOM elements with computed styles from rendered React components via Playwright, maps them to the DSL node tree, and generates `.dsl.ts` source code.
 
 ## Architecture

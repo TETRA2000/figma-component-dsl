@@ -37,14 +37,14 @@ The project follows a **specification-driven, research-first** approach. Referen
 **Purpose**: Project-wide context and conventions loaded as AI memory
 **Convention**: One topic per file (product.md, tech.md, structure.md, custom files)
 
-### React-to-DSL Test Pages
+### React-to-DSL Test Pages (experimental)
 **Location**: `packages/react-to-dsl/test-pages/{category}/`
-**Purpose**: Generated React test pages for the React-to-DSL converter and visual regression tests
+**Purpose**: Generated React test pages for the experimental React-to-DSL converter and visual regression tests. The automated converter is a research tool for benchmarking; regular workflow uses AI-based React-to-DSL conversion.
 **Convention**: 18 pages total (one per category, e.g., `layout-horizontal-01.tsx`). Each exports a default function component with a `data-testid="root"` wrapper. Served by the test server at `/test/{name}`.
 
-### Visual Regression Baselines
+### Visual Regression Baselines (experimental)
 **Location**: `packages/react-to-dsl/src/__tests__/baselines/`
-**Purpose**: Committed PNG baselines for visual regression tests
+**Purpose**: Committed PNG baselines for visual regression tests (measuring pipeline fidelity)
 **Convention**: `react/{name}.png` for Playwright screenshots, `dsl/{name}.png` for DSL pipeline renders. `diffs/` is gitignored (generated on failure). Updated via `npm run update-baselines`.
 
 ### DSL Examples
