@@ -231,7 +231,7 @@ The `text()` factory accepts `TextStyle & ChildLayoutProps & { size?: { x: numbe
 
 ---
 
-## Banner Mode Types
+## Canvas Mode Types
 **Confidence**: 0.97 | **Consensus**: Full | **Sources**: Code review
 
 ### Visual Effect Types
@@ -274,7 +274,7 @@ interface FontDeclaration {
 }
 ```
 
-### Extended Text Style Properties (Banner Mode)
+### Extended Text Style Properties (Canvas Mode)
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -282,14 +282,14 @@ interface FontDeclaration {
 | `textStroke` | `{ color: string; width: number }` | Stroke outline around text glyphs |
 | `textShadow` | `{ color: string; offsetX: number; offsetY: number; blur: number }` | Drop shadow behind text |
 
-### DslNode Banner Mode Properties
+### DslNode Canvas Mode Properties
 
 Frame, rectangle, ellipse, and image nodes support:
 - `effects?: EffectDefinition[]` — Visual effects (drop shadow, layer blur)
 - `blendMode?: BlendMode` — Compositing blend mode
 - `rotation?: number` — Rotation in degrees around node center
 
-All Banner Mode properties are optional. Standard-mode files remain unaffected.
+All Canvas Mode properties are optional. Standard-mode files remain unaffected.
 
 **Evidence**: `src/types.ts:14-41,124-139,152-208`
 

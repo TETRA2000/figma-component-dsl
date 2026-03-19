@@ -27,6 +27,8 @@ export const VISUAL_REGRESSION_PAGES = [
   'lists-grids-01',
   'badges-tags-01',
   'combined-complex-01',
+  'svg-basic-01',
+  'canvas-effects-01',
 ];
 
 /** Minimum similarity % for React screenshots vs committed baselines. */

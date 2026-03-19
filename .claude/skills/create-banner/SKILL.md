@@ -1,11 +1,11 @@
 ---
 name: create-banner
 description: >
-  Create banners using the DSL banner mode — produces a .dsl.ts file, compiled JSON,
+  Create banners using the DSL canvas mode — produces a .dsl.ts file, compiled JSON,
   Figma plugin JSON, and a rendered PNG image. Use this skill whenever the user wants
   to create a banner, promotional graphic, hero image, event poster, campaign visual,
   advertisement, or any rich visual design that goes beyond standard component layouts.
-  Also trigger when the user mentions banner mode, wants absolute positioning with
+  Also trigger when the user mentions canvas mode, wants absolute positioning with
   overlapping elements, or needs visual effects like shadows, blur, text strokes, or
   rotated elements. Covers: "create a banner", "make a promotional graphic", "design
   an event poster", "build a hero image", "campaign banner", "advertisement design",
@@ -15,12 +15,12 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 
 # Create Banner
 
-Generate rich visual banners using the DSL banner mode pipeline: write a `.dsl.ts` file, compile to JSON, export Figma plugin JSON, and render a PNG preview.
+Generate rich visual banners using the DSL canvas mode pipeline: write a `.dsl.ts` file, compile to JSON, export Figma plugin JSON, and render a PNG preview.
 
 ## Workflow Overview
 
 1. **Gather requirements** — ask the user what they want
-2. **Write the DSL** — create a `.dsl.ts` file with `mode = 'banner'`
+2. **Write the DSL** — create a `.dsl.ts` file with `mode = 'canvas'`
 3. **Compile & render** — produce JSON, Figma JSON, and PNG
 4. **Review & iterate** — show the PNG, refine based on feedback
 
@@ -48,7 +48,7 @@ If the user provides a website URL, use Playwright MCP tools to capture a screen
 
 Create the file at `examples/<banner-name>.dsl.ts`.
 
-### Banner Mode Template
+### Canvas Mode Template
 
 ```ts
 import {
@@ -59,8 +59,8 @@ import {
 
 import type { FontDeclaration } from '@figma-dsl/core';
 
-// Enable Banner Mode
-export const mode = 'banner';
+// Enable Canvas Mode
+export const mode = 'canvas';
 
 // Font declarations (empty unless custom brand fonts needed)
 export const fonts: FontDeclaration[] = [];
@@ -79,9 +79,9 @@ export default frame('BannerName', {
 });
 ```
 
-### Banner Mode Capabilities
+### Canvas Mode Capabilities
 
-These features are available **only in banner mode** (via `export const mode = 'banner'`):
+These features are available **only in canvas mode** (via `export const mode = 'canvas'`):
 
 | Feature | API | Example |
 |---------|-----|---------|

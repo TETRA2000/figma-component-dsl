@@ -24,6 +24,7 @@ function mapNodeType(node: DslNode): FigmaNodeType | null {
         ? 'ROUNDED_RECTANGLE'
         : 'RECTANGLE';
     case 'IMAGE':
+    case 'SVG':
     case 'FRAME':
     case 'TEXT':
     case 'ELLIPSE':
@@ -170,6 +171,16 @@ function validateNode(
     }
   }
 
+  // Validate SVG — must have svgContent or svgSrc
+  if (node.type === 'SVG') {
+    if (!node.svgContent && !node.svgSrc) {
+      push('SVG node must have svgContent or svgSrc');
+    }
+    if (node.svgContent && node.svgSrc) {
+      push('SVG node has both svgContent and svgSrc; svgContent will be used', 'warning');
+    }
+  }
+
   // Validate fills for image type — always required
   if (node.fills) {
     for (const fill of node.fills) {
@@ -260,6 +271,13 @@ function compileNode(
   if (node.type === 'IMAGE') {
     result.imageSrc = node.imageSrc;
     result.imageScaleMode = node.imageScaleMode;
+  }
+
+  // SVG passthrough
+  if (node.type === 'SVG') {
+    result.svgContent = node.svgContent;
+    result.svgSrc = node.svgSrc;
+    result.svgScaleMode = node.svgScaleMode;
   }
 
   // Auto-layout passthrough
@@ -418,7 +436,7 @@ function compileNode(
     result.booleanOperation = node.booleanOperation;
   }
 
-  // Banner Mode properties passthrough
+  // Canvas Mode properties passthrough
   if (node.effects?.length) {
     result.effects = node.effects;
   }
@@ -429,7 +447,7 @@ function compileNode(
   if (node.rotation !== undefined && node.type !== 'LINE' && node.type !== 'POLYGON' && node.type !== 'STAR') {
     result.rotation = node.rotation;
   }
-  // Banner Mode text style properties
+  // Canvas Mode text style properties
   if (node.type === 'TEXT' && node.textStyle) {
     if (node.textStyle.textTransform) result.textTransform = node.textStyle.textTransform;
     if (node.textStyle.textStroke) result.textStroke = node.textStyle.textStroke;
@@ -446,16 +464,16 @@ function compileNode(
   return result;
 }
 
-function warnBannerPropsInStandardMode(node: DslNode, path: string, errors: CompileError[]): void {
-  const bannerProps: string[] = [];
-  if (node.effects?.length) bannerProps.push('effects');
-  if (node.blendMode) bannerProps.push('blendMode');
+function warnCanvasPropsInStandardMode(node: DslNode, path: string, errors: CompileError[]): void {
+  const canvasProps: string[] = [];
+  if (node.effects?.length) canvasProps.push('effects');
+  if (node.blendMode) canvasProps.push('blendMode');
   if (node.rotation !== undefined && node.type !== 'LINE' && node.type !== 'POLYGON' && node.type !== 'STAR') {
-    bannerProps.push('rotation');
+    canvasProps.push('rotation');
   }
-  if (bannerProps.length > 0) {
+  if (canvasProps.length > 0) {
     errors.push({
-      message: `Banner Mode properties [${bannerProps.join(', ')}] are ignored in standard mode`,
+      message: `Canvas Mode properties [${canvasProps.join(', ')}] are ignored in standard mode`,
       nodePath: path,
       nodeType: node.type,
       severity: 'warning',
@@ -463,7 +481,7 @@ function warnBannerPropsInStandardMode(node: DslNode, path: string, errors: Comp
   }
   if (node.children) {
     for (const child of node.children) {
-      warnBannerPropsInStandardMode(child, `${path} > ${child.name}`, errors);
+      warnCanvasPropsInStandardMode(child, `${path} > ${child.name}`, errors);
     }
   }
 }
@@ -473,9 +491,9 @@ export function compile(node: DslNode, options?: CompilerOptions): CompileResult
   const errors: CompileError[] = [];
   const mode = options?.mode ?? 'standard';
 
-  // Warn if Banner Mode properties are used in standard mode
+  // Warn if Canvas Mode properties are used in standard mode
   if (mode === 'standard') {
-    warnBannerPropsInStandardMode(node, node.name, errors);
+    warnCanvasPropsInStandardMode(node, node.name, errors);
   }
 
   const root = compileNode(node, undefined, 0, node.name, errors, options?.validationLevel);
@@ -493,9 +511,9 @@ export function compileWithLayout(node: DslNode, measurer: TextMeasurer, options
   resetGuidCounter();
   const errors: CompileError[] = [];
 
-  // Warn if Banner Mode properties are used in standard mode
+  // Warn if Canvas Mode properties are used in standard mode
   if (mode === 'standard') {
-    warnBannerPropsInStandardMode(node, node.name, errors);
+    warnCanvasPropsInStandardMode(node, node.name, errors);
   }
 
   const root = compileNodeWithLayout(node, undefined, 0, node.name, errors, sizes, offsets, [1, 0, 0, 0, 1, 0], options?.validationLevel);

@@ -3,6 +3,8 @@ import {
   cssColorToHex,
   cssColorToOpacity,
   parseLinearGradient,
+  parseBoxShadow,
+  parseTextShadow,
   isTransparent,
 } from '../color-utils.js';
 
@@ -107,5 +109,48 @@ describe('isTransparent', () => {
     expect(isTransparent('rgb(255, 0, 0)')).toBe(false);
     expect(isTransparent('#ff0000')).toBe(false);
     expect(isTransparent('rgba(255, 0, 0, 0.5)')).toBe(false);
+  });
+});
+
+describe('parseBoxShadow', () => {
+  it('parses a single shadow', () => {
+    const result = parseBoxShadow('0px 4px 12px rgba(0, 0, 0, 0.25)');
+    expect(result).toHaveLength(1);
+    expect(result[0]!.offsetX).toBe(0);
+    expect(result[0]!.offsetY).toBe(4);
+    expect(result[0]!.blur).toBe(12);
+    expect(result[0]!.color.a).toBeCloseTo(0.25);
+  });
+
+  it('parses shadow with spread', () => {
+    const result = parseBoxShadow('2px 4px 8px 2px rgba(0, 0, 0, 0.5)');
+    expect(result).toHaveLength(1);
+    expect(result[0]!.spread).toBe(2);
+  });
+
+  it('returns empty for none', () => {
+    expect(parseBoxShadow('none')).toEqual([]);
+    expect(parseBoxShadow('')).toEqual([]);
+  });
+
+  it('skips inset shadows', () => {
+    const result = parseBoxShadow('inset 0 2px 4px rgba(0, 0, 0, 0.1)');
+    expect(result).toEqual([]);
+  });
+});
+
+describe('parseTextShadow', () => {
+  it('parses a basic text shadow', () => {
+    const result = parseTextShadow('2px 3px 4px rgba(0, 0, 0, 0.5)');
+    expect(result).not.toBeNull();
+    expect(result!.offsetX).toBe(2);
+    expect(result!.offsetY).toBe(3);
+    expect(result!.blur).toBe(4);
+    expect(result!.color).toContain('rgba');
+  });
+
+  it('returns null for none', () => {
+    expect(parseTextShadow('none')).toBeNull();
+    expect(parseTextShadow('')).toBeNull();
   });
 });

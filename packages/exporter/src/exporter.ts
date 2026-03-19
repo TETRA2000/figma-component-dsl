@@ -150,6 +150,22 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
     if (embedded.imageError) result.imageError = embedded.imageError;
   }
 
+  // SVG node passthrough — embed SVG content as text
+  if (node.type === 'SVG') {
+    if (node.svgContent) {
+      result.svgContent = node.svgContent;
+    } else if (node.svgSrc) {
+      // Read SVG file and embed content
+      try {
+        const resolvedPath = resolve(assetDir, node.svgSrc);
+        result.svgContent = readFileSync(resolvedPath, 'utf-8');
+      } catch {
+        result.svgContent = undefined;
+      }
+    }
+    if (node.svgScaleMode) result.svgScaleMode = node.svgScaleMode;
+  }
+
   // Component properties
   // Filter out VARIANT properties for standalone COMPONENT nodes — Figma only
   // allows VARIANT properties on COMPONENT_SET nodes.
@@ -182,7 +198,7 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
   if (node.strokeCap) result.strokeCap = node.strokeCap;
   if (node.sectionContentsHidden !== undefined) result.sectionContentsHidden = node.sectionContentsHidden;
 
-  // Banner Mode: effects
+  // Canvas Mode: effects
   if (node.effects?.length) {
     result.effects = node.effects.map(effect => {
       if (effect.type === 'DROP_SHADOW') {
@@ -204,12 +220,12 @@ function convertToPluginNode(node: FigmaNodeDict, assetDir: string): PluginNodeD
     });
   }
 
-  // Banner Mode: blendMode
+  // Canvas Mode: blendMode
   if (node.blendMode) {
     result.blendMode = node.blendMode;
   }
 
-  // Banner Mode: text style extensions
+  // Canvas Mode: text style extensions
   if (node.textTransform) result.textTransform = node.textTransform;
   if (node.textStroke) result.textStroke = node.textStroke;
   if (node.textShadow) result.textShadow = node.textShadow;
@@ -236,7 +252,7 @@ export function generatePluginInput(
     schemaVersion: '1.0.0',
     targetPage: pageName,
     components,
-    mode: compileResult.mode === 'banner' ? 'banner' : undefined,
+    mode: compileResult.mode === 'canvas' ? 'canvas' : undefined,
   };
 
   return result;

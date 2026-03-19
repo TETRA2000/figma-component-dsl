@@ -605,6 +605,160 @@ const img = image('Photo', { src: './photo.png', size: { x: 100, y: 100 } });
   });
 });
 
+describe('svg-content rule', () => {
+  it('passes when no svg() calls exist', async () => {
+    const dir = setupFixture('NoSvg', {
+      'NoSvg.tsx': 'export function NoSvg() { return <div />; }',
+    });
+    const result = await validateComponent(dir, { rules: ['svg-content'] });
+    expect(result.errors).toHaveLength(0);
+    expect(result.warnings).toHaveLength(0);
+    cleanFixtures();
+  });
+
+  it('passes when svg() has svgContent', async () => {
+    const dir = setupFixture('SvgInline', {
+      'SvgInline.tsx': `
+import { svg } from '@figma-dsl/core';
+export const mode = 'canvas';
+const icon = svg('Icon', { svgContent: '<svg><circle r="10"/></svg>', size: { x: 24, y: 24 } });
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['svg-content'] });
+    expect(result.errors).toHaveLength(0);
+    expect(result.warnings).toHaveLength(0);
+    cleanFixtures();
+  });
+
+  it('passes when svg() has src pointing to existing file', async () => {
+    const dir = setupFixture('SvgSrc', {
+      'SvgSrc.tsx': `
+import { svg } from '@figma-dsl/core';
+const icon = svg('Icon', { src: './icon.svg', size: { x: 24, y: 24 } });
+`,
+      'icon.svg': '<svg><rect width="24" height="24"/></svg>',
+    });
+    const result = await validateComponent(dir, { rules: ['svg-content'] });
+    expect(result.errors).toHaveLength(0);
+    // No "not found" warnings
+    const notFoundWarnings = result.warnings.filter(w => w.message.includes('not found'));
+    expect(notFoundWarnings).toHaveLength(0);
+    cleanFixtures();
+  });
+
+  it('errors when svg() has neither svgContent nor src', async () => {
+    const dir = setupFixture('SvgEmpty', {
+      'SvgEmpty.tsx': `
+import { svg } from '@figma-dsl/core';
+const icon = svg('Icon', { size: { x: 24, y: 24 } });
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['svg-content'] });
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0].rule).toBe('svg-content');
+    expect(result.errors[0].message).toContain('svgContent');
+    expect(result.errors[0].message).toContain('src');
+    cleanFixtures();
+  });
+
+  it('warns when svg() src file does not exist', async () => {
+    const dir = setupFixture('SvgMissing', {
+      'SvgMissing.tsx': `
+import { svg } from '@figma-dsl/core';
+const icon = svg('Icon', { src: './missing.svg', size: { x: 24, y: 24 } });
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['svg-content'] });
+    expect(result.warnings.length).toBeGreaterThan(0);
+    expect(result.warnings[0]!.message).toContain('not found');
+    cleanFixtures();
+  });
+
+  it('warns about effects in standard mode', async () => {
+    const dir = setupFixture('SvgEffects', {
+      'SvgEffects.tsx': `
+import { svg } from '@figma-dsl/core';
+const icon = svg('Icon', {
+  svgContent: '<svg><circle r="10"/></svg>',
+  size: { x: 24, y: 24 },
+  effects: [{ type: 'DROP_SHADOW', offset: { x: 2, y: 2 }, radius: 4, color: { r: 0, g: 0, b: 0, a: 0.25 } }],
+});
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['svg-content'] });
+    expect(result.warnings.length).toBeGreaterThan(0);
+    expect(result.warnings.some(w => w.message.includes('effects'))).toBe(true);
+    cleanFixtures();
+  });
+
+  it('warns about blendMode in standard mode', async () => {
+    const dir = setupFixture('SvgBlend', {
+      'SvgBlend.tsx': `
+import { svg } from '@figma-dsl/core';
+const icon = svg('Icon', {
+  svgContent: '<svg><circle r="10"/></svg>',
+  size: { x: 24, y: 24 },
+  blendMode: 'MULTIPLY',
+});
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['svg-content'] });
+    expect(result.warnings.length).toBeGreaterThan(0);
+    expect(result.warnings.some(w => w.message.includes('blendMode'))).toBe(true);
+    cleanFixtures();
+  });
+
+  it('warns about rotation in standard mode', async () => {
+    const dir = setupFixture('SvgRotation', {
+      'SvgRotation.tsx': `
+import { svg } from '@figma-dsl/core';
+const icon = svg('Icon', {
+  svgContent: '<svg><circle r="10"/></svg>',
+  size: { x: 24, y: 24 },
+  rotation: 45,
+});
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['svg-content'] });
+    expect(result.warnings.length).toBeGreaterThan(0);
+    expect(result.warnings.some(w => w.message.includes('rotation'))).toBe(true);
+    cleanFixtures();
+  });
+
+  it('does not warn about effects/blendMode/rotation in canvas mode', async () => {
+    const dir = setupFixture('SvgCanvasMode', {
+      'SvgCanvasMode.tsx': `
+import { svg } from '@figma-dsl/core';
+export const mode = 'canvas';
+const icon = svg('Icon', {
+  svgContent: '<svg><circle r="10"/></svg>',
+  size: { x: 24, y: 24 },
+  effects: [{ type: 'DROP_SHADOW', offset: { x: 2, y: 2 }, radius: 4, color: { r: 0, g: 0, b: 0, a: 0.25 } }],
+  blendMode: 'MULTIPLY',
+  rotation: 45,
+});
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['svg-content'] });
+    expect(result.errors).toHaveLength(0);
+    expect(result.warnings).toHaveLength(0);
+    cleanFixtures();
+  });
+
+  it('accepts HTTPS URLs for src without file check', async () => {
+    const dir = setupFixture('SvgUrl', {
+      'SvgUrl.tsx': `
+import { svg } from '@figma-dsl/core';
+const icon = svg('Icon', { src: 'https://example.com/icon.svg', size: { x: 24, y: 24 } });
+`,
+    });
+    const result = await validateComponent(dir, { rules: ['svg-content'] });
+    expect(result.errors).toHaveLength(0);
+    expect(result.warnings).toHaveLength(0);
+    cleanFixtures();
+  });
+});
+
 describe('validation presets', () => {
   it('strict preset keeps original severity levels', async () => {
     const dir = setupFixture('StrictComp', {

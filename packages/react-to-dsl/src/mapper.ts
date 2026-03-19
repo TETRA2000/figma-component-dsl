@@ -5,26 +5,35 @@
  * into the DSL node representation used by @figma-dsl/core.
  */
 
-import type { DslNode, AutoLayoutConfig, Fill, StrokePaint } from '@figma-dsl/core';
+import type { DslNode, AutoLayoutConfig, Fill, StrokePaint, EffectDefinition, BlendMode } from '@figma-dsl/core';
 import type { DomSnapshot, ExtractedStyles } from './types.js';
-import { cssColorToHex, cssColorToOpacity, parseLinearGradient, isTransparent } from './color-utils.js';
+import { cssColorToHex, cssColorToOpacity, parseLinearGradient, isTransparent, parseBoxShadow, parseTextShadow } from './color-utils.js';
 import { deriveName } from './naming.js';
 
 /** Warnings collected during mapping */
 const warnings: string[] = [];
 
+/** Whether canvas mode features were detected */
+let needsCanvasMode = false;
+
 /**
  * Convert a DomSnapshot tree to a DslNode tree.
- * Returns the root DslNode and any warnings about unsupported features.
+ * Returns the root DslNode, warnings, and whether canvas mode is needed.
  */
-export function mapToDsl(snapshot: DomSnapshot, componentName?: string): { node: DslNode; warnings: string[] } {
+export function mapToDsl(snapshot: DomSnapshot, componentName?: string): { node: DslNode; warnings: string[]; canvasMode: boolean } {
   warnings.length = 0;
+  needsCanvasMode = false;
   const node = mapElement(snapshot, 0, componentName);
-  return { node, warnings: [...warnings] };
+  return { node, warnings: [...warnings], canvasMode: needsCanvasMode };
 }
 
 function mapElement(snap: DomSnapshot, index: number, nameOverride?: string): DslNode {
   const name = nameOverride ?? deriveName(snap, index);
+
+  // SVG element
+  if (snap.tag === 'svg' && snap.svgContent) {
+    return mapSvgNode(snap, name);
+  }
 
   // Image element
   if (snap.tag === 'img' && snap.imgSrc) {
@@ -70,6 +79,14 @@ function mapText(snap: DomSnapshot, _name: string): DslNode {
   // Text decoration
   const td = parseTextDecoration(s.textDecoration);
   if (td) textStyle.textDecoration = td;
+
+  // Canvas Mode: text transform
+  const tt = mapTextTransform(s);
+  if (tt) textStyle.textTransform = tt;
+
+  // Canvas Mode: text shadow
+  const ts = mapTextShadowStyle(s);
+  if (ts) textStyle.textShadow = ts;
 
   // Build the node
   const node: DslNode = {
@@ -152,6 +169,18 @@ function mapContainer(snap: DomSnapshot, name: string): DslNode {
   // Clip content
   const clipContent = s.overflow === 'hidden' ? true : undefined;
 
+  // Canvas Mode: effects (box-shadow)
+  const effects = mapEffects(s);
+
+  // Canvas Mode: rotation
+  const rotation = mapRotation(s);
+
+  // Canvas Mode: blend mode
+  const blendMode = mapBlendMode(s);
+
+  // Canvas Mode: absolute positioning
+  const absPos = mapAbsolutePosition(snap);
+
   // Size — use bounding rect for all containers
   const size = { x: Math.round(snap.rect.width), y: Math.round(snap.rect.height) };
 
@@ -167,8 +196,17 @@ function mapContainer(snap: DomSnapshot, name: string): DslNode {
     ...(cornerRadius !== undefined && { cornerRadius }),
     ...(cornerRadii && { cornerRadii }),
     ...(clipContent && { clipContent }),
+    ...(effects && { effects }),
+    ...(blendMode && { blendMode }),
+    ...(rotation !== undefined && { rotation }),
     ...(children.length > 0 && { children }),
   };
+
+  // Canvas Mode: attach absolute position via type cast (DslNode doesn't have x/y)
+  if (absPos) {
+    (node as unknown as Record<string, unknown>).x = absPos.x;
+    (node as unknown as Record<string, unknown>).y = absPos.y;
+  }
 
   // Add child layout sizing props
   addChildLayoutSizing(node, snap);
@@ -437,6 +475,98 @@ function addChildLayoutSizing(node: DslNode, snap: DomSnapshot): void {
   if (s.height === '100%') {
     node.layoutSizingVertical = 'FILL';
   }
+}
+
+// --- SVG Node ---
+
+function mapSvgNode(snap: DomSnapshot, name: string): DslNode {
+  needsCanvasMode = true;
+  return {
+    type: 'SVG' as DslNode['type'],
+    name,
+    visible: true,
+    opacity: parseFloat(snap.styles.opacity) || 1,
+    size: { x: Math.round(snap.rect.width), y: Math.round(snap.rect.height) },
+    svgContent: snap.svgContent,
+  };
+}
+
+// --- Canvas Mode Feature Mapping ---
+
+function mapEffects(s: ExtractedStyles): EffectDefinition[] | undefined {
+  const shadows = parseBoxShadow(s.boxShadow);
+  if (shadows.length === 0) return undefined;
+
+  needsCanvasMode = true;
+  return shadows.map(sh => ({
+    type: 'DROP_SHADOW' as const,
+    color: sh.color,
+    offsetX: sh.offsetX,
+    offsetY: sh.offsetY,
+    blur: sh.blur,
+    ...(sh.spread !== 0 && { spread: sh.spread }),
+  }));
+}
+
+function mapTextShadowStyle(s: ExtractedStyles): { color: string; offsetX: number; offsetY: number; blur: number } | undefined {
+  const parsed = parseTextShadow(s.textShadow);
+  if (!parsed) return undefined;
+
+  needsCanvasMode = true;
+  return parsed;
+}
+
+function mapRotation(s: ExtractedStyles): number | undefined {
+  if (!s.transform || s.transform === 'none') return undefined;
+
+  const match = s.transform.match(/rotate\(([\d.-]+)deg\)/);
+  if (!match) return undefined;
+
+  needsCanvasMode = true;
+  return parseFloat(match[1]!);
+}
+
+function mapBlendMode(s: ExtractedStyles): BlendMode | undefined {
+  if (!s.mixBlendMode || s.mixBlendMode === 'normal') return undefined;
+
+  const map: Record<string, string> = {
+    multiply: 'MULTIPLY',
+    screen: 'SCREEN',
+    overlay: 'OVERLAY',
+    darken: 'DARKEN',
+    lighten: 'LIGHTEN',
+    'color-dodge': 'COLOR_DODGE',
+    'color-burn': 'COLOR_BURN',
+    'hard-light': 'HARD_LIGHT',
+    'soft-light': 'SOFT_LIGHT',
+    difference: 'DIFFERENCE',
+    exclusion: 'EXCLUSION',
+  };
+
+  const mapped = map[s.mixBlendMode] as BlendMode | undefined;
+  if (!mapped) return undefined;
+
+  needsCanvasMode = true;
+  return mapped;
+}
+
+function mapTextTransform(s: ExtractedStyles): 'UPPERCASE' | 'LOWERCASE' | 'CAPITALIZE' | undefined {
+  switch (s.textTransform) {
+    case 'uppercase': needsCanvasMode = true; return 'UPPERCASE';
+    case 'lowercase': needsCanvasMode = true; return 'LOWERCASE';
+    case 'capitalize': needsCanvasMode = true; return 'CAPITALIZE';
+    default: return undefined;
+  }
+}
+
+function mapAbsolutePosition(snap: DomSnapshot): { x: number; y: number } | undefined {
+  if (snap.styles.position !== 'absolute') return undefined;
+
+  const x = parsePx(snap.styles.left) ?? 0;
+  const y = parsePx(snap.styles.top) ?? 0;
+
+  needsCanvasMode = true;
+  return { x, y };
 }
 
 // --- Utility Functions ---

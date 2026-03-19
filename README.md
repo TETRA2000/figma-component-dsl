@@ -17,14 +17,14 @@ npx vitest run
 
 | Package | Description |
 |---------|-------------|
-| `@figma-dsl/core` | DSL node primitives, color/fill helpers, image support, layout config, component/variant system, changeset schema, canonical PluginNodeDef types, diff algorithm, Banner Mode types (effects, blend modes, font declarations) |
-| `@figma-dsl/compiler` | Compiles DslNode trees to FigmaNodeDict with GUID assignment, text measurement, two-pass auto-layout, and Banner Mode absolute positioning |
+| `@figma-dsl/core` | DSL node primitives, color/fill helpers, image support, layout config, component/variant system, changeset schema, canonical PluginNodeDef types, diff algorithm, Canvas Mode types (effects, blend modes, font declarations) |
+| `@figma-dsl/compiler` | Compiles DslNode trees to FigmaNodeDict with GUID assignment, text measurement, two-pass auto-layout, and Canvas Mode absolute positioning |
 | `@figma-dsl/renderer` | Renders compiled nodes to PNG via @napi-rs/canvas (Skia), with image loading, caching, effects (shadows, blur, blend modes), and custom font support |
 | `@figma-dsl/capturer` | Captures React component screenshots via Playwright |
 | `@figma-dsl/comparator` | Pixel-level image comparison with similarity scoring via pixelmatch |
 | `@figma-dsl/exporter` | Generates Figma plugin input JSON from compiled DSL |
 | `@figma-dsl/plugin` | Figma plugin: imports DSL definitions as Figma nodes, tracks edits, exports changesets and complete DSL JSON |
-| `@figma-dsl/validator` | DSL compatibility validator with 10 rules (file-structure, styling, AST-based) and Banner Mode preset |
+| `@figma-dsl/validator` | DSL compatibility validator with 10 rules (file-structure, styling, AST-based) and Canvas Mode preset |
 | `@figma-dsl/cli` | CLI interface for all pipeline operations |
 
 ## CLI Usage
@@ -94,17 +94,17 @@ image('Avatar', { src: './assets/avatar.png', size: { x: 48, y: 48 }, cornerRadi
 frame('Hero', { size: { x: 800, y: 400 }, fills: [imageFill('./assets/hero.jpg', { scaleMode: 'FILL' })] });
 ```
 
-### Banner Mode Example
+### Canvas Mode Example
 
-Banner Mode drops React compatibility and enables absolute positioning, visual effects, extended typography, and custom fonts for rich banner designs.
+Canvas Mode drops React compatibility and enables absolute positioning, visual effects, extended typography, and custom fonts for rich visual designs. (The deprecated `'banner'` alias is still accepted.)
 
 ```typescript
 import { frame, text, rectangle } from '@figma-dsl/core';
 import { solid, gradient } from '@figma-dsl/core';
 import type { FontDeclaration } from '@figma-dsl/core';
 
-// Opt into Banner Mode
-export const mode = 'banner';
+// Opt into Canvas Mode
+export const mode = 'canvas';
 
 // Declare custom fonts
 export const fonts: FontDeclaration[] = [
@@ -248,7 +248,7 @@ Preview server configurations for Claude Desktop are defined in `.claude/launch.
 - **Vitest** — test runner
 - **Inter font** — bundled (Regular, Medium, SemiBold, Bold)
 - **Noto Sans JP** — bundled (Regular, Bold) for Japanese/CJK text
-- **Banner Mode** — visual effects, absolute positioning, custom fonts, extended typography
+- **Canvas Mode** — visual effects, absolute positioning, custom fonts, extended typography
 
 ## References
 

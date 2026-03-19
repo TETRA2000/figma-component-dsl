@@ -10,7 +10,7 @@ A domain-specific language (DSL) for defining Figma component structures declara
 4. **Visual Comparison** — Image diff with similarity scoring between DSL-rendered and React-rendered outputs
 5. **Figma Export** — Parse DSL and create real Figma nodes via a Figma plugin
 6. **Real-time Sync** — Bidirectional sync between code and Figma via MCP server (push components, pull changesets/exports, track design changes)
-7. **Banner Mode** — Rich visual design mode (absolute positioning, visual effects, extended typography, custom fonts) for banners and promotional graphics without React compatibility constraints
+7. **Canvas Mode** — Rich visual design mode (absolute positioning, visual effects, extended typography, custom fonts) for banners, SVG compositions, and promotional graphics without React compatibility constraints
 
 ## Target Use Cases
 
@@ -18,7 +18,7 @@ A domain-specific language (DSL) for defining Figma component structures declara
 - **Design system synchronization**: Keep React component libraries and Figma design systems in sync programmatically
 - **Automated component generation**: Generate Figma components from React code via DSL as an intermediate representation
 - **Claude Desktop interactive workflows**: AI Skills enable conversational creation of landing pages, React components, Figma designs, and HTML pages with live preview
-- **Rich banner creation**: Banner Mode enables expressive visual designs (hero images, promotional graphics, event posters, social media assets) with absolute positioning, drop shadows, blur effects, blend modes, text effects, and custom font loading — all exportable to Figma
+- **Rich visual creation**: Canvas Mode enables expressive visual designs (hero images, promotional graphics, event posters, social media assets, SVG compositions) with absolute positioning, drop shadows, blur effects, blend modes, text effects, and custom font loading — all exportable to Figma
 
 ## Value Proposition
 

@@ -1,4 +1,4 @@
-# Banner Mode Example: Amazon 初売り (New Year Sale)
+# Canvas Mode Example: Amazon 初売り (New Year Sale)
 
 A sale campaign banner recreating a real Amazon Japan ad. Demonstrates structured auto-layout sections, badges with strokes and shadows, large Japanese typography, color palette organization, and a product showcase area.
 
@@ -23,8 +23,8 @@ import {
 
 import type { FontDeclaration } from '@figma-dsl/core';
 
-// Enable Banner Mode
-export const mode = 'banner';
+// Enable Canvas Mode
+export const mode = 'canvas';
 
 // Font declarations
 export const fonts: FontDeclaration[] = [];

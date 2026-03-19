@@ -23,6 +23,10 @@ const STYLE_PROPERTIES: (keyof ExtractedStyles)[] = [
   'borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius',
   'fontFamily', 'fontSize', 'fontWeight', 'color', 'textAlign',
   'lineHeight', 'letterSpacing', 'textDecoration', 'whiteSpace',
+  // Canvas Mode features
+  'boxShadow', 'textShadow', 'transform', 'mixBlendMode', 'textTransform',
+  // Positioning
+  'position', 'top', 'left',
 ];
 
 /**
@@ -77,9 +81,9 @@ async function extractElement(page: Page, selector: string): Promise<DomSnapshot
   return await page.evaluate(
     ({ sel, props }) => {
       const root = document.querySelector(sel);
-      if (!root || !(root instanceof HTMLElement)) return null;
+      if (!root || !(root instanceof HTMLElement || root instanceof SVGSVGElement)) return null;
 
-      function walkElement(el: HTMLElement): DomSnapshot {
+      function walkElement(el: Element): DomSnapshot {
         const computed = window.getComputedStyle(el);
         const rect = el.getBoundingClientRect();
 
@@ -94,7 +98,7 @@ async function extractElement(page: Page, selector: string): Promise<DomSnapshot
 
         // Check if element contains only text (no child elements)
         const childElements = Array.from(el.children).filter(
-          child => child instanceof HTMLElement &&
+          child => (child instanceof HTMLElement || child instanceof SVGSVGElement) &&
           getComputedStyle(child).display !== 'none'
         );
         const isTextOnly = childElements.length === 0;
@@ -111,27 +115,36 @@ async function extractElement(page: Page, selector: string): Promise<DomSnapshot
           imgSrc = (el as HTMLImageElement).src;
         }
 
-        // Recurse into visible children
+        // SVG detection: capture outerHTML and skip child recursion
+        let svgContent: string | undefined;
+        const isSvg = el instanceof SVGSVGElement;
+        if (isSvg) {
+          svgContent = (el as SVGSVGElement).outerHTML;
+        }
+
+        // Recurse into visible children (skip for SVG — children are vector data)
         const children: DomSnapshot[] = [];
-        for (const child of childElements) {
-          if (child instanceof HTMLElement) {
-            const childComputed = getComputedStyle(child);
-            // Skip hidden elements
-            if (childComputed.display === 'none' ||
-                childComputed.visibility === 'hidden' ||
-                childComputed.opacity === '0') {
-              continue;
+        if (!isSvg) {
+          for (const child of childElements) {
+            if (child instanceof HTMLElement || child instanceof SVGSVGElement) {
+              const childComputed = getComputedStyle(child);
+              // Skip hidden elements
+              if (childComputed.display === 'none' ||
+                  childComputed.visibility === 'hidden' ||
+                  childComputed.opacity === '0') {
+                continue;
+              }
+              children.push(walkElement(child));
             }
-            children.push(walkElement(child));
           }
         }
 
         return {
           tag: el.tagName.toLowerCase(),
           id: el.id || '',
-          className: el.className || '',
-          textContent,
-          isTextOnly,
+          className: (typeof el.className === 'string' ? el.className : '') || '',
+          textContent: isSvg ? '' : textContent,
+          isTextOnly: isSvg ? false : isTextOnly,
           styles: styles as unknown as ExtractedStyles,
           rect: {
             x: Math.round(rect.x),
@@ -141,6 +154,7 @@ async function extractElement(page: Page, selector: string): Promise<DomSnapshot
           },
           children,
           imgSrc,
+          svgContent,
         } satisfies DomSnapshot;
       }
 

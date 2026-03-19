@@ -81,6 +81,18 @@ export interface ExtractedStyles {
   letterSpacing: string;
   textDecoration: string;
   whiteSpace: string;
+
+  // Canvas Mode features
+  boxShadow: string;
+  textShadow: string;
+  transform: string;
+  mixBlendMode: string;
+  textTransform: string;
+
+  // Positioning
+  position: string;
+  top: string;
+  left: string;
 }
 
 /** A snapshot of a DOM element with its computed styles and children */
@@ -103,6 +115,8 @@ export interface DomSnapshot {
   children: DomSnapshot[];
   /** Image src for <img> elements */
   imgSrc?: string;
+  /** Serialized SVG markup for <svg> elements */
+  svgContent?: string;
 }
 
 /** Options for the DOM extraction */
@@ -125,6 +139,8 @@ export interface CodegenOptions {
   asComponent?: boolean;
   /** Indentation string (default: '  ' = 2 spaces) */
   indent?: string;
+  /** Enable Canvas Mode output (export const mode = 'canvas') */
+  canvasMode?: boolean;
 }
 
 /** Result of a single conversion */

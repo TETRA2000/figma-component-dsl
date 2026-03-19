@@ -20,6 +20,7 @@ export const presets: Record<ValidationPreset, Record<string, SeverityLevel>> = 
     'html-attrs':            'warning',
     'dsl-compatible-layout': 'warning',
     'image-refs':            'error',
+    'svg-content':           'warning',
   },
 
   normal: {
@@ -34,6 +35,7 @@ export const presets: Record<ValidationPreset, Record<string, SeverityLevel>> = 
     'html-attrs':            'off',
     'dsl-compatible-layout': 'warning',
     'image-refs':            'warning',
+    'svg-content':           'warning',
   },
 
   loose: {
@@ -48,8 +50,25 @@ export const presets: Record<ValidationPreset, Record<string, SeverityLevel>> = 
     'html-attrs':            'off',
     'dsl-compatible-layout': 'off',
     'image-refs':            'warning',
+    'svg-content':           'off',
   },
 
+  canvas: {
+    'three-file':            'off',
+    'barrel-export':         'off',
+    'css-modules':           'off',
+    'no-inline-style':       'off',
+    'design-tokens':         'off',
+    'token-exists':          'off',
+    'classname-prop':        'off',
+    'variant-union':         'off',
+    'html-attrs':            'off',
+    'dsl-compatible-layout': 'off',
+    'image-refs':            'warning',
+    'svg-content':           'off',
+  },
+
+  // Backward-compatible alias for 'canvas' (deprecated)
   banner: {
     'three-file':            'off',
     'barrel-export':         'off',
@@ -62,6 +81,7 @@ export const presets: Record<ValidationPreset, Record<string, SeverityLevel>> = 
     'html-attrs':            'off',
     'dsl-compatible-layout': 'off',
     'image-refs':            'warning',
+    'svg-content':           'off',
   },
 };
 

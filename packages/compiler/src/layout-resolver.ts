@@ -356,14 +356,14 @@ function positionChildren(
       offsets.set(child, childOffset);
       primaryOffset += (isHorizontal ? childSize.width : childSize.height) + effectiveSpacing;
     }
-  } else if (mode === 'banner') {
-    // Banner Mode: absolute positioning using x/y from node.size or explicit position
+  } else if (mode === 'canvas') {
+    // Canvas Mode: absolute positioning using x/y from node.size or explicit position
     // Children are positioned at their declared x/y coordinates
     for (const child of node.children) {
-      // In banner mode, use the DslNode's size.x/y as position when no autoLayout
+      // In canvas mode, use the DslNode's size.x/y as position when no autoLayout
       // The convention: child.size holds dimensions, position comes from a separate field
       // Since DslNode doesn't have separate x/y position fields, we use size for dimensions
-      // and the offset represents position. For banner mode children in a non-auto-layout frame,
+      // and the offset represents position. For canvas mode children in a non-auto-layout frame,
       // default to (0,0) — actual absolute coordinates will be set through the compile step
       offsets.set(child, { x: 0, y: 0 });
     }

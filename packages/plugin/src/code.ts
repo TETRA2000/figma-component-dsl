@@ -24,6 +24,16 @@ import uiHtml from './ui.html';
 const componentMap = new Map<string, ComponentNode>();
 const errors: string[] = [];
 
+// Simple FNV-1a hash for plugin sandbox (no node:crypto available)
+function simpleHash(str: string): string {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    hash ^= str.charCodeAt(i);
+    hash = (hash * 0x01000193) >>> 0;
+  }
+  return hash.toString(16).padStart(8, '0');
+}
+
 // --- Edit Tracker State ---
 const PLUGIN_DATA_BASELINE = 'dsl-baseline';
 const PLUGIN_DATA_IDENTITY = 'dsl-identity';
@@ -358,6 +368,37 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
         break;
       }
 
+      case 'SVG': {
+        if (def.svgContent) {
+          const svgFrame = figma.createNodeFromSvg(def.svgContent);
+          svgFrame.name = def.name;
+          svgFrame.resize(def.size.x, def.size.y);
+          if (def.cornerRadius) svgFrame.cornerRadius = def.cornerRadius;
+          svgFrame.opacity = def.opacity;
+          svgFrame.visible = def.visible;
+          parent.appendChild(svgFrame);
+          setLayoutSizing(svgFrame, def);
+
+          // Store SVG identity for bidirectional sync
+          const svgHash = simpleHash(def.svgContent);
+          svgFrame.setPluginData('dsl-svg-hash', svgHash);
+
+          // Export normalized SVG and store baseline hash
+          try {
+            const normalizedSvg = await svgFrame.exportAsync({ format: 'SVG_STRING' });
+            svgFrame.setPluginData('dsl-svg-baseline-hash', simpleHash(normalizedSvg));
+          } catch {
+            // exportAsync may fail in some contexts; skip baseline
+          }
+
+          node = svgFrame;
+        } else {
+          errors.push(`SVG node "${def.name}" has no svgContent`);
+          node = null;
+        }
+        break;
+      }
+
       case 'GROUP': {
         const groupChildren: SceneNode[] = [];
         const tempFrame = figma.createFrame();
@@ -621,6 +662,34 @@ async function createNode(def: PluginNodeDef, parent: BaseNode & ChildrenMixin):
       (node as GeometryMixin).strokeWeight = def.strokes[0]!.weight;
     }
 
+    // Apply Canvas Mode visual properties generically
+    if (def.effects && 'effects' in node) {
+      (node as FrameNode).effects = (def.effects as ReadonlyArray<Record<string, unknown>>).map(e => {
+        if (e.type === 'DROP_SHADOW') {
+          const c = e.color as { r: number; g: number; b: number; a: number };
+          return {
+            type: 'DROP_SHADOW' as const,
+            visible: true,
+            color: { r: c.r, g: c.g, b: c.b, a: c.a },
+            offset: { x: (e.offset as { x: number }).x, y: (e.offset as { y: number }).y },
+            radius: e.radius as number,
+            spread: (e.spread as number) ?? 0,
+          };
+        }
+        return {
+          type: 'LAYER_BLUR' as const,
+          visible: true,
+          radius: e.radius as number,
+        };
+      }) as Effect[];
+    }
+    if (def.blendMode && 'blendMode' in node) {
+      (node as FrameNode).blendMode = def.blendMode as BlendMode;
+    }
+    if (def.rotation !== undefined && 'rotation' in node) {
+      (node as FrameNode).rotation = def.rotation;
+    }
+
     return node;
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
@@ -805,6 +874,25 @@ async function computeChangeset(nodeIds: ReadonlyArray<string>): Promise<Changes
 
     const current = serializeNode(node);
     const changes = diffNodes(baseline, current);
+
+    // SVG changeset detection: compare exported SVG against stored baseline hash
+    const svgBaselineHash = node.getPluginData('dsl-svg-baseline-hash');
+    if (svgBaselineHash) {
+      try {
+        const currentSvg = await (node as FrameNode).exportAsync({ format: 'SVG_STRING' });
+        const currentHash = simpleHash(currentSvg);
+        if (currentHash !== svgBaselineHash) {
+          changes.push({
+            propertyPath: 'svgContent',
+            changeType: 'modified',
+            newValue: currentSvg,
+            description: 'SVG content modified in Figma',
+          });
+        }
+      } catch {
+        // exportAsync may fail; skip SVG change detection
+      }
+    }
 
     // Detect unsyncable properties
     const nodeWarnings = detectUnsyncableProperties(node);

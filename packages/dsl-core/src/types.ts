@@ -1,7 +1,8 @@
 // --- Node Types ---
 export type NodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ELLIPSE' | 'GROUP'
   | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'IMAGE'
-  | 'LINE' | 'SECTION' | 'POLYGON' | 'STAR' | 'BOOLEAN_OPERATION';
+  | 'LINE' | 'SECTION' | 'POLYGON' | 'STAR' | 'BOOLEAN_OPERATION'
+  | 'SVG';
 
 // --- Stroke Cap ---
 export type StrokeCap = 'NONE' | 'ROUND' | 'SQUARE' | 'LINE_ARROW' | 'TRIANGLE_ARROW'
@@ -10,7 +11,7 @@ export type StrokeCap = 'NONE' | 'ROUND' | 'SQUARE' | 'LINE_ARROW' | 'TRIANGLE_A
 // --- Boolean Operation ---
 export type BooleanOperationType = 'UNION' | 'SUBTRACT' | 'INTERSECT' | 'EXCLUDE';
 
-// --- Banner Mode: Effects ---
+// --- Canvas Mode: Effects ---
 export interface DropShadowEffect {
   type: 'DROP_SHADOW';
   color: RgbaColor;
@@ -32,7 +33,7 @@ export type BlendMode =
   | 'DARKEN' | 'LIGHTEN' | 'COLOR_DODGE' | 'COLOR_BURN'
   | 'HARD_LIGHT' | 'SOFT_LIGHT' | 'DIFFERENCE' | 'EXCLUSION';
 
-// --- Banner Mode: Font Declaration ---
+// --- Canvas Mode: Font Declaration ---
 export interface FontDeclaration {
   path: string;
   family: string;
@@ -132,7 +133,7 @@ export interface TextStyle {
   textDecoration?: 'NONE' | 'UNDERLINE' | 'STRIKETHROUGH';
   color?: string;            // hex string, convenience shorthand
 
-  // Banner Mode: Extended Typography
+  // Canvas Mode: Extended Typography
   textTransform?: 'UPPERCASE' | 'LOWERCASE' | 'CAPITALIZE';
   textStroke?: { color: string; width: number };
   textShadow?: { color: string; offsetX: number; offsetY: number; blur: number };
@@ -174,6 +175,11 @@ export interface DslNode {
   imageSrc?: string;
   imageScaleMode?: ImageScaleMode;
 
+  // SVG (SVG only)
+  svgContent?: string;
+  svgSrc?: string;
+  svgScaleMode?: ImageScaleMode;
+
   // Text (TEXT only)
   characters?: string;
   textStyle?: TextStyle;
@@ -193,10 +199,10 @@ export interface DslNode {
   pointCount?: number;
   innerRadius?: number; // STAR only, 0–1, default 0.382
 
-  // Rotation (LINE, POLYGON, STAR; any node in Banner Mode)
+  // Rotation (LINE, POLYGON, STAR; any node in Canvas Mode)
   rotation?: number;
 
-  // Banner Mode: Visual Effects
+  // Canvas Mode: Visual Effects
   effects?: EffectDefinition[];
   blendMode?: BlendMode;
 
@@ -222,7 +228,7 @@ export interface FrameProps {
   layoutGrow?: number;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
-  // Banner Mode
+  // Canvas Mode
   effects?: EffectDefinition[];
   blendMode?: BlendMode;
   rotation?: number;
@@ -239,7 +245,7 @@ export interface RectangleProps {
   layoutGrow?: number;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
-  // Banner Mode
+  // Canvas Mode
   effects?: EffectDefinition[];
   blendMode?: BlendMode;
   rotation?: number;
@@ -253,7 +259,7 @@ export interface EllipseProps {
   layoutGrow?: number;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
-  // Banner Mode
+  // Canvas Mode
   effects?: EffectDefinition[];
   blendMode?: BlendMode;
   rotation?: number;
@@ -282,6 +288,24 @@ export interface ImageProps {
   cornerRadius?: number;
   opacity?: number;
   visible?: boolean;
+  layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
+  layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
+}
+
+export interface SvgProps {
+  svgContent?: string;
+  src?: string;
+  size: { x: number; y: number };
+  fit?: ImageScaleMode;
+  cornerRadius?: number;
+  clipContent?: boolean;
+  opacity?: number;
+  visible?: boolean;
+  x?: number;
+  y?: number;
+  rotation?: number;
+  effects?: EffectDefinition[];
+  blendMode?: BlendMode;
   layoutSizingHorizontal?: 'FIXED' | 'HUG' | 'FILL';
   layoutSizingVertical?: 'FIXED' | 'HUG' | 'FILL';
 }

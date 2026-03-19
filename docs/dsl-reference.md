@@ -10,8 +10,8 @@
    - [Fill & Stroke Builders](#fill--stroke-builders)
    - [Token System](#token-system)
    - [Component Properties](#component-properties)
-4. [Banner Mode](#banner-mode)
-   - [Enabling Banner Mode](#enabling-banner-mode)
+4. [Canvas Mode](#canvas-mode)
+   - [Enabling Canvas Mode](#enabling-canvas-mode)
    - [Absolute Positioning](#absolute-positioning)
    - [Visual Effects](#visual-effects)
    - [Extended Typography](#extended-typography)
@@ -242,6 +242,47 @@ image('Avatar', {
 **ImageScaleMode values:** `'FILL'` (cover, may crop), `'FIT'` (contain, may letterbox), `'CROP'` (center crop), `'TILE'` (repeat pattern).
 
 > **Note:** Use `--asset-dir` in CLI commands to set the base directory for resolving relative image paths. Supported formats: PNG, JPG, JPEG, WebP.
+
+#### `svg(name, options)`
+
+Creates an SVG node from inline SVG markup or an external `.svg` file. SVG content is rendered to PNG via `@resvg/resvg-js` and exported to Figma via `figma.createNodeFromSvg()`.
+
+```ts
+// Inline SVG content
+svg('Icon', {
+  svgContent: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L2 22h20z"/></svg>',
+  size: { x: 24, y: 24 },
+})
+
+// External SVG file
+svg('Logo', {
+  src: './assets/logo.svg',
+  size: { x: 200, y: 50 },
+  fit: 'FIT',
+})
+```
+
+**Options:**
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `svgContent` | `string` | | Inline SVG markup (takes precedence over `src` if both provided) |
+| `src` | `string` | | Path to external `.svg` file (relative to `--asset-dir`) |
+| `size` | `{ x: number, y: number }` | *(required)* | Bounding box dimensions |
+| `fit` | `ImageScaleMode` | `'FIT'` | How SVG fills its bounding box. Default `'FIT'` (contain) preserves vector precision |
+| `cornerRadius` | `number` | | Border radius |
+| `clipContent` | `boolean` | | Clip SVG to bounding box |
+| `opacity` | `number` | `1` | Opacity (0–1) |
+| `visible` | `boolean` | `true` | Visibility |
+| `x` | `number` | | Absolute X position (Canvas Mode) |
+| `y` | `number` | | Absolute Y position (Canvas Mode) |
+| `rotation` | `number` | | Rotation in degrees (Canvas Mode) |
+| `effects` | `EffectDefinition[]` | | Drop shadow / blur effects (Canvas Mode) |
+| `blendMode` | `BlendMode` | | Compositing blend mode (Canvas Mode) |
+| `layoutSizingHorizontal` | `'FIXED' \| 'HUG' \| 'FILL'` | | Horizontal sizing in auto-layout |
+| `layoutSizingVertical` | `'FIXED' \| 'HUG' \| 'FILL'` | | Vertical sizing in auto-layout |
+
+> **Note:** At least one of `svgContent` or `src` must be provided. If both are specified, `svgContent` takes precedence and the compiler emits a warning. SVG nodes are treated as opaque vector content — the DSL does not parse or manipulate the SVG internals.
 
 #### `component(name, options)`
 
@@ -600,17 +641,17 @@ export default componentSet('Button', { children });
 
 ---
 
-## Banner Mode
+## Canvas Mode
 
-Banner Mode is a rendering mode that prioritizes visual richness over React code compatibility. It enables absolute positioning, visual effects (shadows, blur, blend modes), extended typography (text transform, stroke, shadow), and custom font loading — features excluded from standard mode.
+Canvas Mode is a rendering mode that prioritizes visual richness over React code compatibility. It enables absolute positioning, visual effects (shadows, blur, blend modes), extended typography (text transform, stroke, shadow), and custom font loading — features excluded from standard mode.
 
-### Enabling Banner Mode
+### Enabling Canvas Mode
 
 Add a `mode` named export to your `.dsl.ts` file:
 
 ```ts
-// Opt into Banner Mode — drops React compatibility
-export const mode = 'banner';
+// Opt into Canvas Mode — drops React compatibility
+export const mode = 'canvas';
 
 export default frame('Banner', {
   size: { x: 1200, y: 630 },
@@ -619,21 +660,23 @@ export default frame('Banner', {
 });
 ```
 
-When `mode: 'banner'` is exported:
-- The compiler uses Banner Mode rules (absolute positioning, effects passthrough)
-- The validator applies the `banner` preset (all React rules disabled)
+When `mode: 'canvas'` is exported:
+- The compiler uses Canvas Mode rules (absolute positioning, effects passthrough)
+- The validator applies the `canvas` preset (all React rules disabled)
 - The renderer enables effects, rotation, and extended typography
-- The exporter includes `"mode": "banner"` and effects in the Figma JSON
+- The exporter includes `"mode": "canvas"` and effects in the Figma JSON
 - The `capture` command is skipped (no React component)
+
+> **Note:** The deprecated `'banner'` alias is still accepted and automatically mapped to `'canvas'` with a deprecation warning.
 
 Files without a `mode` export use standard mode (backward compatible).
 
 ### Absolute Positioning
 
-In Banner Mode, frames without `autoLayout` position children using their `x` and `y` coordinates relative to the frame's top-left corner. Children overlap in source order (later children on top).
+In Canvas Mode, frames without `autoLayout` position children using their `x` and `y` coordinates relative to the frame's top-left corner. Children overlap in source order (later children on top).
 
 ```ts
-export const mode = 'banner';
+export const mode = 'canvas';
 
 export default frame('Poster', {
   size: { x: 800, y: 600 },
@@ -662,7 +705,7 @@ export default frame('Poster', {
 
 ### Visual Effects
 
-Banner Mode nodes support drop shadows, layer blur, and blend modes.
+Canvas Mode nodes support drop shadows, layer blur, and blend modes.
 
 #### Drop Shadow
 
@@ -711,13 +754,13 @@ Available blend modes: `'NORMAL'`, `'MULTIPLY'`, `'SCREEN'`, `'OVERLAY'`, `'DARK
 
 #### Node Opacity
 
-All nodes support `opacity` (0–1) for semi-transparent layering in both standard and Banner Mode.
+All nodes support `opacity` (0–1) for semi-transparent layering in both standard and Canvas Mode.
 
-> **Warning:** Using Banner Mode-only properties (`effects`, `blendMode`, `rotation`) in standard mode emits a compiler warning. The properties are ignored during rendering.
+> **Warning:** Using Canvas Mode-only properties (`effects`, `blendMode`, `rotation`) in standard mode emits a compiler warning. The properties are ignored during rendering.
 
 ### Extended Typography
 
-Banner Mode text nodes support additional styling properties:
+Canvas Mode text nodes support additional styling properties:
 
 ```ts
 text('SALE', {
@@ -736,16 +779,16 @@ text('SALE', {
 | `textStroke` | `{ color: string; width: number }` | Outline stroke around text glyphs |
 | `textShadow` | `{ color: string; offsetX: number; offsetY: number; blur: number }` | Drop shadow behind text |
 
-Gradient fills on text nodes are also supported in Banner Mode — use the existing `fills` property with a gradient type. Text `opacity` controls semi-transparent text layering.
+Gradient fills on text nodes are also supported in Canvas Mode — use the existing `fills` property with a gradient type. Text `opacity` controls semi-transparent text layering.
 
 ### Custom Fonts
 
-Banner Mode supports loading custom local fonts via a declarative `fonts` export:
+Canvas Mode supports loading custom local fonts via a declarative `fonts` export:
 
 ```ts
 import type { FontDeclaration } from '@figma-dsl/core';
 
-export const mode = 'banner';
+export const mode = 'canvas';
 
 export const fonts: FontDeclaration[] = [
   { path: './fonts/CustomFont-Bold.ttf', family: 'Custom Font', weight: 700 },
@@ -846,7 +889,7 @@ The validator supports three severity presets that control how strictly rules ar
 | `strict` | All rules at original severity (default) |
 | `normal` | Relaxes structural/boilerplate rules (`three-file`, `barrel-export` off; `css-modules`, `no-inline-style` downgraded to warning) |
 | `loose` | Maximum flexibility — most rules off, only `image-refs` as warning |
-| `banner` | All React-specific rules disabled; only `image-refs` as warning. Auto-applied when `mode: 'banner'` is detected |
+| `canvas` | All React-specific rules disabled; only `image-refs` as warning. Auto-applied when `mode: 'canvas'` is detected. `'banner'` is accepted as a deprecated alias |
 
 **Programmatic usage:**
 
@@ -1369,6 +1412,19 @@ frame('Button', {
 
 **Solution:** Wrap sections in a parent frame with vertical auto-layout in the merged JSON. See [Page-Level Export](#page-level-export-multiple-sections).
 
+### 5. Plugin data size limit (100KB per key)
+
+**Constraint:** Figma's `setPluginData()` API has a practical size limit of ~100KB per key-value entry. The DSL plugin enforces this via `PLUGIN_DATA_SIZE_LIMIT` (100,000 bytes) in `plugin/src/code.ts`.
+
+**Impact:** Any data stored per-node via `setPluginData` — baselines, identity metadata, SVG content hashes — must fit within this limit. Large payloads (e.g., full SVG strings, deeply nested component baselines) will be truncated or rejected.
+
+**Design restriction:** Never store raw content (full SVG markup, large JSON snapshots) directly in plugin data. Instead:
+- Store **hashes** (SHA-256, 64 chars) for content comparison
+- Store **minimal metadata** (identifiers, timestamps, flags)
+- Use **truncation strategies** for baselines (e.g., strip `children` arrays)
+
+The existing `storeBaseline()` function already handles oversized baselines by truncating children. Any new plugin data keys must follow the same size-aware pattern.
+
 ---
 
 ## Known Pipeline Limitations
@@ -1377,9 +1433,9 @@ These are limitations of the DSL pipeline itself (compiler/renderer), distinct f
 
 | Limitation | Description | Workaround |
 |------------|-------------|------------|
-| No absolute positioning in auto-layout (standard mode) | Standard mode auto-layout does not support overlapping children like CSS `position: absolute`. | Use invisible spacers (`opacity: 0` rectangles) to push content, use separate stacked frames, or switch to Banner Mode (`export const mode = 'banner'`) for absolute positioning with `x`/`y` coordinates. |
+| No absolute positioning in auto-layout (standard mode) | Standard mode auto-layout does not support overlapping children like CSS `position: absolute`. | Use invisible spacers (`opacity: 0` rectangles) to push content, use separate stacked frames, or switch to Canvas Mode (`export const mode = 'canvas'`) for absolute positioning with `x`/`y` coordinates. |
 | Gradient angle differs from CSS | DSL gradient angles follow Figma convention (0°=L→R, 90°=B→T, 270°=T→B), not CSS convention (180deg=T→B). | See gradient angle convention table in Fill & Stroke Builders section. |
-| No shadow/blur effects (standard mode) | Drop shadows and blur effects are not supported in standard mode. | Switch to Banner Mode for `effects` support (DROP_SHADOW, LAYER_BLUR), or use layered frames with gradient fills to approximate shadows. |
+| No shadow/blur effects (standard mode) | Drop shadows and blur effects are not supported in standard mode. | Switch to Canvas Mode for `effects` support (DROP_SHADOW, LAYER_BLUR), or use layered frames with gradient fills to approximate shadows. |
 | No dashed/dotted strokes | Stroke dash patterns are not supported. | Use rectangles as visual separators. |
 | CJK font coverage | CJK text uses Noto Sans JP; other CJK scripts (Chinese, Korean) may render with fallback glyphs. | Stick to Japanese text for best results. |
 
@@ -1397,9 +1453,9 @@ These limitations from earlier versions have been fixed:
 | ~~No canvas reuse~~ | Canvas pooling (`acquireCanvas`/`releaseCanvas`) is now used in batch operations. |
 | ~~No text decoration~~ | `textDecoration: 'UNDERLINE' \| 'STRIKETHROUGH'` is now supported. |
 | ~~No compiler validation~~ | `validateNode()` now checks cornerRadius, RGBA bounds, strokeWeight, fontSize. Supports configurable `validationLevel` (`strict`/`normal`/`loose`) via `CompilerOptions`. |
-| ~~No absolute positioning~~ | Banner Mode enables absolute `x`/`y` positioning and `rotation` for free-form layouts. |
-| ~~No shadow/blur effects~~ | Banner Mode adds `DROP_SHADOW` and `LAYER_BLUR` effects, plus `blendMode` for compositing. |
-| ~~Inter font only (no custom fonts)~~ | Banner Mode supports custom font loading via declarative `fonts` export (`.ttf`, `.otf`, `.woff2`). |
+| ~~No absolute positioning~~ | Canvas Mode enables absolute `x`/`y` positioning and `rotation` for free-form layouts. |
+| ~~No shadow/blur effects~~ | Canvas Mode adds `DROP_SHADOW` and `LAYER_BLUR` effects, plus `blendMode` for compositing. |
+| ~~Inter font only (no custom fonts)~~ | Canvas Mode supports custom font loading via declarative `fonts` export (`.ttf`, `.otf`, `.woff2`). |
 
 ---
 

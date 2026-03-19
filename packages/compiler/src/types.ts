@@ -2,7 +2,7 @@ import type { EffectDefinition, BlendMode } from '@figma-dsl/core';
 
 export type FigmaNodeType = 'FRAME' | 'TEXT' | 'RECTANGLE' | 'ROUNDED_RECTANGLE'
   | 'ELLIPSE' | 'GROUP' | 'COMPONENT' | 'COMPONENT_SET' | 'INSTANCE' | 'VECTOR' | 'IMAGE'
-  | 'LINE' | 'SECTION' | 'POLYGON' | 'STAR' | 'BOOLEAN_OPERATION';
+  | 'LINE' | 'SECTION' | 'POLYGON' | 'STAR' | 'BOOLEAN_OPERATION' | 'SVG';
 
 export interface FigmaPaint {
   type: 'SOLID' | 'GRADIENT_LINEAR' | 'GRADIENT_RADIAL' | 'IMAGE';
@@ -72,6 +72,11 @@ export interface FigmaNodeDict {
   imageSrc?: string;
   imageScaleMode?: 'FILL' | 'FIT' | 'CROP' | 'TILE';
 
+  // SVG
+  svgContent?: string;
+  svgSrc?: string;
+  svgScaleMode?: 'FILL' | 'FIT' | 'CROP' | 'TILE';
+
   // Text
   textData?: { characters: string; lines: string[] };
   derivedTextData?: { baselines: Baseline[]; fontMetaData: FontMeta[] };
@@ -103,7 +108,7 @@ export interface FigmaNodeDict {
   // Section
   sectionContentsHidden?: boolean;
 
-  // Banner Mode
+  // Canvas Mode
   effects?: EffectDefinition[];
   blendMode?: BlendMode;
   textTransform?: 'UPPERCASE' | 'LOWERCASE' | 'CAPITALIZE';
@@ -120,7 +125,7 @@ export interface CompileError {
   severity?: 'error' | 'warning';
 }
 
-export type CompilerMode = 'standard' | 'banner';
+export type CompilerMode = 'standard' | 'canvas';
 
 export interface CompilerOptions {
   validationLevel?: CompilerValidationLevel;
